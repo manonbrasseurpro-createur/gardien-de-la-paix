@@ -114,7 +114,7 @@
         id: `symmetry-${index + 1}`,
         type: "Symétries",
         spatialType: "symmetries",
-        text: `Quelle option est le symétrique de la figure selon l'axe ${axis.label} ?`,
+        text: `Quelle option est le symétrique de la ${shapeLabel(shape)} orientée à ${baseAngle}° selon l'axe ${axis.label} ?`,
         answer: 0,
         visual: {
           label: `Figure de départ avec axe ${axis.label}`,
@@ -122,7 +122,7 @@
         },
         options: transformsByAxis[axis.key].map((mirror) => ({
           label: "Figure proposée",
-          svg: shapeSvg(shape, baseAngle, mirror)
+          svg: symmetryOptionSvg(shape, baseAngle, mirror)
         })),
         explanation: axis.explanation
       });
@@ -155,7 +155,7 @@
 
     for (let index = 0; index < 20; index += 1) {
       const pattern = foldPatterns[index % foldPatterns.length];
-      const cutSet = cuts[index % cuts.length];
+      const cutSet = canonicalFoldedCuts(cuts[index % cuts.length], pattern.folds);
       const correctPoints = unfoldPoints(cutSet, pattern.folds);
       const optionPointSets = paperOptionSets(correctPoints, pattern.folds, index);
 
@@ -163,10 +163,10 @@
         id: `folding-${index + 1}`,
         type: "Pliages de papier",
         spatialType: "folding",
-        text: `La feuille est pliée (${pattern.label}) puis découpée. Quel résultat obtient-on une fois dépliée ?`,
+        text: `La feuille du schéma ${index + 1} est pliée (${pattern.label}) puis découpée. Quel résultat obtient-on une fois dépliée ?`,
         answer: 0,
         visual: {
-          label: "Feuille pliée avec découpes",
+          label: "Zone visible de la feuille pliée avec découpes",
           svg: foldedPaperSvg(pattern.folds, cutSet)
         },
         options: optionPointSets.map((points) => ({
@@ -225,7 +225,7 @@
         id: `cube-${index + 1}`,
         type: "Patrons de cubes",
         spatialType: "cubes",
-        text: `Quel cube correspond au patron de cube ${net.name} ?`,
+        text: `Quel cube correspond au patron de cube ${net.name}, variante ${index + 1} ?`,
         answer: 0,
         visual: {
           label: "Patron déplié",
@@ -271,14 +271,14 @@
         id: `sequence-${index + 1}`,
         type: "Suites de figures",
         spatialType: "sequences",
-        text: "Quelle figure vient ensuite dans la séquence ?",
+        text: `Quelle figure vient ensuite dans la séquence ${shapeLabel(shape)} n°${index + 1} ?`,
         answer: 0,
         visual: {
           label: "Suite de figures",
           svg: sequenceSvg(shape, sequence)
         },
         options: optionStates.map((state) => ({
-          label: "Suite proposée",
+          label: "Figure proposée",
           svg: shapeSvg(shape, state.angle, state.mirror)
         })),
         explanation: `La règle applique une rotation régulière de ${step}° à chaque étape${index % 3 === 0 ? " avec une alternance de symétrie verticale" : ""}.`
@@ -291,6 +291,14 @@
   function shapeSvg(shape, angle = 0, mirror = "none") {
     return svgFrame(`
       <g transform="${centerTransform(angle, mirror)}">
+        ${shapeMarkup(shape)}
+      </g>
+    `, "Illustration géométrique");
+  }
+
+  function symmetryOptionSvg(shape, angle = 0, mirror = "none") {
+    return svgFrame(`
+      <g transform="${worldMirrorTransform(angle, mirror)}">
         ${shapeMarkup(shape)}
       </g>
     `, "Illustration géométrique");
@@ -353,6 +361,9 @@
   }
 
   function foldedPaperSvg(folds, cuts) {
+    const foldedRegion = foldedRegionPolygon(folds)
+      .map(([x, y]) => paperPoint(x, y).join(","))
+      .join(" ");
     const foldLines = folds.map(axisLine).join("");
     const cutMarks = cuts.map(([x, y], index) => {
       const [cx, cy] = paperPoint(x, y);
@@ -362,8 +373,8 @@
     }).join("");
 
     return svgFrame(`
-      <rect x="40" y="40" width="120" height="120" rx="8" fill="${COLORS.white}" stroke="${COLORS.navy}" stroke-width="3"/>
-      <path d="M40 40 L160 160" stroke="${COLORS.paleBlue}" stroke-width="18" opacity="0.45"/>
+      <rect x="40" y="40" width="120" height="120" rx="8" fill="${COLORS.paleBlue}" stroke="${COLORS.border}" stroke-width="2" opacity="0.55"/>
+      <polygon points="${foldedRegion}" fill="${COLORS.white}" stroke="${COLORS.navy}" stroke-width="3" stroke-linejoin="round"/>
       ${foldLines}
       ${cutMarks}
       <text x="100" y="184" text-anchor="middle" fill="${COLORS.navy}" font-size="12" font-family="Arial" font-weight="700">feuille pliée + découpes</text>
@@ -454,6 +465,34 @@
     return points;
   }
 
+  function canonicalFoldedCuts(cuts, folds) {
+    return cuts.map((point) => {
+      let foldedPoint = [...point];
+      for (let pass = 0; pass < folds.length * 2; pass += 1) {
+        folds.forEach((fold) => {
+          foldedPoint = canonicalFoldedPoint(foldedPoint, fold);
+        });
+      }
+      return foldedPoint;
+    });
+  }
+
+  function canonicalFoldedPoint([x, y], fold) {
+    if (fold === "v" && x > 60) {
+      return [120 - x, y];
+    }
+    if (fold === "h" && y > 60) {
+      return [x, 120 - y];
+    }
+    if (fold === "diag" && x > y) {
+      return [y, x];
+    }
+    if (fold === "anti" && x + y > 120) {
+      return [120 - y, 120 - x];
+    }
+    return [x, y];
+  }
+
   function paperOptionSets(correctPoints, folds, index) {
     const candidates = [
       correctPoints,
@@ -527,6 +566,68 @@
 
   function paperPoint(x, y) {
     return [40 + x, 40 + y];
+  }
+
+  function foldedRegionPolygon(folds) {
+    return folds.reduce((polygon, fold) => clipPolygon(polygon, fold), [
+      [0, 0],
+      [120, 0],
+      [120, 120],
+      [0, 120]
+    ]);
+  }
+
+  function clipPolygon(polygon, fold) {
+    const clipped = [];
+    polygon.forEach((current, index) => {
+      const previous = polygon[(index + polygon.length - 1) % polygon.length];
+      const currentInside = isInsideFoldRegion(current, fold);
+      const previousInside = isInsideFoldRegion(previous, fold);
+
+      if (currentInside && !previousInside) {
+        clipped.push(intersectionWithFold(previous, current, fold));
+      }
+      if (currentInside) {
+        clipped.push(current);
+      } else if (previousInside) {
+        clipped.push(intersectionWithFold(previous, current, fold));
+      }
+    });
+    return clipped;
+  }
+
+  function isInsideFoldRegion(point, fold) {
+    return foldDistance(point, fold) <= 0.0001;
+  }
+
+  function intersectionWithFold(start, end, fold) {
+    const startDistance = foldDistance(start, fold);
+    const endDistance = foldDistance(end, fold);
+    const ratio = startDistance / (startDistance - endDistance);
+    return [
+      roundCoordinate(start[0] + (end[0] - start[0]) * ratio),
+      roundCoordinate(start[1] + (end[1] - start[1]) * ratio)
+    ];
+  }
+
+  function foldDistance([x, y], fold) {
+    if (fold === "v") {
+      return x - 60;
+    }
+    if (fold === "h") {
+      return y - 60;
+    }
+    if (fold === "diag") {
+      return x - y;
+    }
+    if (fold === "anti") {
+      return x + y - 120;
+    }
+    return 0;
+  }
+
+  function roundCoordinate(value) {
+    return Math.round(value * 100) / 100;
   }
 
   function rotateNetFaces(net, offset) {
@@ -604,6 +705,10 @@
 
   function centerTransform(angle, mirror) {
     return `translate(100 100) rotate(${angle}) ${mirrorTransform(mirror)} translate(-100 -100)`;
+  }
+
+  function worldMirrorTransform(angle, mirror) {
+    return `translate(100 100) ${mirrorTransform(mirror)} rotate(${angle}) translate(-100 -100)`;
   }
 
   function mirrorTransform(mirror) {

@@ -1116,14 +1116,14 @@
       }
 
       for (let index = 0; index < 15; index += 1) {
-        const multiplier = index % 3 === 0 ? 3 : 2;
-        const start = 2 + (index % 6);
+        const multiplier = index % 2 === 0 ? 3 : 2;
+        const start = 7 + index;
         const sequence = [0, 1, 2, 3].map((offset) => start * multiplier ** offset);
         const correct = start * multiplier ** 4;
         questions.push(q(
           "Série de chiffres",
           `${sequence.join(", ")}, __ ?`,
-          numberOptions(correct, [correct + multiplier, correct / multiplier, correct + start]),
+          numberOptions(correct, [correct - start, correct + start, correct + start * multiplier]),
           0,
           `Chaque terme est multiplié par ${multiplier} : ${sequence[3]} x ${multiplier} = ${correct}.`
         ));
@@ -1148,7 +1148,7 @@
       }
 
       for (let index = 0; index < 15; index += 1) {
-        const start = index % 26;
+        const start = 4 + index;
         const step = 2 + (index % 4);
         const sequence = [0, 1, 2, 3].map((offset) => letterFromIndex(start + offset * step));
         const correct = letterFromIndex(start + 4 * step);
@@ -1161,7 +1161,7 @@
             letterFromIndex(start + 4 * step + 2)
           ]),
           0,
-          `On avance de ${step} lettres à chaque fois : la lettre attendue est ${correct}.`
+          `On avance de ${step} lettres à chaque fois${start + 4 * step >= 26 ? " en reprenant au début de l'alphabet après Z" : ""} : la lettre attendue est ${correct}.`
         ));
       }
 
@@ -1263,7 +1263,7 @@
       const percentages = [10, 20, 25, 30, 40, 50, 60, 75];
       for (let index = 0; index < 15; index += 1) {
         const percent = percentages[index % percentages.length];
-        const base = 80 + (index % 10) * 20;
+        const base = 80 + index * 20;
         const correct = base * percent / 100;
         questions.push(q(
           "Pourcentages",
@@ -1277,7 +1277,7 @@
       for (let index = 0; index < 15; index += 1) {
         const mode = index % 3;
         if (mode === 0) {
-          const hours = 2 + (index % 5);
+          const hours = 4 + Math.floor(index / 3);
           const correct = hours * 60;
           questions.push(q(
             "Conversions",
@@ -1287,7 +1287,7 @@
             `1 heure vaut 60 minutes, donc ${hours} x 60 = ${correct}.`
           ));
         } else if (mode === 1) {
-          const km = 2 + (index % 6);
+          const km = 2 + Math.floor(index / 3);
           const correct = km * 1000;
           questions.push(q(
             "Conversions",
@@ -1297,7 +1297,7 @@
             `1 km vaut 1 000 m, donc ${km} km = ${correct} m.`
           ));
         } else {
-          const grams = 250 * (3 + (index % 6));
+          const grams = 250 * (4 + Math.floor(index / 3));
           const correct = grams / 1000;
           questions.push(q(
             "Conversions",
@@ -1329,15 +1329,15 @@
       const questions = [];
       const synonyms = [
         ["attentif", "vigilant", "distrait", "bruyant", "lent"],
-        ["rapide", "vif", "calme", "faible", "lointain"],
-        ["exact", "précis", "faux", "flou", "ancien"],
+        ["bref", "court", "long", "lourd", "ancien"],
+        ["évident", "manifeste", "caché", "douteux", "faible"],
         ["utile", "pratique", "inutile", "risqué", "fragile"],
         ["solide", "robuste", "léger", "vide", "tardif"],
         ["sincère", "franc", "secret", "froid", "large"],
-        ["calme", "paisible", "agité", "pressé", "violent"],
+        ["réfléchi", "posé", "bruyant", "hâtif", "violent"],
         ["difficile", "complexe", "simple", "clair", "court"],
         ["important", "essentiel", "mineur", "rare", "lointain"],
-        ["ancien", "vieux", "récent", "neuf", "futur"],
+        ["âgé", "vieux", "récent", "neuf", "futur"],
         ["humide", "mouillé", "sec", "chaud", "dur"],
         ["bruyant", "sonore", "silencieux", "discret", "lisse"],
         ["courageux", "brave", "craintif", "timide", "faible"],
@@ -1355,7 +1355,7 @@
       });
 
       const antonyms = [
-        ["légal", "illégal", "officiel", "public", "valable"],
+        ["autorisé", "interdit", "officiel", "public", "valable"],
         ["visible", "invisible", "clair", "présent", "direct"],
         ["simple", "complexe", "facile", "rapide", "utile"],
         ["stable", "instable", "solide", "régulier", "fixe"],
@@ -1364,10 +1364,10 @@
         ["échec", "réussite", "faute", "retard", "refus"],
         ["public", "privé", "commun", "visible", "collectif"],
         ["absent", "présent", "lointain", "discret", "retiré"],
-        ["clair", "obscur", "net", "simple", "lisible"],
+        ["opaque", "transparent", "sombre", "épais", "fermé"],
         ["rapide", "lent", "vif", "pressé", "actif"],
         ["prudent", "imprudent", "attentif", "mesuré", "vigilant"],
-        ["ancien", "récent", "vieux", "passé", "historique"],
+        ["moderne", "ancien", "neuf", "actuel", "récent"],
         ["calme", "agité", "paisible", "silencieux", "posé"],
         ["fragile", "résistant", "délicat", "fin", "léger"]
       ];
@@ -1382,10 +1382,10 @@
       });
 
       const intruders = [
-        ["Citron", "Marteau", "Tournevis", "Pince", "Les trois autres sont des outils."],
-        ["Table", "Rouge", "Bleu", "Vert", "Les trois autres sont des couleurs."],
-        ["Fourchette", "Justice", "Tribunal", "Juge", "Les trois autres relèvent du domaine judiciaire."],
-        ["Banane", "Police", "Gendarmerie", "Pompiers", "Les trois autres sont des services de sécurité ou de secours."],
+        ["Horloge", "Veste", "Pantalon", "Chemise", "Les trois autres sont des vêtements."],
+        ["Crayon", "Sapin", "Chêne", "Bouleau", "Les trois autres sont des arbres."],
+        ["Téléphone", "Soleil", "Lune", "Étoile", "Les trois autres sont des astres."],
+        ["Coussin", "Rugby", "Handball", "Volley", "Les trois autres sont des sports collectifs."],
         ["Nuage", "Bus", "Train", "Métro", "Les trois autres sont des moyens de transport."],
         ["Stylo", "Chien", "Chat", "Cheval", "Les trois autres sont des animaux."],
         ["Été", "Nord", "Sud", "Ouest", "Les trois autres sont des directions."],
@@ -1409,9 +1409,9 @@
       });
 
       const analogies = [
-        ["Main", "gant", "pied", "chaussette", ["casquette", "ceinture", "écharpe"], "Le gant couvre la main, la chaussette couvre le pied."],
-        ["Livre", "lire", "musique", "écouter", ["regarder", "écrire", "compter"], "On lit un livre et on écoute de la musique."],
-        ["Médecin", "hôpital", "professeur", "école", ["garage", "tribunal", "stade"], "Le professeur exerce principalement à l'école."],
+        ["Couteau", "couper", "stylo", "écrire", ["coller", "mesurer", "porter"], "Un couteau sert à couper, un stylo sert à écrire."],
+        ["Pilote", "avion", "conducteur", "voiture", ["bateau", "vélo", "gare"], "Le pilote dirige un avion, le conducteur dirige une voiture."],
+        ["Clé", "ouvrir", "frein", "ralentir", ["peindre", "chauffer", "ranger"], "La clé sert à ouvrir, le frein sert à ralentir."],
         ["Serrure", "clé", "vis", "tournevis", ["marteau", "pince", "règle"], "La clé actionne une serrure, le tournevis actionne une vis."],
         ["Oiseau", "nid", "abeille", "ruche", ["étable", "terrier", "aquarium"], "L'abeille vit dans une ruche."],
         ["Jour", "nuit", "clair", "sombre", ["propre", "simple", "rapide"], "Le lien est l'opposition."],
@@ -1436,7 +1436,7 @@
       });
 
       const comprehension = [
-        ["Tous les agents présents ont signé le registre. Karim était présent.", "Karim a signé le registre", ["Karim était absent", "Personne n'a signé", "Le registre est vide"]],
+        ["Tous les agents présents ont signé le registre. Karim est agent et était présent.", "Karim a signé le registre", ["Karim était absent", "Personne n'a signé", "Le registre est vide"]],
         ["Aucun véhicule rouge n'est autorisé dans la zone. La voiture de Léa est rouge.", "La voiture de Léa n'est pas autorisée", ["La voiture de Léa est prioritaire", "La zone est rouge", "Tous les véhicules entrent"]],
         ["Si l'alarme sonne, l'équipe évacue. L'alarme vient de sonner.", "L'équipe évacue", ["L'équipe reste en place", "L'alarme est éteinte", "Personne n'entend rien"]],
         ["Tous les dossiers urgents sont traités avant midi. Ce dossier est urgent.", "Ce dossier est traité avant midi", ["Ce dossier est archivé", "Ce dossier est refusé", "Ce dossier attend demain"]],
@@ -1483,21 +1483,22 @@
         }
       });
 
-      let suffix = 1;
-      while (options.length < 4) {
-        const fallback = `${correct} (${suffix})`;
-        if (!options.includes(fallback)) {
-          options.push(fallback);
-        }
-        suffix += 1;
+      if (options.length < 4) {
+        throw new Error(`Choix insuffisants ou dupliqués pour la réponse « ${correct} ».`);
       }
 
       return options.slice(0, 4);
     }
 
     function formatNumberWithUnit(value, unit) {
-      const formatted = Number.isInteger(value) ? String(value) : formatDecimal(value);
+      const formatted = Number.isInteger(value) ? formatInteger(value) : formatDecimal(value);
       return unit ? `${formatted} ${unit}` : formatted;
+    }
+
+    function formatInteger(value) {
+      const sign = value < 0 ? "-" : "";
+      const digits = String(Math.abs(value));
+      return `${sign}${digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
     }
 
     function formatDecimal(value) {

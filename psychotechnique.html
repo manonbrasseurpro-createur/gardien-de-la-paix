@@ -1501,7 +1501,12 @@
         ["Si le feu est vert, les véhicules peuvent passer. Le feu est vert.", "Les véhicules peuvent passer", ["Les véhicules reculent", "Le feu est rouge", "La route disparaît"]],
         ["Aucun document illisible n'est accepté. Ce document est illisible.", "Ce document n'est pas accepté", ["Ce document est prioritaire", "Ce document est parfait", "Ce document est verbal"]],
         ["Les convocations envoyées par mail arrivent le jour même. Celle-ci est envoyée par mail.", "Elle arrive le jour même", ["Elle arrive dans un mois", "Elle n'existe pas", "Elle est manuscrite"]],
-        ["Tout objet trouvé est enregistré. Cette clé a été trouvée.", "Cette clé est enregistrée", ["Cette clé est jetée", "Cette clé est vendue", "Cette clé ouvre tout"]]
+        ["Tout objet trouvé est enregistré. Cette clé a été trouvée.", "Cette clé est enregistrée", ["Cette clé est jetée", "Cette clé est vendue", "Cette clé ouvre tout"]],
+        ["Si un candidat arrive après la fermeture, il n'entre pas. Hugo arrive après la fermeture.", "Hugo n'entre pas", ["Hugo entre en premier", "Hugo ferme la salle", "Hugo est surveillant"]],
+        ["Tous les messages prioritaires sont lus immédiatement. Ce message est prioritaire.", "Ce message est lu immédiatement", ["Ce message est supprimé", "Ce message est ignoré", "Ce message est anonyme"]],
+        ["Aucun badge expiré ne permet l'accès. Le badge de Samir est expiré.", "Le badge de Samir ne permet pas l'accès", ["Samir est invité", "Le badge ouvre tout", "L'accès est automatique"]],
+        ["Quand la consigne change, les candidats sont informés. La consigne change.", "Les candidats sont informés", ["Les candidats quittent la salle", "La consigne disparaît", "Personne ne sait lire"]],
+        ["Tous les objets fragiles sont manipulés avec soin. Ce vase est fragile.", "Ce vase est manipulé avec soin", ["Ce vase est jeté", "Ce vase est interdit", "Ce vase est métallique"]]
       ];
       comprehension.forEach(([premise, correct, distractors]) => {
         questions.push(q(

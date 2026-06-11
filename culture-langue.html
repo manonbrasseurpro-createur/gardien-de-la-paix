@@ -632,7 +632,7 @@
           <button class="mode-card" type="button" data-mode="language" disabled>
             <span class="mode-card__icon" aria-hidden="true">🌍</span>
             <h3>Langue Étrangère uniquement</h3>
-            <p>40 questions de grammaire, vocabulaire, compréhension écrite et remise en ordre.</p>
+            <p>40 questions tirées parmi 600 par langue : 16 grammaire, 12 vocabulaire, 6 compréhension et 6 remise en ordre.</p>
             <span class="mode-card__duration">⏱ ~25 min</span>
           </button>
 
@@ -1329,6 +1329,301 @@
       }
     };
 
+    const languageExtensions = {
+      english: {
+        contexts: [
+          "while checking a suspicious vehicle",
+          "during an identity check",
+          "before writing an incident report",
+          "after a domestic violence call",
+          "near a public demonstration",
+          "inside the police station lobby",
+          "when securing a crime scene",
+          "during a roadside checkpoint"
+        ]
+      },
+      spanish: {
+        contexts: [
+          "al revisar un vehículo sospechoso",
+          "durante un control de identidad",
+          "antes de redactar un informe de intervención",
+          "tras una llamada por violencia doméstica",
+          "cerca de una manifestación pública",
+          "en la recepción de la comisaría",
+          "al asegurar la escena de un delito",
+          "durante un control de carretera"
+        ]
+      },
+      german: {
+        contexts: [
+          "bei der Kontrolle eines verdächtigen Fahrzeugs",
+          "während einer Identitätskontrolle",
+          "vor dem Schreiben eines Einsatzberichts",
+          "nach einem Anruf wegen häuslicher Gewalt",
+          "nahe einer öffentlichen Demonstration",
+          "im Empfangsbereich der Polizeiwache",
+          "bei der Sicherung eines Tatorts",
+          "während einer Verkehrskontrolle"
+        ]
+      }
+    };
+
+    const vocabularyLanguageIndex = {
+      english: 2,
+      spanish: 3,
+      german: 4
+    };
+
+    const securityVocabularyExtensions = [
+      ["Procédure", "procès-verbal", "official record", "acta", "Protokoll"],
+      ["Procédure", "main courante", "daily log", "libro de incidencias", "Tagesjournal"],
+      ["Surveillance", "garde statique", "fixed guard", "guardia fija", "Standposten"],
+      ["Surveillance", "ronde de surveillance", "security round", "ronda de vigilancia", "Kontrollgang"],
+      ["Contrôle", "point de contrôle", "checkpoint", "puesto de control", "Kontrollpunkt"],
+      ["Contrôle", "palpation de sécurité", "security pat-down", "cacheo de seguridad", "Sicherheitsabtastung"],
+      ["Contrôle", "fouille de véhicule", "vehicle search", "registro de vehículo", "Fahrzeugdurchsuchung"],
+      ["Objets", "objet trouvé", "lost property", "objeto encontrado", "Fundsache"],
+      ["Objets", "objet suspect", "suspicious item", "objeto sospechoso", "verdächtiger Gegenstand"],
+      ["Sécurisation", "périmètre de sécurité", "security perimeter", "perímetro de seguridad", "Sicherheitsbereich"],
+      ["Sécurisation", "barriérage", "barriers", "vallado", "Absperrung"],
+      ["Sécurisation", "évacuation", "evacuation", "evacuación", "Evakuierung"],
+      ["Sécurisation", "mise à l'abri", "sheltering", "puesta a salvo", "Schutzunterbringung"],
+      ["Alerte", "alerte", "alert", "alerta", "Alarm"],
+      ["Signalement", "signalement", "description", "descripción", "Personenbeschreibung"],
+      ["Signalement", "fiche de recherche", "wanted notice", "ficha de búsqueda", "Fahndungsblatt"],
+      ["Signalement", "individu recherché", "wanted person", "persona buscada", "gesuchte Person"],
+      ["Public vulnérable", "personne vulnérable", "vulnerable person", "persona vulnerable", "schutzbedürftige Person"],
+      ["Public vulnérable", "mineur isolé", "unaccompanied minor", "menor no acompañado", "unbegleiteter Minderjähriger"],
+      ["Public vulnérable", "personne sans domicile", "homeless person", "persona sin hogar", "obdachlose Person"],
+      ["Ordre public", "trouble à l'ordre public", "public disorder", "alteración del orden público", "Störung der öffentlichen Ordnung"],
+      ["Ordre public", "tapage nocturne", "night noise disturbance", "ruido nocturno", "nächtliche Ruhestörung"],
+      ["Ordre public", "attroupement", "gathering", "concentración", "Menschenansammlung"],
+      ["Ordre public", "manifestation", "demonstration", "manifestación", "Demonstration"],
+      ["Ordre public", "service d'ordre", "crowd control duty", "dispositivo de seguridad", "Ordnungsdienst"],
+      ["Routier", "contrôle routier", "roadside check", "control de carretera", "Verkehrskontrolle"],
+      ["Routier", "dépistage alcoolémie", "breath alcohol test", "prueba de alcoholemia", "Alkoholtest"],
+      ["Routier", "dépistage stupéfiants", "drug test", "prueba de drogas", "Drogentest"],
+      ["Routier", "excès de vitesse", "speeding", "exceso de velocidad", "Geschwindigkeitsüberschreitung"],
+      ["Routier", "stationnement gênant", "obstructive parking", "estacionamiento indebido", "behinderndes Parken"],
+      ["Routier", "refus d'obtempérer", "failure to comply", "negativa a obedecer", "Missachtung einer Anhalteaufforderung"],
+      ["Routier", "délit de fuite", "hit-and-run", "fuga tras accidente", "Fahrerflucht"],
+      ["Routier", "conduite sans permis", "driving without a licence", "conducir sin permiso", "Fahren ohne Fahrerlaubnis"],
+      ["Routier", "défaut d'assurance", "no insurance", "falta de seguro", "fehlende Versicherung"],
+      ["Routier", "véhicule immobilisé", "immobilised vehicle", "vehículo inmovilizado", "stillgelegtes Fahrzeug"],
+      ["Routier", "fourrière", "impound lot", "depósito municipal", "Verwahrstelle"],
+      ["Enquête", "scène d'infraction", "offence scene", "lugar de la infracción", "Tatort"],
+      ["Enquête", "indice", "clue", "indicio", "Hinweis"],
+      ["Enquête", "prélèvement", "sample", "muestra", "Probe"],
+      ["Enquête", "empreinte digitale", "fingerprint", "huella dactilar", "Fingerabdruck"],
+      ["Enquête", "trace ADN", "DNA trace", "rastro de ADN", "DNA-Spur"],
+      ["Vidéo", "caméra de surveillance", "CCTV camera", "cámara de vigilancia", "Überwachungskamera"],
+      ["Vidéo", "enregistrement vidéo", "video recording", "grabación de vídeo", "Videoaufzeichnung"],
+      ["Audition", "audition", "interview", "declaración", "Vernehmung"],
+      ["Audition", "déclaration écrite", "written statement", "declaración escrita", "schriftliche Aussage"],
+      ["Audition", "confrontation", "confrontation", "careo", "Gegenüberstellung"],
+      ["Audition", "reconnaissance", "identification", "reconocimiento", "Wiedererkennung"],
+      ["Preuve", "scellé", "sealed evidence", "precinto", "versiegeltes Beweisstück"],
+      ["Preuve", "chaîne de conservation", "chain of custody", "cadena de custodia", "Beweismittelkette"],
+      ["Preuve", "pièce à conviction", "exhibit", "pieza de convicción", "Beweisstück"],
+      ["Enquête", "enquête de voisinage", "neighbourhood enquiry", "encuesta vecinal", "Nachbarschaftsbefragung"],
+      ["Radio", "appel d'urgence", "emergency call", "llamada de emergencia", "Notruf"],
+      ["Radio", "centre d'appel", "call centre", "centro de llamadas", "Leitstelle"],
+      ["Radio", "opérateur radio", "radio operator", "operador de radio", "Funker"],
+      ["Radio", "message prioritaire", "priority message", "mensaje prioritario", "Vorrangmeldung"],
+      ["Organisation", "consigne", "instruction", "consigna", "Anweisung"],
+      ["Organisation", "briefing", "briefing", "reunión informativa", "Einsatzbesprechung"],
+      ["Organisation", "relève", "shift change", "relevo", "Schichtwechsel"],
+      ["Organisation", "équipe de nuit", "night team", "equipo nocturno", "Nachtschicht"],
+      ["Patrouille", "patrouille pédestre", "foot patrol", "patrulla a pie", "Fußstreife"],
+      ["Patrouille", "patrouille motorisée", "motor patrol", "patrulla motorizada", "motorisierte Streife"],
+      ["Patrouille", "équipage", "crew", "dotación", "Besatzung"],
+      ["Patrouille", "chef de bord", "team leader", "jefe de equipo", "Streifenführer"],
+      ["Patrouille", "collègue", "colleague", "compañero", "Kollege"],
+      ["Équipement", "uniforme", "uniform", "uniforme", "Uniform"],
+      ["Équipement", "brassard", "armband", "brazalete", "Armbinde"],
+      ["Équipement", "gilet pare-balles", "bulletproof vest", "chaleco antibalas", "schusssichere Weste"],
+      ["Équipement", "gants de protection", "protective gloves", "guantes de protección", "Schutzhandschuhe"],
+      ["Équipement", "lampe torche", "flashlight", "linterna", "Taschenlampe"],
+      ["Équipement", "radio portative", "handheld radio", "radio portátil", "Handfunkgerät"],
+      ["Équipement", "véhicule sérigraphié", "marked police car", "vehículo rotulado", "Streifenwagen"],
+      ["Équipement", "gyrophare", "flashing light", "luz giratoria", "Blaulicht"],
+      ["Équipement", "sirène", "siren", "sirena", "Sirene"],
+      ["Secours", "dispositif de secours", "emergency response system", "dispositivo de emergencia", "Rettungssystem"],
+      ["Secours", "premiers intervenants", "first responders", "primeros intervinientes", "Ersthelfer"],
+      ["Secours", "malaise", "fainting spell", "indisposición", "Schwächeanfall"],
+      ["Secours", "blessure légère", "minor injury", "lesión leve", "leichte Verletzung"],
+      ["Secours", "blessure grave", "serious injury", "lesión grave", "schwere Verletzung"],
+      ["Secours", "certificat médical", "medical certificate", "certificado médico", "ärztliches Attest"],
+      ["Secours", "médecin légiste", "forensic doctor", "médico forense", "Rechtsmediziner"],
+      ["Accueil", "dépôt de plainte", "filing a complaint", "presentación de denuncia", "Anzeigeerstattung"],
+      ["Accueil", "accueil du public", "public reception", "atención al público", "Publikumsverkehr"],
+      ["Accueil", "salle d'attente", "waiting room", "sala de espera", "Warteraum"],
+      ["Accueil", "guichet", "front desk", "ventanilla", "Schalter"],
+      ["Accueil", "rendez-vous", "appointment", "cita", "Termin"],
+      ["Procédure", "convocation", "summons", "citación", "Vorladung"],
+      ["Procédure", "registre", "register", "registro", "Register"],
+      ["Procédure", "numéro de dossier", "case number", "número de expediente", "Aktenzeichen"],
+      ["Déontologie", "confidentialité", "confidentiality", "confidencialidad", "Vertraulichkeit"],
+      ["Déontologie", "secret professionnel", "professional secrecy", "secreto profesional", "Berufsgeheimnis"],
+      ["Déontologie", "respect de la victime", "respect for the victim", "respeto a la víctima", "Respekt gegenüber dem Opfer"],
+      ["Déontologie", "impartialité", "impartiality", "imparcialidad", "Unparteilichkeit"],
+      ["Déontologie", "sang-froid", "composure", "sangre fría", "Besonnenheit"],
+      ["Relationnel", "médiation", "mediation", "mediación", "Vermittlung"],
+      ["Relationnel", "désescalade", "de-escalation", "desescalada", "Deeskalation"],
+      ["Relationnel", "prévention", "prevention", "prevención", "Prävention"],
+      ["Infractions", "cambriolage signalé", "reported burglary", "robo denunciado", "gemeldeter Einbruch"],
+      ["Infractions", "vol à l'étalage", "shoplifting", "hurto en tienda", "Ladendiebstahl"],
+      ["Infractions", "arnaque", "scam", "estafa", "Betrug"],
+      ["Infractions", "usurpation d'identité", "identity theft", "usurpación de identidad", "Identitätsdiebstahl"],
+      ["Infractions", "cyberharcèlement", "cyberbullying", "ciberacoso", "Cybermobbing"],
+      ["Infractions", "menace en ligne", "online threat", "amenaza en línea", "Online-Drohung"],
+      ["Infractions", "téléphone volé", "stolen phone", "teléfono robado", "gestohlenes Telefon"],
+      ["Infractions", "sac arraché", "snatched bag", "bolso arrebatado", "entrissene Tasche"],
+      ["Objets", "portefeuille perdu", "lost wallet", "cartera perdida", "verlorene Brieftasche"],
+      ["Public vulnérable", "enfant égaré", "lost child", "niño perdido", "verlaufenes Kind"],
+      ["Public vulnérable", "personne âgée désorientée", "disoriented elderly person", "persona mayor desorientada", "verwirrte ältere Person"],
+      ["Conflits", "conflit de voisinage", "neighbour dispute", "conflicto vecinal", "Nachbarschaftsstreit"],
+      ["Conflits", "différend familial", "family dispute", "conflicto familiar", "Familienstreit"],
+      ["Conflits", "violence conjugale", "domestic violence", "violencia de pareja", "partnerschaftliche Gewalt"],
+      ["Protection", "mise en sécurité de la victime", "victim safety", "protección de la víctima", "Sicherung des Opfers"],
+      ["Protection", "unité spécialisée", "specialised unit", "unidad especializada", "Spezialeinheit"],
+      ["Judiciaire", "enquêteur", "investigator", "investigador", "Ermittler"],
+      ["Judiciaire", "parquet", "prosecutor's office", "fiscalía", "Staatsanwaltschaft"],
+      ["Judiciaire", "magistrat", "magistrate", "magistrado", "Magistrat"],
+      ["Judiciaire", "mandat", "warrant", "orden judicial", "Haftbefehl"],
+      ["Droits", "notification des droits", "rights notification", "notificación de derechos", "Rechtsbelehrung"],
+      ["Droits", "retenue administrative", "administrative detention", "retención administrativa", "Verwaltungsgewahrsam"],
+      ["Déplacement", "escorte", "escort", "escolta", "Begleitung"],
+      ["Déplacement", "transfert sécurisé", "secure transfer", "traslado seguro", "gesicherter Transport"]
+    ];
+
+    const situationLanguageIndex = {
+      english: 0,
+      spanish: 1,
+      german: 2
+    };
+
+    const supplementalSituationLabels = {
+      english: {
+        incidentQuestion: "What is reported?",
+        detailQuestion: "What detail is mentioned?",
+        actionQuestion: "What does the patrol do first?"
+      },
+      spanish: {
+        incidentQuestion: "¿Qué se comunica?",
+        detailQuestion: "¿Qué detalle se menciona?",
+        actionQuestion: "¿Qué hace primero la patrulla?"
+      },
+      german: {
+        incidentQuestion: "Was wird gemeldet?",
+        detailQuestion: "Welches Detail wird genannt?",
+        actionQuestion: "Was macht die Streife zuerst?"
+      }
+    };
+
+    const operationalSituationExtensions = [
+      [
+        ["A school employee", "a suspicious van", "near the school gate", "The driver is filming the entrance.", "checks the licence plate", "speaks with school security", "suspicious van near a school", ["observe the van from a safe distance", "check the licence plate", "speak with school security"]],
+        ["Un empleado del colegio", "una furgoneta sospechosa", "cerca de la puerta del colegio", "El conductor graba la entrada.", "comprueba la matrícula", "habla con el personal de seguridad", "furgoneta sospechosa cerca de un colegio", ["observar la furgoneta a distancia segura", "comprobar la matrícula", "hablar con la seguridad del colegio"]],
+        ["Ein Schulmitarbeiter", "einen verdächtigen Lieferwagen", "nahe dem Schultor", "Der Fahrer filmt den Eingang.", "prüft das Kennzeichen", "spricht mit dem Sicherheitsdienst", "verdächtiger Lieferwagen nahe einer Schule", ["den Lieferwagen aus sicherer Entfernung beobachten", "das Kennzeichen prüfen", "mit dem Sicherheitsdienst sprechen"]]
+      ],
+      [
+        ["A neighbour", "a forced back door", "behind an empty house", "Fresh marks are visible on the lock.", "secures the garden", "asks nearby residents for information", "forced door behind an empty house", ["secure the garden", "photograph the lock", "ask neighbours for information"]],
+        ["Un vecino", "una puerta trasera forzada", "detrás de una casa vacía", "Hay marcas recientes en la cerradura.", "asegura el jardín", "pregunta a los vecinos cercanos", "puerta forzada detrás de una casa vacía", ["asegurar el jardín", "fotografiar la cerradura", "preguntar a los vecinos"]],
+        ["Ein Nachbar", "eine aufgebrochene Hintertür", "hinter einem leeren Haus", "Frische Spuren sind am Schloss sichtbar.", "sichert den Garten", "befragt nahe Anwohner", "aufgebrochene Tür hinter einem leeren Haus", ["den Garten sichern", "das Schloss fotografieren", "Nachbarn befragen"]]
+      ],
+      [
+        ["A market guard", "a lost child", "inside the crowded market", "The child is wearing a red jacket.", "collects the description", "contacts the family desk", "lost child in a market", ["collect the child's description", "search the nearby aisles", "contact the family desk"]],
+        ["Un vigilante del mercado", "un niño perdido", "dentro del mercado lleno", "El niño lleva una chaqueta roja.", "recoge la descripción", "contacta con el punto de familias", "niño perdido en un mercado", ["recoger la descripción del niño", "buscar en los pasillos cercanos", "contactar con el punto de familias"]],
+        ["Ein Marktordner", "ein verlaufenes Kind", "im vollen Markt", "Das Kind trägt eine rote Jacke.", "nimmt die Beschreibung auf", "kontaktiert die Familienanlaufstelle", "verlaufenes Kind auf einem Markt", ["die Beschreibung des Kindes aufnehmen", "nahe Gänge absuchen", "die Familienanlaufstelle kontaktieren"]]
+      ],
+      [
+        ["A station agent", "an unattended parcel", "under a platform bench", "No passenger claims the parcel.", "sets up a safety perimeter", "calls the specialist team", "unattended parcel at a station", ["keep people away", "set up a safety perimeter", "call the specialist team"]],
+        ["Un agente de la estación", "un paquete abandonado", "debajo de un banco del andén", "Ningún pasajero reclama el paquete.", "establece un perímetro de seguridad", "llama al equipo especializado", "paquete abandonado en una estación", ["alejar al público", "establecer un perímetro de seguridad", "llamar al equipo especializado"]],
+        ["Ein Bahnhofsmitarbeiter", "ein herrenloses Paket", "unter einer Bahnsteigbank", "Kein Fahrgast beansprucht das Paket.", "richtet einen Sicherheitsbereich ein", "ruft das Spezialteam", "herrenloses Paket im Bahnhof", ["Personen fernhalten", "einen Sicherheitsbereich einrichten", "das Spezialteam rufen"]]
+      ],
+      [
+        ["A checkpoint officer", "a possible drunk driver", "on the ring road", "The driver's breath smells of alcohol.", "stops the vehicle safely", "prepares a breath alcohol test", "possible drunk driver at a checkpoint", ["stop the vehicle safely", "check the documents", "prepare the alcohol test"]],
+        ["Un agente del control", "un posible conductor ebrio", "en la ronda", "El aliento del conductor huele a alcohol.", "detiene el vehículo con seguridad", "prepara una prueba de alcoholemia", "posible conductor ebrio en un control", ["detener el vehículo con seguridad", "comprobar los documentos", "preparar la prueba de alcoholemia"]],
+        ["Ein Kontrollbeamter", "einen möglicherweise betrunkenen Fahrer", "auf der Ringstraße", "Der Atem des Fahrers riecht nach Alkohol.", "hält das Fahrzeug sicher an", "bereitet einen Alkoholtest vor", "möglicherweise betrunkener Fahrer an einer Kontrolle", ["das Fahrzeug sicher anhalten", "die Dokumente prüfen", "den Alkoholtest vorbereiten"]]
+      ],
+      [
+        ["An elderly resident", "a phone scam", "from her apartment", "The caller asked for her bank code.", "reassures the resident", "records the phone number", "phone scam targeting an elderly person", ["reassure the resident", "record the phone number", "write the complaint"]],
+        ["Una vecina mayor", "una estafa telefónica", "desde su piso", "La persona que llamó pidió su código bancario.", "tranquiliza a la vecina", "anota el número de teléfono", "estafa telefónica contra una persona mayor", ["tranquilizar a la vecina", "anotar el número de teléfono", "redactar la denuncia"]],
+        ["Eine ältere Bewohnerin", "einen Telefonbetrug", "aus ihrer Wohnung", "Der Anrufer fragte nach ihrem Bankcode.", "beruhigt die Bewohnerin", "notiert die Telefonnummer", "Telefonbetrug gegen eine ältere Person", ["die Bewohnerin beruhigen", "die Telefonnummer notieren", "die Anzeige schreiben"]]
+      ],
+      [
+        ["A bus driver", "a stolen phone", "on a city bus", "The suspect left the bus at the next stop.", "notes the route number", "checks available video footage", "stolen phone on a bus", ["note the route number", "identify the stop", "check video footage"]],
+        ["Un conductor de autobús", "un teléfono robado", "en un autobús urbano", "El sospechoso bajó en la parada siguiente.", "anota el número de línea", "comprueba las imágenes disponibles", "teléfono robado en un autobús", ["anotar el número de línea", "identificar la parada", "comprobar las imágenes"]],
+        ["Ein Busfahrer", "ein gestohlenes Telefon", "in einem Stadtbus", "Der Verdächtige stieg an der nächsten Haltestelle aus.", "notiert die Liniennummer", "prüft verfügbare Videoaufnahmen", "gestohlenes Telefon in einem Bus", ["die Liniennummer notieren", "die Haltestelle feststellen", "Videoaufnahmen prüfen"]]
+      ],
+      [
+        ["A supermarket guard", "shoplifting", "near the exit", "The guard kept the unpaid items at the desk.", "speaks with the guard", "identifies the suspect", "shoplifting in a supermarket", ["speak with the guard", "identify the suspect", "list the unpaid items"]],
+        ["Un vigilante de supermercado", "un hurto en tienda", "cerca de la salida", "El vigilante guardó los artículos no pagados.", "habla con el vigilante", "identifica al sospechoso", "hurto en un supermercado", ["hablar con el vigilante", "identificar al sospechoso", "enumerar los artículos no pagados"]],
+        ["Ein Supermarktmitarbeiter", "einen Ladendiebstahl", "nahe dem Ausgang", "Der Mitarbeiter bewahrte die unbezahlten Waren auf.", "spricht mit dem Mitarbeiter", "identifiziert den Verdächtigen", "Ladendiebstahl in einem Supermarkt", ["mit dem Mitarbeiter sprechen", "den Verdächtigen identifizieren", "die unbezahlten Waren auflisten"]]
+      ],
+      [
+        ["A caretaker", "smoke in the stairwell", "inside a residential building", "Residents are waiting on the landing.", "evacuates the residents", "guides firefighters to the entrance", "smoke in a residential stairwell", ["evacuate residents", "keep the entrance clear", "guide firefighters"]],
+        ["Un conserje", "humo en la escalera", "dentro de un edificio residencial", "Los residentes esperan en el rellano.", "evacua a los residentes", "guía a los bomberos hasta la entrada", "humo en la escalera de un edificio", ["evacuar a los residentes", "mantener libre la entrada", "guiar a los bomberos"]],
+        ["Ein Hausmeister", "Rauch im Treppenhaus", "in einem Wohngebäude", "Bewohner warten auf dem Absatz.", "evakuiert die Bewohner", "führt die Feuerwehr zum Eingang", "Rauch in einem Treppenhaus", ["Bewohner evakuieren", "den Eingang freihalten", "die Feuerwehr einweisen"]]
+      ],
+      [
+        ["A victim", "online threats", "at the front desk", "The messages include her workplace address.", "preserves the screenshots", "opens a complaint file", "online threats reported at the station", ["preserve the screenshots", "record the victim's statement", "open a complaint file"]],
+        ["Una víctima", "amenazas en línea", "en la recepción", "Los mensajes incluyen la dirección de su trabajo.", "conserva las capturas de pantalla", "abre un expediente de denuncia", "amenazas en línea denunciadas en comisaría", ["conservar las capturas de pantalla", "tomar declaración a la víctima", "abrir el expediente de denuncia"]],
+        ["Ein Opfer", "Online-Drohungen", "am Empfang", "Die Nachrichten enthalten ihre Arbeitsadresse.", "sichert die Screenshots", "öffnet eine Anzeigenakte", "Online-Drohungen auf der Wache", ["Screenshots sichern", "die Aussage des Opfers aufnehmen", "eine Anzeigenakte öffnen"]]
+      ],
+      [
+        ["A neighbour", "shouting in a flat", "late in the evening", "Two children are inside the home.", "listens at the door", "separates the adults", "domestic dispute with children present", ["assess the immediate risk", "separate the adults", "protect the children"]],
+        ["Un vecino", "gritos en un piso", "a última hora de la tarde", "Hay dos niños dentro de la vivienda.", "escucha junto a la puerta", "separa a los adultos", "conflicto doméstico con niños presentes", ["evaluar el riesgo inmediato", "separar a los adultos", "proteger a los niños"]],
+        ["Ein Nachbar", "Schreie in einer Wohnung", "spät am Abend", "Zwei Kinder sind in der Wohnung.", "hört an der Tür", "trennt die Erwachsenen", "häuslicher Streit mit Kindern", ["das unmittelbare Risiko einschätzen", "die Erwachsenen trennen", "die Kinder schützen"]]
+      ],
+      [
+        ["A traffic unit", "an uninsured motorcycle", "near a tunnel", "The rider cannot show an insurance certificate.", "checks the registration", "immobilises the motorcycle", "uninsured motorcycle near a tunnel", ["check the registration", "verify insurance status", "immobilise the motorcycle"]],
+        ["Una unidad de tráfico", "una motocicleta sin seguro", "cerca de un túnel", "El motorista no puede mostrar el certificado de seguro.", "comprueba la documentación", "inmoviliza la motocicleta", "motocicleta sin seguro cerca de un túnel", ["comprobar la documentación", "verificar el seguro", "inmovilizar la motocicleta"]],
+        ["Eine Verkehrseinheit", "ein Motorrad ohne Versicherung", "nahe einem Tunnel", "Der Fahrer kann keinen Versicherungsnachweis zeigen.", "prüft die Zulassung", "legt das Motorrad still", "Motorrad ohne Versicherung nahe einem Tunnel", ["die Zulassung prüfen", "den Versicherungsstatus prüfen", "das Motorrad stilllegen"]]
+      ],
+      [
+        ["A municipal agent", "vandalism on a bus shelter", "during the night", "The camera shows two youths tagging the wall.", "photographs the damage", "requests the video recording", "vandalism on a bus shelter", ["photograph the damage", "request the video recording", "identify possible witnesses"]],
+        ["Un agente municipal", "vandalismo en una marquesina", "durante la noche", "La cámara muestra a dos jóvenes pintando la pared.", "fotografía los daños", "solicita la grabación", "vandalismo en una marquesina", ["fotografiar los daños", "solicitar la grabación", "identificar posibles testigos"]],
+        ["Ein städtischer Mitarbeiter", "Vandalismus an einer Bushaltestelle", "in der Nacht", "Die Kamera zeigt zwei Jugendliche beim Besprühen der Wand.", "fotografiert den Schaden", "fordert die Videoaufnahme an", "Vandalismus an einer Bushaltestelle", ["den Schaden fotografieren", "die Videoaufnahme anfordern", "mögliche Zeugen feststellen"]]
+      ],
+      [
+        ["A tourist", "a lost hotel address", "near the old town", "His passport is still in his bag.", "checks his identity", "contacts the hotel reception", "lost tourist near the old town", ["check the tourist's identity", "contact the hotel reception", "guide him to a safe route"]],
+        ["Un turista", "una dirección de hotel perdida", "cerca del casco antiguo", "Su pasaporte sigue en su bolsa.", "comprueba su identidad", "contacta con la recepción del hotel", "turista perdido cerca del casco antiguo", ["comprobar la identidad del turista", "contactar con la recepción del hotel", "indicar una ruta segura"]],
+        ["Ein Tourist", "eine verlorene Hoteladresse", "nahe der Altstadt", "Sein Pass ist noch in seiner Tasche.", "prüft seine Identität", "kontaktiert die Hotelrezeption", "verirrter Tourist nahe der Altstadt", ["die Identität des Touristen prüfen", "die Hotelrezeption kontaktieren", "einen sicheren Weg erklären"]]
+      ],
+      [
+        ["An event steward", "a blocked emergency exit", "during a concert", "A group is standing in front of the doors.", "moves the group back", "keeps the exit clear", "blocked emergency exit at an event", ["move the group back", "keep the exit clear", "inform the event command post"]],
+        ["Un auxiliar de evento", "una salida de emergencia bloqueada", "durante un concierto", "Un grupo está delante de las puertas.", "hace retroceder al grupo", "mantiene libre la salida", "salida de emergencia bloqueada en un evento", ["hacer retroceder al grupo", "mantener libre la salida", "informar al puesto de mando"]],
+        ["Ein Ordner", "einen blockierten Notausgang", "während eines Konzerts", "Eine Gruppe steht vor den Türen.", "drängt die Gruppe zurück", "hält den Ausgang frei", "blockierter Notausgang bei einer Veranstaltung", ["die Gruppe zurückdrängen", "den Ausgang freihalten", "die Einsatzleitung informieren"]]
+      ],
+      [
+        ["A custody officer", "inconsistent identity details", "after an arrest", "The suspect gives two dates of birth.", "compares the documents", "informs the officer in charge", "inconsistent identity in custody", ["compare the documents", "verify the database record", "inform the officer in charge"]],
+        ["Un agente de custodia", "datos de identidad incoherentes", "después de una detención", "El sospechoso da dos fechas de nacimiento.", "compara los documentos", "informa al responsable", "identidad incoherente en custodia", ["comparar los documentos", "verificar la base de datos", "informar al responsable"]],
+        ["Ein Gewahrsamsbeamter", "widersprüchliche Identitätsangaben", "nach einer Festnahme", "Der Verdächtige nennt zwei Geburtsdaten.", "vergleicht die Dokumente", "informiert den Verantwortlichen", "widersprüchliche Identität im Gewahrsam", ["die Dokumente vergleichen", "den Datenbankeintrag prüfen", "den Verantwortlichen informieren"]]
+      ],
+      [
+        ["A shop owner", "a robbery captured on camera", "inside a small shop", "The video shows the getaway car plate.", "protects the video file", "notes the licence plate", "robbery captured by a shop camera", ["protect the video file", "note the licence plate", "send the details to investigators"]],
+        ["Un comerciante", "un robo grabado por una cámara", "dentro de una tienda pequeña", "El vídeo muestra la matrícula del coche de fuga.", "protege el archivo de vídeo", "anota la matrícula", "robo grabado por una cámara de tienda", ["proteger el archivo de vídeo", "anotar la matrícula", "enviar los datos a los investigadores"]],
+        ["Ein Ladenbesitzer", "einen Raub auf Video", "in einem kleinen Geschäft", "Das Video zeigt das Kennzeichen des Fluchtwagens.", "sichert die Videodatei", "notiert das Kennzeichen", "Raub auf einer Ladenkamera", ["die Videodatei sichern", "das Kennzeichen notieren", "die Angaben an Ermittler senden"]]
+      ],
+      [
+        ["A park visitor", "a dog bite", "near the playground", "The dog owner left before the patrol arrived.", "helps the injured person", "looks for the owner", "dog bite near a playground", ["help the injured person", "collect the dog's description", "look for the owner"]],
+        ["Un visitante del parque", "una mordedura de perro", "cerca del parque infantil", "El dueño del perro se marchó antes de llegar la patrulla.", "ayuda a la persona herida", "busca al dueño", "mordedura de perro cerca de un parque infantil", ["ayudar a la persona herida", "recoger la descripción del perro", "buscar al dueño"]],
+        ["Ein Parkbesucher", "einen Hundebiss", "nahe dem Spielplatz", "Der Hundehalter ging vor Ankunft der Streife weg.", "hilft der verletzten Person", "sucht den Halter", "Hundebiss nahe einem Spielplatz", ["der verletzten Person helfen", "die Beschreibung des Hundes aufnehmen", "den Halter suchen"]]
+      ],
+      [
+        ["A building manager", "water near an electrical panel", "in the basement", "The water is rising quickly.", "keeps residents away", "requests the utility company", "water near an electrical panel", ["keep residents away", "cut access to the basement", "request the utility company"]],
+        ["Un administrador del edificio", "agua junto a un cuadro eléctrico", "en el sótano", "El agua sube rápidamente.", "aleja a los residentes", "solicita a la compañía de servicios", "agua junto a un cuadro eléctrico", ["alejar a los residentes", "cerrar el acceso al sótano", "solicitar a la compañía de servicios"]],
+        ["Ein Gebäudemanager", "Wasser nahe einem Schaltschrank", "im Keller", "Das Wasser steigt schnell.", "hält Bewohner fern", "fordert den Versorger an", "Wasser nahe einem Schaltschrank", ["Bewohner fernhalten", "den Kellerzugang sperren", "den Versorger anfordern"]]
+      ],
+      [
+        ["A ticket inspector", "an aggressive passenger", "on a tram", "The passenger refuses to show a ticket.", "keeps a safe distance", "asks for police support", "aggressive passenger on a tram", ["keep a safe distance", "ask for police support", "take witness details"]],
+        ["Un revisor", "un pasajero agresivo", "en un tranvía", "El pasajero se niega a mostrar el billete.", "mantiene una distancia segura", "pide apoyo policial", "pasajero agresivo en un tranvía", ["mantener una distancia segura", "pedir apoyo policial", "tomar los datos de testigos"]],
+        ["Ein Kontrolleur", "einen aggressiven Fahrgast", "in einer Straßenbahn", "Der Fahrgast weigert sich, den Fahrschein zu zeigen.", "hält sicheren Abstand", "fordert polizeiliche Unterstützung an", "aggressiver Fahrgast in einer Straßenbahn", ["sicheren Abstand halten", "polizeiliche Unterstützung anfordern", "Zeugendaten aufnehmen"]]
+      ]
+    ];
+
     function q(category, subtype, text, correct, distractors, explanation) {
       return createQuestion("culture", category, subtype, text, correct, distractors, explanation);
     }
@@ -1356,16 +1651,22 @@
 
     function buildLanguageBank(language) {
       const data = languageData[language];
-      const grammar = data.contexts.flatMap((context) => data.grammarTemplates.map(([subtype, text, correct, distractors, explanation]) =>
+      const grammarContexts = [...data.contexts, ...languageExtensions[language].contexts];
+      const grammar = grammarContexts.flatMap((context) => data.grammarTemplates.map(([subtype, text, correct, distractors, explanation]) =>
         lq(language, "grammaire", subtype, text.replace("{context}", context), correct, distractors, explanation)
       ));
-      const vocabulary = data.vocabulary.map(([subtype, text, correct, distractors, explanation]) =>
-        lq(language, "vocabulaire", subtype, text, correct, distractors, explanation)
-      );
-      const comprehension = data.readings.flatMap((reading, index) => reading.questions.map(([text, correct, distractors, explanation], questionIndex) =>
+      const vocabulary = [
+        ...data.vocabulary.map(([subtype, text, correct, distractors, explanation]) =>
+          lq(language, "vocabulaire", subtype, text, correct, distractors, explanation)
+        ),
+        ...buildSupplementalVocabulary(language)
+      ];
+      const readings = [...data.readings, ...buildSupplementalReadings(language)];
+      const comprehension = readings.flatMap((reading, index) => reading.questions.map(([text, correct, distractors, explanation], questionIndex) =>
         lq(language, "comprehension", `Texte ${index + 1}.${questionIndex + 1}`, `${reading.text}\n\n${text}`, correct, distractors, explanation)
       ));
-      const ordering = data.ordering.flatMap(([scene, steps], index) => {
+      const orderingSequences = [...data.ordering, ...buildSupplementalOrdering(language)];
+      const ordering = orderingSequences.flatMap(([scene, steps], index) => {
         const correct = steps.join(" → ");
         const distractors = [
           [steps[1], steps[0], steps[2]].join(" → "),
@@ -1379,6 +1680,101 @@
       });
 
       return [...grammar, ...vocabulary, ...comprehension, ...ordering];
+    }
+
+    function buildSupplementalVocabulary(language) {
+      return securityVocabularyExtensions.map(([subtype, frenchTerm], index) => {
+        const correct = getVocabularyTranslation(index, language);
+        const distractors = buildVocabularyDistractors(index, language);
+        const languageName = languageLabels[language].toLowerCase();
+        return lq(
+          language,
+          "vocabulaire",
+          `${subtype} ${index + 1}`,
+          `Dans le vocabulaire sécurité, comment dit-on "${frenchTerm}" en ${languageName} ?`,
+          correct,
+          distractors,
+          `${correct} correspond à "${frenchTerm}" dans un contexte de sécurité.`
+        );
+      });
+    }
+
+    function getVocabularyTranslation(index, language) {
+      return securityVocabularyExtensions[index][vocabularyLanguageIndex[language]];
+    }
+
+    function buildVocabularyDistractors(index, language) {
+      return pickDistinctByOffset(securityVocabularyExtensions, index, [17, 43])
+        .map((entryIndex) => getVocabularyTranslation(entryIndex, language));
+    }
+
+    function buildSupplementalReadings(language) {
+      const labels = supplementalSituationLabels[language];
+      return operationalSituationExtensions.map((situation, index) => {
+        const data = getSituationData(situation, language);
+        return {
+          text: buildSituationText(data, language),
+          questions: [
+            [
+              labels.incidentQuestion,
+              data.incident,
+              buildSituationDistractors(index, language, 1),
+              "Le texte indique l'incident signalé par l'appelant."
+            ],
+            [
+              labels.detailQuestion,
+              data.detail,
+              buildSituationDistractors(index, language, 3),
+              "Ce détail est explicitement mentionné dans la situation."
+            ],
+            [
+              labels.actionQuestion,
+              data.firstAction,
+              buildSituationDistractors(index, language, 4),
+              "La première action respecte les priorités de sécurité."
+            ]
+          ]
+        };
+      });
+    }
+
+    function buildSupplementalOrdering(language) {
+      return operationalSituationExtensions.map((situation) => {
+        const data = getSituationData(situation, language);
+        return [data.scene, data.steps];
+      });
+    }
+
+    function getSituationData(situation, language) {
+      const [reporter, incident, place, detail, firstAction, secondAction, scene, steps] = situation[situationLanguageIndex[language]];
+      return { reporter, incident, place, detail, firstAction, secondAction, scene, steps };
+    }
+
+    function buildSituationText(data, language) {
+      if (language === "english") {
+        return `${data.reporter} reports ${data.incident} ${data.place}. ${data.detail} The patrol ${data.firstAction} and ${data.secondAction}.`;
+      }
+      if (language === "spanish") {
+        return `${data.reporter} comunica ${data.incident} ${data.place}. ${data.detail} La patrulla ${data.firstAction} y ${data.secondAction}.`;
+      }
+      return `${data.reporter} meldet ${data.incident} ${data.place}. ${data.detail} Die Streife ${data.firstAction} und ${data.secondAction}.`;
+    }
+
+    function buildSituationDistractors(index, language, fieldIndex) {
+      return pickDistinctByOffset(operationalSituationExtensions, index, [7, 13])
+        .map((entryIndex) => operationalSituationExtensions[entryIndex][situationLanguageIndex[language]][fieldIndex]);
+    }
+
+    function pickDistinctByOffset(items, startIndex, offsets) {
+      const picked = [];
+      offsets.forEach((offset) => {
+        let candidate = (startIndex + offset) % items.length;
+        while (picked.includes(candidate) || candidate === startIndex) {
+          candidate = (candidate + 1) % items.length;
+        }
+        picked.push(candidate);
+      });
+      return picked;
     }
 
     const languageBanks = buildAllLanguageBanks();
@@ -1842,10 +2238,10 @@
     };
 
     const expectedLanguageCounts = {
-      "langue-grammaire": 80,
-      "langue-vocabulaire": 60,
-      "langue-comprehension": 30,
-      "langue-ordre": 30
+      "langue-grammaire": 240,
+      "langue-vocabulaire": 180,
+      "langue-comprehension": 90,
+      "langue-ordre": 90
     };
 
     console.assert(cultureQuestionBank.length === 200, `Banque culture attendue : 200 questions, obtenu : ${cultureQuestionBank.length}`);
@@ -1856,13 +2252,27 @@
     });
 
     Object.entries(languageBanks).forEach(([language, bank]) => {
-      console.assert(bank.length === 200, `${languageLabels[language]} : 200 questions attendues, obtenu : ${bank.length}`);
+      console.assert(bank.length === 600, `${languageLabels[language]} : 600 questions attendues, obtenu : ${bank.length}`);
       console.assert(bank.every((question) => question.options.length === 3), `${languageLabels[language]} : toutes les questions doivent proposer exactement 3 choix.`);
+      const duplicatedTexts = findDuplicateQuestionTexts(bank);
+      console.assert(duplicatedTexts.length === 0, `${languageLabels[language]} : doublons détectés : ${duplicatedTexts.join(" | ")}`);
       Object.entries(expectedLanguageCounts).forEach(([category, expectedCount]) => {
         const actualCount = bank.filter((question) => question.category === category).length;
         console.assert(actualCount === expectedCount, `${languageLabels[language]} - ${category} : ${expectedCount} questions attendues, obtenu : ${actualCount}`);
       });
     });
+
+    function findDuplicateQuestionTexts(bank) {
+      const seen = new Set();
+      const duplicates = new Set();
+      bank.forEach((question) => {
+        if (seen.has(question.text)) {
+          duplicates.add(question.text);
+        }
+        seen.add(question.text);
+      });
+      return [...duplicates];
+    }
   </script>
 </body>
 </html>

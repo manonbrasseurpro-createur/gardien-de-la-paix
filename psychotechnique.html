@@ -443,6 +443,11 @@
       line-height: 1;
     }
 
+    .download-pdf-button {
+      width: fit-content;
+      margin: 0 auto;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -587,6 +592,7 @@
       <p class="hero__label" style="color: var(--navy);">Résultat final</p>
       <h2 id="results-title">Score final</h2>
       <div id="score-circle" class="score-circle">0/40</div>
+      <button id="download-pdf-button" class="primary-button download-pdf-button" type="button">📄 Télécharger ma fiche de révision (PDF)</button>
       <p id="encouragement"></p>
       <div id="category-results" class="feedback"></div>
       <p id="penalty-summary"></p>
@@ -599,8 +605,15 @@
   </main>
 
   <script src="spatial-bank.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
     const letters = ["A", "B", "C", "D"];
+    const cubeLabels = {
+      cubeCross: "Cube avec face bleue au centre",
+      cubeLine: "Cube avec bande bleue alignée",
+      cubeStair: "Cube avec faces en escalier",
+      cubePyramid: "Cube avec trois faces autour du sommet"
+    };
 
     const categories = {
       logic: {
@@ -713,6 +726,9 @@
     let intervalId = null;
     let nextButtonTimeoutId = null;
     let remainingSeconds = 30;
+    let questionResults = [];
+    let testStartedAt = null;
+    let lastCompletedAttempt = null;
 
     const homeView = document.getElementById("home-view");
     const quizView = document.getElementById("quiz-view");
@@ -734,6 +750,7 @@
     const encouragement = document.getElementById("encouragement");
     const categoryResults = document.getElementById("category-results");
     const penaltySummary = document.getElementById("penalty-summary");
+    const downloadPdfButton = document.getElementById("download-pdf-button");
 
     extendQuestionBank();
 
@@ -743,6 +760,7 @@
     document.getElementById("restart-quiz-button").addEventListener("click", startQuiz);
     document.getElementById("menu-button").addEventListener("click", showHome);
     document.getElementById("back-menu-button").addEventListener("click", showHome);
+    downloadPdfButton.addEventListener("click", generateRevisionPdf);
 
     function q(type, text, options, answer, explanation) {
       return { type, text, options, answer, explanation };
@@ -757,6 +775,9 @@
         scores[key] = { correct: 0, total: 10 };
         return scores;
       }, {});
+      questionResults = [];
+      testStartedAt = new Date();
+      lastCompletedAttempt = null;
       clearInterval(intervalId);
       homeView.classList.add("hidden");
       resultsView.classList.add("hidden");
@@ -900,7 +921,24 @@
       });
 
       const correctOption = question.options[question.answer];
-      const correctLabel = typeof correctOption === "string" ? correctOption : correctOption.label;
+      const correctLabel = getPlainOptionText(correctOption);
+      const selectedOption = selectedIndex === null ? null : question.options[selectedIndex];
+      const userAnswerLabel = selectedOption
+        ? getOptionAnswerLabel(selectedOption, selectedIndex)
+        : "Aucune réponse (temps écoulé)";
+      const correctAnswerLabel = getOptionAnswerLabel(correctOption, question.answer);
+      questionResults[currentQuestionIndex] = {
+        categoryKey: question.categoryKey,
+        categoryTitle: categories[question.categoryKey].title,
+        questionNumber: currentQuestionIndex + 1,
+        questionType: question.type,
+        questionText: question.text,
+        userAnswer: userAnswerLabel,
+        correctAnswer: correctAnswerLabel,
+        isCorrect,
+        timedOut,
+        explanation: question.explanation || ""
+      };
       const correctAnswerText = `${letters[question.answer]}. ${correctLabel}`;
       const status = isCorrect ? "✅ Bonne réponse !" : timedOut ? "❌ Temps écoulé !" : "❌ Mauvaise réponse !";
       const correction = isCorrect ? "" : `<br>La bonne réponse était : ${correctAnswerText}`;
@@ -940,6 +978,15 @@
       penaltySummary.textContent = numericTimeouts > 0
         ? `Questions numériques non répondues dans les 30 secondes : ${numericTimeouts}.`
         : "Aucune question numérique n'a dépassé les 30 secondes.";
+      lastCompletedAttempt = {
+        score,
+        total: currentQuestions.length,
+        numericTimeouts,
+        categoryScores: copyCategoryScores(categoryScores),
+        startedAt: testStartedAt || new Date(),
+        completedAt: new Date(),
+        results: questionResults.slice()
+      };
     }
 
     function getEncouragement(value) {
@@ -953,6 +1000,14 @@
         return "Résultat encourageant : reprenez les corrections par catégorie et recommencez.";
       }
       return "Entraînement à poursuivre : avancez question par question et repérez les méthodes utiles.";
+    }
+
+    function copyCategoryScores(scores) {
+      return categoryOrder.reduce((copy, key) => {
+        const result = scores[key] || { correct: 0, total: 10 };
+        copy[key] = { correct: result.correct, total: result.total };
+        return copy;
+      }, {});
     }
 
     function buildRandomTest() {
@@ -986,6 +1041,212 @@
         [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
       }
       return copy;
+    }
+
+    function getPlainOptionText(option) {
+      return typeof option === "string" ? option : option.label;
+    }
+
+    function getOptionAnswerLabel(option, index) {
+      return `${letters[index]}. ${getPlainOptionText(option)}`;
+    }
+
+    function generateRevisionPdf() {
+      const attempt = lastCompletedAttempt;
+      const jsPDFConstructor = window.jspdf && window.jspdf.jsPDF;
+      if (!attempt || !jsPDFConstructor) {
+        alert("La fiche PDF n'est pas encore disponible. Vérifiez votre connexion puis réessayez.");
+        return;
+      }
+
+      const doc = new jsPDFConstructor();
+      const navy = [26, 39, 68];
+      const muted = [79, 92, 119];
+      const red = [179, 38, 30];
+      const green = [30, 114, 59];
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 16;
+      const maxWidth = pageWidth - margin * 2;
+      let y = 18;
+
+      doc.setFillColor(...navy);
+      doc.roundedRect(margin, y - 7, 12, 12, 3, 3, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text("GP", margin + 2.6, y + 1);
+      doc.setTextColor(...navy);
+      doc.setFontSize(15);
+      doc.text("Fiche de révision - Entraînement Gardien de la Paix", margin + 17, y);
+      y += 9;
+      doc.setDrawColor(...navy);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 10;
+
+      y = addPdfText(doc, `Date et heure du test : ${formatDateTime(attempt.startedAt)}`, margin, y, maxWidth, {
+        fontSize: 11,
+        color: muted
+      });
+      y = addPdfText(doc, `Score obtenu : ${attempt.score}/${attempt.total}`, margin, y + 2, maxWidth, {
+        fontSize: 13,
+        style: "bold",
+        color: navy
+      });
+      y = addPdfText(doc, "Détail par catégorie :", margin, y + 4, maxWidth, {
+        fontSize: 12,
+        style: "bold",
+        color: navy
+      });
+      categoryOrder.forEach((key) => {
+        const result = attempt.categoryScores[key] || { correct: 0, total: 10 };
+        y = addPdfText(doc, `• ${categories[key].title} : ${result.correct}/${result.total}`, margin + 4, y + 1, maxWidth - 4, {
+          fontSize: 11,
+          color: muted
+        });
+      });
+      y = addPdfText(doc, `Questions numériques hors délai : ${attempt.numericTimeouts}`, margin + 4, y + 1, maxWidth - 4, {
+        fontSize: 11,
+        color: muted
+      });
+      y += 4;
+
+      const wrongAnswersByCategory = groupWrongAnswersByCategory(attempt.results);
+      if (wrongAnswersByCategory.length === 0) {
+        y = ensurePdfSpace(doc, y, 18, margin);
+        doc.setFillColor(232, 247, 237);
+        doc.roundedRect(margin, y, maxWidth, 15, 3, 3, "F");
+        y = addPdfText(doc, "Félicitations, aucune erreur !", margin + 5, y + 10, maxWidth - 10, {
+          fontSize: 13,
+          style: "bold",
+          color: green
+        });
+      } else {
+        y = addPdfText(doc, "Questions à revoir", margin, y + 4, maxWidth, {
+          fontSize: 14,
+          style: "bold",
+          color: navy
+        });
+
+        let wrongQuestionNumber = 1;
+        wrongAnswersByCategory.forEach(({ title, answers }) => {
+          y = ensurePdfSpace(doc, y + 4, 16, margin);
+          doc.setFillColor(245, 247, 251);
+          doc.setDrawColor(216, 222, 234);
+          doc.roundedRect(margin, y, maxWidth, 11, 2, 2, "FD");
+          y = addPdfText(doc, title, margin + 4, y + 7.5, maxWidth - 8, {
+            fontSize: 12,
+            style: "bold",
+            color: navy
+          });
+          y += 3;
+
+          answers.forEach((answer) => {
+            y = ensurePdfSpace(doc, y, 42, margin);
+            y = addPdfText(
+              doc,
+              `${wrongQuestionNumber}. Question ${answer.questionNumber} - ${answer.questionType}`,
+              margin,
+              y + 2,
+              maxWidth,
+              { fontSize: 11, style: "bold", color: navy }
+            );
+            y = addPdfText(doc, answer.questionText, margin + 4, y + 1, maxWidth - 4, {
+              fontSize: 11,
+              color: [33, 39, 55]
+            });
+            y = addPdfText(doc, `❌ Réponse donnée : ${answer.userAnswer}`, margin + 4, y + 1, maxWidth - 4, {
+              fontSize: 10.5,
+              color: red
+            });
+            y = addPdfText(doc, `✅ Bonne réponse : ${answer.correctAnswer}`, margin + 4, y + 1, maxWidth - 4, {
+              fontSize: 10.5,
+              color: green
+            });
+            if (answer.explanation) {
+              y = addPdfText(doc, `Explication : ${answer.explanation}`, margin + 4, y + 1, maxWidth - 4, {
+                fontSize: 10.5,
+                color: muted
+              });
+            }
+            doc.setDrawColor(216, 222, 234);
+            doc.line(margin, y + 2, pageWidth - margin, y + 2);
+            y += 7;
+            wrongQuestionNumber += 1;
+          });
+        });
+      }
+
+      addPdfFooters(doc, margin, pageWidth, pageHeight);
+      doc.save(`fiche-revision-psychotechnique-${formatFileDate(attempt.startedAt)}.pdf`);
+    }
+
+    function groupWrongAnswersByCategory(results) {
+      const grouped = [];
+      results
+        .filter((result) => result && !result.isCorrect)
+        .forEach((result) => {
+          let group = grouped.find((item) => item.key === result.categoryKey);
+          if (!group) {
+            group = { key: result.categoryKey, title: result.categoryTitle, answers: [] };
+            grouped.push(group);
+          }
+          group.answers.push(result);
+        });
+      return grouped.sort((first, second) => categoryOrder.indexOf(first.key) - categoryOrder.indexOf(second.key));
+    }
+
+    function addPdfText(doc, text, x, y, maxWidth, options = {}) {
+      const lineHeight = options.lineHeight || 5.5;
+      let currentY = y;
+      doc.setFont("helvetica", options.style || "normal");
+      doc.setFontSize(options.fontSize || 11);
+      doc.setTextColor(...(options.color || [33, 39, 55]));
+      const lines = doc.splitTextToSize(String(text), maxWidth);
+      lines.forEach((line) => {
+        currentY = ensurePdfSpace(doc, currentY, lineHeight, 16);
+        doc.text(line, x, currentY);
+        currentY += lineHeight;
+      });
+      return currentY;
+    }
+
+    function ensurePdfSpace(doc, y, requiredHeight, margin) {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      if (y + requiredHeight <= pageHeight - margin) {
+        return y;
+      }
+      doc.addPage();
+      return margin;
+    }
+
+    function addPdfFooters(doc, margin, pageWidth, pageHeight) {
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        doc.setDrawColor(216, 222, 234);
+        doc.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(79, 92, 119);
+        doc.text(`Page ${page}/${pageCount}`, pageWidth - margin, pageHeight - 7, { align: "right" });
+      }
+    }
+
+    function formatDateTime(value) {
+      return new Intl.DateTimeFormat("fr-FR", {
+        dateStyle: "long",
+        timeStyle: "short"
+      }).format(value);
+    }
+
+    function formatFileDate(value) {
+      const date = value instanceof Date ? value : new Date(value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
     }
 
     function spatialRotation(type, text, shape, baseAngle, answerAngle, optionAngles, answer) {
@@ -1117,13 +1378,6 @@
         </svg>
       `;
     }
-
-    const cubeLabels = {
-      cubeCross: "Cube avec face bleue au centre",
-      cubeLine: "Cube avec bande bleue alignée",
-      cubeStair: "Cube avec faces en escalier",
-      cubePyramid: "Cube avec trois faces autour du sommet"
-    };
 
     function cubeSvg(kind) {
       const labels = {

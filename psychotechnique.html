@@ -44,6 +44,7 @@
       border-radius: 18px;
       box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
       cursor: pointer;
+      font: inherit;
       text-align: left;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
     }
@@ -885,7 +886,7 @@
           svg: shapeSvg(shape, baseAngle)
         },
         options: optionAngles.map((angle) => ({
-          label: `${angle}°`,
+          label: "Figure proposée",
           svg: shapeSvg(shape, angle)
         })),
         explanation: `La rotation attendue place la figure à ${answerAngle}°.`
@@ -902,7 +903,7 @@
           svg: shapeSvg(shape, 0)
         },
         options: optionTransforms.map((transforms) => ({
-          label: transformLabel(transforms),
+          label: "Figure proposée",
           svg: shapeSvg(shape, 0, transforms)
         })),
         explanation: axis === "h"
@@ -921,21 +922,11 @@
           svg: netSvg(net)
         },
         options: cubeOptions.map((cube) => ({
-          label: cubeLabels[cube],
+          label: "Cube proposé",
           svg: cubeSvg(cube)
         })),
         explanation: "Le bon cube respecte la disposition relative des faces colorées dans le patron."
       };
-    }
-
-    function transformLabel(transforms) {
-      if (!transforms.length) {
-        return "Figure inchangée";
-      }
-      if (transforms.includes("h") && transforms.includes("v")) {
-        return "Symétrie horizontale et verticale";
-      }
-      return transforms.includes("h") ? "Symétrie horizontale" : "Symétrie verticale";
     }
 
     function shapeSvg(shape, angle = 0, transforms = []) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tests psychotechniques - Gardien de la Paix</title>
+  <title>Test de Personnalité et Tests Psychotechniques</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .psychotechnique-page {
@@ -25,9 +25,36 @@
       padding: 30px;
     }
 
+    .exam-info-panel {
+      display: grid;
+      gap: 14px;
+      margin: 24px 0 30px;
+      padding: 26px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 20px;
+      box-shadow: 0 16px 36px rgba(26, 39, 68, 0.22);
+    }
+
+    .exam-info-panel h3 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      line-height: 1.25;
+    }
+
+    .exam-info-panel ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .exam-info-panel li + li {
+      margin-top: 8px;
+    }
+
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 18px;
       margin-top: 24px;
     }
@@ -405,9 +432,9 @@
       min-height: 68px;
       max-width: 100%;
       padding: 20px 50px;
-      color: var(--navy);
-      background: #f0b429;
-      border: 1px solid #f0b429;
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
       border-radius: 50px;
       box-shadow: 0 14px 30px rgba(26, 39, 68, 0.2);
       font-size: 1.4rem;
@@ -480,24 +507,46 @@
   <header class="hero">
     <div class="hero__content">
       <p class="hero__label">Concours Gardien de la Paix</p>
-      <h1>Tests psychotechniques</h1>
-      <p class="hero__subtitle">Logique, spatial, numérique et verbal</p>
+      <h1>Test de Personnalité et Tests Psychotechniques</h1>
+      <p class="hero__subtitle">Personnalité, logique, spatial, numérique et verbal</p>
     </div>
   </header>
 
   <main class="container psychotechnique-page">
     <section id="home-view" class="module-shell" aria-labelledby="psychotechnique-title">
       <div class="intro">
-        <h2 id="psychotechnique-title">Test psychotechnique aléatoire</h2>
+        <h2 id="psychotechnique-title">Test de Personnalité et Tests Psychotechniques</h2>
         <p>
-          La banque contient 400 questions : 100 en logique, 100 en spatial,
-          100 en numérique et 100 en verbal. Chaque nouveau test pioche 10
-          questions par catégorie, mélange les 40 questions et mélange aussi
-          l'ordre des 4 réponses.
+          Entraînez-vous avec un parcours complet : une simulation du test de
+          personnalité, puis 40 questions cognitives tirées des quatre familles
+          psychotechniques.
         </p>
       </div>
 
-      <div class="category-grid" aria-label="Catégories de tests psychotechniques">
+      <aside class="exam-info-panel" aria-labelledby="exam-info-title">
+        <h3 id="exam-info-title">📋 Ce qu'il faut savoir avant de commencer</h3>
+        <ul>
+          <li>L'épreuve intervient pendant l'admissibilité et s'inscrit dans un format global de 2 heures.</li>
+          <li>Elle associe deux évaluations complémentaires : des tests cognitifs chronométrés et un test de personnalité sans limite de temps.</li>
+          <li>Aucune note chiffrée n'est attribuée à cette partie du concours.</li>
+          <li>Les résultats sont communiqués au jury lors de l'entretien d'admission et pèsent dans son appréciation.</li>
+          <li>Le test de personnalité aide le jury à mesurer l'adéquation psychologique du candidat avec les réalités du métier de policier.</li>
+          <li>Conseil : répondez avec sincérité et restez cohérent, en particulier dans la partie personnalité.</li>
+        </ul>
+      </aside>
+
+      <div class="category-grid" aria-label="Épreuves du test de personnalité et des tests psychotechniques">
+        <article class="category-card">
+          <span class="category-card__number" aria-hidden="true">🧬</span>
+          <h3>Test de Personnalité</h3>
+          <p>Simulation non chronométrée pour analyser vos tendances comportementales.</p>
+          <ul>
+            <li>Épreuve sans note chiffrée</li>
+            <li>Réponses à formuler avec sincérité</li>
+            <li>Support d'échange pour l'entretien</li>
+          </ul>
+        </article>
+
         <article class="category-card">
           <span class="category-card__number" aria-hidden="true">🧠</span>
           <h3>Raisonnement logique et abstrait</h3>
@@ -544,7 +593,7 @@
       </div>
 
       <div class="actions start-test-actions">
-        <button id="start-test-button" class="primary-button" type="button">Démarrer un test de 40 questions</button>
+        <button id="start-test-button" class="primary-button" type="button">🚀 Lancer le test complet (personnalité + 40 questions cognitives)</button>
         <a class="secondary-button" href="index.html">Retour vers index.html</a>
       </div>
     </section>
@@ -554,7 +603,7 @@
         <div class="quiz-title-row">
           <div>
             <p class="hero__label" id="category-label">Test mixte</p>
-            <h2 id="quiz-title">Tests psychotechniques</h2>
+            <h2 id="quiz-title">Test de Personnalité et Tests Psychotechniques</h2>
           </div>
           <div id="timer" class="timer-badge hidden">Temps : 30s</div>
         </div>
@@ -783,7 +832,7 @@
       resultsView.classList.add("hidden");
       quizView.classList.remove("hidden");
       categoryLabel.textContent = "10 questions par catégorie";
-      quizTitle.textContent = "Test psychotechnique mixte";
+      quizTitle.textContent = "Test de Personnalité et Tests Psychotechniques";
       renderQuestion();
     }
 

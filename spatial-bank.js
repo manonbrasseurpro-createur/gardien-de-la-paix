@@ -114,7 +114,7 @@
         id: `symmetry-${index + 1}`,
         type: "Symétries",
         spatialType: "symmetries",
-        text: `Quelle option est le symétrique de la figure selon l'axe ${axis.label} ?`,
+        text: `Quelle option est le symétrique de la ${shapeLabel(shape)} orientée à ${baseAngle}° selon l'axe ${axis.label} ?`,
         answer: 0,
         visual: {
           label: `Figure de départ avec axe ${axis.label}`,
@@ -163,7 +163,7 @@
         id: `folding-${index + 1}`,
         type: "Pliages de papier",
         spatialType: "folding",
-        text: `La feuille est pliée (${pattern.label}) puis découpée. Quel résultat obtient-on une fois dépliée ?`,
+        text: `La feuille du schéma ${index + 1} est pliée (${pattern.label}) puis découpée. Quel résultat obtient-on une fois dépliée ?`,
         answer: 0,
         visual: {
           label: "Zone visible de la feuille pliée avec découpes",
@@ -225,7 +225,7 @@
         id: `cube-${index + 1}`,
         type: "Patrons de cubes",
         spatialType: "cubes",
-        text: `Quel cube correspond au patron de cube ${net.name} ?`,
+        text: `Quel cube correspond au patron de cube ${net.name}, variante ${index + 1} ?`,
         answer: 0,
         visual: {
           label: "Patron déplié",
@@ -271,7 +271,7 @@
         id: `sequence-${index + 1}`,
         type: "Suites de figures",
         spatialType: "sequences",
-        text: "Quelle figure vient ensuite dans la séquence ?",
+        text: `Quelle figure vient ensuite dans la séquence ${shapeLabel(shape)} n°${index + 1} ?`,
         answer: 0,
         visual: {
           label: "Suite de figures",

@@ -1148,7 +1148,7 @@
       }
 
       for (let index = 0; index < 15; index += 1) {
-        const start = index % 26;
+        const start = 4 + index;
         const step = 2 + (index % 4);
         const sequence = [0, 1, 2, 3].map((offset) => letterFromIndex(start + offset * step));
         const correct = letterFromIndex(start + 4 * step);
@@ -1277,7 +1277,7 @@
       for (let index = 0; index < 15; index += 1) {
         const mode = index % 3;
         if (mode === 0) {
-          const hours = 2 + (index % 5);
+          const hours = 4 + Math.floor(index / 3);
           const correct = hours * 60;
           questions.push(q(
             "Conversions",
@@ -1297,7 +1297,7 @@
             `1 km vaut 1 000 m, donc ${km} km = ${correct} m.`
           ));
         } else {
-          const grams = 250 * (3 + (index % 6));
+          const grams = 250 * (4 + Math.floor(index / 3));
           const correct = grams / 1000;
           questions.push(q(
             "Conversions",
@@ -1364,7 +1364,7 @@
         ["échec", "réussite", "faute", "retard", "refus"],
         ["public", "privé", "commun", "visible", "collectif"],
         ["absent", "présent", "lointain", "discret", "retiré"],
-        ["clair", "obscur", "net", "simple", "lisible"],
+        ["opaque", "transparent", "sombre", "épais", "fermé"],
         ["rapide", "lent", "vif", "pressé", "actif"],
         ["prudent", "imprudent", "attentif", "mesuré", "vigilant"],
         ["moderne", "ancien", "neuf", "actuel", "récent"],

@@ -240,7 +240,7 @@
       cursor: pointer;
       font: inherit;
       text-align: left;
-      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, opacity 160ms ease, transform 160ms ease;
     }
 
     .option-button:hover:not(:disabled) {
@@ -252,16 +252,70 @@
       cursor: default;
     }
 
+    .option-button.is-correct,
+    .option-button.is-wrong {
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      color: var(--white);
+      animation: answer-pop 320ms ease;
+    }
+
+    .option-button.is-correct::before,
+    .option-button.is-wrong::before {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
     .option-button.is-correct {
-      color: #174525;
-      background: #e8f7ed;
-      border-color: #2c8a45;
+      background: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .option-button.is-correct::before {
+      content: "✓";
     }
 
     .option-button.is-wrong {
-      color: #6f1d1d;
-      background: #fde8e8;
-      border-color: #c73838;
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .option-button.is-wrong::before {
+      content: "✗";
+    }
+
+    .option-button.is-inactive {
+      color: #64748b;
+      background: #e5e7eb;
+      border-color: #cbd5e1;
+      opacity: 0.72;
+    }
+
+    .option-button.is-inactive svg {
+      opacity: 0.62;
+      filter: grayscale(1);
+    }
+
+    @keyframes answer-pop {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.035);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
 
     .option-label {
@@ -294,6 +348,12 @@
 
     .feedback strong {
       color: var(--navy);
+    }
+
+    .feedback__status {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
     }
 
     .primary-button,
@@ -651,6 +711,7 @@
     let numericTimeouts = 0;
     let answered = false;
     let intervalId = null;
+    let nextButtonTimeoutId = null;
     let remainingSeconds = 30;
 
     const homeView = document.getElementById("home-view");
@@ -707,6 +768,7 @@
 
     function showHome() {
       clearInterval(intervalId);
+      clearTimeout(nextButtonTimeoutId);
       quizView.classList.add("hidden");
       resultsView.classList.add("hidden");
       homeView.classList.remove("hidden");
@@ -715,8 +777,10 @@
     function renderQuestion() {
       const question = currentQuestions[currentQuestionIndex];
       answered = false;
+      clearTimeout(nextButtonTimeoutId);
       feedback.innerHTML = "";
       nextButton.disabled = true;
+      nextButton.classList.add("hidden");
       nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
       timer.classList.remove("timer-badge--danger");
 
@@ -823,27 +887,32 @@
 
       optionsContainer.querySelectorAll(".option-button").forEach((button) => {
         const index = Number(button.dataset.index);
+        const isAnswer = index === question.answer;
+        const isSelected = index === selectedIndex;
         button.disabled = true;
-        if (index === question.answer) {
+        if (isAnswer) {
           button.classList.add("is-correct");
-        } else if (index === selectedIndex) {
+        } else if (isSelected) {
           button.classList.add("is-wrong");
+        } else {
+          button.classList.add("is-inactive");
         }
       });
 
       const correctOption = question.options[question.answer];
       const correctLabel = typeof correctOption === "string" ? correctOption : correctOption.label;
-      const heading = timedOut
-        ? "Temps écoulé."
-        : isCorrect
-          ? "Bonne réponse."
-          : "Réponse incorrecte.";
+      const correctAnswerText = `${letters[question.answer]}. ${correctLabel}`;
+      const status = isCorrect ? "✅ Bonne réponse !" : timedOut ? "❌ Temps écoulé !" : "❌ Mauvaise réponse !";
+      const correction = isCorrect ? "" : `<br>La bonne réponse était : ${correctAnswerText}`;
       feedback.innerHTML = `
-        <strong>${heading}</strong><br>
-        Bonne réponse : ${letters[question.answer]}. ${correctLabel}<br>
+        <strong class="feedback__status">${status}</strong>
+        ${correction}<br>
         ${question.explanation}
       `;
-      nextButton.disabled = false;
+      nextButtonTimeoutId = setTimeout(() => {
+        nextButton.classList.remove("hidden");
+        nextButton.disabled = false;
+      }, 1000);
     }
 
     function nextQuestion() {

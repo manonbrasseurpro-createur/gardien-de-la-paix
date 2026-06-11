@@ -61,10 +61,12 @@
 
     .category-card {
       display: flex;
-      min-height: 280px;
+      min-height: 150px;
       padding: 24px;
       flex-direction: column;
       gap: 14px;
+      align-items: center;
+      justify-content: center;
       color: var(--text);
       background: var(--white);
       border: 1px solid var(--border);
@@ -72,7 +74,7 @@
       box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
       cursor: default;
       font: inherit;
-      text-align: left;
+      text-align: center;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
     }
 
@@ -516,85 +518,32 @@
     <section id="home-view" class="module-shell" aria-labelledby="psychotechnique-title">
       <div class="intro">
         <h2 id="psychotechnique-title">Test de Personnalité et Tests Psychotechniques</h2>
-        <p>
-          Entraînez-vous avec un parcours complet : une simulation du test de
-          personnalité, puis 40 questions cognitives tirées des quatre familles
-          psychotechniques.
-        </p>
       </div>
-
-      <aside class="exam-info-panel" aria-labelledby="exam-info-title">
-        <h3 id="exam-info-title">📋 Ce qu'il faut savoir avant de commencer</h3>
-        <ul>
-          <li>L'épreuve intervient pendant l'admissibilité et s'inscrit dans un format global de 2 heures.</li>
-          <li>Elle associe deux évaluations complémentaires : des tests cognitifs chronométrés et un test de personnalité sans limite de temps.</li>
-          <li>Aucune note chiffrée n'est attribuée à cette partie du concours.</li>
-          <li>Les résultats sont communiqués au jury lors de l'entretien d'admission et pèsent dans son appréciation.</li>
-          <li>Le test de personnalité aide le jury à mesurer l'adéquation psychologique du candidat avec les réalités du métier de policier.</li>
-          <li>Conseil : répondez avec sincérité et restez cohérent, en particulier dans la partie personnalité.</li>
-        </ul>
-      </aside>
 
       <div class="category-grid" aria-label="Épreuves du test de personnalité et des tests psychotechniques">
         <article class="category-card">
-          <span class="category-card__number" aria-hidden="true">🧬</span>
           <h3>Test de Personnalité</h3>
-          <p>Simulation non chronométrée pour analyser vos tendances comportementales.</p>
-          <ul>
-            <li>Épreuve sans note chiffrée</li>
-            <li>Réponses à formuler avec sincérité</li>
-            <li>Support d'échange pour l'entretien</li>
-          </ul>
         </article>
 
         <article class="category-card">
-          <span class="category-card__number" aria-hidden="true">🧠</span>
           <h3>Raisonnement logique et abstrait</h3>
-          <p>Séries de chiffres, séries de lettres et analogies logiques.</p>
-          <ul>
-            <li>100 questions en banque</li>
-            <li>10 questions tirées par test</li>
-            <li>4 choix par question</li>
-          </ul>
         </article>
 
         <article class="category-card">
-          <span class="category-card__number" aria-hidden="true">📐</span>
           <h3>Raisonnement spatial</h3>
-          <p>Rotations, symétries, pliages, cubes et suites en illustrations SVG.</p>
-          <ul>
-            <li>100 questions visuelles</li>
-            <li>10 questions tirées par test</li>
-            <li>Figures et options dessinées</li>
-          </ul>
         </article>
 
         <article class="category-card">
-          <span class="category-card__number" aria-hidden="true">🔢</span>
           <h3>Tests numériques</h3>
-          <p>Calcul mental, pourcentages et problèmes arithmétiques simples.</p>
-          <ul>
-            <li>100 questions en banque</li>
-            <li>10 questions tirées par test</li>
-            <li>30 secondes par question</li>
-          </ul>
         </article>
 
         <article class="category-card">
-          <span class="category-card__number" aria-hidden="true">📖</span>
           <h3>Logique verbale et compréhension</h3>
-          <p>Intrus, analogies, proverbes, synonymes et antonymes.</p>
-          <ul>
-            <li>100 questions en banque</li>
-            <li>10 questions tirées par test</li>
-            <li>4 choix par question</li>
-          </ul>
         </article>
       </div>
 
       <div class="actions start-test-actions">
-        <button id="start-test-button" class="primary-button" type="button">🚀 Lancer le test complet (personnalité + 40 questions cognitives)</button>
-        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        <button id="start-test-button" class="primary-button" type="button">Lancer le test</button>
       </div>
     </section>
 
@@ -610,8 +559,8 @@
 
         <div class="progress-wrap" aria-label="Progression">
           <div class="quiz-meta">
-            <strong id="progress-text">Question 1/40</strong>
-            <span id="score-text">Score : 0/40</span>
+            <strong id="progress-text">Question en cours</strong>
+            <span id="score-text">Score : 0</span>
           </div>
           <div class="progress-track" aria-hidden="true">
             <div id="progress-bar" class="progress-bar"></div>
@@ -640,7 +589,7 @@
     <section id="results-view" class="results-panel hidden" aria-live="polite">
       <p class="hero__label" style="color: var(--navy);">Résultat final</p>
       <h2 id="results-title">Score final</h2>
-      <div id="score-circle" class="score-circle">0/40</div>
+      <div id="score-circle" class="score-circle">0</div>
       <button id="download-pdf-button" class="primary-button download-pdf-button" type="button">📄 Télécharger ma fiche de révision (PDF)</button>
       <p id="encouragement"></p>
       <div id="category-results" class="feedback"></div>
@@ -831,7 +780,7 @@
       homeView.classList.add("hidden");
       resultsView.classList.add("hidden");
       quizView.classList.remove("hidden");
-      categoryLabel.textContent = "10 questions par catégorie";
+      categoryLabel.textContent = "Test mixte";
       quizTitle.textContent = "Test de Personnalité et Tests Psychotechniques";
       renderQuestion();
     }
@@ -854,8 +803,8 @@
       nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
       timer.classList.remove("timer-badge--danger");
 
-      progressText.textContent = `Question ${currentQuestionIndex + 1}/${currentQuestions.length}`;
-      scoreText.textContent = `Score : ${score}/40`;
+      progressText.textContent = "Question en cours";
+      scoreText.textContent = `Score : ${score}`;
       progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
       questionType.textContent = `${categoryBadges[question.categoryKey]} | ${question.type}`;
       questionText.textContent = question.text;
@@ -953,7 +902,7 @@
       answered = true;
       clearInterval(intervalId);
       progressBar.style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
-      scoreText.textContent = `Score : ${score}/40`;
+      scoreText.textContent = `Score : ${score}`;
 
       optionsContainer.querySelectorAll(".option-button").forEach((button) => {
         const index = Number(button.dataset.index);
@@ -1018,11 +967,11 @@
       resultsView.classList.remove("hidden");
       timer.classList.add("hidden");
       resultsTitle.textContent = "Score final";
-      scoreCircle.textContent = `${score}/40`;
+      scoreCircle.textContent = `${score}`;
       encouragement.textContent = getEncouragement(score);
       categoryResults.innerHTML = categoryOrder.map((key) => {
         const result = categoryScores[key];
-        return `<strong>${categoryBadges[key]}</strong> : ${result.correct}/${result.total}`;
+        return `<strong>${categoryBadges[key]}</strong> : ${result.correct}`;
       }).join(" | ");
       penaltySummary.textContent = numericTimeouts > 0
         ? `Questions numériques non répondues dans les 30 secondes : ${numericTimeouts}.`
@@ -1138,7 +1087,7 @@
         fontSize: 11,
         color: muted
       });
-      y = addPdfText(doc, `Score obtenu : ${attempt.score}/${attempt.total}`, margin, y + 2, maxWidth, {
+      y = addPdfText(doc, `Score obtenu : ${attempt.score}`, margin, y + 2, maxWidth, {
         fontSize: 13,
         style: "bold",
         color: navy
@@ -1150,7 +1099,7 @@
       });
       categoryOrder.forEach((key) => {
         const result = attempt.categoryScores[key] || { correct: 0, total: 10 };
-        y = addPdfText(doc, `• ${categories[key].title} : ${result.correct}/${result.total}`, margin + 4, y + 1, maxWidth - 4, {
+        y = addPdfText(doc, `• ${categories[key].title} : ${result.correct}`, margin + 4, y + 1, maxWidth - 4, {
           fontSize: 11,
           color: muted
         });

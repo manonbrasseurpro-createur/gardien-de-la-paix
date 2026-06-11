@@ -396,60 +396,63 @@
   <main class="container psychotechnique-page">
     <section id="home-view" class="module-shell" aria-labelledby="psychotechnique-title">
       <div class="intro">
-        <h2 id="psychotechnique-title">Choisissez une catégorie</h2>
+        <h2 id="psychotechnique-title">Test psychotechnique aléatoire</h2>
         <p>
-          Chaque entraînement contient 20 questions en QCM avec correction immédiate.
-          Les tests numériques imposent 30 secondes par question.
+          La banque contient 400 questions : 100 en logique, 100 en spatial,
+          100 en numérique et 100 en verbal. Chaque nouveau test pioche 10
+          questions par catégorie, mélange les 40 questions et mélange aussi
+          l'ordre des 4 réponses.
         </p>
       </div>
 
       <div class="category-grid" aria-label="Catégories de tests psychotechniques">
-        <button class="category-card" type="button" data-category="logic">
-          <span class="category-card__number">1</span>
+        <article class="category-card">
+          <span class="category-card__number" aria-hidden="true">🧠</span>
           <h3>Raisonnement logique et abstrait</h3>
           <p>Séries de chiffres, séries de lettres et analogies logiques.</p>
           <ul>
-            <li>20 questions</li>
+            <li>100 questions en banque</li>
+            <li>10 questions tirées par test</li>
             <li>4 choix par question</li>
-            <li>Chronomètre visible</li>
           </ul>
-        </button>
+        </article>
 
-        <button class="category-card" type="button" data-category="spatial">
-          <span class="category-card__number">2</span>
+        <article class="category-card">
+          <span class="category-card__number" aria-hidden="true">📐</span>
           <h3>Raisonnement spatial</h3>
           <p>Rotations, symétries et patrons de cubes en illustrations SVG.</p>
           <ul>
-            <li>20 questions visuelles</li>
+            <li>100 questions visuelles</li>
+            <li>10 questions tirées par test</li>
             <li>Figures et options dessinées</li>
-            <li>Correction détaillée</li>
           </ul>
-        </button>
+        </article>
 
-        <button class="category-card" type="button" data-category="numeric">
-          <span class="category-card__number">3</span>
+        <article class="category-card">
+          <span class="category-card__number" aria-hidden="true">🔢</span>
           <h3>Tests numériques</h3>
           <p>Calcul mental, pourcentages et problèmes arithmétiques simples.</p>
           <ul>
-            <li>20 questions</li>
+            <li>100 questions en banque</li>
+            <li>10 questions tirées par test</li>
             <li>30 secondes par question</li>
-            <li>Pénalité en cas de dépassement</li>
           </ul>
-        </button>
+        </article>
 
-        <button class="category-card" type="button" data-category="verbal">
-          <span class="category-card__number">4</span>
+        <article class="category-card">
+          <span class="category-card__number" aria-hidden="true">📖</span>
           <h3>Logique verbale et compréhension</h3>
           <p>Intrus, analogies, proverbes, synonymes et antonymes.</p>
           <ul>
-            <li>20 questions</li>
+            <li>100 questions en banque</li>
+            <li>10 questions tirées par test</li>
             <li>4 choix par question</li>
-            <li>Explication après réponse</li>
           </ul>
-        </button>
+        </article>
       </div>
 
       <div class="actions" style="margin-top: 24px;">
+        <button id="start-test-button" class="primary-button" type="button">Démarrer un test de 40 questions</button>
         <a class="secondary-button" href="index.html">Retour vers index.html</a>
       </div>
     </section>
@@ -458,16 +461,16 @@
       <div class="quiz-panel__header">
         <div class="quiz-title-row">
           <div>
-            <p class="hero__label" id="category-label">Catégorie</p>
-            <h2 id="quiz-title">Titre du test</h2>
+            <p class="hero__label" id="category-label">Test mixte</p>
+            <h2 id="quiz-title">Tests psychotechniques</h2>
           </div>
-          <div id="timer" class="timer-badge">00:00</div>
+          <div id="timer" class="timer-badge hidden">Temps : 30s</div>
         </div>
 
         <div class="progress-wrap" aria-label="Progression">
           <div class="quiz-meta">
-            <strong id="progress-text">Question 1/20</strong>
-            <span id="score-text">Score : 0</span>
+            <strong id="progress-text">Question 1/40</strong>
+            <span id="score-text">Score : 0/40</span>
           </div>
           <div class="progress-track" aria-hidden="true">
             <div id="progress-bar" class="progress-bar"></div>
@@ -486,8 +489,8 @@
 
         <div class="actions">
           <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
-          <button id="restart-quiz-button" class="secondary-button" type="button">Recommencer</button>
-          <button id="menu-button" class="secondary-button" type="button">Menu des catégories</button>
+          <button id="restart-quiz-button" class="secondary-button" type="button">Nouveau test</button>
+          <button id="menu-button" class="secondary-button" type="button">Retour accueil du test</button>
           <a class="secondary-button" href="index.html">Retour vers index.html</a>
         </div>
       </div>
@@ -496,12 +499,13 @@
     <section id="results-view" class="results-panel hidden" aria-live="polite">
       <p class="hero__label" style="color: var(--navy);">Résultat final</p>
       <h2 id="results-title">Score final</h2>
-      <div id="score-circle" class="score-circle">0/20</div>
+      <div id="score-circle" class="score-circle">0/40</div>
       <p id="encouragement"></p>
+      <div id="category-results" class="feedback"></div>
       <p id="penalty-summary"></p>
       <div class="actions">
-        <button id="restart-button" class="primary-button" type="button">Recommencer</button>
-        <button id="back-menu-button" class="secondary-button" type="button">Menu des catégories</button>
+        <button id="restart-button" class="primary-button" type="button">Nouveau test</button>
+        <button id="back-menu-button" class="secondary-button" type="button">Retour accueil du test</button>
         <a class="secondary-button" href="index.html">Retour vers index.html</a>
       </div>
     </section>
@@ -625,13 +629,21 @@
       }
     };
 
-    let currentCategoryKey = null;
+    const categoryOrder = ["logic", "spatial", "numeric", "verbal"];
+    const categoryBadges = {
+      logic: "🧠 Logique",
+      spatial: "📐 Spatial",
+      numeric: "🔢 Numérique",
+      verbal: "📖 Verbal"
+    };
+
+    let currentQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
-    let penalties = 0;
+    let categoryScores = {};
+    let numericTimeouts = 0;
     let answered = false;
     let intervalId = null;
-    let elapsedSeconds = 0;
     let remainingSeconds = 30;
 
     const homeView = document.getElementById("home-view");
@@ -652,15 +664,15 @@
     const resultsTitle = document.getElementById("results-title");
     const scoreCircle = document.getElementById("score-circle");
     const encouragement = document.getElementById("encouragement");
+    const categoryResults = document.getElementById("category-results");
     const penaltySummary = document.getElementById("penalty-summary");
 
-    document.querySelectorAll("[data-category]").forEach((button) => {
-      button.addEventListener("click", () => startQuiz(button.dataset.category));
-    });
+    extendQuestionBank();
 
+    document.getElementById("start-test-button").addEventListener("click", startQuiz);
     nextButton.addEventListener("click", nextQuestion);
-    document.getElementById("restart-button").addEventListener("click", () => startQuiz(currentCategoryKey));
-    document.getElementById("restart-quiz-button").addEventListener("click", () => startQuiz(currentCategoryKey));
+    document.getElementById("restart-button").addEventListener("click", startQuiz);
+    document.getElementById("restart-quiz-button").addEventListener("click", startQuiz);
     document.getElementById("menu-button").addEventListener("click", showHome);
     document.getElementById("back-menu-button").addEventListener("click", showHome);
 
@@ -668,19 +680,21 @@
       return { type, text, options, answer, explanation };
     }
 
-    function startQuiz(categoryKey) {
-      currentCategoryKey = categoryKey;
+    function startQuiz() {
+      currentQuestions = buildRandomTest();
       currentQuestionIndex = 0;
       score = 0;
-      penalties = 0;
-      elapsedSeconds = 0;
+      numericTimeouts = 0;
+      categoryScores = categoryOrder.reduce((scores, key) => {
+        scores[key] = { correct: 0, total: 10 };
+        return scores;
+      }, {});
       clearInterval(intervalId);
       homeView.classList.add("hidden");
       resultsView.classList.add("hidden");
       quizView.classList.remove("hidden");
-      const category = categories[categoryKey];
-      categoryLabel.textContent = category.label;
-      quizTitle.textContent = category.title;
+      categoryLabel.textContent = "10 questions par catégorie";
+      quizTitle.textContent = "Test psychotechnique mixte";
       renderQuestion();
     }
 
@@ -692,22 +706,21 @@
     }
 
     function renderQuestion() {
-      const category = categories[currentCategoryKey];
-      const question = category.questions[currentQuestionIndex];
+      const question = currentQuestions[currentQuestionIndex];
       answered = false;
       feedback.innerHTML = "";
       nextButton.disabled = true;
-      nextButton.textContent = currentQuestionIndex === category.questions.length - 1 ? "Voir le score" : "Question suivante";
+      nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
       timer.classList.remove("timer-badge--danger");
 
-      progressText.textContent = `Question ${currentQuestionIndex + 1}/${category.questions.length}`;
-      scoreText.textContent = `Score : ${score}`;
-      progressBar.style.width = `${(currentQuestionIndex / category.questions.length) * 100}%`;
-      questionType.textContent = question.type;
+      progressText.textContent = `Question ${currentQuestionIndex + 1}/${currentQuestions.length}`;
+      scoreText.textContent = `Score : ${score}/40`;
+      progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+      questionType.textContent = `${categoryBadges[question.categoryKey]} | ${question.type}`;
       questionText.textContent = question.text;
       renderVisual(question);
       renderOptions(question);
-      startTimer(category.timerMode);
+      startTimer(question.categoryKey);
     }
 
     function renderVisual(question) {
@@ -747,39 +760,27 @@
       });
     }
 
-    function startTimer(mode) {
+    function startTimer(categoryKey) {
       clearInterval(intervalId);
-      if (mode === "countdown") {
-        remainingSeconds = 30;
-        updateTimerText();
-        intervalId = setInterval(() => {
-          remainingSeconds -= 1;
-          updateTimerText();
-          if (remainingSeconds <= 0) {
-            handleTimeout();
-          }
-        }, 1000);
+      timer.classList.toggle("hidden", categoryKey !== "numeric");
+      if (categoryKey !== "numeric") {
         return;
       }
 
+      remainingSeconds = 30;
       updateTimerText();
       intervalId = setInterval(() => {
-        elapsedSeconds += 1;
         updateTimerText();
+        remainingSeconds -= 1;
+        if (remainingSeconds < 0) {
+          handleTimeout();
+        }
       }, 1000);
     }
 
     function updateTimerText() {
-      const category = categories[currentCategoryKey];
-      if (category.timerMode === "countdown") {
-        timer.textContent = `Temps : ${remainingSeconds}s`;
-        timer.classList.toggle("timer-badge--danger", remainingSeconds <= 10);
-        return;
-      }
-
-      const minutes = String(Math.floor(elapsedSeconds / 60)).padStart(2, "0");
-      const seconds = String(elapsedSeconds % 60).padStart(2, "0");
-      timer.textContent = `${minutes}:${seconds}`;
+      timer.textContent = `Temps : ${remainingSeconds}s`;
+      timer.classList.toggle("timer-badge--danger", remainingSeconds <= 10);
     }
 
     function answerQuestion(selectedIndex) {
@@ -787,11 +788,11 @@
         return;
       }
 
-      const category = categories[currentCategoryKey];
-      const question = category.questions[currentQuestionIndex];
+      const question = currentQuestions[currentQuestionIndex];
       const isCorrect = selectedIndex === question.answer;
       if (isCorrect) {
         score += 1;
+        categoryScores[question.categoryKey].correct += 1;
       }
 
       showCorrection(selectedIndex, isCorrect, false);
@@ -802,17 +803,16 @@
         return;
       }
 
-      penalties += 1;
+      numericTimeouts += 1;
       showCorrection(null, false, true);
     }
 
     function showCorrection(selectedIndex, isCorrect, timedOut) {
-      const category = categories[currentCategoryKey];
-      const question = category.questions[currentQuestionIndex];
+      const question = currentQuestions[currentQuestionIndex];
       answered = true;
       clearInterval(intervalId);
-      progressBar.style.width = `${((currentQuestionIndex + 1) / category.questions.length) * 100}%`;
-      scoreText.textContent = `Score : ${score}`;
+      progressBar.style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
+      scoreText.textContent = `Score : ${score}/40`;
 
       optionsContainer.querySelectorAll(".option-button").forEach((button) => {
         const index = Number(button.dataset.index);
@@ -827,7 +827,7 @@
       const correctOption = question.options[question.answer];
       const correctLabel = typeof correctOption === "string" ? correctOption : correctOption.label;
       const heading = timedOut
-        ? "Temps écoulé : pénalité."
+        ? "Temps écoulé."
         : isCorrect
           ? "Bonne réponse."
           : "Réponse incorrecte.";
@@ -840,8 +840,7 @@
     }
 
     function nextQuestion() {
-      const category = categories[currentCategoryKey];
-      if (currentQuestionIndex < category.questions.length - 1) {
+      if (currentQuestionIndex < currentQuestions.length - 1) {
         currentQuestionIndex += 1;
         renderQuestion();
         return;
@@ -852,28 +851,65 @@
 
     function showResults() {
       clearInterval(intervalId);
-      const category = categories[currentCategoryKey];
       quizView.classList.add("hidden");
       resultsView.classList.remove("hidden");
-      resultsTitle.textContent = category.title;
-      scoreCircle.textContent = `${score}/20`;
+      timer.classList.add("hidden");
+      resultsTitle.textContent = "Score final";
+      scoreCircle.textContent = `${score}/40`;
       encouragement.textContent = getEncouragement(score);
-      penaltySummary.textContent = category.timerMode === "countdown"
-        ? `Pénalités pour dépassement de temps : ${penalties}`
-        : "Continuez à vous entraîner en surveillant votre temps de réponse.";
+      categoryResults.innerHTML = categoryOrder.map((key) => {
+        const result = categoryScores[key];
+        return `<strong>${categoryBadges[key]}</strong> : ${result.correct}/${result.total}`;
+      }).join(" | ");
+      penaltySummary.textContent = numericTimeouts > 0
+        ? `Questions numériques non répondues dans les 30 secondes : ${numericTimeouts}.`
+        : "Aucune question numérique n'a dépassé les 30 secondes.";
     }
 
     function getEncouragement(value) {
-      if (value >= 17) {
-        return "Excellent niveau : vous maîtrisez très bien cette catégorie.";
+      if (value >= 34) {
+        return "Excellent niveau : vous maîtrisez très bien les quatre catégories.";
       }
-      if (value >= 13) {
-        return "Bon résultat : consolidez les automatismes pour gagner en vitesse.";
+      if (value >= 28) {
+        return "Bon résultat : consolidez les automatismes pour gagner encore en régularité.";
       }
-      if (value >= 8) {
-        return "Résultat encourageant : reprenez les corrections et recommencez.";
+      if (value >= 20) {
+        return "Résultat encourageant : reprenez les corrections par catégorie et recommencez.";
       }
-      return "Entraînement à poursuivre : avancez question par question et repérez les méthodes.";
+      return "Entraînement à poursuivre : avancez question par question et repérez les méthodes utiles.";
+    }
+
+    function buildRandomTest() {
+      const selectedQuestions = categoryOrder.flatMap((categoryKey) => {
+        return sample(categories[categoryKey].questions, 10).map((question) => prepareQuestion(question, categoryKey));
+      });
+      return shuffle(selectedQuestions);
+    }
+
+    function prepareQuestion(question, categoryKey) {
+      const shuffledOptions = shuffle(question.options.map((option, index) => ({
+        option,
+        originalIndex: index
+      })));
+      return {
+        ...question,
+        categoryKey,
+        options: shuffledOptions.map((item) => item.option),
+        answer: shuffledOptions.findIndex((item) => item.originalIndex === question.answer)
+      };
+    }
+
+    function sample(items, count) {
+      return shuffle(items).slice(0, count);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+      return copy;
     }
 
     function spatialRotation(type, text, shape, baseAngle, answerAngle, optionAngles, answer) {
@@ -1029,6 +1065,497 @@
           <polygon points="158,62 100,96 100,166 158,132" fill="${right}" stroke="#1a2744" stroke-width="2"/>
         </svg>
       `;
+    }
+
+    function extendQuestionBank() {
+      fillCategory("logic", createLogicQuestions());
+      fillCategory("spatial", createSpatialQuestions());
+      fillCategory("numeric", createNumericQuestions());
+      fillCategory("verbal", createVerbalQuestions());
+
+      categoryOrder.forEach((key) => {
+        if (categories[key].questions.length !== 100) {
+          throw new Error(`La banque ${key} contient ${categories[key].questions.length} questions au lieu de 100.`);
+        }
+      });
+    }
+
+    function fillCategory(categoryKey, generatedQuestions) {
+      const needed = 100 - categories[categoryKey].questions.length;
+      categories[categoryKey].questions.push(...generatedQuestions.slice(0, needed));
+    }
+
+    function createLogicQuestions() {
+      const questions = [];
+
+      for (let index = 0; index < 20; index += 1) {
+        const start = 3 + index;
+        const step = 2 + (index % 7);
+        const sequence = [0, 1, 2, 3].map((offset) => start + offset * step);
+        const correct = start + 4 * step;
+        questions.push(q(
+          "Série de chiffres",
+          `${sequence.join(", ")}, __ ?`,
+          numberOptions(correct, [correct + step, correct - step, correct + 2 * step]),
+          0,
+          `On ajoute ${step} à chaque étape : ${sequence[3]} + ${step} = ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const multiplier = index % 3 === 0 ? 3 : 2;
+        const start = 2 + (index % 6);
+        const sequence = [0, 1, 2, 3].map((offset) => start * multiplier ** offset);
+        const correct = start * multiplier ** 4;
+        questions.push(q(
+          "Série de chiffres",
+          `${sequence.join(", ")}, __ ?`,
+          numberOptions(correct, [correct + multiplier, correct / multiplier, correct + start]),
+          0,
+          `Chaque terme est multiplié par ${multiplier} : ${sequence[3]} x ${multiplier} = ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const start = 1 + index;
+        const firstGap = 2 + (index % 5);
+        const sequence = [start];
+        for (let step = 0; step < 4; step += 1) {
+          sequence.push(sequence[step] + firstGap + step);
+        }
+        const visible = sequence.slice(0, 4);
+        const correct = sequence[4];
+        questions.push(q(
+          "Écarts progressifs",
+          `${visible.join(", ")}, __ ?`,
+          numberOptions(correct, [correct - 1, correct + 1, correct + firstGap]),
+          0,
+          `Les écarts augmentent de 1 : +${firstGap}, +${firstGap + 1}, +${firstGap + 2}, puis +${firstGap + 3}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const start = index % 26;
+        const step = 2 + (index % 4);
+        const sequence = [0, 1, 2, 3].map((offset) => letterFromIndex(start + offset * step));
+        const correct = letterFromIndex(start + 4 * step);
+        questions.push(q(
+          "Série de lettres",
+          `${sequence.join(", ")}, __ ?`,
+          textOptions(correct, [
+            letterFromIndex(start + 4 * step + 1),
+            letterFromIndex(start + 4 * step - 1),
+            letterFromIndex(start + 4 * step + 2)
+          ]),
+          0,
+          `On avance de ${step} lettres à chaque fois : la lettre attendue est ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const left = 3 + index;
+        const right = 5 + (index % 12);
+        const mode = index % 5;
+        let transformedLeft;
+        let correct;
+        let explanation;
+        if (mode === 0) {
+          transformedLeft = left * 2;
+          correct = right * 2;
+          explanation = "Le second nombre vaut le double du premier.";
+        } else if (mode === 1) {
+          transformedLeft = left + 7;
+          correct = right + 7;
+          explanation = "On ajoute 7 au premier nombre.";
+        } else if (mode === 2) {
+          transformedLeft = left * left;
+          correct = right * right;
+          explanation = "Le lien est le carré du nombre.";
+        } else if (mode === 3) {
+          transformedLeft = left * 3;
+          correct = right * 3;
+          explanation = "Le second nombre vaut trois fois le premier.";
+        } else {
+          transformedLeft = left + 4;
+          correct = right + 4;
+          explanation = "On ajoute 4 au premier nombre.";
+        }
+        questions.push(q(
+          "Analogie logique",
+          `${left} est à ${transformedLeft} ce que ${right} est à __ ?`,
+          numberOptions(correct, [correct - 2, correct + 2, correct + 4]),
+          0,
+          explanation
+        ));
+      }
+
+      return questions;
+    }
+
+    function createSpatialQuestions() {
+      const questions = [];
+      const shapes = ["arrow", "triangleMark", "flag", "lShape", "cornerDots", "chevron", "stairs", "zigzag", "tShape"];
+      const baseAngles = [0, 90, 180, 270];
+      const rotations = [
+        { label: "90° vers la droite", value: 90 },
+        { label: "180°", value: 180 },
+        { label: "90° vers la gauche", value: 270 },
+        { label: "270° vers la droite", value: 270 }
+      ];
+
+      for (let index = 0; index < 32; index += 1) {
+        const shape = shapes[index % shapes.length];
+        const baseAngle = baseAngles[index % baseAngles.length];
+        const rotation = rotations[(index + Math.floor(index / shapes.length)) % rotations.length];
+        const answerAngle = normalizeAngle(baseAngle + rotation.value);
+        const optionAngles = [answerAngle, ...baseAngles.filter((angle) => angle !== answerAngle)];
+        questions.push(spatialRotation(
+          "Rotation de formes",
+          `Quelle option montre la figure après une rotation de ${rotation.label} ?`,
+          shape,
+          baseAngle,
+          answerAngle,
+          optionAngles,
+          0
+        ));
+      }
+
+      for (let index = 0; index < 24; index += 1) {
+        const shape = shapes[(index + 3) % shapes.length];
+        const axis = index % 2 === 0 ? "h" : "v";
+        const transforms = axis === "h"
+          ? [["h"], [], ["v"], ["h", "v"]]
+          : [["v"], [], ["h"], ["h", "v"]];
+        questions.push(spatialMirror(
+          "Symétries",
+          axis === "h"
+            ? "Quelle option est le symétrique horizontal de la figure ?"
+            : "Quelle option est le symétrique vertical de la figure ?",
+          shape,
+          axis,
+          transforms,
+          0
+        ));
+      }
+
+      const cubeSets = [
+        ["cross", "cubeCross"],
+        ["line", "cubeLine"],
+        ["stair", "cubeStair"],
+        ["pyramid", "cubePyramid"]
+      ];
+      const cubeChoices = ["cubeCross", "cubeLine", "cubeStair", "cubePyramid"];
+      for (let index = 0; index < 24; index += 1) {
+        const [net, correctCube] = cubeSets[index % cubeSets.length];
+        const options = [correctCube, ...cubeChoices.filter((choice) => choice !== correctCube)];
+        questions.push(spatialCube(
+          "Patrons de cubes",
+          "Quel cube correspond au patron déplié affiché ?",
+          net,
+          options,
+          0
+        ));
+      }
+
+      return questions;
+    }
+
+    function createNumericQuestions() {
+      const questions = [];
+
+      for (let index = 0; index < 20; index += 1) {
+        const a = 28 + index * 3;
+        const b = 17 + (index % 9) * 6;
+        if (index % 2 === 0) {
+          const correct = a + b;
+          questions.push(q(
+            "Calcul mental rapide",
+            `${a} + ${b} = ?`,
+            numberOptions(correct, [correct - 10, correct + 10, correct + 5]),
+            0,
+            `${a} + ${b} = ${correct}.`
+          ));
+        } else {
+          const larger = a + b;
+          const correct = larger - a;
+          questions.push(q(
+            "Calcul mental rapide",
+            `${larger} - ${a} = ?`,
+            numberOptions(correct, [correct - 6, correct + 6, correct + 12]),
+            0,
+            `${larger} - ${a} = ${correct}.`
+          ));
+        }
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const factorA = 6 + (index % 9);
+        const factorB = 3 + (index % 7);
+        const product = factorA * factorB;
+        if (index % 3 === 0) {
+          questions.push(q(
+            "Multiplications",
+            `${factorA} x ${factorB} = ?`,
+            numberOptions(product, [product - factorA, product + factorB, product + factorA]),
+            0,
+            `${factorA} x ${factorB} = ${product}.`
+          ));
+        } else {
+          questions.push(q(
+            "Divisions",
+            `${product} / ${factorA} = ?`,
+            numberOptions(factorB, [factorB + 1, factorB + 2, Math.max(1, factorB - 1)]),
+            0,
+            `${product} / ${factorA} = ${factorB}.`
+          ));
+        }
+      }
+
+      const percentages = [10, 20, 25, 30, 40, 50, 60, 75];
+      for (let index = 0; index < 15; index += 1) {
+        const percent = percentages[index % percentages.length];
+        const base = 80 + (index % 10) * 20;
+        const correct = base * percent / 100;
+        questions.push(q(
+          "Pourcentages",
+          `${percent}% de ${base} = ?`,
+          numberOptions(correct, [correct + 5, correct + 10, Math.max(1, correct - 5)]),
+          0,
+          `${percent}% de ${base} = ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const mode = index % 3;
+        if (mode === 0) {
+          const hours = 2 + (index % 5);
+          const correct = hours * 60;
+          questions.push(q(
+            "Conversions",
+            `${hours} heures correspondent à combien de minutes ?`,
+            numberOptions(correct, [correct - 30, correct + 30, correct + 60]),
+            0,
+            `1 heure vaut 60 minutes, donc ${hours} x 60 = ${correct}.`
+          ));
+        } else if (mode === 1) {
+          const km = 2 + (index % 6);
+          const correct = km * 1000;
+          questions.push(q(
+            "Conversions",
+            `${km} km correspondent à combien de mètres ?`,
+            numberOptions(correct, [correct / 10, correct + 500, correct * 10], "m"),
+            0,
+            `1 km vaut 1 000 m, donc ${km} km = ${correct} m.`
+          ));
+        } else {
+          const grams = 250 * (3 + (index % 6));
+          const correct = grams / 1000;
+          questions.push(q(
+            "Conversions",
+            `${grams} g correspondent à combien de kilogrammes ?`,
+            textOptions(`${formatDecimal(correct)} kg`, [`${formatDecimal(correct + 0.25)} kg`, `${formatDecimal(Math.max(0.25, correct - 0.25))} kg`, `${formatDecimal(correct * 10)} kg`]),
+            0,
+            `1 kg vaut 1 000 g, donc ${grams} g = ${formatDecimal(correct)} kg.`
+          ));
+        }
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const unitPrice = 4 + (index % 9);
+        const quantity = 3 + (index % 6);
+        const correct = unitPrice * quantity;
+        questions.push(q(
+          "Problème arithmétique",
+          `Un carnet coûte ${unitPrice} €. Combien coûtent ${quantity} carnets ?`,
+          numberOptions(correct, [correct + unitPrice, correct - unitPrice, correct + quantity], "€"),
+          0,
+          `${unitPrice} x ${quantity} = ${correct} €.`
+        ));
+      }
+
+      return questions;
+    }
+
+    function createVerbalQuestions() {
+      const questions = [];
+      const synonyms = [
+        ["attentif", "vigilant", "distrait", "bruyant", "lent"],
+        ["rapide", "vif", "calme", "faible", "lointain"],
+        ["exact", "précis", "faux", "flou", "ancien"],
+        ["utile", "pratique", "inutile", "risqué", "fragile"],
+        ["solide", "robuste", "léger", "vide", "tardif"],
+        ["sincère", "franc", "secret", "froid", "large"],
+        ["calme", "paisible", "agité", "pressé", "violent"],
+        ["difficile", "complexe", "simple", "clair", "court"],
+        ["important", "essentiel", "mineur", "rare", "lointain"],
+        ["ancien", "vieux", "récent", "neuf", "futur"],
+        ["humide", "mouillé", "sec", "chaud", "dur"],
+        ["bruyant", "sonore", "silencieux", "discret", "lisse"],
+        ["courageux", "brave", "craintif", "timide", "faible"],
+        ["obscur", "sombre", "clair", "net", "visible"],
+        ["prévoir", "anticiper", "oublier", "subir", "retarder"]
+      ];
+      synonyms.forEach(([word, correct, ...distractors]) => {
+        questions.push(q(
+          "Synonyme",
+          `Quel est le synonyme de « ${word} » ?`,
+          textOptions(correct, distractors),
+          0,
+          `« ${correct} » est le mot le plus proche de « ${word} ».`
+        ));
+      });
+
+      const antonyms = [
+        ["légal", "illégal", "officiel", "public", "valable"],
+        ["visible", "invisible", "clair", "présent", "direct"],
+        ["simple", "complexe", "facile", "rapide", "utile"],
+        ["stable", "instable", "solide", "régulier", "fixe"],
+        ["ouvrir", "fermer", "entrer", "poser", "tenir"],
+        ["augmenter", "diminuer", "monter", "grandir", "ajouter"],
+        ["échec", "réussite", "faute", "retard", "refus"],
+        ["public", "privé", "commun", "visible", "collectif"],
+        ["absent", "présent", "lointain", "discret", "retiré"],
+        ["clair", "obscur", "net", "simple", "lisible"],
+        ["rapide", "lent", "vif", "pressé", "actif"],
+        ["prudent", "imprudent", "attentif", "mesuré", "vigilant"],
+        ["ancien", "récent", "vieux", "passé", "historique"],
+        ["calme", "agité", "paisible", "silencieux", "posé"],
+        ["fragile", "résistant", "délicat", "fin", "léger"]
+      ];
+      antonyms.forEach(([word, correct, ...distractors]) => {
+        questions.push(q(
+          "Antonyme",
+          `Quel est l'antonyme de « ${word} » ?`,
+          textOptions(correct, distractors),
+          0,
+          `« ${correct} » exprime l'idée opposée à « ${word} ».`
+        ));
+      });
+
+      const intruders = [
+        ["Citron", "Marteau", "Tournevis", "Pince", "Les trois autres sont des outils."],
+        ["Table", "Rouge", "Bleu", "Vert", "Les trois autres sont des couleurs."],
+        ["Fourchette", "Justice", "Tribunal", "Juge", "Les trois autres relèvent du domaine judiciaire."],
+        ["Banane", "Police", "Gendarmerie", "Pompiers", "Les trois autres sont des services de sécurité ou de secours."],
+        ["Nuage", "Bus", "Train", "Métro", "Les trois autres sont des moyens de transport."],
+        ["Stylo", "Chien", "Chat", "Cheval", "Les trois autres sont des animaux."],
+        ["Été", "Nord", "Sud", "Ouest", "Les trois autres sont des directions."],
+        ["Sel", "Janvier", "Mars", "Avril", "Les trois autres sont des mois."],
+        ["Livre", "Football", "Basket", "Tennis", "Les trois autres sont des sports."],
+        ["Fenêtre", "Pomme", "Poire", "Raisin", "Les trois autres sont des fruits."],
+        ["Lampe", "Neuf", "Sept", "Trois", "Les trois autres sont des nombres."],
+        ["Rivière", "Souris", "Clavier", "Écran", "Les trois autres sont liés à l'informatique."],
+        ["Montagne", "Médecin", "Infirmier", "Pharmacien", "Les trois autres sont des métiers de santé."],
+        ["Bouteille", "Chêne", "Hêtre", "Pin", "Les trois autres sont des arbres."],
+        ["Couteau", "Paris", "Lyon", "Marseille", "Les trois autres sont des villes."]
+      ];
+      intruders.forEach(([correct, wordA, wordB, wordC, explanation]) => {
+        questions.push(q(
+          "Trouver l'intrus",
+          "Quel mot est l'intrus ?",
+          textOptions(correct, [wordA, wordB, wordC]),
+          0,
+          explanation
+        ));
+      });
+
+      const analogies = [
+        ["Main", "gant", "pied", "chaussette", ["casquette", "ceinture", "écharpe"], "Le gant couvre la main, la chaussette couvre le pied."],
+        ["Livre", "lire", "musique", "écouter", ["regarder", "écrire", "compter"], "On lit un livre et on écoute de la musique."],
+        ["Médecin", "hôpital", "professeur", "école", ["garage", "tribunal", "stade"], "Le professeur exerce principalement à l'école."],
+        ["Serrure", "clé", "vis", "tournevis", ["marteau", "pince", "règle"], "La clé actionne une serrure, le tournevis actionne une vis."],
+        ["Oiseau", "nid", "abeille", "ruche", ["étable", "terrier", "aquarium"], "L'abeille vit dans une ruche."],
+        ["Jour", "nuit", "clair", "sombre", ["propre", "simple", "rapide"], "Le lien est l'opposition."],
+        ["Thermomètre", "température", "horloge", "heure", ["distance", "poids", "vitesse"], "L'horloge mesure l'heure."],
+        ["Peintre", "pinceau", "écrivain", "stylo", ["sifflet", "couteau", "casque"], "Le stylo est l'outil courant de l'écrivain."],
+        ["Question", "réponse", "problème", "solution", ["doute", "ordre", "texte"], "Une solution répond à un problème."],
+        ["Oreille", "entendre", "œil", "voir", ["parler", "sentir", "toucher"], "L'œil sert à voir."],
+        ["Carte", "orientation", "règle", "mesure", ["peinture", "repos", "lecture"], "Une règle sert à mesurer."],
+        ["Capitaine", "équipe", "chef", "service", ["mur", "route", "papier"], "Un chef dirige un service."],
+        ["Feu", "chaleur", "glace", "froid", ["lumière", "vent", "bruit"], "La glace est associée au froid."],
+        ["Avocat", "tribunal", "pilote", "cockpit", ["cuisine", "jardin", "atelier"], "Le pilote travaille dans un cockpit."],
+        ["Grammaire", "phrase", "calcul", "nombre", ["couleur", "route", "image"], "Le calcul manipule des nombres."]
+      ];
+      analogies.forEach(([first, second, third, correct, distractors, explanation]) => {
+        questions.push(q(
+          "Analogie verbale",
+          `${first} est à ${second} ce que ${third} est à :`,
+          textOptions(correct, distractors),
+          0,
+          explanation
+        ));
+      });
+
+      const comprehension = [
+        ["Tous les agents présents ont signé le registre. Karim était présent.", "Karim a signé le registre", ["Karim était absent", "Personne n'a signé", "Le registre est vide"]],
+        ["Aucun véhicule rouge n'est autorisé dans la zone. La voiture de Léa est rouge.", "La voiture de Léa n'est pas autorisée", ["La voiture de Léa est prioritaire", "La zone est rouge", "Tous les véhicules entrent"]],
+        ["Si l'alarme sonne, l'équipe évacue. L'alarme vient de sonner.", "L'équipe évacue", ["L'équipe reste en place", "L'alarme est éteinte", "Personne n'entend rien"]],
+        ["Tous les dossiers urgents sont traités avant midi. Ce dossier est urgent.", "Ce dossier est traité avant midi", ["Ce dossier est archivé", "Ce dossier est refusé", "Ce dossier attend demain"]],
+        ["Les candidats admis ont une convocation. Inès est admise.", "Inès a une convocation", ["Inès n'a pas candidaté", "Inès est absente", "La convocation est inutile"]],
+        ["Aucun sac non contrôlé ne peut entrer. Ce sac n'a pas été contrôlé.", "Ce sac ne peut pas entrer", ["Ce sac est prioritaire", "Le contrôle est terminé", "Tous les sacs entrent"]],
+        ["Quand la route est barrée, le bus prend une déviation. La route est barrée.", "Le bus prend une déviation", ["Le bus s'arrête définitivement", "La route est libre", "Le bus change de couleur"]],
+        ["Tous les rapports signés sont valides. Ce rapport est signé.", "Ce rapport est valide", ["Ce rapport est perdu", "Ce rapport est oral", "Ce rapport est ancien"]],
+        ["Si une pièce manque, le dossier est incomplet. Une pièce manque.", "Le dossier est incomplet", ["Le dossier est accepté", "La pièce est inutile", "Le dossier est doublé"]],
+        ["Les visiteurs doivent présenter une pièce d'identité. Nora est visiteuse.", "Nora doit présenter une pièce d'identité", ["Nora est exemptée", "Nora est agent", "Nora refuse le contrôle"]],
+        ["Tous les témoins entendus ont donné une déclaration. Paul a été entendu.", "Paul a donné une déclaration", ["Paul n'a rien vu", "Paul est absent", "Paul est enquêteur"]],
+        ["Si le feu est vert, les véhicules peuvent passer. Le feu est vert.", "Les véhicules peuvent passer", ["Les véhicules reculent", "Le feu est rouge", "La route disparaît"]],
+        ["Aucun document illisible n'est accepté. Ce document est illisible.", "Ce document n'est pas accepté", ["Ce document est prioritaire", "Ce document est parfait", "Ce document est verbal"]],
+        ["Les convocations envoyées par mail arrivent le jour même. Celle-ci est envoyée par mail.", "Elle arrive le jour même", ["Elle arrive dans un mois", "Elle n'existe pas", "Elle est manuscrite"]],
+        ["Tout objet trouvé est enregistré. Cette clé a été trouvée.", "Cette clé est enregistrée", ["Cette clé est jetée", "Cette clé est vendue", "Cette clé ouvre tout"]]
+      ];
+      comprehension.forEach(([premise, correct, distractors]) => {
+        questions.push(q(
+          "Compréhension",
+          `${premise} Que peut-on conclure ?`,
+          textOptions(correct, distractors),
+          0,
+          "La conclusion reprend uniquement ce qui découle logiquement de l'énoncé."
+        ));
+      });
+
+      return questions;
+    }
+
+    function numberOptions(correct, distractors, unit = "") {
+      return textOptions(formatNumberWithUnit(correct, unit), distractors.map((value) => formatNumberWithUnit(value, unit)));
+    }
+
+    function textOptions(correct, distractors) {
+      const options = [String(correct)];
+      distractors.forEach((value) => {
+        const text = String(value);
+        if (!options.includes(text)) {
+          options.push(text);
+        }
+      });
+
+      let suffix = 1;
+      while (options.length < 4) {
+        const fallback = `${correct} (${suffix})`;
+        if (!options.includes(fallback)) {
+          options.push(fallback);
+        }
+        suffix += 1;
+      }
+
+      return options.slice(0, 4);
+    }
+
+    function formatNumberWithUnit(value, unit) {
+      const formatted = Number.isInteger(value) ? String(value) : formatDecimal(value);
+      return unit ? `${formatted} ${unit}` : formatted;
+    }
+
+    function formatDecimal(value) {
+      return String(Number(value.toFixed(2))).replace(".", ",");
+    }
+
+    function letterFromIndex(index) {
+      return String.fromCharCode(65 + ((index % 26) + 26) % 26);
+    }
+
+    function normalizeAngle(angle) {
+      return ((angle % 360) + 360) % 360;
     }
   </script>
 </body>

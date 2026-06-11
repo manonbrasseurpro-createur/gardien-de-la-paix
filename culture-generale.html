@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Culture Générale - Gardien de la Paix</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .culture-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .module-shell,
+    .quiz-panel,
+    .results-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .module-shell {
+      padding: 30px;
+    }
+
+    .info-panel,
+    .callout,
+    .winning-formula {
+      border-radius: 20px;
+      box-shadow: 0 14px 30px rgba(26, 39, 68, 0.1);
+    }
+
+    .info-panel {
+      display: grid;
+      gap: 14px;
+      margin: 24px 0;
+      padding: 26px;
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .info-panel h3,
+    .info-panel p {
+      margin: 0;
+    }
+
+    .info-panel h3,
+    .callout h3,
+    .winning-formula h3 {
+      font-size: clamp(1.15rem, 2.8vw, 1.55rem);
+      line-height: 1.25;
+    }
+
+    .info-panel ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .info-panel li + li {
+      margin-top: 8px;
+    }
+
+    .callout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 24px 0;
+    }
+
+    .callout {
+      display: grid;
+      gap: 10px;
+      padding: 22px;
+      border: 1px solid transparent;
+    }
+
+    .callout h3,
+    .callout p,
+    .winning-formula h3,
+    .winning-formula p {
+      margin: 0;
+    }
+
+    .callout--danger {
+      color: #6f1d1d;
+      background: #fff0e6;
+      border-color: #ffb06b;
+    }
+
+    .callout--success {
+      color: #174525;
+      background: #e8f7ed;
+      border-color: #8ad0a0;
+    }
+
+    .callout--warning {
+      color: #6a3d00;
+      background: #fff4d6;
+      border-color: #f1b85d;
+    }
+
+    .winning-formula {
+      display: grid;
+      gap: 10px;
+      margin: 24px 0 30px;
+      padding: 24px;
+      color: #473000;
+      background: linear-gradient(135deg, #fff3ba, #ffd66b);
+      border: 1px solid #d6a92f;
+      text-align: center;
+    }
+
+    .winning-formula p {
+      font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+      font-weight: 800;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .mode-card {
+      display: flex;
+      min-height: 250px;
+      padding: 22px;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .mode-card:hover,
+    .mode-card:focus {
+      border-color: var(--navy);
+      box-shadow: var(--shadow);
+      outline: none;
+      transform: translateY(-4px);
+    }
+
+    .mode-card:focus-visible,
+    .option-button:focus-visible,
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: 3px solid rgba(26, 39, 68, 0.32);
+      outline-offset: 3px;
+    }
+
+    .mode-card__icon,
+    .timer-badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .mode-card__icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.35rem;
+    }
+
+    .mode-card h3 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.3;
+    }
+
+    .mode-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .mode-card__duration {
+      margin-top: auto;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quiz-panel__header {
+      display: grid;
+      gap: 18px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .quiz-title-row,
+    .quiz-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quiz-panel h2,
+    .results-panel h2 {
+      margin: 0;
+    }
+
+    .timer-badge {
+      min-width: 116px;
+      padding: 8px 14px;
+      color: var(--navy);
+      background: var(--white);
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--white);
+      border-radius: inherit;
+      transition: width 220ms ease;
+    }
+
+    .quiz-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 18px;
+    }
+
+    .question-type {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(1.25rem, 2.7vw, 1.9rem);
+      line-height: 1.35;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .option-button {
+      display: grid;
+      min-height: 64px;
+      padding: 16px 44px 16px 16px;
+      align-items: center;
+      position: relative;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .option-button:hover:not(:disabled) {
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .option-button:disabled {
+      cursor: default;
+    }
+
+    .option-button.is-correct {
+      color: #174525;
+      background: #e8f7ed;
+      border-color: #2c8a45;
+    }
+
+    .option-button.is-wrong {
+      color: #6f1d1d;
+      background: #fdeaea;
+      border-color: #c0392b;
+    }
+
+    .option-button.is-correct::after,
+    .option-button.is-wrong::after {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.45rem;
+      font-weight: 800;
+    }
+
+    .option-button.is-correct::after {
+      content: "✓";
+    }
+
+    .option-button.is-wrong::after {
+      content: "✗";
+    }
+
+    .option-label {
+      display: inline-flex;
+      min-width: 34px;
+      height: 34px;
+      margin-right: 10px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .feedback {
+      padding: 16px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .feedback:empty {
+      display: none;
+    }
+
+    .feedback.is-success {
+      color: #174525;
+      background: #e8f7ed;
+      border-color: #2c8a45;
+    }
+
+    .feedback.is-error {
+      color: #6f1d1d;
+      background: #fdeaea;
+      border-color: #c0392b;
+    }
+
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      min-height: 46px;
+      padding: 12px 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .primary-button {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .secondary-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button:hover:not(:disabled),
+    .secondary-button:hover {
+      box-shadow: 0 10px 22px rgba(26, 39, 68, 0.14);
+      transform: translateY(-2px);
+    }
+
+    .primary-button:disabled {
+      cursor: default;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .results-panel {
+      display: grid;
+      gap: 18px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .score-circle {
+      display: inline-flex;
+      width: 128px;
+      height: 128px;
+      margin: 0 auto;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 50%;
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+    }
+
+    .detail-list li {
+      padding: 10px 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1180px) {
+      .mode-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      .callout-grid,
+      .mode-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .module-shell,
+      .quiz-panel__body,
+      .results-panel {
+        padding: 22px;
+      }
+
+      .quiz-panel__header {
+        padding: 22px;
+      }
+
+      .callout-grid,
+      .mode-grid,
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Culture Générale</h1>
+      <p class="hero__subtitle">Institutions, symboles de la République, histoire de France et actualité récente</p>
+    </div>
+  </header>
+
+  <main class="container culture-page">
+    <section id="home-view" class="module-shell" aria-labelledby="culture-title">
+      <div class="intro">
+        <h2 id="culture-title">PAGE D'ACCUEIL DU MODULE</h2>
+        <p>
+          Travaillez une culture générale ciblée sur les connaissances réellement utiles au concours.
+        </p>
+      </div>
+
+      <section class="info-panel" aria-labelledby="essential-title">
+        <h3 id="essential-title">🎯 INFORMATIONS ESSENTIELLES</h3>
+        <ul>
+          <li>1 heure pour réaliser le QCM de culture générale ET le QCM de langue étrangère, les deux ensemble.</li>
+          <li>40 questions de culture générale.</li>
+          <li>Coefficient 2.</li>
+        </ul>
+      </section>
+
+      <div class="callout-grid">
+        <article class="callout callout--danger">
+          <h3>⚠️ Ce n'est pas de la culture générale au sens large !</h3>
+          <p>
+            Cette épreuve ne porte pas sur les capitales du monde ou la géographie internationale.
+            Elle évalue des connaissances très ciblées : les symboles de la République, les institutions
+            françaises et européennes, l'histoire de France et l'actualité récente. Les livres de préparation
+            généralistes contiennent souvent des questions qui ne tombent jamais au concours.
+          </p>
+        </article>
+
+        <article class="callout callout--success">
+          <h3>💡 3 à 5 questions garanties sur l'hymne national et le drapeau français</h3>
+          <p>
+            À chaque session du concours, plusieurs questions portent sur la Marseillaise et le drapeau
+            tricolore. Ces sujets sont précis, faciles à réviser et représentent des points quasi certains.
+            Ne les négligez pas.
+          </p>
+        </article>
+
+        <article class="callout callout--warning">
+          <h3>⚠️ Les institutions : un tiers des questions !</h3>
+          <p>
+            Le fonctionnement des institutions françaises et européennes représente environ un tiers de
+            l'épreuve. Ces notions sont peu abordées en dehors d'un cursus juridique, il est donc indispensable
+            de les travailler spécifiquement.
+          </p>
+        </article>
+
+        <article class="callout callout--success">
+          <h3>💡 Restez focalisé sur l'année écoulée</h3>
+          <p>
+            Les questions d'actualité portent exclusivement sur les événements récents. Inutile de remonter
+            à plusieurs années en arrière : concentrez-vous sur les grands faits marquants des 12 derniers mois.
+          </p>
+        </article>
+      </div>
+
+      <article class="winning-formula">
+        <h3>🏆 FORMULE GAGNANTE</h3>
+        <p>
+          Histoire de France + Institutions françaises et européennes + Actualité récente =
+          La combinaison gagnante pour réussir cette épreuve.
+        </p>
+      </article>
+
+      <section aria-labelledby="mode-title">
+        <div class="intro">
+          <h2 id="mode-title">MENU DES CATÉGORIES</h2>
+          <p>Choisissez un mode de test. Les corrections sont affichées immédiatement après chaque réponse.</p>
+        </div>
+
+        <div class="mode-grid" aria-label="Modes de test culture générale">
+          <button class="mode-card" type="button" data-mode="complete">
+            <span class="mode-card__icon" aria-hidden="true">🚀</span>
+            <h3>Test Complet</h3>
+            <p>40 questions - ~25 min. Mélange de toutes les catégories avec institutions autour d'un tiers du test.</p>
+            <span class="mode-card__duration">Lancer le test complet</span>
+          </button>
+
+          <button class="mode-card" type="button" data-mode="institutions">
+            <span class="mode-card__icon" aria-hidden="true">🏛️</span>
+            <h3>Institutions françaises et européennes</h3>
+            <p>~10 min. Priorité absolue : République, Parlement, Gouvernement et Union européenne.</p>
+            <span class="mode-card__duration">20 questions ciblées</span>
+          </button>
+
+          <button class="mode-card" type="button" data-mode="symboles">
+            <span class="mode-card__icon" aria-hidden="true">🇫🇷</span>
+            <h3>Symboles de la République</h3>
+            <p>~5 min. Points faciles garantis : hymne, drapeau, devise, Marianne, 14 juillet.</p>
+            <span class="mode-card__duration">12 questions rapides</span>
+          </button>
+
+          <button class="mode-card" type="button" data-mode="histoire-actualite">
+            <span class="mode-card__icon" aria-hidden="true">📰</span>
+            <h3>Actualité et Histoire de France</h3>
+            <p>~10 min. Grandes dates, personnages clés et événements récents 2024-2025.</p>
+            <span class="mode-card__duration">20 questions mixtes</span>
+          </button>
+
+          <button class="mode-card" type="button" data-mode="mini">
+            <span class="mode-card__icon" aria-hidden="true">⚡</span>
+            <h3>Mini test</h3>
+            <p>10 questions - ~5 min. Pour s'entraîner rapidement sur toutes les familles de notions.</p>
+            <span class="mode-card__duration">Démarrer vite</span>
+          </button>
+        </div>
+
+        <div class="actions" style="margin-top: 24px;">
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </section>
+    </section>
+
+    <section id="quiz-view" class="quiz-panel hidden" aria-live="polite">
+      <div class="quiz-panel__header">
+        <div class="quiz-title-row">
+          <div>
+            <p class="hero__label" id="mode-label">Culture générale</p>
+            <h2 id="quiz-title">Test complet</h2>
+          </div>
+          <span id="timer-badge" class="timer-badge">~25 min</span>
+        </div>
+
+        <div class="progress-wrap" aria-label="Progression">
+          <div class="quiz-meta">
+            <strong id="progress-text">Question 1/40</strong>
+            <span id="score-text">Score : 0/40</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-panel__body">
+        <article class="question-card">
+          <p id="question-type" class="question-type"></p>
+          <h3 id="question-text" class="question-text"></h3>
+          <div id="options" class="options-grid"></div>
+          <div id="feedback" class="feedback"></div>
+        </article>
+
+        <div class="actions">
+          <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
+          <button id="restart-quiz-button" class="secondary-button" type="button">Nouveau test</button>
+          <button id="menu-button" class="secondary-button" type="button">Retour au menu</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="results-view" class="results-panel hidden" aria-live="polite">
+      <p class="hero__label" style="color: var(--navy);">Résultat final</p>
+      <h2 id="results-title">Score final</h2>
+      <div id="score-circle" class="score-circle">0/40</div>
+      <p id="encouragement"></p>
+      <div id="category-results" class="feedback"></div>
+      <p id="mistake-summary"></p>
+      <div class="actions">
+        <button id="download-pdf-button" class="primary-button" type="button">Télécharger ma fiche de révision (PDF)</button>
+        <button id="restart-button" class="secondary-button" type="button">Nouveau test</button>
+        <button id="back-menu-button" class="secondary-button" type="button">Retour au menu</button>
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const letters = ["A", "B", "C", "D"];
+    const categoryInfo = {
+      "institutions-francaises": {
+        label: "Institutions françaises",
+        shortLabel: "Institutions FR"
+      },
+      "institutions-europeennes": {
+        label: "Institutions européennes",
+        shortLabel: "Institutions UE"
+      },
+      symboles: {
+        label: "Symboles de la République",
+        shortLabel: "Symboles"
+      },
+      "histoire-actualite": {
+        label: "Histoire de France et actualité",
+        shortLabel: "Histoire/actualité"
+      }
+    };
+
+    const modeInfo = {
+      complete: {
+        label: "Test complet",
+        title: "Test complet aléatoire - 40 questions",
+        duration: "~25 min"
+      },
+      institutions: {
+        label: "Institutions",
+        title: "Institutions françaises et européennes - 20 questions",
+        duration: "~10 min"
+      },
+      symboles: {
+        label: "Symboles",
+        title: "Symboles de la République - 12 questions",
+        duration: "~5 min"
+      },
+      "histoire-actualite": {
+        label: "Histoire et actualité",
+        title: "Actualité et Histoire de France - 20 questions",
+        duration: "~10 min"
+      },
+      mini: {
+        label: "Mini test",
+        title: "Mini test aléatoire - 10 questions",
+        duration: "~5 min"
+      }
+    };
+
+    const questionBank = [
+      q("institutions-francaises", "Président de la République", "Quelle est la durée du mandat du président de la République française ?", "5 ans", ["4 ans", "6 ans", "7 ans"], "Depuis le quinquennat, le président est élu pour 5 ans au suffrage universel direct."),
+      q("institutions-francaises", "Président de la République", "Qui nomme le Premier ministre sous la Ve République ?", "Le président de la République", ["L'Assemblée nationale", "Le Sénat", "Le Conseil constitutionnel"], "L'article 8 de la Constitution donne au président le pouvoir de nommer le Premier ministre."),
+      q("institutions-francaises", "Président de la République", "Quel pouvoir permet au président de mettre fin au mandat des députés avant son terme ?", "La dissolution de l'Assemblée nationale", ["La censure du Sénat", "La saisine de la Cour de cassation", "La révocation du Parlement"], "Le président peut dissoudre l'Assemblée nationale, mais pas le Sénat."),
+      q("institutions-francaises", "Président de la République", "Quel article de la Constitution permet au président d'organiser un référendum législatif ?", "L'article 11", ["L'article 1", "L'article 49", "L'article 66"], "L'article 11 encadre le référendum portant notamment sur l'organisation des pouvoirs publics ou certaines réformes."),
+      q("institutions-francaises", "Président de la République", "Quel rôle militaire appartient au président de la République ?", "Chef des armées", ["Chef de la police municipale", "Commandant des préfets", "Président de la Cour de cassation"], "Le président est chef des armées selon l'article 15 de la Constitution."),
+      q("institutions-francaises", "Président de la République", "Où se tient habituellement le Conseil des ministres ?", "Au palais de l'Élysée", ["Au palais Bourbon", "Au palais du Luxembourg", "Au Conseil d'État"], "Le Conseil des ministres est présidé par le chef de l'État à l'Élysée."),
+      q("institutions-francaises", "Président de la République", "Combien de mandats présidentiels consécutifs une même personne peut-elle exercer au maximum ?", "2", ["1", "3", "4"], "Depuis la révision constitutionnelle de 2008, nul ne peut exercer plus de deux mandats consécutifs."),
+      q("institutions-francaises", "Président de la République", "Quel texte le président promulgue-t-il après son adoption définitive ?", "La loi", ["Le règlement intérieur des communes", "Le jugement pénal", "Le procès-verbal électoral"], "La promulgation rend la loi officiellement exécutoire."),
+      q("institutions-francaises", "Gouvernement", "Qui dirige l'action du Gouvernement ?", "Le Premier ministre", ["Le président du Sénat", "Le garde des Sceaux", "Le président de l'Assemblée nationale"], "L'article 21 de la Constitution prévoit que le Premier ministre dirige l'action du Gouvernement."),
+      q("institutions-francaises", "Gouvernement", "Selon l'article 20, que fait le Gouvernement ?", "Il détermine et conduit la politique de la Nation", ["Il juge les crimes", "Il élit les députés", "Il annule les élections"], "Le Gouvernement conduit la politique nationale sous le contrôle du Parlement."),
+      q("institutions-francaises", "Gouvernement", "Quel ministre est aussi appelé garde des Sceaux ?", "Le ministre de la Justice", ["Le ministre de l'Intérieur", "Le ministre des Armées", "Le ministre de l'Économie"], "Le garde des Sceaux est le titre traditionnel du ministre de la Justice."),
+      q("institutions-francaises", "Gouvernement", "Quel outil de l'article 49 alinéa 3 engage la responsabilité du Gouvernement sur un texte ?", "Le 49.3", ["La QPC", "Le recours gracieux", "La motion référendaire"], "Le 49.3 permet l'adoption d'un texte sauf vote d'une motion de censure."),
+      q("institutions-francaises", "Gouvernement", "Qui peut renverser le Gouvernement par une motion de censure ?", "L'Assemblée nationale", ["Le Sénat seul", "Le Conseil d'État", "Les préfets"], "Le Gouvernement est politiquement responsable devant l'Assemblée nationale."),
+      q("institutions-francaises", "Gouvernement", "Comment appelle-t-on un texte de loi déposé par le Gouvernement ?", "Un projet de loi", ["Une proposition de loi", "Un arrêt", "Une circulaire"], "Un projet de loi vient du Gouvernement ; une proposition de loi vient d'un parlementaire."),
+      q("institutions-francaises", "Parlement", "Combien de députés compte l'Assemblée nationale ?", "577", ["348", "925", "101"], "L'Assemblée nationale compte 577 députés élus au suffrage universel direct."),
+      q("institutions-francaises", "Parlement", "Quelle est la durée normale du mandat d'un député ?", "5 ans", ["3 ans", "6 ans", "9 ans"], "Les députés sont élus pour une législature de 5 ans, sauf dissolution."),
+      q("institutions-francaises", "Parlement", "Où siège l'Assemblée nationale ?", "Au palais Bourbon", ["Au palais du Luxembourg", "À l'Élysée", "Au palais de justice"], "Le palais Bourbon est le siège de l'Assemblée nationale."),
+      q("institutions-francaises", "Parlement", "Combien de sénateurs compte le Sénat ?", "348", ["577", "101", "705"], "Le Sénat compte 348 sénateurs."),
+      q("institutions-francaises", "Parlement", "Où siège le Sénat ?", "Au palais du Luxembourg", ["Au palais Bourbon", "À Matignon", "À l'Hôtel de Ville"], "Le Sénat siège au palais du Luxembourg à Paris."),
+      q("institutions-francaises", "Parlement", "Comment les sénateurs sont-ils élus ?", "Au suffrage universel indirect", ["Au suffrage universel direct", "Par tirage au sort", "Par le Conseil constitutionnel"], "Les sénateurs sont élus par un collège de grands électeurs."),
+      q("institutions-francaises", "Parlement", "Quelle collectivité le Sénat représente-t-il particulièrement ?", "Les collectivités territoriales", ["Les entreprises privées", "Les juridictions", "Les syndicats uniquement"], "Le Sénat assure la représentation des collectivités territoriales de la République."),
+      q("institutions-francaises", "Parlement", "Quelles sont les deux assemblées du Parlement français ?", "L'Assemblée nationale et le Sénat", ["Le Gouvernement et le Sénat", "Le Conseil d'État et l'Assemblée nationale", "Le Conseil constitutionnel et la Cour des comptes"], "Le Parlement est bicaméral : Assemblée nationale et Sénat."),
+      q("institutions-francaises", "Parlement", "Quelle mission n'appartient pas au Parlement ?", "Rendre les jugements pénaux", ["Voter la loi", "Contrôler le Gouvernement", "Évaluer les politiques publiques"], "Rendre les jugements relève des juridictions, pas du Parlement."),
+      q("institutions-francaises", "Parlement", "Lorsqu'un désaccord persiste entre les deux chambres, qui peut avoir le dernier mot sur une loi ordinaire ?", "L'Assemblée nationale", ["Le Sénat", "Le Conseil d'État", "La Cour des comptes"], "Après la navette et les procédures prévues, le Gouvernement peut demander à l'Assemblée nationale de statuer définitivement."),
+      q("institutions-francaises", "Loi", "Comment appelle-t-on les allers-retours d'un texte entre l'Assemblée nationale et le Sénat ?", "La navette parlementaire", ["La cohabitation", "La promulgation", "La déconcentration"], "La navette désigne l'examen successif d'un texte par les deux assemblées."),
+      q("institutions-francaises", "Loi", "Quel organe réunit députés et sénateurs pour chercher un compromis sur un texte ?", "La commission mixte paritaire", ["Le Conseil supérieur de la magistrature", "Le Conseil économique social et environnemental", "La Cour de justice de la République"], "La commission mixte paritaire comprend 7 députés et 7 sénateurs."),
+      q("institutions-francaises", "Loi", "Où une loi promulguée est-elle publiée officiellement ?", "Au Journal officiel", ["Dans chaque mairie uniquement", "Au Bulletin scolaire", "Dans un registre privé"], "La publication au Journal officiel permet l'entrée en vigueur selon les règles applicables."),
+      q("institutions-francaises", "Loi", "Quel type de texte est pris par le Gouvernement dans le domaine de la loi après autorisation du Parlement ?", "Une ordonnance", ["Un amendement citoyen", "Un arrêt de cassation", "Une circulaire européenne"], "L'article 38 permet au Gouvernement de prendre des ordonnances après habilitation."),
+      q("institutions-francaises", "Loi", "Quelle loi fixe chaque année les ressources et charges de l'État ?", "La loi de finances", ["La loi organique municipale", "La loi martiale", "La loi référendaire locale"], "La loi de finances détermine le budget de l'État."),
+      q("institutions-francaises", "Constitution", "Quel texte fonde la Ve République ?", "La Constitution du 4 octobre 1958", ["La Déclaration de 1789 seule", "Le Code civil de 1804", "Le traité de Rome"], "La Constitution de 1958 organise les institutions de la Ve République."),
+      q("institutions-francaises", "Constitution", "Quel conseil contrôle notamment la conformité des lois à la Constitution ?", "Le Conseil constitutionnel", ["Le Conseil d'État uniquement", "La Cour des comptes", "Le Sénat"], "Le Conseil constitutionnel exerce le contrôle de constitutionnalité."),
+      q("institutions-francaises", "Constitution", "Combien de membres nommés composent le Conseil constitutionnel ?", "9", ["5", "12", "577"], "Neuf membres sont nommés pour neuf ans, renouvelés par tiers."),
+      q("institutions-francaises", "Constitution", "Que signifie QPC ?", "Question prioritaire de constitutionnalité", ["Question parlementaire commune", "Quota public communal", "Qualité pénale contrôlée"], "La QPC permet de contester la constitutionnalité d'une disposition législative déjà applicable."),
+      q("institutions-francaises", "Constitution", "Quel principe signifie que les pouvoirs exécutif, législatif et judiciaire ne doivent pas être concentrés ?", "La séparation des pouvoirs", ["La subsidiarité", "La proportionnelle", "La tutelle administrative"], "La séparation des pouvoirs protège l'équilibre institutionnel et les libertés."),
+      q("institutions-francaises", "Juridictions", "Quel est le plus haut juge de l'ordre administratif ?", "Le Conseil d'État", ["La Cour de cassation", "Le tribunal correctionnel", "Le conseil municipal"], "Le Conseil d'État est la juridiction suprême de l'ordre administratif."),
+      q("institutions-francaises", "Juridictions", "Quel est le plus haut juge de l'ordre judiciaire ?", "La Cour de cassation", ["Le Conseil d'État", "La Cour des comptes", "Le préfet"], "La Cour de cassation veille à la bonne application du droit par les juridictions judiciaires."),
+      q("institutions-francaises", "Juridictions", "Quel ordre juge principalement les litiges entre un administré et l'administration ?", "L'ordre administratif", ["L'ordre judiciaire", "L'ordre sportif", "L'ordre consulaire"], "Les tribunaux administratifs, cours administratives d'appel et le Conseil d'État relèvent de l'ordre administratif."),
+      q("institutions-francaises", "Juridictions", "Quel ordre juge les infractions pénales ?", "L'ordre judiciaire", ["L'ordre administratif", "Le Parlement", "Le Conseil européen"], "Les juridictions pénales appartiennent à l'ordre judiciaire."),
+      q("institutions-francaises", "Juridictions", "Quelle juridiction juge les crimes en première instance ?", "La cour d'assises", ["Le tribunal de commerce", "Le tribunal administratif", "Le conseil de prud'hommes"], "Les crimes sont jugés par une cour d'assises ou une cour criminelle départementale selon les cas."),
+      q("institutions-francaises", "Juridictions", "Quel acteur représente l'accusation au nom de la société dans un procès pénal ?", "Le ministère public", ["Le greffier", "Le maire", "Le rapporteur budgétaire"], "Le procureur et ses substituts composent le ministère public."),
+      q("institutions-francaises", "Contrôles", "Quelle institution contrôle la régularité des comptes publics ?", "La Cour des comptes", ["Le Conseil constitutionnel", "Le Sénat uniquement", "La mairie"], "La Cour des comptes contrôle l'usage de l'argent public."),
+      q("institutions-francaises", "Contrôles", "Quelle autorité protège les données personnelles en France ?", "La CNIL", ["L'ARCOM", "La BCE", "La CMP"], "La Commission nationale de l'informatique et des libertés veille à la protection des données personnelles."),
+      q("institutions-francaises", "Contrôles", "Quelle autorité régule notamment l'audiovisuel et le numérique après fusion du CSA et de l'Hadopi ?", "L'ARCOM", ["La CNIL", "Le Conseil d'État", "La Cour d'appel"], "L'ARCOM existe depuis 2022 et régule la communication audiovisuelle et numérique."),
+      q("institutions-francaises", "Contrôles", "Quelle institution défend les droits des usagers face aux services publics et lutte contre les discriminations ?", "Le Défenseur des droits", ["Le préfet maritime", "Le Conseil européen", "Le tribunal de commerce"], "Le Défenseur des droits est une autorité constitutionnelle indépendante."),
+      q("institutions-francaises", "Administration", "Qui représente l'État dans un département ?", "Le préfet", ["Le maire", "Le président du conseil régional", "Le député européen"], "Le préfet représente le Gouvernement et l'État dans le département."),
+      q("institutions-francaises", "Administration", "Quelle différence correspond à la déconcentration ?", "L'État agit localement par ses représentants", ["Les collectivités deviennent des États indépendants", "Le Parlement juge les crimes", "Les communes disparaissent"], "La déconcentration rapproche l'action de l'État du terrain sans transférer la personnalité juridique."),
+      q("institutions-francaises", "Administration", "Quelle différence correspond à la décentralisation ?", "L'État transfère des compétences à des collectivités territoriales", ["Le président nomme les députés", "Le Sénat rend la justice", "La police devient privée"], "La décentralisation confie des compétences à des collectivités élues."),
+      q("institutions-francaises", "Collectivités", "Quelle est la plus petite collectivité territoriale française de droit commun ?", "La commune", ["La région", "Le département", "L'arrondissement judiciaire"], "La commune est l'échelon local de base."),
+      q("institutions-francaises", "Collectivités", "Qui élit le maire dans une commune ?", "Le conseil municipal", ["Le préfet", "Le président de la République", "Le Sénat"], "Après les élections municipales, le conseil municipal élit le maire."),
+      q("institutions-francaises", "Collectivités", "Quelle collectivité est administrée par un conseil départemental ?", "Le département", ["La commune", "L'Union européenne", "Le canton comme collectivité"], "Le département est administré par le conseil départemental."),
+      q("institutions-francaises", "Collectivités", "Quelle collectivité est administrée par un conseil régional ?", "La région", ["La commune", "Le ministère", "Le tribunal"], "La région est administrée par le conseil régional."),
+      q("institutions-francaises", "Élections", "Quel scrutin élit les députés en France métropolitaine et outre-mer ?", "Les élections législatives", ["Les élections sénatoriales", "Les élections prud'homales", "Les élections européennes seulement"], "Les élections législatives renouvellent l'Assemblée nationale."),
+      q("institutions-francaises", "Élections", "Quel scrutin élit les conseillers municipaux ?", "Les élections municipales", ["Les élections cantonales européennes", "Les élections présidentielles", "Le référendum national"], "Les conseillers municipaux sont élus lors des élections municipales."),
+      q("institutions-francaises", "Élections", "Quel âge minimum permet de voter en France ?", "18 ans", ["16 ans", "21 ans", "25 ans"], "Le droit de vote est ouvert aux citoyens français majeurs jouissant de leurs droits civiques."),
+      q("institutions-francaises", "Police et sécurité", "De quel ministère relève principalement la Police nationale ?", "Le ministère de l'Intérieur", ["Le ministère de la Justice", "Le ministère des Armées uniquement", "Le ministère de la Culture"], "La Police nationale dépend du ministère de l'Intérieur."),
+      q("institutions-francaises", "Police et sécurité", "Quel statut caractérise la Gendarmerie nationale ?", "Un statut militaire", ["Un statut municipal", "Un statut associatif", "Un statut parlementaire"], "La Gendarmerie nationale est une force armée, placée pour emploi sous l'autorité du ministère de l'Intérieur."),
+      q("institutions-francaises", "Police et sécurité", "Qui exerce des pouvoirs de police administrative générale dans sa commune ?", "Le maire", ["Le député", "Le président du Sénat", "Le juge d'instruction"], "Le maire dispose de pouvoirs de police administrative pour assurer ordre, sûreté, sécurité et salubrité publics."),
+      q("institutions-francaises", "Police et sécurité", "Quelle police dépend directement de la commune ?", "La police municipale", ["La police aux frontières", "La police judiciaire nationale", "La gendarmerie mobile"], "La police municipale est placée sous l'autorité du maire."),
+      q("institutions-francaises", "Citoyenneté", "Quel texte de 1789 proclame notamment la liberté et l'égalité en droits ?", "La Déclaration des droits de l'homme et du citoyen", ["Le traité de Lisbonne", "Le Code de la route", "La loi de finances"], "La DDHC du 26 août 1789 est un texte fondamental du bloc de constitutionnalité."),
+
+      q("institutions-europeennes", "Union européenne", "Combien d'États membres compte l'Union européenne depuis le départ du Royaume-Uni ?", "27", ["24", "28", "30"], "Depuis le Brexit, l'Union européenne compte 27 États membres."),
+      q("institutions-europeennes", "Union européenne", "Quel pays a quitté l'Union européenne en 2020 ?", "Le Royaume-Uni", ["La Norvège", "La Suisse", "L'Irlande"], "Le Brexit est devenu effectif le 31 janvier 2020."),
+      q("institutions-europeennes", "Union européenne", "Quels pays faisaient partie des six fondateurs de la construction européenne ?", "France, Allemagne de l'Ouest, Italie, Belgique, Pays-Bas, Luxembourg", ["France, Espagne, Portugal, Grèce, Irlande, Danemark", "France, Royaume-Uni, Suisse, Norvège, Suède, Finlande", "Allemagne, Autriche, Pologne, Hongrie, Roumanie, Bulgarie"], "Les six États fondateurs ont signé les traités de Rome en 1957."),
+      q("institutions-europeennes", "Union européenne", "Quelle ville accueille les séances plénières principales du Parlement européen ?", "Strasbourg", ["Madrid", "Rome", "Varsovie"], "Strasbourg est le siège officiel des sessions plénières du Parlement européen."),
+      q("institutions-europeennes", "Parlement européen", "Comment les députés européens sont-ils élus ?", "Au suffrage universel direct", ["Par les gouvernements", "Par les juges européens", "Par tirage au sort"], "Les citoyens de l'Union élisent les députés européens tous les cinq ans."),
+      q("institutions-europeennes", "Parlement européen", "Quelle est la durée du mandat des députés européens ?", "5 ans", ["3 ans", "6 ans", "9 ans"], "Les élections européennes ont lieu tous les cinq ans."),
+      q("institutions-europeennes", "Parlement européen", "Avec quelle institution le Parlement européen partage-t-il généralement le pouvoir législatif ?", "Le Conseil de l'Union européenne", ["La Banque centrale européenne", "La Cour des comptes européenne", "Le Conseil constitutionnel français"], "La procédure législative ordinaire associe Parlement européen et Conseil de l'Union européenne."),
+      q("institutions-europeennes", "Parlement européen", "Quel pouvoir le Parlement européen exerce-t-il sur la Commission européenne ?", "Il approuve la Commission et peut la censurer", ["Il nomme seul les commissaires nationaux", "Il dirige la BCE", "Il juge les crimes"], "Le Parlement approuve la Commission et peut adopter une motion de censure."),
+      q("institutions-europeennes", "Commission européenne", "Quel est le rôle classique de la Commission européenne ?", "Proposer les textes et veiller à l'application des traités", ["Commander les armées nationales", "Élire les maires", "Rendre les arrêts de cassation français"], "La Commission a l'initiative législative et est gardienne des traités."),
+      q("institutions-europeennes", "Commission européenne", "Combien de commissaires européens composent la Commission en principe ?", "Un par État membre", ["Deux par région", "Un par groupe politique", "577 au total"], "Chaque État membre dispose d'un commissaire, soit 27 dans l'Union actuelle."),
+      q("institutions-europeennes", "Commission européenne", "Quelle personnalité a été reconduite à la présidence de la Commission européenne en 2024 ?", "Ursula von der Leyen", ["Christine Lagarde", "Roberta Metsola", "Kaja Kallas"], "Ursula von der Leyen a été reconduite pour un second mandat après les élections européennes de 2024."),
+      q("institutions-europeennes", "Commission européenne", "Dans quelle ville siège principalement la Commission européenne ?", "Bruxelles", ["Luxembourg", "Lisbonne", "Athènes"], "La Commission européenne travaille principalement à Bruxelles."),
+      q("institutions-europeennes", "Conseil de l'Union européenne", "Qui siège au Conseil de l'Union européenne ?", "Les ministres des États membres selon le sujet traité", ["Les chefs d'État uniquement", "Les députés européens uniquement", "Les juges nationaux"], "Le Conseil réunit les ministres compétents des États membres."),
+      q("institutions-europeennes", "Conseil de l'Union européenne", "Quelle institution représente les gouvernements des États membres dans l'adoption des lois européennes ?", "Le Conseil de l'Union européenne", ["Le Parlement européen seul", "La Cour de justice", "La Banque centrale européenne"], "Le Conseil de l'Union européenne est le co-législateur représentant les États."),
+      q("institutions-europeennes", "Conseil européen", "Qui compose le Conseil européen ?", "Les chefs d'État ou de gouvernement des États membres", ["Les maires des capitales", "Les juges de la Cour de justice", "Les commissaires de police"], "Le Conseil européen rassemble les dirigeants des États membres et fixe les grandes orientations."),
+      q("institutions-europeennes", "Conseil européen", "Quel est le rôle principal du Conseil européen ?", "Définir les grandes orientations politiques de l'Union", ["Voter les lois municipales", "Contrôler les contraventions", "Émettre les billets en euros"], "Le Conseil européen donne les impulsions politiques générales à l'Union."),
+      q("institutions-europeennes", "Conseil européen", "Qui a pris la présidence du Conseil européen en décembre 2024 ?", "Antonio Costa", ["Emmanuel Macron", "Mario Draghi", "Jean-Claude Juncker"], "Antonio Costa a succédé à Charles Michel à la présidence du Conseil européen."),
+      q("institutions-europeennes", "Cour de justice", "Où siège la Cour de justice de l'Union européenne ?", "À Luxembourg", ["À Paris", "À Berlin", "À Prague"], "La Cour de justice de l'Union européenne siège à Luxembourg."),
+      q("institutions-europeennes", "Cour de justice", "Quelle mission appartient à la Cour de justice de l'Union européenne ?", "Assurer l'interprétation et l'application uniforme du droit de l'Union", ["Diriger la politique monétaire", "Élire les députés nationaux", "Promulguer les lois françaises"], "La CJUE veille au respect du droit dans l'interprétation et l'application des traités."),
+      q("institutions-europeennes", "BCE", "Où siège la Banque centrale européenne ?", "À Francfort", ["À Strasbourg", "À Bruxelles", "À La Haye"], "La BCE siège à Francfort-sur-le-Main en Allemagne."),
+      q("institutions-europeennes", "BCE", "Quelle est la mission centrale de la Banque centrale européenne ?", "Conduire la politique monétaire de la zone euro", ["Rédiger le Code civil", "Commander Europol", "Élire le Parlement"], "La BCE pilote la politique monétaire des pays ayant adopté l'euro."),
+      q("institutions-europeennes", "BCE", "Quelle personnalité préside la Banque centrale européenne depuis 2019 ?", "Christine Lagarde", ["Ursula von der Leyen", "Roberta Metsola", "Elisabeth Borne"], "Christine Lagarde préside la BCE depuis novembre 2019."),
+      q("institutions-europeennes", "Euro", "Combien de pays utilisent l'euro dans la zone euro depuis 2023 ?", "20", ["17", "19", "27"], "La Croatie a rejoint la zone euro en 2023, portant le total à 20 pays."),
+      q("institutions-europeennes", "Euro", "En quelle année les pièces et billets en euros ont-ils été mis en circulation ?", "2002", ["1992", "1999", "2009"], "L'euro existe comme monnaie scripturale depuis 1999, mais les pièces et billets circulent depuis 2002."),
+      q("institutions-europeennes", "Traités", "Quel traité de 1957 a créé la Communauté économique européenne ?", "Le traité de Rome", ["Le traité de Maastricht", "Le traité de Lisbonne", "Le traité de Nice"], "Le traité de Rome fonde la CEE."),
+      q("institutions-europeennes", "Traités", "Quel traité a créé l'Union européenne ?", "Le traité de Maastricht", ["Le traité de Versailles", "Le traité de Rome seul", "Le traité de Schengen"], "Le traité de Maastricht, signé en 1992, crée l'Union européenne."),
+      q("institutions-europeennes", "Traités", "Quel traité a réformé les institutions européennes et est entré en vigueur en 2009 ?", "Le traité de Lisbonne", ["Le traité de Paris de 1763", "Le traité de l'Élysée", "Le traité de Trianon"], "Le traité de Lisbonne a été signé en 2007 et est entré en vigueur en 2009."),
+      q("institutions-europeennes", "Droit européen", "Quel acte européen est directement applicable dans tous les États membres ?", "Le règlement", ["La directive", "La recommandation", "Le voeu"], "Un règlement s'applique directement ; une directive doit en principe être transposée."),
+      q("institutions-europeennes", "Droit européen", "Quel acte fixe un résultat à atteindre tout en laissant aux États le choix des moyens ?", "La directive", ["Le règlement", "L'arrêté municipal", "Le jugement correctionnel"], "La directive nécessite une transposition dans le droit national."),
+      q("institutions-europeennes", "Droit européen", "Quel principe veut que l'Union agisse seulement si l'action est plus efficace au niveau européen ?", "La subsidiarité", ["La monarchie", "La dissolution", "La parité absolue"], "La subsidiarité encadre l'intervention de l'Union dans les domaines partagés."),
+      q("institutions-europeennes", "Droits", "Quelle charte européenne est devenue juridiquement contraignante avec le traité de Lisbonne ?", "La Charte des droits fondamentaux de l'Union européenne", ["La charte des communes rurales", "La Magna Carta française", "Le Code pénal européen unique"], "La Charte des droits fondamentaux a la même valeur juridique que les traités depuis Lisbonne."),
+      q("institutions-europeennes", "Citoyenneté", "Quel traité a instauré la citoyenneté européenne ?", "Le traité de Maastricht", ["Le traité de Rome de 1957", "Le traité de Versailles", "Le traité de Paris de 1815"], "La citoyenneté européenne complète la citoyenneté nationale depuis Maastricht."),
+      q("institutions-europeennes", "Citoyenneté", "Quel droit découle de la citoyenneté européenne ?", "Voter aux élections européennes dans son pays de résidence au sein de l'UE", ["Voter à toutes les présidentielles nationales de l'UE", "Devenir préfet automatiquement", "Échapper aux lois nationales"], "Un citoyen européen peut voter et se présenter aux élections européennes et municipales dans son État de résidence, sous conditions."),
+      q("institutions-europeennes", "Symboles européens", "Quelle est la devise de l'Union européenne ?", "Unie dans la diversité", ["Liberté Égalité Fraternité", "Travail Famille Patrie", "Force et honneur"], "La devise de l'Union européenne est « Unie dans la diversité »."),
+      q("institutions-europeennes", "Symboles européens", "Quelle musique est l'hymne européen ?", "L'Ode à la joie", ["La Marseillaise", "Le Chant des partisans", "God Save the King"], "L'hymne européen reprend l'Ode à la joie de Beethoven."),
+      q("institutions-europeennes", "Symboles européens", "Combien d'étoiles figurent sur le drapeau européen ?", "12", ["15", "27", "6"], "Les 12 étoiles symbolisent l'unité et l'harmonie, pas le nombre d'États membres."),
+      q("institutions-europeennes", "Symboles européens", "À quelle date célèbre-t-on la Journée de l'Europe ?", "Le 9 mai", ["Le 14 juillet", "Le 11 novembre", "Le 1er janvier"], "Le 9 mai rappelle la déclaration Schuman de 1950."),
+      q("institutions-europeennes", "Espace Schengen", "Quel est l'objectif principal de l'espace Schengen ?", "Permettre la libre circulation sans contrôles systématiques aux frontières intérieures", ["Créer une armée unique", "Remplacer toutes les constitutions", "Fixer les impôts locaux"], "Schengen facilite la circulation entre États participants tout en renforçant la coopération aux frontières extérieures."),
+      q("institutions-europeennes", "Coopération policière", "Quelle agence européenne soutient la coopération policière ?", "Europol", ["Eurostat", "Erasmus", "Frontex uniquement"], "Europol appuie les services répressifs des États membres contre la criminalité grave et organisée."),
+      q("institutions-europeennes", "Frontières", "Quelle agence européenne coordonne la coopération aux frontières extérieures ?", "Frontex", ["Europol", "La BCE", "La Cour des comptes"], "Frontex est l'agence européenne de garde-frontières et de garde-côtes."),
+      q("institutions-francaises", "Institution consultative", "Quelle institution consultative représente la société civile organisée auprès des pouvoirs publics ?", "Le Conseil économique, social et environnemental", ["La Cour de cassation", "La Banque de France", "Le Conseil européen"], "Le CESE donne des avis consultatifs sur les questions économiques, sociales et environnementales."),
+
+      q("symboles", "La Marseillaise", "Qui a composé La Marseillaise ?", "Rouget de Lisle", ["Victor Hugo", "Jean Jaurès", "Charles de Gaulle"], "Claude Joseph Rouget de Lisle a composé ce chant en 1792."),
+      q("symboles", "La Marseillaise", "En quelle année La Marseillaise a-t-elle été composée ?", "1792", ["1789", "1795", "1880"], "Rouget de Lisle compose le Chant de guerre pour l'armée du Rhin en avril 1792."),
+      q("symboles", "La Marseillaise", "Quel était le premier titre de La Marseillaise ?", "Chant de guerre pour l'armée du Rhin", ["Chant du 14 juillet", "Hymne de la Bastille", "Cantique de la République"], "Le chant prend ensuite le nom de Marseillaise car il est popularisé par les fédérés marseillais."),
+      q("symboles", "La Marseillaise", "Dans quelle ville La Marseillaise a-t-elle été composée ?", "Strasbourg", ["Marseille", "Paris", "Lyon"], "Rouget de Lisle compose le chant à Strasbourg."),
+      q("symboles", "La Marseillaise", "Quel est le premier vers de La Marseillaise ?", "Allons enfants de la Patrie", ["Aux armes citoyens", "Liberté Égalité Fraternité", "Amour sacré de la Patrie"], "Le chant commence par « Allons enfants de la Patrie »."),
+      q("symboles", "La Marseillaise", "Quelle formule ouvre le refrain de La Marseillaise ?", "Aux armes, citoyens", ["Marchons dans les campagnes", "Vive la République", "Français, dormez en paix"], "Le refrain commence par « Aux armes, citoyens »."),
+      q("symboles", "La Marseillaise", "Quelle institution adopte La Marseillaise comme hymne national en 1795 ?", "La Convention", ["Le Consulat", "La Troisième République seule", "Le Conseil européen"], "La Convention adopte La Marseillaise comme chant national le 14 juillet 1795."),
+      q("symboles", "La Marseillaise", "Sous quelle République La Marseillaise redevient durablement hymne national en 1879 ?", "La Troisième République", ["La Première République", "La Quatrième République", "La Cinquième République"], "La Troisième République réaffirme La Marseillaise comme hymne national."),
+      q("symboles", "La Marseillaise", "Dans La Marseillaise, quel jour est arrivé selon le premier couplet ?", "Le jour de gloire", ["Le jour de paix", "Le jour d'examen", "Le jour du vote"], "Le texte dit : « Le jour de gloire est arrivé »."),
+      q("symboles", "La Marseillaise", "Quel vers complète le refrain : « Marchons, marchons ! Qu'un sang impur... » ?", "Abreuve nos sillons", ["Protège nos maisons", "Éteigne nos chansons", "Traverse nos drapeaux"], "La formule appartient au refrain de La Marseillaise."),
+      q("symboles", "Drapeau français", "Quelles sont les couleurs du drapeau français ?", "Bleu, blanc, rouge", ["Vert, blanc, rouge", "Bleu, jaune, rouge", "Noir, blanc, rouge"], "Le drapeau tricolore français est bleu, blanc, rouge."),
+      q("symboles", "Drapeau français", "Dans quel ordre apparaissent les couleurs du drapeau français de la hampe vers l'extérieur ?", "Bleu, blanc, rouge", ["Rouge, blanc, bleu", "Blanc, bleu, rouge", "Bleu, rouge, blanc"], "La bande bleue est placée du côté de la hampe."),
+      q("symboles", "Drapeau français", "Quelle couleur du drapeau est traditionnellement associée à la monarchie ?", "Le blanc", ["Le bleu", "Le rouge", "Le vert"], "Le blanc est associé à la monarchie française."),
+      q("symboles", "Drapeau français", "Quelles couleurs sont traditionnellement associées à Paris dans le drapeau tricolore ?", "Le bleu et le rouge", ["Le blanc et le vert", "Le noir et le rouge", "Le jaune et le bleu"], "Le bleu et le rouge sont les couleurs de Paris."),
+      q("symboles", "Drapeau français", "Quel article de la Constitution mentionne le drapeau tricolore ?", "L'article 2", ["L'article 11", "L'article 49", "L'article 89"], "L'article 2 indique que l'emblème national est le drapeau tricolore, bleu, blanc, rouge."),
+      q("symboles", "Drapeau français", "Quelle forme ont les bandes du drapeau français actuel ?", "Verticale", ["Horizontale", "En diagonale", "En damier"], "Le drapeau français utilise trois bandes verticales."),
+      q("symboles", "Drapeau français", "À quelle période le drapeau tricolore devient-il un symbole majeur de la Nation ?", "La Révolution française", ["Le Moyen Âge", "Le Second Empire uniquement", "La Ve République uniquement"], "Le drapeau tricolore s'impose avec la Révolution française."),
+      q("symboles", "Drapeau français", "Quel emblème national flotte sur les bâtiments publics lors des cérémonies officielles ?", "Le drapeau tricolore", ["Le drapeau européen uniquement", "Un drapeau régional obligatoire", "Le fanion municipal seul"], "Le drapeau tricolore est l'emblème national de la République française."),
+      q("symboles", "Devise", "Quelle est la devise de la République française ?", "Liberté, Égalité, Fraternité", ["Travail, Famille, Patrie", "Unie dans la diversité", "Ordre, Force, Justice"], "La devise républicaine est « Liberté, Égalité, Fraternité »."),
+      q("symboles", "Devise", "Quel article de la Constitution mentionne la devise de la République ?", "L'article 2", ["L'article 1 seulement", "L'article 16", "L'article 72"], "L'article 2 rassemble plusieurs symboles : langue, drapeau, hymne, devise et principe."),
+      q("symboles", "Devise", "Quel mot de la devise exprime l'absence de privilèges devant la loi ?", "Égalité", ["Liberté", "Fraternité", "Laïcité"], "L'égalité renvoie notamment à l'égalité des citoyens devant la loi."),
+      q("symboles", "Devise", "Quel mot de la devise exprime la solidarité entre citoyens ?", "Fraternité", ["Liberté", "Égalité", "Souveraineté"], "La fraternité renvoie à la solidarité et au lien civique."),
+      q("symboles", "Devise", "Quel régime a utilisé la devise « Travail, Famille, Patrie » à la place de la devise républicaine ?", "Le régime de Vichy", ["La Première République", "La Commune de Paris", "La Cinquième République"], "Le régime de Vichy a remplacé la devise républicaine par « Travail, Famille, Patrie »."),
+      q("symboles", "Marianne", "Que représente Marianne ?", "L'allégorie de la République française", ["Une reine de France", "Une institution européenne", "Une juridiction administrative"], "Marianne personnifie la République et ses valeurs."),
+      q("symboles", "Marianne", "Quel bonnet porte souvent Marianne ?", "Le bonnet phrygien", ["Le képi", "La couronne royale", "Le chapeau haut-de-forme"], "Le bonnet phrygien est associé à la liberté et à la Révolution."),
+      q("symboles", "Marianne", "Où trouve-t-on fréquemment un buste de Marianne ?", "Dans les mairies", ["Dans les commissariats uniquement", "Sur les billets en euros uniquement", "Dans les ambassades étrangères seulement"], "Le buste de Marianne est présent dans de nombreuses mairies."),
+      q("symboles", "Marianne", "Quel symbole féminin figure sur de nombreux timbres français ?", "Marianne", ["Jeanne d'Arc uniquement", "Europe", "La Joconde"], "Marianne est régulièrement utilisée sur les timbres d'usage courant."),
+      q("symboles", "14 juillet", "Quelle est la fête nationale française ?", "Le 14 juillet", ["Le 8 mai", "Le 11 novembre", "Le 9 mai"], "La fête nationale française est célébrée le 14 juillet."),
+      q("symboles", "14 juillet", "Quelle loi a fait du 14 juillet la fête nationale ?", "La loi de 1880", ["La loi de 1905", "La Constitution de 1958", "Le traité de Rome"], "La Troisième République adopte le 14 juillet comme fête nationale par la loi de 1880."),
+      q("symboles", "14 juillet", "Quel événement du 14 juillet 1789 est associé à la fête nationale ?", "La prise de la Bastille", ["L'abolition de la peine de mort", "La bataille de Verdun", "La signature du traité de Maastricht"], "La prise de la Bastille symbolise la fin de l'arbitraire royal."),
+      q("symboles", "14 juillet", "Quel événement du 14 juillet 1790 est aussi commémoré par la fête nationale ?", "La Fête de la Fédération", ["La bataille d'Austerlitz", "Le sacre de Napoléon", "L'appel du 18 juin"], "La Fête de la Fédération symbolise l'unité nationale."),
+      q("symboles", "14 juillet", "Que représentait la Bastille avant sa prise en 1789 ?", "Une prison royale", ["Un palais présidentiel", "Une université", "Une assemblée élue"], "La Bastille était une prison d'État, symbole de l'absolutisme."),
+      q("symboles", "République", "Quelle est la langue de la République selon la Constitution ?", "Le français", ["Le latin", "L'anglais", "Toutes les langues régionales uniquement"], "L'article 2 de la Constitution affirme que la langue de la République est le français."),
+      q("symboles", "République", "Quel est le principe de la République mentionné à l'article 2 : gouvernement du peuple, par le peuple et pour le peuple ?", "La démocratie", ["La monarchie", "L'empire", "La théocratie"], "L'article 2 rappelle le principe démocratique de la République."),
+      q("symboles", "République", "Quel principe impose la neutralité religieuse de l'État ?", "La laïcité", ["La féodalité", "La cohabitation", "La subsidiarité"], "La République française est laïque, notamment depuis la loi de 1905 et la Constitution."),
+      q("symboles", "République", "Quel animal est souvent utilisé comme symbole non officiel de la France, notamment dans le sport ?", "Le coq", ["Le lion", "L'aigle", "Le panda"], "Le coq gaulois est un symbole populaire et sportif de la France."),
+      q("symboles", "République", "Quel texte constitutionnel cite ensemble drapeau, hymne, devise et principe démocratique ?", "La Constitution de 1958", ["Le Code de commerce", "Le traité de Schengen", "Le règlement intérieur du Sénat"], "L'article 2 de la Constitution de 1958 énonce ces symboles."),
+      q("symboles", "République", "Sur quels bâtiments voit-on souvent la devise républicaine ?", "Les mairies et bâtiments publics", ["Les seuls bâtiments privés", "Les ambassades étrangères uniquement", "Les stades européens uniquement"], "La devise figure fréquemment sur les frontons des bâtiments publics."),
+      q("symboles", "République", "Quelle valeur républicaine garantit la libre expression des opinions dans le respect de la loi ?", "La liberté", ["La hiérarchie", "La tutelle", "L'hérédité"], "La liberté fait partie de la devise et des droits fondamentaux."),
+
+      q("histoire-actualite", "Antiquité", "Quelle bataille de 52 av. J.-C. oppose Vercingétorix à Jules César ?", "Alésia", ["Bouvines", "Marignan", "Valmy"], "La défaite d'Alésia marque la victoire romaine sur les Gaulois."),
+      q("histoire-actualite", "Moyen Âge", "Quel roi des Francs est traditionnellement associé au baptême de Reims ?", "Clovis", ["Charlemagne", "Hugues Capet", "Saint Louis"], "Le baptême de Clovis est un événement fondateur de l'histoire des Francs."),
+      q("histoire-actualite", "Moyen Âge", "En quelle année Charlemagne est-il couronné empereur ?", "800", ["732", "987", "1515"], "Charlemagne est couronné empereur à Rome le 25 décembre 800."),
+      q("histoire-actualite", "Moyen Âge", "Quelle dynastie commence avec l'élection d'Hugues Capet en 987 ?", "Les Capétiens", ["Les Mérovingiens", "Les Carolingiens", "Les Bourbons uniquement"], "Hugues Capet fonde la dynastie capétienne."),
+      q("histoire-actualite", "Moyen Âge", "Quelle héroïne libère Orléans en 1429 pendant la guerre de Cent Ans ?", "Jeanne d'Arc", ["Aliénor d'Aquitaine", "Olympe de Gouges", "George Sand"], "Jeanne d'Arc joue un rôle majeur dans la levée du siège d'Orléans."),
+      q("histoire-actualite", "Renaissance", "Quelle bataille célèbre est associée à la date 1515 ?", "Marignan", ["Waterloo", "Verdun", "Poitiers"], "La victoire de Marignan est remportée par François Ier."),
+      q("histoire-actualite", "Ancien Régime", "Quel édit de 1598 accorde des droits aux protestants ?", "L'édit de Nantes", ["L'édit de Fontainebleau", "L'édit de Villers-Cotterêts", "L'édit de Moulins"], "Henri IV promulgue l'édit de Nantes pour apaiser les guerres de Religion."),
+      q("histoire-actualite", "Ancien Régime", "Quel roi est surnommé le Roi-Soleil ?", "Louis XIV", ["Louis XVI", "Henri IV", "François Ier"], "Louis XIV incarne la monarchie absolue et fait rayonner Versailles."),
+      q("histoire-actualite", "Révolution", "Quel événement a lieu le 14 juillet 1789 ?", "La prise de la Bastille", ["Le sacre de Napoléon", "La chute de Robespierre", "La proclamation de la IIIe République"], "La prise de la Bastille est un symbole majeur de la Révolution française."),
+      q("histoire-actualite", "Révolution", "Quel texte est adopté le 26 août 1789 ?", "La Déclaration des droits de l'homme et du citoyen", ["Le Code civil", "La Constitution de 1958", "Le traité de Maastricht"], "La DDHC proclame des droits fondamentaux comme la liberté et l'égalité."),
+      q("histoire-actualite", "Révolution", "En quelle année la Première République est-elle proclamée ?", "1792", ["1789", "1804", "1848"], "La monarchie est abolie et la République proclamée en septembre 1792."),
+      q("histoire-actualite", "Empire", "En quelle année Napoléon Bonaparte devient-il empereur des Français ?", "1804", ["1799", "1815", "1870"], "Napoléon est sacré empereur en 1804."),
+      q("histoire-actualite", "Empire", "Quel grand texte juridique est promulgué en 1804 ?", "Le Code civil", ["La Constitution de 1958", "La loi de 1905", "Le traité de Rome"], "Le Code civil structure durablement le droit privé français."),
+      q("histoire-actualite", "Empire", "Quelle bataille marque la défaite finale de Napoléon en 1815 ?", "Waterloo", ["Austerlitz", "Valmy", "Bouvines"], "Waterloo entraîne la chute définitive de Napoléon Ier."),
+      q("histoire-actualite", "XIXe siècle", "Quelle révolution française proclame la Deuxième République ?", "La révolution de 1848", ["La révolution de 1830", "La Commune de 1871", "Mai 1968"], "La révolution de février 1848 renverse la monarchie de Juillet."),
+      q("histoire-actualite", "XIXe siècle", "Quelle mesure sociale majeure est définitivement abolie en France en 1848 ?", "L'esclavage", ["L'impôt", "Le suffrage universel", "La propriété privée"], "Victor Schoelcher est associé au décret d'abolition de l'esclavage en 1848."),
+      q("histoire-actualite", "XIXe siècle", "Quel régime naît après la défaite de Sedan en 1870 ?", "La Troisième République", ["Le Second Empire", "La Restauration", "La Cinquième République"], "La Troisième République est proclamée le 4 septembre 1870."),
+      q("histoire-actualite", "République", "Quelle loi de 1905 est un repère majeur de la laïcité française ?", "La séparation des Églises et de l'État", ["La création de l'euro", "L'abolition de la peine de mort", "La décentralisation"], "La loi de 1905 organise la séparation des Églises et de l'État."),
+      q("histoire-actualite", "Première Guerre mondiale", "Quelles années couvrent la Première Guerre mondiale ?", "1914-1918", ["1939-1945", "1870-1871", "1954-1962"], "La Grande Guerre dure de 1914 à 1918."),
+      q("histoire-actualite", "Première Guerre mondiale", "Quelle bataille de 1916 est un symbole majeur de la Première Guerre mondiale en France ?", "Verdun", ["Marignan", "Waterloo", "Alésia"], "Verdun est l'une des batailles les plus meurtrières de 1916."),
+      q("histoire-actualite", "Entre-deux-guerres", "Quel gouvernement de 1936 est associé aux congés payés ?", "Le Front populaire", ["Le Directoire", "Le Consulat", "Le Gouvernement provisoire de 1944"], "Le Front populaire fait adopter les premiers congés payés."),
+      q("histoire-actualite", "Seconde Guerre mondiale", "À quelle date Charles de Gaulle lance-t-il son appel depuis Londres ?", "Le 18 juin 1940", ["Le 8 mai 1945", "Le 11 novembre 1918", "Le 14 juillet 1789"], "L'appel du 18 juin devient un symbole de la Résistance."),
+      q("histoire-actualite", "Seconde Guerre mondiale", "Quel régime dirige la France non occupée après l'armistice de 1940 ?", "Le régime de Vichy", ["La Commune", "La Quatrième République", "Le Directoire"], "Le régime de Vichy est dirigé par le maréchal Pétain."),
+      q("histoire-actualite", "Seconde Guerre mondiale", "En quelle année les femmes obtiennent-elles le droit de vote en France ?", "1944", ["1918", "1936", "1958"], "L'ordonnance du 21 avril 1944 accorde le droit de vote aux femmes."),
+      q("histoire-actualite", "Seconde Guerre mondiale", "Quelle date marque la capitulation de l'Allemagne nazie commémorée en France ?", "Le 8 mai 1945", ["Le 14 juillet 1945", "Le 11 novembre 1945", "Le 9 mai 1950"], "Le 8 mai commémore la victoire de 1945 en Europe."),
+      q("histoire-actualite", "IVe République", "En quelle année commence la Quatrième République ?", "1946", ["1944", "1958", "1962"], "La Constitution de 1946 fonde la IVe République."),
+      q("histoire-actualite", "Ve République", "En quelle année commence la Cinquième République ?", "1958", ["1946", "1968", "1981"], "La Constitution du 4 octobre 1958 fonde la Ve République."),
+      q("histoire-actualite", "Ve République", "Qui est le premier président de la Cinquième République ?", "Charles de Gaulle", ["Georges Pompidou", "Valéry Giscard d'Estaing", "François Mitterrand"], "Charles de Gaulle devient président de la République en 1959."),
+      q("histoire-actualite", "Ve République", "Quelle réforme de 1962 modifie l'élection présidentielle ?", "L'élection du président au suffrage universel direct", ["Le passage au quinquennat", "La suppression du Sénat", "La création de l'euro"], "Depuis 1962, le président est élu directement par les citoyens."),
+      q("histoire-actualite", "Société", "En quelle année la peine de mort est-elle abolie en France ?", "1981", ["1968", "1992", "2000"], "L'abolition est portée par Robert Badinter sous la présidence de François Mitterrand."),
+      q("histoire-actualite", "Europe", "Quel traité européen est approuvé par référendum en France en 1992 ?", "Le traité de Maastricht", ["Le traité de Rome", "Le traité de Versailles", "Le traité de Lisbonne"], "Le traité de Maastricht crée l'Union européenne."),
+      q("histoire-actualite", "Institutions", "Quelle réforme constitutionnelle réduit le mandat présidentiel à cinq ans ?", "Le quinquennat", ["La cohabitation", "La proportionnelle", "La décentralisation"], "Le quinquennat est adopté par référendum en 2000."),
+      q("histoire-actualite", "Monnaie", "Quelle monnaie remplace le franc dans la vie quotidienne en 2002 ?", "L'euro", ["Le dollar", "L'écu papier", "Le nouveau franc"], "Les pièces et billets en euros entrent en circulation en 2002."),
+      q("histoire-actualite", "Actualité 2024", "Qui est nommé Premier ministre le 9 janvier 2024 ?", "Gabriel Attal", ["Michel Barnier", "François Bayrou", "Édouard Philippe"], "Gabriel Attal devient Premier ministre en janvier 2024."),
+      q("histoire-actualite", "Actualité 2024", "Qui est nommé Premier ministre le 5 septembre 2024 ?", "Michel Barnier", ["Gabriel Attal", "Jean Castex", "Bernard Cazeneuve"], "Michel Barnier est nommé à Matignon après les élections législatives anticipées de 2024."),
+      q("histoire-actualite", "Actualité 2024", "Qui est nommé Premier ministre le 13 décembre 2024 ?", "François Bayrou", ["Michel Barnier", "Bruno Le Maire", "Gérald Darmanin"], "François Bayrou succède à Michel Barnier en décembre 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quel événement politique Emmanuel Macron annonce-t-il le 9 juin 2024 ?", "La dissolution de l'Assemblée nationale", ["Sa démission", "La suppression du Sénat", "Un changement de Constitution immédiat"], "La dissolution suit les résultats des élections européennes de juin 2024."),
+      q("histoire-actualite", "Actualité 2024", "À quelles dates ont lieu les élections législatives anticipées de 2024 ?", "30 juin et 7 juillet 2024", ["9 et 16 juin 2024", "1er et 8 mai 2024", "14 et 21 juillet 2024"], "Les deux tours des législatives anticipées ont lieu les 30 juin et 7 juillet 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quel scrutin se tient en France le 9 juin 2024 ?", "Les élections européennes", ["Les élections municipales", "L'élection présidentielle", "Les élections sénatoriales générales"], "Les Français votent pour élire leurs députés européens le 9 juin 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quelle liste arrive en tête des élections européennes de 2024 en France ?", "La liste du Rassemblement national menée par Jordan Bardella", ["La liste Renaissance menée par Valérie Hayer", "La liste PS-Place publique menée par Raphaël Glucksmann", "La liste écologiste menée par Marie Toussaint"], "La liste RN menée par Jordan Bardella arrive en tête en France."),
+      q("histoire-actualite", "Actualité 2024", "Quel ensemble politique arrive en tête en nombre de sièges aux législatives de juillet 2024 ?", "Le Nouveau Front populaire", ["La majorité présidentielle seule", "Les Républicains seuls", "Reconquête"], "Le Nouveau Front populaire obtient le plus grand nombre de sièges, sans majorité absolue."),
+      q("histoire-actualite", "Actualité 2024", "Quelle cérémonie des Jeux olympiques de Paris 2024 se déroule pour la première fois hors d'un stade, sur la Seine ?", "La cérémonie d'ouverture", ["La remise des médailles du judo", "La clôture paralympique", "Le tirage au sort des groupes"], "La cérémonie d'ouverture des Jeux olympiques de Paris 2024 a lieu sur la Seine."),
+      q("histoire-actualite", "Actualité 2024", "Quelles dates encadrent les Jeux olympiques de Paris 2024 ?", "26 juillet au 11 août 2024", ["1er au 15 juin 2024", "28 août au 8 septembre 2024", "14 juillet au 1er août 2025"], "Les Jeux olympiques de Paris 2024 se déroulent du 26 juillet au 11 août 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quelles dates encadrent les Jeux paralympiques de Paris 2024 ?", "28 août au 8 septembre 2024", ["26 juillet au 11 août 2024", "1er au 10 janvier 2025", "9 au 16 juin 2024"], "Les Jeux paralympiques de Paris 2024 ont lieu après les Jeux olympiques."),
+      q("histoire-actualite", "Actualité 2024", "Quel monument parisien rouvre officiellement au public en décembre 2024 après l'incendie de 2019 ?", "Notre-Dame de Paris", ["Le Panthéon", "L'Arc de Triomphe", "Le Louvre"], "Notre-Dame de Paris rouvre après un grand chantier de restauration."),
+      q("histoire-actualite", "Actualité 2024", "Quel résistant d'origine arménienne entre au Panthéon en février 2024 avec son épouse Mélinée ?", "Missak Manouchian", ["Jean Moulin", "Pierre Brossolette", "Marc Bloch"], "Missak et Mélinée Manouchian sont panthéonisés en février 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quel territoire français de l'océan Indien est gravement touché par le cyclone Chido en décembre 2024 ?", "Mayotte", ["La Martinique", "La Corse", "Saint-Pierre-et-Miquelon"], "Le cyclone Chido frappe durement Mayotte en décembre 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quel territoire connaît une grave crise institutionnelle et sécuritaire au printemps 2024 autour d'une réforme électorale ?", "La Nouvelle-Calédonie", ["La Guyane", "La Réunion", "La Polynésie française"], "La Nouvelle-Calédonie connaît de graves troubles en mai 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quel mouvement social marque fortement le début de l'année 2024 en France ?", "La mobilisation des agriculteurs", ["La grève générale des lycéens uniquement", "La fermeture de toutes les universités", "La suppression des régions"], "Les agriculteurs manifestent massivement début 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quelle loi promulguée en janvier 2024 fait suite à un long débat politique sur les conditions d'entrée et de séjour ?", "La loi immigration", ["La loi de séparation de 1905", "La loi sur le quinquennat", "La loi fondant la Ve République"], "La loi immigration est promulguée le 26 janvier 2024 après décision du Conseil constitutionnel."),
+      q("histoire-actualite", "Actualité 2024", "Quel ministère Rachida Dati rejoint-elle en janvier 2024 ?", "Le ministère de la Culture", ["Le ministère des Armées", "Le ministère de l'Intérieur", "Le ministère de la Justice"], "Rachida Dati est nommée ministre de la Culture en janvier 2024."),
+      q("histoire-actualite", "Actualité 2025", "Quel événement international majeur la France accueille-t-elle à Nice en juin 2025 ?", "La Conférence des Nations unies sur l'Océan", ["La Coupe du monde de football", "Le sommet du G7 à Paris", "Les Jeux olympiques d'hiver"], "La troisième Conférence des Nations unies sur l'Océan se tient à Nice en 2025."),
+      q("histoire-actualite", "Actualité européenne", "Quelle responsable est nommée haute représentante de l'Union pour les affaires étrangères fin 2024 ?", "Kaja Kallas", ["Angela Merkel", "Marine Le Pen", "Ségolène Royal"], "Kaja Kallas devient haute représentante dans la Commission entrée en fonctions fin 2024."),
+      q("histoire-actualite", "Actualité européenne", "Quel pays rejoint pleinement l'espace Schengen pour les frontières terrestres le 1er janvier 2025 avec la Bulgarie ?", "La Roumanie", ["L'Ukraine", "La Turquie", "Le Maroc"], "La Roumanie et la Bulgarie rejoignent pleinement Schengen au 1er janvier 2025."),
+      q("histoire-actualite", "Actualité européenne", "Quelle personnalité est réélue présidente du Parlement européen en juillet 2024 ?", "Roberta Metsola", ["Ursula von der Leyen", "Christine Lagarde", "Kaja Kallas"], "Roberta Metsola est reconduite à la présidence du Parlement européen."),
+      q("histoire-actualite", "Actualité 2024", "Quel Français devient une figure majeure des Jeux de Paris 2024 avec plusieurs titres olympiques en natation ?", "Léon Marchand", ["Kylian Mbappé", "Teddy Riner uniquement", "Renaud Lavillenie"], "Léon Marchand remporte plusieurs médailles d'or en natation aux Jeux de Paris 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quelle judokate française monte sur le podium olympique à Paris 2024 chez les plus de 78 kg ?", "Romane Dicko", ["Clarisse Agbegnenou", "Amandine Buchard", "Sarah-Léonie Cysique"], "Romane Dicko remporte le bronze individuel chez les plus de 78 kg aux Jeux de Paris 2024."),
+      q("histoire-actualite", "Actualité 2024", "Quel judoka français remporte un nouveau titre olympique individuel à Paris 2024 ?", "Teddy Riner", ["David Douillet", "Luka Mkheidze", "Florent Manaudou"], "Teddy Riner marque les Jeux de Paris 2024 par un nouveau titre olympique."),
+      q("symboles", "République", "Quelle figure féminine représente souvent symboliquement la liberté républicaine sur les sceaux et emblèmes ?", "La Liberté", ["La reine", "La Commission européenne", "La Cour de cassation"], "Les emblèmes républicains utilisent souvent une figure féminine de la Liberté, proche de l'imaginaire de Marianne."),
+      q("histoire-actualite", "Actualité 2024", "Quelle ville française accueille une grande partie des épreuves de voile des Jeux olympiques de 2024 ?", "Marseille", ["Lille", "Nice", "Bordeaux"], "Les épreuves de voile de Paris 2024 se déroulent à Marseille."),
+      q("histoire-actualite", "Actualité 2024", "Quelle île française du Pacifique accueille l'épreuve olympique de surf en 2024 ?", "Tahiti", ["La Corse", "Mayotte", "Noirmoutier"], "L'épreuve de surf se déroule à Teahupo'o, à Tahiti.")
+    ];
+
+    const homeView = document.getElementById("home-view");
+    const quizView = document.getElementById("quiz-view");
+    const resultsView = document.getElementById("results-view");
+    const modeLabel = document.getElementById("mode-label");
+    const quizTitle = document.getElementById("quiz-title");
+    const timerBadge = document.getElementById("timer-badge");
+    const progressText = document.getElementById("progress-text");
+    const scoreText = document.getElementById("score-text");
+    const progressBar = document.getElementById("progress-bar");
+    const questionType = document.getElementById("question-type");
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-button");
+    const resultsTitle = document.getElementById("results-title");
+    const scoreCircle = document.getElementById("score-circle");
+    const encouragement = document.getElementById("encouragement");
+    const categoryResults = document.getElementById("category-results");
+    const mistakeSummary = document.getElementById("mistake-summary");
+
+    let currentMode = "complete";
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = false;
+    let mistakes = [];
+    let categoryScores = {};
+
+    document.querySelectorAll(".mode-card").forEach((button) => {
+      button.addEventListener("click", () => startQuiz(button.dataset.mode));
+    });
+    document.getElementById("next-button").addEventListener("click", nextQuestion);
+    document.getElementById("restart-quiz-button").addEventListener("click", () => startQuiz(currentMode));
+    document.getElementById("restart-button").addEventListener("click", () => startQuiz(currentMode));
+    document.getElementById("menu-button").addEventListener("click", showHome);
+    document.getElementById("back-menu-button").addEventListener("click", showHome);
+    document.getElementById("download-pdf-button").addEventListener("click", downloadRevisionPdf);
+
+    function q(category, subtype, text, correct, distractors, explanation) {
+      return {
+        category,
+        subtype,
+        text,
+        options: [correct, ...distractors],
+        answer: 0,
+        explanation
+      };
+    }
+
+    function startQuiz(mode) {
+      currentMode = mode;
+      currentQuestions = buildQuestionSet(mode).map(prepareQuestion);
+      currentQuestionIndex = 0;
+      score = 0;
+      answered = false;
+      mistakes = [];
+      categoryScores = initCategoryScores(currentQuestions);
+
+      homeView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      quizView.classList.remove("hidden");
+      modeLabel.textContent = modeInfo[mode].label;
+      quizTitle.textContent = modeInfo[mode].title;
+      timerBadge.textContent = modeInfo[mode].duration;
+      renderQuestion();
+    }
+
+    function buildQuestionSet(mode) {
+      if (mode === "complete") {
+        return shuffle([
+          ...sampleByCategory("institutions-francaises", 8),
+          ...sampleByCategory("institutions-europeennes", 6),
+          ...buildSymbolesSelection(10),
+          ...sampleByCategory("histoire-actualite", 16)
+        ]);
+      }
+
+      if (mode === "institutions") {
+        return shuffle([
+          ...sampleByCategory("institutions-francaises", 12),
+          ...sampleByCategory("institutions-europeennes", 8)
+        ]);
+      }
+
+      if (mode === "symboles") {
+        return buildSymbolesSelection(12);
+      }
+
+      if (mode === "histoire-actualite") {
+        return sampleByCategory("histoire-actualite", 20);
+      }
+
+      return shuffle([
+        ...sampleByCategory("institutions-francaises", 2),
+        ...sampleByCategory("institutions-europeennes", 2),
+        ...buildSymbolesSelection(3),
+        ...sampleByCategory("histoire-actualite", 3)
+      ]);
+    }
+
+    function buildSymbolesSelection(count) {
+      const priority = questionBank.filter((question) =>
+        question.category === "symboles" &&
+        (question.subtype === "La Marseillaise" || question.subtype === "Drapeau français")
+      );
+      const others = questionBank.filter((question) =>
+        question.category === "symboles" &&
+        question.subtype !== "La Marseillaise" &&
+        question.subtype !== "Drapeau français"
+      );
+      const priorityCount = Math.min(count, count >= 10 ? 5 : 2);
+      return shuffle([
+        ...sample(priority, priorityCount),
+        ...sample(others, count - priorityCount)
+      ]);
+    }
+
+    function sampleByCategory(category, count) {
+      return sample(questionBank.filter((question) => question.category === category), count);
+    }
+
+    function initCategoryScores(questions) {
+      return questions.reduce((scores, question) => {
+        if (!scores[question.category]) {
+          scores[question.category] = { correct: 0, total: 0 };
+        }
+        scores[question.category].total += 1;
+        return scores;
+      }, {});
+    }
+
+    function showHome() {
+      quizView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    }
+
+    function renderQuestion() {
+      const question = currentQuestions[currentQuestionIndex];
+      answered = false;
+      feedback.innerHTML = "";
+      feedback.className = "feedback";
+      nextButton.disabled = true;
+      nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
+
+      progressText.textContent = `Question ${currentQuestionIndex + 1}/${currentQuestions.length}`;
+      scoreText.textContent = `Score : ${score}/${currentQuestions.length}`;
+      progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+      questionType.textContent = `${categoryInfo[question.category].label} | ${question.subtype}`;
+      questionText.textContent = question.text;
+      renderOptions(question);
+    }
+
+    function renderOptions(question) {
+      optionsContainer.innerHTML = "";
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option-button";
+        button.dataset.index = index;
+        button.innerHTML = `<span><span class="option-label">${letters[index]}</span>${option}</span>`;
+        button.addEventListener("click", () => answerQuestion(index));
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function answerQuestion(selectedIndex) {
+      if (answered) {
+        return;
+      }
+
+      const question = currentQuestions[currentQuestionIndex];
+      const isCorrect = selectedIndex === question.answer;
+      answered = true;
+      if (isCorrect) {
+        score += 1;
+        categoryScores[question.category].correct += 1;
+      } else {
+        mistakes.push({
+          question,
+          selected: selectedIndex,
+          correct: question.answer
+        });
+      }
+
+      showCorrection(selectedIndex, isCorrect);
+    }
+
+    function showCorrection(selectedIndex, isCorrect) {
+      const question = currentQuestions[currentQuestionIndex];
+      progressBar.style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
+      scoreText.textContent = `Score : ${score}/${currentQuestions.length}`;
+
+      optionsContainer.querySelectorAll(".option-button").forEach((button) => {
+        const index = Number(button.dataset.index);
+        button.disabled = true;
+        if (index === question.answer) {
+          button.classList.add("is-correct");
+        } else if (index === selectedIndex) {
+          button.classList.add("is-wrong");
+        }
+      });
+
+      feedback.classList.add(isCorrect ? "is-success" : "is-error");
+      feedback.innerHTML = `
+        <strong>${isCorrect ? "✓ Bonne réponse." : "✗ Réponse incorrecte."}</strong><br>
+        Bonne réponse : ${letters[question.answer]}. ${question.options[question.answer]}<br>
+        ${question.explanation}
+      `;
+      nextButton.disabled = false;
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex += 1;
+        renderQuestion();
+        return;
+      }
+
+      showResults();
+    }
+
+    function showResults() {
+      quizView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+      resultsTitle.textContent = `Score final - ${modeInfo[currentMode].label}`;
+      scoreCircle.textContent = `${score}/${currentQuestions.length}`;
+      encouragement.textContent = getEncouragement(score, currentQuestions.length);
+      categoryResults.className = "feedback";
+      categoryResults.innerHTML = `
+        <ul class="detail-list">
+          ${Object.entries(categoryScores).map(([key, result]) => `
+            <li><strong>${categoryInfo[key].label}</strong> : ${result.correct}/${result.total}</li>
+          `).join("")}
+        </ul>
+      `;
+      mistakeSummary.textContent = mistakes.length === 0
+        ? "Aucune erreur : votre fiche PDF confirmera les points maîtrisés."
+        : `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir dans la fiche PDF.`;
+    }
+
+    function getEncouragement(value, total) {
+      const ratio = value / total;
+      if (ratio >= 0.85) {
+        return "Excellent niveau : les repères institutionnels, historiques et républicains sont solides.";
+      }
+      if (ratio >= 0.7) {
+        return "Bon résultat : consolidez surtout les catégories où vous perdez encore des points faciles.";
+      }
+      if (ratio >= 0.5) {
+        return "Résultat encourageant : reprenez les corrections, puis refaites un mini test ciblé.";
+      }
+      return "Entraînement à poursuivre : commencez par les symboles et les institutions, très rentables au concours.";
+    }
+
+    function prepareQuestion(question) {
+      const shuffledOptions = shuffle(question.options.map((option, index) => ({
+        option,
+        originalIndex: index
+      })));
+      return {
+        ...question,
+        options: shuffledOptions.map((item) => item.option),
+        answer: shuffledOptions.findIndex((item) => item.originalIndex === question.answer)
+      };
+    }
+
+    function sample(items, count) {
+      return shuffle(items).slice(0, count);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function downloadRevisionPdf() {
+      const lines = buildRevisionLines();
+      const pdf = buildPdf(lines);
+      const blob = new Blob([pdf], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "fiche-revision-culture-generale.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function buildRevisionLines() {
+      const lines = [
+        "Fiche de revision - Culture generale",
+        `Mode : ${modeInfo[currentMode].label}`,
+        `Score : ${score}/${currentQuestions.length}`,
+        "",
+        "Detail par categorie :"
+      ];
+
+      Object.entries(categoryScores).forEach(([key, result]) => {
+        lines.push(`- ${categoryInfo[key].label} : ${result.correct}/${result.total}`);
+      });
+
+      lines.push("");
+      if (mistakes.length === 0) {
+        lines.push("Aucune erreur relevee. Refaire un test complet pour entretenir les automatismes.");
+        return lines;
+      }
+
+      lines.push("Erreurs a revoir :");
+      mistakes.forEach((mistake, index) => {
+        const question = mistake.question;
+        lines.push("");
+        lines.push(`${index + 1}. ${categoryInfo[question.category].label} - ${question.subtype}`);
+        wrapText(question.text, 88).forEach((line) => lines.push(`   Question : ${line}`));
+        lines.push(`   Votre reponse : ${letters[mistake.selected]} - ${question.options[mistake.selected]}`);
+        lines.push(`   Bonne reponse : ${letters[mistake.correct]} - ${question.options[mistake.correct]}`);
+        wrapText(question.explanation, 88).forEach((line) => lines.push(`   Rappel : ${line}`));
+      });
+
+      return lines;
+    }
+
+    function wrapText(text, maxLength) {
+      const words = toPdfSafe(text).split(/\s+/);
+      const lines = [];
+      let current = "";
+      words.forEach((word) => {
+        if (`${current} ${word}`.trim().length > maxLength) {
+          lines.push(current);
+          current = word;
+        } else {
+          current = `${current} ${word}`.trim();
+        }
+      });
+      if (current) {
+        lines.push(current);
+      }
+      return lines;
+    }
+
+    function buildPdf(rawLines) {
+      const lines = rawLines.map(toPdfSafe);
+      const linesPerPage = 58;
+      const pages = [];
+      for (let index = 0; index < lines.length; index += linesPerPage) {
+        pages.push(lines.slice(index, index + linesPerPage));
+      }
+
+      const objects = [
+        "",
+        "",
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>"
+      ];
+      const pageIds = [];
+
+      pages.forEach((pageLines) => {
+        const content = [
+          "BT",
+          "/F1 10 Tf",
+          "50 790 Td",
+          ...pageLines.flatMap((line) => [`(${escapePdfText(line)}) Tj`, "0 -13 Td"]),
+          "ET"
+        ].join("\n");
+        const contentId = objects.push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+        const pageId = objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentId} 0 R >>`);
+        pageIds.push(pageId);
+      });
+
+      objects[0] = "<< /Type /Catalog /Pages 2 0 R >>";
+      objects[1] = `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`;
+
+      let pdf = "%PDF-1.4\n";
+      const offsets = [0];
+      objects.forEach((object, index) => {
+        offsets[index + 1] = pdf.length;
+        pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+      });
+      const xrefStart = pdf.length;
+      pdf += `xref\n0 ${objects.length + 1}\n`;
+      pdf += "0000000000 65535 f \n";
+      for (let index = 1; index <= objects.length; index += 1) {
+        pdf += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
+      }
+      pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+      return pdf;
+    }
+
+    function escapePdfText(text) {
+      return text.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+    }
+
+    function toPdfSafe(text) {
+      return String(text)
+        .replace(/œ/g, "oe")
+        .replace(/Œ/g, "OE")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\x20-\x7E]/g, "");
+    }
+
+    console.assert(questionBank.length === 200, `Banque attendue : 200 questions, obtenu : ${questionBank.length}`);
+  </script>
+</body>
+</html>

@@ -131,6 +131,18 @@ a {
   transform: translateY(-4px);
 }
 
+.card--culture {
+  color: var(--white);
+  background: var(--navy);
+  border-color: var(--navy);
+}
+
+.card--culture:hover,
+.card--culture:focus {
+  border-color: var(--navy-dark);
+  box-shadow: 0 16px 36px rgba(26, 39, 68, 0.26);
+}
+
 .card:focus {
   outline: 3px solid rgba(26, 39, 68, 0.3);
   outline-offset: 3px;
@@ -148,11 +160,20 @@ a {
   font-size: 2rem;
 }
 
+.card--culture .card__icon {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 .card h3 {
   margin: 0 0 12px;
   color: var(--navy);
   font-size: 1.2rem;
   line-height: 1.3;
+}
+
+.card--culture h3,
+.card--culture p {
+  color: var(--white);
 }
 
 .card p {

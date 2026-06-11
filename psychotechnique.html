@@ -420,7 +420,7 @@
         <article class="category-card">
           <span class="category-card__number" aria-hidden="true">📐</span>
           <h3>Raisonnement spatial</h3>
-          <p>Rotations, symétries et patrons de cubes en illustrations SVG.</p>
+          <p>Rotations, symétries, pliages, cubes et suites en illustrations SVG.</p>
           <ul>
             <li>100 questions visuelles</li>
             <li>10 questions tirées par test</li>
@@ -511,6 +511,7 @@
     </section>
   </main>
 
+  <script src="spatial-bank.js"></script>
   <script>
     const letters = ["A", "B", "C", "D"];
 
@@ -548,28 +549,7 @@
         title: "Raisonnement spatial",
         label: "Catégorie 2",
         timerMode: "elapsed",
-        questions: [
-          spatialRotation("Rotation de formes", "Quelle option montre la flèche après une rotation de 90° vers la droite ?", "arrow", 0, 90, [180, 270, 90, 0], 2),
-          spatialRotation("Rotation de formes", "Quelle option montre le triangle après une rotation de 180° ?", "triangleMark", 0, 180, [90, 180, 270, 0], 1),
-          spatialMirror("Symétries", "Quelle option est le symétrique horizontal de la figure ?", "flag", "h", [["h"], [], ["v"], ["h", "v"]], 0),
-          spatialRotation("Rotation de formes", "Quelle option correspond à une rotation de 90° vers la gauche ?", "lShape", 0, 270, [90, 180, 270, 0], 2),
-          spatialCube("Patrons de cubes", "Ce patron forme un cube. Quelle option montre le cube attendu ?", "cross", ["cubeCross", "cubeLine", "cubeStair", "cubePyramid"], 0),
-          spatialMirror("Symétries", "Quelle option est le symétrique vertical de cette figure ?", "cornerDots", "v", [[], ["v"], ["h"], ["h", "v"]], 1),
-          spatialRotation("Rotation de formes", "Après une rotation de 270° vers la droite, quelle option est correcte ?", "chevron", 0, 270, [270, 90, 180, 0], 0),
-          spatialMirror("Symétries", "Trouvez le symétrique horizontal de la forme en escalier.", "stairs", "h", [["v"], ["h"], [], ["h", "v"]], 1),
-          spatialCube("Patrons de cubes", "Quel cube correspond au patron avec trois faces colorées alignées ?", "line", ["cubeLine", "cubeCross", "cubePyramid", "cubeStair"], 0),
-          spatialRotation("Rotation de formes", "Quelle option montre la forme après une rotation de 180° ?", "tShape", 0, 180, [0, 90, 180, 270], 2),
-          spatialMirror("Symétries", "Quelle option est le symétrique vertical de la flèche ?", "arrow", "v", [["h"], ["v"], [], ["h", "v"]], 1),
-          spatialRotation("Rotation de formes", "Quelle option correspond à une rotation de 90° vers la droite ?", "zigzag", 0, 90, [270, 180, 0, 90], 3),
-          spatialCube("Patrons de cubes", "Quel volume obtient-on avec ce patron en escalier ?", "stair", ["cubePyramid", "cubeLine", "cubeStair", "cubeCross"], 2),
-          spatialMirror("Symétries", "Trouvez le symétrique horizontal de cette figure avec point.", "triangleMark", "h", [["v"], [], ["h"], ["h", "v"]], 2),
-          spatialRotation("Rotation de formes", "Après une rotation de 180°, où se place l'ouverture du chevron ?", "chevron", 90, 270, [270, 0, 180, 90], 0),
-          spatialMirror("Symétries", "Quelle option est le symétrique vertical du drapeau ?", "flag", "v", [["v"], ["h"], [], ["h", "v"]], 0),
-          spatialCube("Patrons de cubes", "Ce patron compact correspond à quel cube ?", "pyramid", ["cubeLine", "cubeStair", "cubePyramid", "cubeCross"], 2),
-          spatialRotation("Rotation de formes", "Quelle option montre le L après une rotation de 90° vers la droite ?", "lShape", 90, 180, [0, 180, 270, 90], 1),
-          spatialMirror("Symétries", "Quelle option est le symétrique horizontal de la figure à deux points ?", "cornerDots", "h", [["h"], ["v"], [], ["h", "v"]], 0),
-          spatialRotation("Rotation de formes", "Quelle option correspond à la rotation de 270° vers la droite ?", "tShape", 0, 270, [180, 270, 90, 0], 1)
-        ]
+        questions: []
       },
       numeric: {
         number: 3,
@@ -1199,71 +1179,7 @@
     }
 
     function createSpatialQuestions() {
-      const questions = [];
-      const shapes = ["arrow", "triangleMark", "flag", "lShape", "cornerDots", "chevron", "stairs", "zigzag", "tShape"];
-      const baseAngles = [0, 90, 180, 270];
-      const rotations = [
-        { label: "90° vers la droite", value: 90 },
-        { label: "180°", value: 180 },
-        { label: "90° vers la gauche", value: 270 },
-        { label: "270° vers la droite", value: 270 }
-      ];
-
-      for (let index = 0; index < 32; index += 1) {
-        const shape = shapes[index % shapes.length];
-        const baseAngle = baseAngles[index % baseAngles.length];
-        const rotation = rotations[(index + Math.floor(index / shapes.length)) % rotations.length];
-        const answerAngle = normalizeAngle(baseAngle + rotation.value);
-        const optionAngles = [answerAngle, ...baseAngles.filter((angle) => angle !== answerAngle)];
-        questions.push(spatialRotation(
-          "Rotation de formes",
-          `Quelle option montre la figure après une rotation de ${rotation.label} ?`,
-          shape,
-          baseAngle,
-          answerAngle,
-          optionAngles,
-          0
-        ));
-      }
-
-      for (let index = 0; index < 24; index += 1) {
-        const shape = shapes[(index + 3) % shapes.length];
-        const axis = index % 2 === 0 ? "h" : "v";
-        const transforms = axis === "h"
-          ? [["h"], [], ["v"], ["h", "v"]]
-          : [["v"], [], ["h"], ["h", "v"]];
-        questions.push(spatialMirror(
-          "Symétries",
-          axis === "h"
-            ? "Quelle option est le symétrique horizontal de la figure ?"
-            : "Quelle option est le symétrique vertical de la figure ?",
-          shape,
-          axis,
-          transforms,
-          0
-        ));
-      }
-
-      const cubeSets = [
-        ["cross", "cubeCross"],
-        ["line", "cubeLine"],
-        ["stair", "cubeStair"],
-        ["pyramid", "cubePyramid"]
-      ];
-      const cubeChoices = ["cubeCross", "cubeLine", "cubeStair", "cubePyramid"];
-      for (let index = 0; index < 24; index += 1) {
-        const [net, correctCube] = cubeSets[index % cubeSets.length];
-        const options = [correctCube, ...cubeChoices.filter((choice) => choice !== correctCube)];
-        questions.push(spatialCube(
-          "Patrons de cubes",
-          "Quel cube correspond au patron déplié affiché ?",
-          net,
-          options,
-          0
-        ));
-      }
-
-      return questions;
+      return SpatialQuestionBank.createQuestions();
     }
 
     function createNumericQuestions() {

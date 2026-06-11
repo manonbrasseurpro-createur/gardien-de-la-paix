@@ -52,32 +52,46 @@
       margin-top: 8px;
     }
 
+    .home-nav {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .home-nav--bottom {
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .mode-grid,
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
       margin-top: 24px;
     }
 
+    .mode-card,
     .category-card {
       display: flex;
-      min-height: 150px;
+      min-height: 100%;
       padding: 24px;
       flex-direction: column;
       gap: 14px;
-      align-items: center;
-      justify-content: center;
+      align-items: flex-start;
+      justify-content: flex-start;
       color: var(--text);
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 18px;
       box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
-      cursor: default;
+      cursor: pointer;
       font: inherit;
-      text-align: center;
+      text-align: left;
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
     }
 
+    .mode-card:hover,
+    .mode-card:focus,
     .category-card:hover,
     .category-card:focus {
       border-color: var(--navy);
@@ -86,12 +100,76 @@
       transform: translateY(-4px);
     }
 
+    .mode-card:focus-visible,
     .category-card:focus-visible,
+    .scale-option:focus-within,
     .option-button:focus-visible,
     .primary-button:focus-visible,
     .secondary-button:focus-visible {
       outline: 3px solid rgba(26, 39, 68, 0.32);
       outline-offset: 3px;
+    }
+
+    .mode-card__title {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--navy);
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .mode-card__icon {
+      font-size: 1.9rem;
+      line-height: 1;
+    }
+
+    .mode-card__duration {
+      display: inline-flex;
+      width: fit-content;
+      padding: 7px 12px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .mode-card__description {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .mode-card__action {
+      margin-top: auto;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .category-training-panel {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+      padding: 22px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .category-training-panel h3,
+    .category-training-panel p {
+      margin: 0;
+    }
+
+    .category-training-panel h3 {
+      color: var(--navy);
+      font-size: 1.25rem;
+    }
+
+    .category-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 0;
     }
 
     .category-card__number,
@@ -123,6 +201,174 @@
       margin: 0;
       color: var(--muted);
       font-size: 0.96rem;
+    }
+
+    .personality-panel__body,
+    .personality-results-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .personality-question-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .personality-question-card,
+    .score-card,
+    .analysis-card,
+    .important-note {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .personality-question-card {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .personality-question-card__title {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .question-number {
+      display: inline-flex;
+      min-width: 42px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .scale-options {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .scale-option {
+      display: grid;
+      cursor: pointer;
+    }
+
+    .scale-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scale-option > span {
+      display: grid;
+      gap: 6px;
+      height: 100%;
+      padding: 12px;
+      align-content: center;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      text-align: center;
+      transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .scale-option input:checked + span {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .scale-option__value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .scale-option__label {
+      font-size: 0.82rem;
+      line-height: 1.25;
+    }
+
+    .form-warning {
+      min-height: 24px;
+      margin: 0;
+      color: #b3261e;
+      font-weight: 700;
+    }
+
+    .personality-results-panel {
+      text-align: left;
+    }
+
+    .scores-grid,
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .score-card,
+    .analysis-card,
+    .important-note {
+      padding: 20px;
+    }
+
+    .score-card h3,
+    .analysis-card h3 {
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .score-value {
+      color: var(--navy);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-value small {
+      font-size: 0.95rem;
+    }
+
+    .score-meter {
+      height: 10px;
+      margin-top: 14px;
+      background: #d8deea;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .score-meter span {
+      display: block;
+      height: 100%;
+      background: var(--navy);
+      border-radius: inherit;
+    }
+
+    .analysis-card p,
+    .analysis-card ul,
+    .important-note {
+      margin: 0;
+    }
+
+    .analysis-card ul {
+      padding-left: 20px;
+    }
+
+    .analysis-card li + li {
+      margin-top: 8px;
     }
 
     .category-card ul {
@@ -423,33 +669,6 @@
       transform: none;
     }
 
-    .start-test-actions {
-      flex-direction: column;
-      justify-content: center;
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    #start-test-button {
-      min-height: 68px;
-      max-width: 100%;
-      padding: 20px 50px;
-      color: var(--white);
-      background: var(--navy);
-      border: 1px solid var(--navy);
-      border-radius: 50px;
-      box-shadow: 0 14px 30px rgba(26, 39, 68, 0.2);
-      font-size: 1.4rem;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-
-    #start-test-button:hover,
-    #start-test-button:focus-visible {
-      box-shadow: 0 20px 40px rgba(26, 39, 68, 0.28);
-      transform: translateY(-4px);
-    }
-
     .results-panel {
       display: grid;
       gap: 18px;
@@ -482,14 +701,23 @@
     }
 
     @media (max-width: 980px) {
+      .mode-grid,
+      .scores-grid,
+      .analysis-grid,
       .category-grid {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .scale-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 700px) {
       .module-shell,
       .quiz-panel__body,
+      .personality-panel__body,
+      .personality-results-panel__body,
       .results-panel {
         padding: 22px;
       }
@@ -498,7 +726,11 @@
         padding: 22px;
       }
 
+      .mode-grid,
       .category-grid,
+      .scores-grid,
+      .analysis-grid,
+      .scale-options,
       .options-grid {
         grid-template-columns: 1fr;
       }
@@ -516,38 +748,162 @@
 
   <main class="container psychotechnique-page">
     <section id="home-view" class="module-shell" aria-labelledby="psychotechnique-title">
+      <div class="home-nav">
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+
       <div class="intro">
         <h2 id="psychotechnique-title">Test de Personnalité et Tests Psychotechniques</h2>
         <p>
-          Le test de personnalité aide le jury à mesurer l'adéquation psychologique du candidat avec les
-          réalités du métier.
+          Choisissez le mode d'entraînement adapté à votre objectif : simulation complète, personnalité,
+          tests cognitifs, session courte ou entraînement ciblé.
         </p>
       </div>
 
-      <div class="category-grid" aria-label="Épreuves du test de personnalité et des tests psychotechniques">
-        <article class="category-card">
-          <h3>Test de Personnalité</h3>
-        </article>
+      <div class="mode-grid" aria-label="Modes de test disponibles">
+        <button class="mode-card" type="button" data-mode="complete">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🚀</span> Test Complet</span>
+          <span class="mode-card__duration">⏱ ~2 heures</span>
+          <p class="mode-card__description">
+            Le test officiel complet : test de personnalité (60 questions) suivi des 4 tests cognitifs
+            (40 questions). Idéal pour simuler les conditions réelles du concours.
+          </p>
+          <span class="mode-card__action">Lancer personnalité puis cognitif</span>
+        </button>
 
-        <article class="category-card">
-          <h3>Raisonnement logique et abstrait</h3>
-        </article>
+        <button class="mode-card" type="button" data-mode="personality">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🧬</span> Test de Personnalité uniquement</span>
+          <span class="mode-card__duration">⏱ ~20-30 min</span>
+          <p class="mode-card__description">
+            60 affirmations pour évaluer votre profil psychologique. Non chronométré.
+          </p>
+          <span class="mode-card__action">Lancer les 60 affirmations</span>
+        </button>
 
-        <article class="category-card">
-          <h3>Raisonnement spatial</h3>
-        </article>
+        <button class="mode-card" type="button" data-mode="cognitive">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🧠</span> Tests Cognitifs uniquement (40 questions)</span>
+          <span class="mode-card__duration">⏱ ~15-20 min</span>
+          <p class="mode-card__description">
+            40 questions mélangées : logique, spatial, numérique et verbal. Chronométré.
+          </p>
+          <span class="mode-card__action">Lancer 40 questions cognitives</span>
+        </button>
 
-        <article class="category-card">
-          <h3>Tests numériques</h3>
-        </article>
+        <button class="mode-card" type="button" data-mode="mini">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">⚡</span> Mini test cognitif</span>
+          <span class="mode-card__duration">⏱ ~5 min</span>
+          <p class="mode-card__description">
+            10 questions rapides pour s'entraîner en quelques minutes. Idéal quand on manque de temps.
+          </p>
+          <span class="mode-card__action">Lancer 10 questions aléatoires</span>
+        </button>
 
-        <article class="category-card">
-          <h3>Logique verbale et compréhension</h3>
-        </article>
+        <button class="mode-card" type="button" data-mode="category" aria-controls="category-training-panel" aria-expanded="false">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">📚</span> Entraînement par catégorie</span>
+          <span class="mode-card__duration">⏱ ~10 min</span>
+          <p class="mode-card__description">
+            Choisissez une catégorie spécifique pour vous concentrer sur vos points faibles.
+          </p>
+          <span class="mode-card__action">Afficher les 4 catégories</span>
+        </button>
       </div>
 
-      <div class="actions start-test-actions">
-        <button id="start-test-button" class="primary-button" type="button">Lancer le test</button>
+      <div id="category-training-panel" class="category-training-panel hidden">
+        <h3>Choisissez une catégorie d'entraînement</h3>
+        <p>Chaque session propose 10 questions ciblées dans la catégorie sélectionnée.</p>
+
+        <div class="category-grid" aria-label="Catégories de tests cognitifs">
+          <button class="category-card" type="button" data-category="logic">
+            <span class="category-card__number" aria-hidden="true">🧠</span>
+            <h3>Raisonnement logique</h3>
+          </button>
+
+          <button class="category-card" type="button" data-category="spatial">
+            <span class="category-card__number" aria-hidden="true">📐</span>
+            <h3>Raisonnement spatial</h3>
+          </button>
+
+          <button class="category-card" type="button" data-category="numeric">
+            <span class="category-card__number" aria-hidden="true">🔢</span>
+            <h3>Tests numériques</h3>
+          </button>
+
+          <button class="category-card" type="button" data-category="verbal">
+            <span class="category-card__number" aria-hidden="true">📖</span>
+            <h3>Logique verbale</h3>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-nav home-nav--bottom">
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+
+    <section id="personality-view" class="quiz-panel hidden" aria-labelledby="personality-title">
+      <div class="quiz-panel__header">
+        <div class="quiz-meta">
+          <div>
+            <p class="hero__label" id="personality-label">60 affirmations - échelle de 1 à 5</p>
+            <h2 id="personality-title">Test simulé de personnalité</h2>
+          </div>
+          <strong id="personality-answered-count">0/60 réponses</strong>
+        </div>
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress-track">
+            <div id="personality-progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <form id="personality-form" class="personality-panel__body" novalidate>
+        <p>
+          Pour chaque affirmation, sélectionnez votre niveau d'accord :
+          <strong>1 = Pas du tout d'accord</strong>,
+          <strong>2 = Plutôt pas d'accord</strong>,
+          <strong>3 = Neutre</strong>,
+          <strong>4 = Plutôt d'accord</strong>,
+          <strong>5 = Tout à fait d'accord</strong>.
+        </p>
+
+        <div id="personality-question-list" class="personality-question-list"></div>
+        <p id="personality-form-warning" class="form-warning" role="alert"></p>
+
+        <div class="actions">
+          <button id="personality-submit-button" class="primary-button" type="submit">Continuer</button>
+          <button id="personality-clear-button" class="secondary-button" type="button">Effacer mes réponses</button>
+          <button id="personality-menu-button" class="secondary-button" type="button">Retour accueil du test</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </form>
+    </section>
+
+    <section id="personality-results-view" class="results-panel personality-results-panel hidden" aria-labelledby="personality-results-title">
+      <p class="hero__label" style="color: var(--navy);">Analyse du profil</p>
+      <h2 id="personality-results-title">Résultats de votre simulation</h2>
+      <div class="personality-results-panel__body">
+        <div id="personality-scores-grid" class="scores-grid"></div>
+        <div id="personality-analysis-summary" class="analysis-card"></div>
+        <div class="analysis-grid">
+          <article class="analysis-card">
+            <h3>Points forts du candidat</h3>
+            <ul id="personality-strengths-list"></ul>
+          </article>
+          <article class="analysis-card">
+            <h3>Axes de progrès à travailler</h3>
+            <ul id="personality-progress-list"></ul>
+          </article>
+          <article id="personality-coherence-card" class="analysis-card"></article>
+        </div>
+        <p class="important-note">
+          Ce test est une simulation d'entraînement. Le vrai test de personnalité du concours GPX est interprété
+          par un psychologue agréé. Soyez toujours authentique dans vos réponses.
+        </p>
+        <div class="actions">
+          <button id="personality-restart-button" class="primary-button" type="button">Refaire le test</button>
+          <button id="personality-results-menu-button" class="secondary-button" type="button">Retour accueil du test</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
       </div>
     </section>
 
@@ -719,6 +1075,136 @@
       verbal: "📖 Verbal"
     };
 
+    const cognitiveModeLabels = {
+      complete: {
+        label: "Test complet - étape cognitive",
+        title: "Tests cognitifs du test complet"
+      },
+      cognitive: {
+        label: "Tests cognitifs",
+        title: "Tests Cognitifs uniquement - 40 questions"
+      },
+      mini: {
+        label: "Mini test cognitif",
+        title: "Mini test cognitif - 10 questions"
+      },
+      category: {
+        label: "Entraînement par catégorie",
+        title: "Entraînement ciblé"
+      }
+    };
+
+    const personalityDimensions = {
+      emotional: {
+        label: "Stabilité émotionnelle",
+        advice: "Travaillez la prise de recul, la respiration et la maîtrise du ton dans les situations tendues."
+      },
+      authority: {
+        label: "Rapport à l'autorité",
+        advice: "Renforcez votre compréhension de la hiérarchie, des consignes et du compte rendu professionnel."
+      },
+      service: {
+        label: "Sens du service et empathie",
+        advice: "Développez l'écoute active, la distance professionnelle et l'attention portée aux personnes vulnérables."
+      },
+      integrity: {
+        label: "Intégrité et éthique",
+        advice: "Gardez comme repères la probité, la confidentialité, l'exemplarité et le refus des arrangements."
+      },
+      teamwork: {
+        label: "Travail en équipe",
+        advice: "Entraînez-vous à partager l'information, accepter les avis différents et soutenir le collectif."
+      },
+      stress: {
+        label: "Gestion du stress et des situations difficiles",
+        advice: "Travaillez la priorisation, la sécurité, la décision sous pression et l'adaptation aux imprévus."
+      }
+    };
+
+    const personalityQuestions = [
+      { id: "emo1", dimension: "emotional", text: "Je garde mon calme dans les situations de tension." },
+      { id: "emo2", dimension: "emotional", text: "Je supporte bien la pression et le stress." },
+      { id: "emo3", dimension: "emotional", text: "Je ne me laisse pas déborder par mes émotions." },
+      { id: "emo4", dimension: "emotional", text: "Je prends du recul avant de réagir à une provocation." },
+      { id: "emo5", dimension: "emotional", text: "Je reste maître de mon ton même face à une personne agressive." },
+      { id: "emo6", dimension: "emotional", text: "Je perds facilement patience lorsque la situation se complique.", reverse: true },
+      { id: "emo7", dimension: "emotional", text: "Le stress me fait rapidement perdre mes moyens.", reverse: true },
+      { id: "emo8", dimension: "emotional", text: "Je retrouve rapidement mon équilibre après un moment difficile." },
+      { id: "emo9", dimension: "emotional", text: "Je sais reconnaître mes émotions sans les laisser guider toutes mes décisions." },
+      { id: "emo10", dimension: "emotional", text: "Je conserve une attitude posée lorsque plusieurs demandes arrivent en même temps." },
+      { id: "auth1", dimension: "authority", text: "Je respecte les décisions de ma hiérarchie même si je ne les partage pas toujours." },
+      { id: "auth2", dimension: "authority", text: "Je suis à l'aise pour travailler dans un cadre avec des règles strictes." },
+      { id: "auth3", dimension: "authority", text: "J'applique les consignes sans les remettre constamment en question." },
+      { id: "auth4", dimension: "authority", text: "Je demande une clarification avant d'agir lorsqu'une consigne me semble ambiguë." },
+      { id: "auth5", dimension: "authority", text: "Je comprends l'importance de la chaîne de commandement dans une intervention." },
+      { id: "auth6", dimension: "authority", text: "J'ai du mal à appliquer une décision hiérarchique qui ne correspond pas à mon avis.", reverse: true },
+      { id: "auth7", dimension: "authority", text: "Les règles strictes me donnent souvent envie de les contourner.", reverse: true },
+      { id: "auth8", dimension: "authority", text: "Je peux faire preuve d'initiative tout en respectant le cadre fixé." },
+      { id: "auth9", dimension: "authority", text: "Je rends compte loyalement à ma hiérarchie après une action." },
+      { id: "auth10", dimension: "authority", text: "Je distingue une remarque professionnelle d'une attaque personnelle." },
+      { id: "serv1", dimension: "service", text: "Aider les personnes en difficulté me tient profondément à cœur." },
+      { id: "serv2", dimension: "service", text: "Je suis sensible aux situations de vulnérabilité." },
+      { id: "serv3", dimension: "service", text: "Je m'investis naturellement pour les autres." },
+      { id: "serv4", dimension: "service", text: "J'écoute attentivement avant de proposer une aide." },
+      { id: "serv5", dimension: "service", text: "Je traite chaque personne avec considération, même dans une situation tendue." },
+      { id: "serv6", dimension: "service", text: "Je fais preuve de patience avec des personnes désorientées ou inquiètes." },
+      { id: "serv7", dimension: "service", text: "Les difficultés des autres me touchent rarement.", reverse: true },
+      { id: "serv8", dimension: "service", text: "Je cherche à comprendre le contexte avant de juger une réaction." },
+      { id: "serv9", dimension: "service", text: "Le sens du service public est une motivation importante pour moi." },
+      { id: "serv10", dimension: "service", text: "Je sais rester humain tout en gardant une distance professionnelle." },
+      { id: "int1", dimension: "integrity", text: "Je ne transige jamais avec les règles d'honnêteté." },
+      { id: "int2", dimension: "integrity", text: "Je signale toujours une irrégularité même si cela peut être inconfortable." },
+      { id: "int3", dimension: "integrity", text: "L'exemplarité dans le comportement est essentielle." },
+      { id: "int4", dimension: "integrity", text: "Je reconnais mes erreurs lorsqu'elles peuvent avoir une conséquence professionnelle." },
+      { id: "int5", dimension: "integrity", text: "Je protège les informations confidentielles auxquelles je peux avoir accès." },
+      { id: "int6", dimension: "integrity", text: "Il m'arrive de considérer qu'un petit arrangement avec les règles n'est pas grave.", reverse: true },
+      { id: "int7", dimension: "integrity", text: "Je préfère fermer les yeux sur une irrégularité pour éviter les tensions.", reverse: true },
+      { id: "int8", dimension: "integrity", text: "Je prends une décision juste même lorsqu'elle est impopulaire." },
+      { id: "int9", dimension: "integrity", text: "Je refuse les avantages ou faveurs qui pourraient influencer mon jugement." },
+      { id: "int10", dimension: "integrity", text: "Je considère la probité comme indispensable dans une mission de police." },
+      { id: "team1", dimension: "teamwork", text: "Je m'adapte facilement à différents collègues." },
+      { id: "team2", dimension: "teamwork", text: "Je place l'intérêt collectif avant mon intérêt personnel." },
+      { id: "team3", dimension: "teamwork", text: "Je communique facilement en situation difficile." },
+      { id: "team4", dimension: "teamwork", text: "Je partage les informations utiles avec mon équipe." },
+      { id: "team5", dimension: "teamwork", text: "J'accepte les avis différents lorsqu'ils améliorent l'action collective." },
+      { id: "team6", dimension: "teamwork", text: "Je soutiens un collègue en difficulté tout en respectant les consignes." },
+      { id: "team7", dimension: "teamwork", text: "Je préfère travailler seul plutôt que de coordonner mes actions avec un groupe.", reverse: true },
+      { id: "team8", dimension: "teamwork", text: "Je sais demander de l'aide lorsque la situation l'exige." },
+      { id: "team9", dimension: "teamwork", text: "Je contribue à maintenir une ambiance professionnelle dans un groupe." },
+      { id: "team10", dimension: "teamwork", text: "Je respecte le rôle de chacun au sein d'une équipe." },
+      { id: "stress1", dimension: "stress", text: "Je peux prendre des décisions rapides sous pression." },
+      { id: "stress2", dimension: "stress", text: "Les imprévus ne me déstabilisent pas." },
+      { id: "stress3", dimension: "stress", text: "Je suis capable d'intervenir dans des situations potentiellement dangereuses." },
+      { id: "stress4", dimension: "stress", text: "Je priorise les actions à mener lorsqu'une situation devient confuse." },
+      { id: "stress5", dimension: "stress", text: "Je garde une vision claire des risques avant d'agir." },
+      { id: "stress6", dimension: "stress", text: "Sous pression, j'ai tendance à éviter de prendre des décisions.", reverse: true },
+      { id: "stress7", dimension: "stress", text: "Un changement soudain de situation me paralyse facilement.", reverse: true },
+      { id: "stress8", dimension: "stress", text: "Je peux gérer plusieurs informations urgentes sans paniquer." },
+      { id: "stress9", dimension: "stress", text: "Je sais protéger ma sécurité et celle des autres avant d'intervenir." },
+      { id: "stress10", dimension: "stress", text: "Je reste concentré même lorsque l'environnement est bruyant ou conflictuel." }
+    ];
+
+    const personalityMirrorPairs = [
+      { direct: "emo1", reverse: "emo6" },
+      { direct: "emo2", reverse: "emo7" },
+      { direct: "auth1", reverse: "auth6" },
+      { direct: "auth2", reverse: "auth7" },
+      { direct: "serv2", reverse: "serv7" },
+      { direct: "int1", reverse: "int6" },
+      { direct: "int2", reverse: "int7" },
+      { direct: "team2", reverse: "team7" },
+      { direct: "stress1", reverse: "stress6" },
+      { direct: "stress2", reverse: "stress7" }
+    ];
+
+    const personalityScaleLabels = [
+      "Pas du tout d'accord",
+      "Plutôt pas d'accord",
+      "Neutre",
+      "Plutôt d'accord",
+      "Tout à fait d'accord"
+    ];
+
     let currentQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
@@ -731,8 +1217,25 @@
     let questionResults = [];
     let testStartedAt = null;
     let lastCompletedAttempt = null;
+    let currentMode = "cognitive";
+    let activeCategoryKeys = [...categoryOrder];
+    let activeCognitiveCounts = {};
+    let personalityNextStep = "results";
+    let lastPersonalityAnalysis = null;
 
     const homeView = document.getElementById("home-view");
+    const categoryTrainingPanel = document.getElementById("category-training-panel");
+    const categoryModeButton = document.querySelector('[data-mode="category"]');
+    const personalityView = document.getElementById("personality-view");
+    const personalityResultsView = document.getElementById("personality-results-view");
+    const personalityLabel = document.getElementById("personality-label");
+    const personalityTitle = document.getElementById("personality-title");
+    const personalityForm = document.getElementById("personality-form");
+    const personalityQuestionList = document.getElementById("personality-question-list");
+    const personalityFormWarning = document.getElementById("personality-form-warning");
+    const personalityAnsweredCount = document.getElementById("personality-answered-count");
+    const personalityProgressBar = document.getElementById("personality-progress-bar");
+    const personalitySubmitButton = document.getElementById("personality-submit-button");
     const quizView = document.getElementById("quiz-view");
     const resultsView = document.getElementById("results-view");
     const categoryLabel = document.getElementById("category-label");
@@ -755,11 +1258,24 @@
     const downloadPdfButton = document.getElementById("download-pdf-button");
 
     extendQuestionBank();
+    renderPersonalityQuestions();
+    updatePersonalityProgress();
 
-    document.getElementById("start-test-button").addEventListener("click", startQuiz);
+    document.querySelectorAll("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => handleModeSelection(button.dataset.mode));
+    });
+    document.querySelectorAll("[data-category]").forEach((button) => {
+      button.addEventListener("click", () => startCategoryTraining(button.dataset.category));
+    });
+    personalityForm.addEventListener("input", updatePersonalityProgress);
+    personalityForm.addEventListener("submit", handlePersonalitySubmit);
+    document.getElementById("personality-clear-button").addEventListener("click", clearPersonalityForm);
+    document.getElementById("personality-menu-button").addEventListener("click", showHome);
+    document.getElementById("personality-restart-button").addEventListener("click", () => startMode("personality"));
+    document.getElementById("personality-results-menu-button").addEventListener("click", showHome);
     nextButton.addEventListener("click", nextQuestion);
-    document.getElementById("restart-button").addEventListener("click", startQuiz);
-    document.getElementById("restart-quiz-button").addEventListener("click", startQuiz);
+    document.getElementById("restart-button").addEventListener("click", restartCurrentMode);
+    document.getElementById("restart-quiz-button").addEventListener("click", restartCurrentMode);
     document.getElementById("menu-button").addEventListener("click", showHome);
     document.getElementById("back-menu-button").addEventListener("click", showHome);
     downloadPdfButton.addEventListener("click", generateRevisionPdf);
@@ -768,33 +1284,336 @@
       return { type, text, options, answer, explanation };
     }
 
-    function startQuiz() {
-      currentQuestions = buildRandomTest();
+    function handleModeSelection(mode) {
+      if (mode === "category") {
+        const isHidden = categoryTrainingPanel.classList.toggle("hidden");
+        categoryModeButton.setAttribute("aria-expanded", String(!isHidden));
+        if (!isHidden) {
+          categoryTrainingPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        return;
+      }
+
+      startMode(mode);
+    }
+
+    function startMode(mode) {
+      currentMode = mode;
+      lastPersonalityAnalysis = null;
+      if (mode === "complete") {
+        startPersonalityTest("cognitive");
+        return;
+      }
+
+      if (mode === "personality") {
+        startPersonalityTest("results");
+        return;
+      }
+
+      if (mode === "mini") {
+        startCognitiveQuiz("mini", buildMiniCategoryCounts());
+        return;
+      }
+
+      startCognitiveQuiz("cognitive", buildFixedCategoryCounts(categoryOrder, 10));
+    }
+
+    function restartCurrentMode() {
+      if (currentMode === "category") {
+        startCognitiveQuiz("category", activeCognitiveCounts);
+        return;
+      }
+
+      startMode(currentMode);
+    }
+
+    function startCategoryTraining(categoryKey) {
+      currentMode = "category";
+      lastPersonalityAnalysis = null;
+      startCognitiveQuiz("category", { [categoryKey]: 10 });
+    }
+
+    function startPersonalityTest(nextStep) {
+      personalityNextStep = nextStep;
+      clearInterval(intervalId);
+      clearTimeout(nextButtonTimeoutId);
+      clearPersonalityForm();
+      homeView.classList.add("hidden");
+      quizView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      personalityResultsView.classList.add("hidden");
+      personalityView.classList.remove("hidden");
+      personalityLabel.textContent = nextStep === "cognitive"
+        ? "Étape 1/2 - 60 affirmations - non chronométré"
+        : "60 affirmations - échelle de 1 à 5";
+      personalityTitle.textContent = nextStep === "cognitive"
+        ? "Test de personnalité - Test complet"
+        : "Test de Personnalité uniquement";
+      personalitySubmitButton.textContent = nextStep === "cognitive"
+        ? "Continuer vers les tests cognitifs"
+        : "Voir mon analyse";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startCognitiveQuiz(mode, counts) {
+      const selectedKeys = categoryOrder.filter((key) => counts[key] > 0);
+      const modeInfo = cognitiveModeLabels[mode];
+      currentMode = mode;
+      activeCategoryKeys = selectedKeys;
+      activeCognitiveCounts = { ...counts };
+      currentQuestions = buildCognitiveTest(counts);
       currentQuestionIndex = 0;
       score = 0;
       numericTimeouts = 0;
-      categoryScores = categoryOrder.reduce((scores, key) => {
-        scores[key] = { correct: 0, total: 10 };
+      categoryScores = selectedKeys.reduce((scores, key) => {
+        scores[key] = { correct: 0, total: counts[key] };
         return scores;
       }, {});
       questionResults = [];
       testStartedAt = new Date();
       lastCompletedAttempt = null;
       clearInterval(intervalId);
+      clearTimeout(nextButtonTimeoutId);
       homeView.classList.add("hidden");
+      personalityView.classList.add("hidden");
+      personalityResultsView.classList.add("hidden");
       resultsView.classList.add("hidden");
       quizView.classList.remove("hidden");
-      categoryLabel.textContent = "Test mixte";
-      quizTitle.textContent = "Test de Personnalité et Tests Psychotechniques";
+      categoryLabel.textContent = modeInfo.label;
+      quizTitle.textContent = mode === "category"
+        ? `${modeInfo.title} - ${categories[selectedKeys[0]].title}`
+        : modeInfo.title;
+      window.scrollTo({ top: 0, behavior: "smooth" });
       renderQuestion();
     }
 
     function showHome() {
       clearInterval(intervalId);
       clearTimeout(nextButtonTimeoutId);
+      personalityView.classList.add("hidden");
+      personalityResultsView.classList.add("hidden");
       quizView.classList.add("hidden");
       resultsView.classList.add("hidden");
       homeView.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderPersonalityQuestions() {
+      personalityQuestionList.innerHTML = personalityQuestions.map((question, index) => `
+        <fieldset class="personality-question-card">
+          <legend class="personality-question-card__title">
+            <span class="question-number">${index + 1}</span>
+            <span>${question.text}</span>
+          </legend>
+          <div class="scale-options">
+            ${personalityScaleLabels.map((label, valueIndex) => {
+              const value = valueIndex + 1;
+              return `
+                <label class="scale-option">
+                  <input type="radio" name="${question.id}" value="${value}">
+                  <span>
+                    <span class="scale-option__value">${value}</span>
+                    <span class="scale-option__label">${label}</span>
+                  </span>
+                </label>
+              `;
+            }).join("")}
+          </div>
+        </fieldset>
+      `).join("");
+    }
+
+    function clearPersonalityForm() {
+      personalityForm.reset();
+      personalityFormWarning.textContent = "";
+      updatePersonalityProgress();
+    }
+
+    function collectPersonalityAnswers() {
+      const data = new FormData(personalityForm);
+      return personalityQuestions.reduce((answers, question) => {
+        const value = data.get(question.id);
+        answers[question.id] = value ? Number(value) : null;
+        return answers;
+      }, {});
+    }
+
+    function updatePersonalityProgress() {
+      const answers = collectPersonalityAnswers();
+      const answeredCount = personalityQuestions.filter((question) => answers[question.id]).length;
+      const percent = Math.round((answeredCount / personalityQuestions.length) * 100);
+      personalityAnsweredCount.textContent = `${answeredCount}/${personalityQuestions.length} réponses`;
+      personalityProgressBar.style.width = `${percent}%`;
+    }
+
+    function handlePersonalitySubmit(event) {
+      event.preventDefault();
+      const answers = collectPersonalityAnswers();
+      const missingQuestion = personalityQuestions.find((question) => !answers[question.id]);
+
+      if (missingQuestion) {
+        personalityFormWarning.textContent = "Merci de répondre aux 60 affirmations avant de continuer.";
+        document.querySelector(`[name="${missingQuestion.id}"]`)
+          .closest(".personality-question-card")
+          .scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      personalityFormWarning.textContent = "";
+      lastPersonalityAnalysis = buildPersonalityAnalysis(answers);
+
+      if (personalityNextStep === "cognitive") {
+        startCognitiveQuiz("complete", buildFixedCategoryCounts(categoryOrder, 10));
+        return;
+      }
+
+      showPersonalityResults(lastPersonalityAnalysis);
+    }
+
+    function buildPersonalityAnalysis(answers) {
+      const scores = calculatePersonalityScores(answers);
+      const coherence = analyzePersonalityCoherence(answers);
+      return { scores, coherence };
+    }
+
+    function calculatePersonalityScores(answers) {
+      const grouped = Object.keys(personalityDimensions).reduce((accumulator, key) => {
+        accumulator[key] = [];
+        return accumulator;
+      }, {});
+
+      personalityQuestions.forEach((question) => {
+        const rawAnswer = answers[question.id];
+        const adjustedAnswer = question.reverse ? 6 - rawAnswer : rawAnswer;
+        grouped[question.dimension].push(((adjustedAnswer - 1) / 4) * 10);
+      });
+
+      return Object.entries(grouped).map(([key, values]) => {
+        const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+        return {
+          key,
+          label: personalityDimensions[key].label,
+          advice: personalityDimensions[key].advice,
+          score: Math.round(average * 10) / 10
+        };
+      });
+    }
+
+    function analyzePersonalityCoherence(answers) {
+      const issues = personalityMirrorPairs.map((pair) => {
+        const directAnswer = answers[pair.direct];
+        const reverseAnswer = answers[pair.reverse];
+        const expectedDirect = 6 - reverseAnswer;
+        return {
+          ...pair,
+          gap: Math.abs(directAnswer - expectedDirect)
+        };
+      }).filter((issue) => issue.gap >= 3);
+
+      if (issues.length === 0) {
+        return {
+          title: "Cohérence des réponses : satisfaisante",
+          message: "Vos réponses aux questions miroir restent globalement constantes. Continuez à privilégier des réponses spontanées et authentiques.",
+          issues
+        };
+      }
+
+      if (issues.length <= 3) {
+        return {
+          title: "Cohérence des réponses : quelques écarts",
+          message: "Certaines réponses à des affirmations inversées semblent contradictoires. Relisez calmement les consignes et évitez de répondre mécaniquement.",
+          issues
+        };
+      }
+
+      return {
+        title: "Cohérence des réponses : avertissement",
+        message: "Plusieurs incohérences sont détectées entre des questions miroir. Dans un vrai test, ce type d'écart peut attirer l'attention du psychologue ou du jury.",
+        issues
+      };
+    }
+
+    function showPersonalityResults(analysis) {
+      renderPersonalityResults(analysis);
+      personalityView.classList.add("hidden");
+      personalityResultsView.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderPersonalityResults({ scores, coherence }) {
+      const average = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const sortedScores = [...scores].sort((a, b) => b.score - a.score);
+      const lowScores = scores.filter((item) => item.score < 6);
+      const solidScores = scores.filter((item) => item.score >= 7.5);
+
+      document.getElementById("personality-scores-grid").innerHTML = scores.map((item) => `
+        <article class="score-card">
+          <h3>${item.label}</h3>
+          <div class="score-value">${formatPersonalityScore(item.score)}<small>/10</small></div>
+          <div class="score-meter" aria-hidden="true"><span style="width: ${item.score * 10}%"></span></div>
+        </article>
+      `).join("");
+
+      document.getElementById("personality-analysis-summary").innerHTML = `
+        <h3>Lecture personnalisée</h3>
+        <p>${personalityOverallMessage(average)}</p>
+        ${scores.map((item) => `<p><strong>${item.label} :</strong> ${personalityDimensionMessage(item)}</p>`).join("")}
+      `;
+
+      document.getElementById("personality-strengths-list").innerHTML = (solidScores.length ? solidScores : sortedScores.slice(0, 2)).map((item) => `
+        <li><strong>${item.label}</strong> : ${personalityStrengthMessage(item)}</li>
+      `).join("");
+
+      const progressItems = lowScores.length ? lowScores : sortedScores.slice(-2).reverse();
+      document.getElementById("personality-progress-list").innerHTML = progressItems.map((item) => `
+        <li><strong>${item.label}</strong> : ${item.advice}</li>
+      `).join("");
+
+      const detail = coherence.issues.length
+        ? `<p>Nombre d'écarts marqués sur les questions miroir : <strong>${coherence.issues.length}/10</strong>.</p>`
+        : "<p>Aucun écart marqué n'a été relevé sur les 10 questions miroir.</p>";
+
+      document.getElementById("personality-coherence-card").innerHTML = `
+        <h3>${coherence.title}</h3>
+        <p>${coherence.message}</p>
+        ${detail}
+      `;
+    }
+
+    function personalityOverallMessage(average) {
+      if (average >= 8) {
+        return "Votre profil simulé montre un équilibre solide sur les dimensions attendues pour le concours GPX. L'enjeu est de rester authentique et constant dans vos réponses.";
+      }
+
+      if (average >= 6.5) {
+        return "Votre profil simulé présente des bases cohérentes avec les attentes du concours. Certaines dimensions peuvent encore être renforcées par un travail de préparation ciblé.";
+      }
+
+      return "Votre profil simulé met en évidence plusieurs points à consolider. Utilisez ces résultats comme support d'entraînement et de réflexion personnelle avant l'entretien.";
+    }
+
+    function personalityDimensionMessage(item) {
+      if (item.score >= 8) {
+        return `score élevé (${formatPersonalityScore(item.score)}/10), indicateur positif à maintenir avec des réponses naturelles.`;
+      }
+
+      if (item.score >= 6) {
+        return `score intermédiaire (${formatPersonalityScore(item.score)}/10), base correcte mais encore perfectible selon les situations.`;
+      }
+
+      return `score fragile (${formatPersonalityScore(item.score)}/10), dimension à travailler pour gagner en crédibilité et en constance.`;
+    }
+
+    function personalityStrengthMessage(item) {
+      if (item.score >= 8) {
+        return `point d'appui net avec un score de ${formatPersonalityScore(item.score)}/10.`;
+      }
+
+      return `dimension la plus favorable de cette simulation avec un score de ${formatPersonalityScore(item.score)}/10.`;
+    }
+
+    function formatPersonalityScore(score) {
+      return score.toFixed(1).replace(".", ",");
     }
 
     function renderQuestion() {
@@ -970,12 +1789,12 @@
       quizView.classList.add("hidden");
       resultsView.classList.remove("hidden");
       timer.classList.add("hidden");
-      resultsTitle.textContent = "Score final";
-      scoreCircle.textContent = `${score}`;
-      encouragement.textContent = getEncouragement(score);
-      categoryResults.innerHTML = categoryOrder.map((key) => {
+      resultsTitle.textContent = cognitiveModeLabels[currentMode]?.title || "Score final";
+      scoreCircle.textContent = `${score}/${currentQuestions.length}`;
+      encouragement.textContent = getEncouragement(score, currentQuestions.length);
+      categoryResults.innerHTML = activeCategoryKeys.map((key) => {
         const result = categoryScores[key];
-        return `<strong>${categoryBadges[key]}</strong> : ${result.correct}`;
+        return `<strong>${categoryBadges[key]}</strong> : ${result.correct}/${result.total}`;
       }).join(" | ");
       penaltySummary.textContent = numericTimeouts > 0
         ? `Questions numériques non répondues dans les 30 secondes : ${numericTimeouts}.`
@@ -983,38 +1802,58 @@
       lastCompletedAttempt = {
         score,
         total: currentQuestions.length,
+        mode: currentMode,
         numericTimeouts,
         categoryScores: copyCategoryScores(categoryScores),
+        categoryKeys: [...activeCategoryKeys],
+        personalityAnalysis: lastPersonalityAnalysis,
         startedAt: testStartedAt || new Date(),
         completedAt: new Date(),
         results: questionResults.slice()
       };
     }
 
-    function getEncouragement(value) {
-      if (value >= 34) {
+    function getEncouragement(value, total) {
+      const ratio = total > 0 ? value / total : 0;
+      if (ratio >= 0.85) {
         return "Excellent niveau : vous maîtrisez très bien les quatre catégories.";
       }
-      if (value >= 28) {
+      if (ratio >= 0.7) {
         return "Bon résultat : consolidez les automatismes pour gagner encore en régularité.";
       }
-      if (value >= 20) {
+      if (ratio >= 0.5) {
         return "Résultat encourageant : reprenez les corrections par catégorie et recommencez.";
       }
       return "Entraînement à poursuivre : avancez question par question et repérez les méthodes utiles.";
     }
 
     function copyCategoryScores(scores) {
-      return categoryOrder.reduce((copy, key) => {
-        const result = scores[key] || { correct: 0, total: 10 };
+      return activeCategoryKeys.reduce((copy, key) => {
+        const result = scores[key] || { correct: 0, total: activeCognitiveCounts[key] || 0 };
         copy[key] = { correct: result.correct, total: result.total };
         return copy;
       }, {});
     }
 
-    function buildRandomTest() {
+    function buildFixedCategoryCounts(keys, count) {
+      return keys.reduce((counts, key) => {
+        counts[key] = count;
+        return counts;
+      }, {});
+    }
+
+    function buildMiniCategoryCounts() {
+      const counts = buildFixedCategoryCounts(categoryOrder, 2);
+      shuffle(categoryOrder).slice(0, 2).forEach((key) => {
+        counts[key] += 1;
+      });
+      return counts;
+    }
+
+    function buildCognitiveTest(counts) {
       const selectedQuestions = categoryOrder.flatMap((categoryKey) => {
-        return sample(categories[categoryKey].questions, 10).map((question) => prepareQuestion(question, categoryKey));
+        const count = counts[categoryKey] || 0;
+        return sample(categories[categoryKey].questions, count).map((question) => prepareQuestion(question, categoryKey));
       });
       return shuffle(selectedQuestions);
     }
@@ -1091,19 +1930,25 @@
         fontSize: 11,
         color: muted
       });
-      y = addPdfText(doc, `Score obtenu : ${attempt.score}`, margin, y + 2, maxWidth, {
+      y = addPdfText(doc, `Score obtenu : ${attempt.score}/${attempt.total}`, margin, y + 2, maxWidth, {
         fontSize: 13,
         style: "bold",
         color: navy
       });
+      if (attempt.personalityAnalysis) {
+        y = addPdfText(doc, "Étape personnalité réalisée avant les tests cognitifs.", margin, y + 2, maxWidth, {
+          fontSize: 11,
+          color: muted
+        });
+      }
       y = addPdfText(doc, "Détail par catégorie :", margin, y + 4, maxWidth, {
         fontSize: 12,
         style: "bold",
         color: navy
       });
-      categoryOrder.forEach((key) => {
-        const result = attempt.categoryScores[key] || { correct: 0, total: 10 };
-        y = addPdfText(doc, `• ${categories[key].title} : ${result.correct}`, margin + 4, y + 1, maxWidth - 4, {
+      attempt.categoryKeys.forEach((key) => {
+        const result = attempt.categoryScores[key] || { correct: 0, total: 0 };
+        y = addPdfText(doc, `• ${categories[key].title} : ${result.correct}/${result.total}`, margin + 4, y + 1, maxWidth - 4, {
           fontSize: 11,
           color: muted
         });

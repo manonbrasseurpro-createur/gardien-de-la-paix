@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Résolution de Cas Pratiques - Gardien de la Paix</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .case-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .module-shell,
+    .exercise-panel,
+    .correction-panel,
+    .examples-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .module-shell {
+      padding: 30px;
+    }
+
+    .top-actions,
+    .exercise-actions,
+    .correction-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .back-link,
+    .primary-button,
+    .secondary-button,
+    .ghost-button,
+    .mode-card,
+    .case-select {
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .back-link,
+    .primary-button,
+    .secondary-button,
+    .ghost-button {
+      display: inline-flex;
+      min-height: 44px;
+      padding: 10px 16px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .back-link,
+    .secondary-button,
+    .ghost-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .back-link:hover,
+    .secondary-button:hover,
+    .ghost-button:hover,
+    .primary-button:hover {
+      box-shadow: 0 10px 22px rgba(26, 39, 68, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .primary-button:disabled,
+    .secondary-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .info-panel,
+    .method-card,
+    .jury-card,
+    .warning-card,
+    .knowledge-card,
+    .skills-card {
+      border-radius: 20px;
+      box-shadow: 0 14px 30px rgba(26, 39, 68, 0.1);
+    }
+
+    .info-panel {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0;
+      padding: 26px;
+      color: var(--white);
+      background: var(--navy);
+    }
+
+    .info-panel h2,
+    .info-panel h3,
+    .info-panel p,
+    .method-card h3,
+    .method-card p,
+    .jury-card h3,
+    .jury-card p,
+    .warning-card h3,
+    .warning-card p,
+    .knowledge-card h3,
+    .knowledge-card p,
+    .skills-card h3,
+    .skills-card p {
+      margin: 0;
+    }
+
+    .info-panel ul,
+    .method-card ol,
+    .jury-card ul,
+    .knowledge-card ul,
+    .skills-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .info-panel li + li,
+    .method-card li + li,
+    .jury-card li + li,
+    .knowledge-card li + li,
+    .skills-card li + li {
+      margin-top: 8px;
+    }
+
+    .callout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 24px 0;
+    }
+
+    .method-card,
+    .jury-card,
+    .warning-card,
+    .knowledge-card,
+    .skills-card {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+      border: 1px solid transparent;
+    }
+
+    .method-card {
+      color: #711f1f;
+      background: #fff0f0;
+      border-color: #f1a4a4;
+    }
+
+    .jury-card,
+    .knowledge-card {
+      color: #174525;
+      background: #e8f7ed;
+      border-color: #8ad0a0;
+    }
+
+    .warning-card,
+    .skills-card {
+      color: #6a3d00;
+      background: #fff4d6;
+      border-color: #f1b85d;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .mode-card,
+    .case-select {
+      display: flex;
+      min-height: 245px;
+      padding: 22px;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .mode-card:hover,
+    .mode-card:focus,
+    .case-select:hover,
+    .case-select:focus {
+      border-color: var(--navy);
+      box-shadow: var(--shadow);
+      outline: none;
+      transform: translateY(-4px);
+    }
+
+    .mode-card__icon,
+    .timer-badge,
+    .progress-pill,
+    .score-pill {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .mode-card__icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.35rem;
+    }
+
+    .mode-card h3,
+    .case-select h3 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.3;
+    }
+
+    .mode-card p,
+    .case-select p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .mode-card__duration {
+      margin-top: auto;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .case-selector {
+      display: none;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .case-selector.is-visible {
+      display: block;
+    }
+
+    .case-selector h2 {
+      margin: 0 0 16px;
+      color: var(--navy);
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .case-select {
+      min-height: 190px;
+    }
+
+    .exercise-panel__header {
+      display: grid;
+      gap: 16px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .exercise-title-row,
+    .exercise-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .exercise-panel h2,
+    .exercise-panel h3,
+    .correction-panel h2,
+    .correction-panel h3,
+    .examples-panel h2,
+    .examples-panel h3 {
+      margin: 0;
+    }
+
+    .timer-badge,
+    .progress-pill,
+    .score-pill {
+      padding: 8px 12px;
+      color: var(--navy);
+      background: var(--white);
+    }
+
+    .timer-badge.is-alert {
+      color: var(--white);
+      background: #b42318;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.04);
+      }
+    }
+
+    .progress-track {
+      height: 10px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+    }
+
+    .progress-track span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: var(--white);
+      border-radius: inherit;
+      transition: width 240ms ease;
+    }
+
+    .exercise-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 0;
+    }
+
+    .question-workspace {
+      display: grid;
+      gap: 18px;
+      padding: 28px;
+    }
+
+    .situation-box,
+    .method-reminder,
+    .documents-highlight,
+    .advice-box {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #f8fafd;
+    }
+
+    .situation-box h3,
+    .method-reminder h3,
+    .documents-highlight h3,
+    .advice-box h3 {
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .steps-list {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .steps-list li + li {
+      margin-top: 8px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .question-card h3 {
+      color: var(--navy);
+      font-size: clamp(1.25rem, 3vw, 1.7rem);
+      line-height: 1.3;
+    }
+
+    .answer-area {
+      width: 100%;
+      min-height: 280px;
+      padding: 18px;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font: inherit;
+      line-height: 1.55;
+      resize: vertical;
+    }
+
+    .answer-area:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 4px rgba(26, 39, 68, 0.12);
+      outline: none;
+    }
+
+    .word-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .document-panel {
+      border-left: 1px solid var(--border);
+      background: #f8fafd;
+    }
+
+    .document-panel__inner {
+      position: sticky;
+      top: 0;
+      display: grid;
+      max-height: 100vh;
+      gap: 14px;
+      overflow: auto;
+      padding: 24px;
+    }
+
+    .document-toggle {
+      display: none;
+    }
+
+    .doc-card {
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .doc-card h4 {
+      margin: 0 0 8px;
+      color: var(--navy);
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .doc-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .correction-panel,
+    .examples-panel {
+      display: none;
+    }
+
+    .correction-panel.is-visible,
+    .examples-panel.is-visible,
+    .exercise-panel.is-visible {
+      display: block;
+    }
+
+    .exercise-panel {
+      display: none;
+    }
+
+    .correction-panel__header,
+    .examples-panel__header {
+      display: grid;
+      gap: 10px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .correction-body,
+    .examples-body {
+      display: grid;
+      gap: 20px;
+      padding: 28px;
+    }
+
+    .answer-comparison {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .answer-box,
+    .model-box {
+      min-height: 240px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #f8fafd;
+      white-space: pre-wrap;
+    }
+
+    .model-box {
+      background: #edf7f0;
+      border-color: #8ad0a0;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .checklist .missed {
+      color: #8a1c1c;
+    }
+
+    .checklist .found {
+      color: #166534;
+    }
+
+    .score-card {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .score-card > div {
+      padding: 18px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 16px;
+    }
+
+    .score-card strong {
+      display: block;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      line-height: 1.1;
+    }
+
+    .example-case {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #f8fafd;
+    }
+
+    .example-case h3 {
+      color: var(--navy);
+    }
+
+    .example-answer {
+      padding: 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .mode-grid,
+      .case-grid,
+      .callout-grid,
+      .answer-comparison,
+      .score-card {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .exercise-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .document-panel {
+        display: none;
+        border-left: 0;
+        border-top: 1px solid var(--border);
+      }
+
+      .document-panel.is-open {
+        display: block;
+      }
+
+      .document-panel__inner {
+        position: static;
+        max-height: none;
+      }
+
+      .document-toggle {
+        display: inline-flex;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .module-shell,
+      .question-workspace,
+      .correction-body,
+      .examples-body {
+        padding: 22px;
+      }
+
+      .mode-grid,
+      .case-grid,
+      .callout-grid,
+      .answer-comparison,
+      .score-card {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-card,
+      .case-select {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Concours de la Police nationale</p>
+      <h1>Résolution de Cas Pratiques</h1>
+      <p class="hero__subtitle">Analysez, priorisez, argumentez et rédigez comme le jury l'attend.</p>
+    </div>
+  </header>
+
+  <main class="container case-page">
+    <section class="module-shell" id="home-screen" aria-labelledby="module-title">
+      <div class="top-actions">
+        <a class="back-link" href="index.html">← Retour vers index.html</a>
+        <button class="ghost-button" type="button" id="download-home">Télécharger mes réponses (PDF)</button>
+      </div>
+
+      <div class="info-panel">
+        <h2 id="module-title">Informations clés</h2>
+        <ul>
+          <li>2 heures pour résoudre plusieurs cas pratiques à partir d'un dossier documentaire.</li>
+          <li>Coefficient 4 au concours externe / coefficient 5 au concours interne.</li>
+          <li>Épreuve éliminatoire en dessous de 5/20. Visez bien au-dessus de 5/20 car une note aussi basse est difficilement rattrapable.</li>
+        </ul>
+      </div>
+
+      <div class="callout-grid" aria-label="Conseils méthodologiques">
+        <article class="method-card">
+          <h3>⚠️ 4 questions clés à se poser pour chaque réponse</h3>
+          <ol>
+            <li><strong>Quelle est la situation ?</strong> Analysez les faits objectivement, ne négligez aucun détail du dossier.</li>
+            <li><strong>Quel est le critère d'urgence ?</strong> Identifiez ce qui doit être traité en priorité.</li>
+            <li><strong>Quelle action je priorise ?</strong> Proposez des solutions concrètes et réalistes dans le cadre de vos fonctions.</li>
+            <li><strong>Quelles pièces du dossier puis-je exploiter ?</strong> Appuyez toujours vos réponses sur le dossier fourni.</li>
+          </ol>
+        </article>
+
+        <article class="jury-card">
+          <h3>💡 Vos réponses doivent être...</h3>
+          <ul>
+            <li><strong>Opérationnelles :</strong> des propositions concrètes de terrain, pas de théorie.</li>
+            <li><strong>Réalistes :</strong> restez dans le cadre du gardien de la paix, pas du commandant ou du juge.</li>
+            <li><strong>Adaptées :</strong> tenez compte du contexte précis.</li>
+            <li><strong>Argumentées :</strong> expliquez pourquoi, dans quel ordre, avec quelles conséquences anticipées.</li>
+          </ul>
+        </article>
+
+        <article class="warning-card">
+          <h3>⚠️ Ce concours est un concours de logique, pas d'intuition !</h3>
+          <p>Le piège le plus courant est de répondre instinctivement. Chaque réponse doit être construite sur un raisonnement clair et justifié, appuyé sur le dossier.</p>
+        </article>
+
+        <article class="knowledge-card">
+          <h3>💡 Pas besoin d'apprendre les lois par coeur</h3>
+          <p>Les articles de loi sont toujours fournis dans le dossier. Ce qui est évalué, c'est votre capacité à les lire, les comprendre et les utiliser au bon moment.</p>
+          <p><strong>Thèmes fréquents :</strong></p>
+          <ul>
+            <li>Troubles à l'ordre public : tapages, rixes, nuisances.</li>
+            <li>Conflits familiaux : violences intrafamiliales.</li>
+            <li>Interventions sur la voie publique : ivresse, altercations.</li>
+          </ul>
+        </article>
+
+        <article class="skills-card">
+          <h3>⚠️ Ce que le jury évalue vraiment</h3>
+          <ul>
+            <li>Votre discernement : distinguer urgent, grave, secondaire.</li>
+            <li>Votre analyse de situation : identifier enjeux et risques.</li>
+            <li>Vos solutions concrètes : argumentées et opérationnelles.</li>
+            <li>Votre positionnement hiérarchique : agir à votre niveau.</li>
+            <li>Votre qualité rédactionnelle : syntaxe, orthographe, structure logique.</li>
+          </ul>
+        </article>
+      </div>
+
+      <h2>Menu des modes</h2>
+      <div class="mode-grid" aria-label="Modes d'entraînement">
+        <button class="mode-card" type="button" data-mode="simulation">
+          <span class="mode-card__icon" aria-hidden="true">🎯</span>
+          <h3>Simulation complète</h3>
+          <p>3 cas pratiques + dossier documentaire complet. Conditions réelles du concours.</p>
+          <span class="mode-card__duration">⏱ 2 heures chronomètre dégressif</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="single">
+          <span class="mode-card__icon" aria-hidden="true">📝</span>
+          <h3>Cas pratique unique</h3>
+          <p>Un seul cas pratique avec 4 questions et son dossier documentaire.</p>
+          <span class="mode-card__duration">⏱ ~40 min</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="question">
+          <span class="mode-card__icon" aria-hidden="true">❓</span>
+          <h3>Question isolée</h3>
+          <p>Entraînez-vous sur une seule question.</p>
+          <span class="mode-card__duration">⏱ ~10 min</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="examples">
+          <span class="mode-card__icon" aria-hidden="true">📚</span>
+          <h3>Exemples de bonnes réponses</h3>
+          <p>Consultez des réponses modèles commentées pour comprendre ce qu'attend le jury.</p>
+          <span class="mode-card__duration">Corrigés commentés</span>
+        </button>
+      </div>
+
+      <section class="case-selector" id="case-selector" aria-live="polite">
+        <h2 id="case-selector-title">Choisissez un cas pratique</h2>
+        <div class="case-grid" id="case-grid"></div>
+      </section>
+    </section>
+
+    <section class="exercise-panel" id="exercise-screen" aria-live="polite">
+      <div class="exercise-panel__header">
+        <div class="exercise-title-row">
+          <div>
+            <p class="hero__label" id="mode-label">Mode</p>
+            <h2 id="case-title">Cas pratique</h2>
+          </div>
+          <div class="timer-badge" id="timer">00:00</div>
+        </div>
+        <div class="exercise-meta">
+          <span class="progress-pill" id="progress-label">Question 1/4</span>
+          <span class="score-pill" id="global-score">Score global : 0/50 - 0/20</span>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+      </div>
+
+      <div class="exercise-layout">
+        <div class="question-workspace">
+          <div class="exercise-actions">
+            <button class="secondary-button" type="button" id="back-to-home">← Accueil du module</button>
+            <button class="secondary-button document-toggle" type="button" id="open-documents">📄 Consulter le dossier</button>
+            <button class="ghost-button" type="button" id="download-exercise">Télécharger mes réponses (PDF)</button>
+          </div>
+
+          <article class="situation-box" id="situation-box"></article>
+
+          <article class="question-card">
+            <h3 id="question-title"></h3>
+            <p id="question-prompt"></p>
+            <textarea class="answer-area" id="answer-input" placeholder="Rédigez votre réponse ici : qualification, actions concrètes, références au dossier, ordre de priorité..."></textarea>
+            <div class="word-row">
+              <span id="word-count">0 mot</span>
+              <span id="autosave-status">Sauvegarde automatique active</span>
+            </div>
+          </article>
+
+          <article class="method-reminder">
+            <h3>Rappel méthodologique</h3>
+            <p>Pensez à : qualifier les faits / citer le dossier / argumenter vos actions / rester dans votre rôle.</p>
+          </article>
+
+          <div class="exercise-actions">
+            <button class="secondary-button" type="button" id="previous-question">Question précédente</button>
+            <button class="primary-button" type="button" id="validate-answer">Valider ma réponse</button>
+          </div>
+        </div>
+
+        <aside class="document-panel" id="document-panel" aria-label="Dossier documentaire">
+          <div class="document-panel__inner">
+            <div class="exercise-actions">
+              <h3>📄 Dossier documentaire</h3>
+              <button class="ghost-button document-toggle" type="button" id="close-documents">Fermer</button>
+            </div>
+            <p><strong>Exploitez ces documents dans vos réponses.</strong></p>
+            <div id="document-list"></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="correction-panel" id="correction-screen" aria-live="polite">
+      <div class="correction-panel__header">
+        <p class="hero__label">Correction immédiate</p>
+        <h2 id="correction-title">Votre réponse et la réponse modèle</h2>
+      </div>
+      <div class="correction-body">
+        <div class="answer-comparison">
+          <article>
+            <h3>Votre réponse</h3>
+            <div class="answer-box" id="user-answer-box"></div>
+          </article>
+          <article>
+            <h3>Réponse modèle détaillée</h3>
+            <div class="model-box" id="model-answer-box"></div>
+          </article>
+        </div>
+
+        <article>
+          <h3>Checklist des points clés à mentionner</h3>
+          <ul class="checklist" id="checklist"></ul>
+        </article>
+
+        <div class="score-card">
+          <div>
+            <span>Score indicatif de la question</span>
+            <strong id="question-score">0/5</strong>
+          </div>
+          <div>
+            <span>Score global converti</span>
+            <strong id="score-converted">0/20</strong>
+          </div>
+        </div>
+
+        <article class="advice-box">
+          <h3>Conseils d'amélioration personnalisés</h3>
+          <p id="personal-advice"></p>
+        </article>
+
+        <article class="documents-highlight">
+          <h3>Documents du dossier à exploiter</h3>
+          <div id="highlighted-docs"></div>
+        </article>
+
+        <div class="correction-actions">
+          <button class="secondary-button" type="button" id="retry-question">Modifier ma réponse</button>
+          <button class="primary-button" type="button" id="next-question">Question suivante</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="examples-panel" id="examples-screen">
+      <div class="examples-panel__header">
+        <p class="hero__label">Réponses modèles commentées</p>
+        <h2>Exemples de bonnes réponses</h2>
+      </div>
+      <div class="examples-body">
+        <div class="top-actions">
+          <button class="secondary-button" type="button" id="examples-home">← Accueil du module</button>
+          <button class="ghost-button" type="button" id="download-examples">Télécharger mes réponses (PDF)</button>
+        </div>
+        <div id="examples-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const cases = [
+      {
+        id: "violences-conjugales",
+        title: "Violences conjugales",
+        theme: "Protection de la victime, qualification pénale et procédure",
+        situation: [
+          "Vous êtes gardien de la paix au commissariat de Xville. À 20 h 15, ALPHA se présente à l'accueil en pleurs avec une trace rouge au visage. Elle déclare que son conjoint BRAVO l'a giflée et poussée contre une porte devant leur enfant de 7 ans.",
+          "Elle explique que ce n'est pas la première fois : depuis plusieurs semaines, BRAVO l'insulte, contrôle son téléphone et l'empêche de voir sa famille. Elle hésite à déposer plainte par peur de représailles.",
+          "Pendant l'entretien, BRAVO appelle à plusieurs reprises puis se présente devant le commissariat en criant qu'il veut récupérer son enfant.",
+          "Un voisin, CHARLIE, téléphone au 17 et indique avoir entendu des cris et un bruit de chute au domicile du couple la veille."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 222-13 du Code pénal",
+            text: "Les violences ayant entraîné une incapacité totale de travail inférieure ou égale à huit jours ou n'ayant entraîné aucune ITT sont aggravées lorsqu'elles sont commises par le conjoint, le concubin ou le partenaire lié par un pacte civil de solidarité."
+          },
+          {
+            title: "Document 2 - Article 222-14-3 du Code pénal",
+            text: "Les violences prévues par les dispositions relatives aux atteintes à l'intégrité de la personne sont réprimées quelle que soit leur nature, y compris s'il s'agit de violences psychologiques."
+          },
+          {
+            title: "Document 3 - Article 53 du Code de procédure pénale",
+            text: "Est qualifié crime ou délit flagrant le crime ou le délit qui se commet actuellement ou qui vient de se commettre. Il y a également flagrance lorsque, dans un temps très voisin de l'action, la personne soupçonnée est poursuivie par la clameur publique ou trouvée en possession d'indices."
+          },
+          {
+            title: "Document 4 - Code de déontologie de la police nationale, article R.434-11 CSI",
+            text: "Le policier accomplit ses missions avec probité, discernement, dignité, impartialité et exemplarité. Il accorde une attention particulière aux victimes."
+          },
+          {
+            title: "Document 5 - Dispositifs de protection des victimes",
+            text: "L'accueil de la victime implique la mise en sécurité, la prise de plainte, l'orientation vers une unité médico-judiciaire, l'information du parquet et l'orientation vers les associations d'aide aux victimes."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Qualification juridique des faits",
+            prompt: "Qualifiez juridiquement les faits rapportés par ALPHA et indiquez les éléments du dossier qui fondent votre analyse.",
+            model: "Les faits peuvent être qualifiés de violences volontaires aggravées par la qualité de conjoint ou concubin, au sens de l'article 222-13 du Code pénal. La gifle, la poussée contre une porte et la trace visible au visage constituent des violences physiques, même si l'ITT n'est pas encore connue. Les insultes répétées, le contrôle du téléphone et l'isolement peuvent aussi relever de violences psychologiques, visées par l'article 222-14-3. La présence de l'enfant au moment des faits est un élément important de contexte et de danger. Le témoignage du voisin CHARLIE et les appels insistants de BRAVO sont des indices à exploiter. Je reste prudent : je ne décide pas de la culpabilité, mais je rassemble les éléments objectifs et je les transmets dans le cadre de la procédure.",
+            keypoints: [
+              { label: "Violences volontaires aggravées par le conjoint", keywords: ["violence", "conjoint", "aggrave"] },
+              { label: "Mention des violences psychologiques", keywords: ["psychologique", "controle", "isolement"] },
+              { label: "Exploitation de la trace visible et du témoignage", keywords: ["trace", "voisin", "temoin"] },
+              { label: "Prudence sur le rôle du policier, pas de jugement définitif", keywords: ["pas", "culpabilite", "transmet", "procedure"] },
+              { label: "Prise en compte de l'enfant et du risque de représailles", keywords: ["enfant", "represaille", "danger"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3"]
+          },
+          {
+            title: "Question 2 - Actions immédiates",
+            prompt: "Quelles actions concrètes menez-vous en priorité à l'accueil du commissariat ?",
+            model: "La priorité est la mise en sécurité d'ALPHA et de l'enfant. Je l'isole de BRAVO dans un espace calme, je préviens immédiatement ma hiérarchie et je fais en sorte que BRAVO ne puisse pas entrer en contact avec elle. Je recueille les premiers éléments sans la brusquer, je constate les traces visibles, je propose le dépôt de plainte et je rappelle que son hésitation ne doit pas empêcher la protection. Je demande une évaluation médicale ou une orientation vers l'unité médico-judiciaire pour fixer l'ITT. J'informe l'officier de police judiciaire, puis le parquet selon la procédure interne. J'oriente ALPHA vers les dispositifs d'aide aux victimes et je consigne les appels de BRAVO ainsi que le signalement de CHARLIE.",
+            keypoints: [
+              { label: "Mise en sécurité de la victime et de l'enfant", keywords: ["securite", "enfant", "isole"] },
+              { label: "Information de la hiérarchie ou de l'OPJ", keywords: ["hierarchie", "opj", "officier"] },
+              { label: "Recueil de plainte et constat des traces", keywords: ["plainte", "trace", "constat"] },
+              { label: "Orientation médicale ou UMJ pour l'ITT", keywords: ["umj", "medical", "itt"] },
+              { label: "Orientation vers aide aux victimes", keywords: ["victime", "association", "aide"] }
+            ],
+            docs: ["Document 4", "Document 5"]
+          },
+          {
+            title: "Question 3 - Gestion de BRAVO devant le commissariat",
+            prompt: "BRAVO se présente devant le commissariat et crie qu'il veut récupérer son enfant. Comment réagissez-vous ?",
+            model: "Je traite la situation comme un risque immédiat de pression ou de passage à l'acte. Je ne laisse pas BRAVO approcher ALPHA. Avec un collègue, je vais au contact en gardant une distance de sécurité, je lui demande de se calmer et de rester à l'extérieur ou dans une zone séparée. Je préviens l'OPJ et ma hiérarchie. Si BRAVO commet un outrage, menace ou tente de forcer l'accès, j'adapte la réponse : rappel au calme, contrôle, interpellation si les conditions légales sont réunies. Le critère d'urgence est la protection de la victime et de l'enfant, puis la préservation de la procédure. Je rends compte précisément de ses propos, de son comportement et des appels répétés.",
+            keypoints: [
+              { label: "Empêcher le contact avec ALPHA", keywords: ["contact", "approcher", "separe"] },
+              { label: "Intervention sécurisée avec un collègue", keywords: ["collegue", "distance", "securite"] },
+              { label: "Information de l'OPJ ou de la hiérarchie", keywords: ["opj", "hierarchie", "rend"] },
+              { label: "Réponse graduée en cas de menace, outrage ou intrusion", keywords: ["menace", "outrage", "interpellation", "controle"] },
+              { label: "Consignation précise des propos et appels", keywords: ["propos", "appels", "consigne"] }
+            ],
+            docs: ["Document 3", "Document 4"]
+          },
+          {
+            title: "Question 4 - Exploitation du dossier documentaire",
+            prompt: "Quels documents exploitez-vous pour rédiger votre procédure et quelles informations doivent apparaître dans votre compte rendu ?",
+            model: "J'exploite l'article 222-13 pour l'aggravation liée au conjoint, l'article 222-14-3 pour les violences psychologiques, l'article 53 CPP si des éléments de flagrance existent dans un temps voisin, et le document sur la protection des victimes pour orienter les mesures concrètes. Dans le compte rendu, je mentionne les déclarations d'ALPHA, les traces constatées, la présence de l'enfant, les appels de BRAVO, son comportement au commissariat, le témoignage de CHARLIE et les démarches proposées : plainte, UMJ, information OPJ/parquet, aide aux victimes. La rédaction doit être chronologique, neutre et factuelle.",
+            keypoints: [
+              { label: "Références aux articles 222-13 et 222-14-3", keywords: ["222-13", "222-14-3", "code penal"] },
+              { label: "Référence possible à la flagrance", keywords: ["flagrance", "53", "temps voisin"] },
+              { label: "Compte rendu chronologique et factuel", keywords: ["chronologique", "factuel", "neutre"] },
+              { label: "Mention des démarches de protection", keywords: ["plainte", "umj", "parquet", "aide"] },
+              { label: "Mention des éléments objectifs du dossier", keywords: ["trace", "enfant", "charlie", "appels"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 5"]
+          }
+        ]
+      },
+      {
+        id: "agression-sexuelle-transports",
+        title: "Agression sexuelle dans les transports",
+        theme: "Accueil de victime, conservation des preuves et interpellation",
+        situation: [
+          "Vous êtes gardien de la paix au commissariat de Xville. À 18 h 40, ALPHA, 19 ans, signale qu'un homme l'a suivie dans un tramway bondé puis lui a imposé des attouchements au niveau des fesses.",
+          "Elle a crié. BRAVO, agent de sécurité du réseau de transport, a retenu l'homme sur le quai avec l'aide d'un usager, CHARLIE.",
+          "La vidéosurveillance de la station existe mais risque d'être écrasée rapidement. ALPHA est choquée et hésite à raconter les faits en détail devant plusieurs personnes.",
+          "L'homme interpellé nie et affirme qu'il s'agit d'un simple contact lié à l'affluence."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 222-22 du Code pénal",
+            text: "Constitue une agression sexuelle toute atteinte sexuelle commise avec violence, contrainte, menace ou surprise."
+          },
+          {
+            title: "Document 2 - Article 222-27 du Code pénal",
+            text: "Les agressions sexuelles autres que le viol sont punies de cinq ans d'emprisonnement et de 75 000 euros d'amende."
+          },
+          {
+            title: "Document 3 - Article 222-28 du Code pénal",
+            text: "Les agressions sexuelles sont aggravées dans plusieurs circonstances, notamment lorsqu'elles sont commises dans un véhicule affecté au transport collectif de voyageurs ou dans un lieu destiné à l'accès à un moyen de transport collectif."
+          },
+          {
+            title: "Document 4 - Article 73 du Code de procédure pénale",
+            text: "Dans les cas de crime flagrant ou de délit flagrant puni d'une peine d'emprisonnement, toute personne a qualité pour en appréhender l'auteur et le conduire devant l'officier de police judiciaire le plus proche."
+          },
+          {
+            title: "Document 5 - Conservation des preuves",
+            text: "Les images de vidéoprotection, coordonnées des témoins, horaires précis, titres de transport et descriptions vestimentaires sont des éléments à préserver rapidement."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Qualification juridique",
+            prompt: "Comment qualifiez-vous les faits dénoncés par ALPHA ?",
+            model: "Les faits dénoncés relèvent d'une agression sexuelle si l'attouchement à caractère sexuel a été imposé par surprise dans le tramway. L'article 222-22 vise l'atteinte sexuelle commise avec violence, contrainte, menace ou surprise. L'article 222-27 prévoit la peine de base pour les agressions sexuelles autres que le viol. La circonstance du transport collectif peut aggraver les faits au regard de l'article 222-28. Je mentionne aussi que la qualification définitive appartient à l'autorité judiciaire : mon rôle est de relever les éléments objectifs, les déclarations de la victime, les témoins et les images disponibles.",
+            keypoints: [
+              { label: "Agression sexuelle par surprise", keywords: ["agression sexuelle", "surprise", "attouchement"] },
+              { label: "Référence à l'article 222-22", keywords: ["222-22", "violence", "contrainte", "menace"] },
+              { label: "Circonstance liée au transport collectif", keywords: ["transport", "tramway", "222-28"] },
+              { label: "Prudence sur la qualification définitive", keywords: ["autorite judiciaire", "definitive", "role"] },
+              { label: "Exploitation des témoins et vidéos", keywords: ["temoin", "video", "images"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3"]
+          },
+          {
+            title: "Question 2 - Victime et preuves",
+            prompt: "Quelles mesures prenez-vous pour ALPHA et pour préserver les preuves ?",
+            model: "Je mets ALPHA à l'écart dans un lieu confidentiel, avec une policière si possible ou toute personne adaptée au contexte, afin de recueillir sa parole sans pression. Je lui explique ses droits, la possibilité de déposer plainte et l'orientation vers une prise en charge médicale ou psychologique. Je préserve les preuves : horaires précis, numéro de rame, station, description de l'auteur, coordonnées de BRAVO et CHARLIE, demande urgente de sauvegarde de la vidéoprotection, éventuels vêtements ou éléments matériels. Je transmets rapidement à l'OPJ afin que les réquisitions utiles soient faites.",
+            keypoints: [
+              { label: "Accueil confidentiel et protection de la victime", keywords: ["confidentiel", "victime", "ecart"] },
+              { label: "Information sur plainte et droits", keywords: ["plainte", "droits", "explique"] },
+              { label: "Coordonnées des témoins", keywords: ["bravo", "charlie", "temoin"] },
+              { label: "Sauvegarde urgente de la vidéoprotection", keywords: ["video", "sauvegarde", "images"] },
+              { label: "Transmission à l'OPJ", keywords: ["opj", "requisition", "transmet"] }
+            ],
+            docs: ["Document 4", "Document 5"]
+          },
+          {
+            title: "Question 3 - Auteur retenu sur le quai",
+            prompt: "Quelle conduite tenez-vous concernant l'homme retenu par BRAVO et CHARLIE ?",
+            model: "Je vérifie d'abord la sécurité de tous et je sépare l'homme de la victime et des témoins. Comme les faits dénoncés peuvent constituer un délit flagrant puni d'emprisonnement, l'appréhension par BRAVO et CHARLIE peut s'inscrire dans l'article 73 CPP. Je procède ou fais procéder aux vérifications d'identité et j'informe l'OPJ sans délai. Je reste professionnel malgré la contestation de l'intéressé : je recueille ses déclarations, je protège ses droits et je ne conclus pas seul à sa culpabilité. Les témoins doivent être identifiés séparément pour éviter les versions concertées.",
+            keypoints: [
+              { label: "Séparation auteur présumé, victime et témoins", keywords: ["separe", "victime", "temoins"] },
+              { label: "Référence au délit flagrant et à l'article 73", keywords: ["flagrant", "73", "emprisonnement"] },
+              { label: "Vérification d'identité", keywords: ["identite", "verification", "controle"] },
+              { label: "Information immédiate de l'OPJ", keywords: ["opj", "delai", "informe"] },
+              { label: "Respect des droits et neutralité", keywords: ["droits", "neutralite", "culpabilite"] }
+            ],
+            docs: ["Document 4"]
+          },
+          {
+            title: "Question 4 - Compte rendu opérationnel",
+            prompt: "Rédigez les points essentiels à faire figurer dans votre compte rendu.",
+            model: "Le compte rendu doit être chronologique et précis : heure de l'appel ou de la présentation, lieu exact, numéro de ligne ou de station, déclarations spontanées d'ALPHA, description de l'attouchement, réaction de la victime, intervention de BRAVO et CHARLIE, identité ou signalement de l'auteur présumé, propos de contestation, existence de la vidéo et urgence de sauvegarde. J'y ajoute les mesures prises : mise à l'écart, prise en charge, information OPJ, recueil des témoins, demande de conservation des images. Je cite les documents utiles : articles 222-22, 222-27, 222-28 et 73 CPP.",
+            keypoints: [
+              { label: "Chronologie précise", keywords: ["chronologique", "heure", "lieu"] },
+              { label: "Déclarations de la victime et réaction", keywords: ["declaration", "alpha", "reaction"] },
+              { label: "Intervention des témoins", keywords: ["bravo", "charlie", "temoins"] },
+              { label: "Vidéoprotection et urgence", keywords: ["video", "urgence", "sauvegarde"] },
+              { label: "Citations des textes utiles", keywords: ["222-22", "222-28", "73"] }
+            ],
+            docs: ["Document 1", "Document 3", "Document 4", "Document 5"]
+          }
+        ]
+      },
+      {
+        id: "corruption-fourriere",
+        title: "Tentative de corruption lors d'une mise en fourrière",
+        theme: "Probité, refus d'avantage et traçabilité",
+        situation: [
+          "Vous êtes gardien de la paix au commissariat de Xville. En patrouille, vous faites enlever le véhicule de ALPHA, stationné sur un passage piéton et gênant la circulation.",
+          "ALPHA vous rejoint et glisse discrètement deux billets de 50 euros dans votre carnet en disant : \"On oublie la fourrière et tout le monde gagne du temps.\"",
+          "Votre collègue BRAVO a vu le geste. Un commerçant, CHARLIE, filme une partie de la scène depuis son magasin.",
+          "ALPHA insiste ensuite : \"Vous n'allez pas ruiner ma journée pour si peu, prenez l'argent.\""
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 433-1 du Code pénal",
+            text: "Le fait de proposer sans droit, à tout moment, directement ou indirectement, des offres, promesses, dons, présents ou avantages quelconques à une personne dépositaire de l'autorité publique pour qu'elle accomplisse ou s'abstienne d'accomplir un acte de sa fonction constitue une corruption active."
+          },
+          {
+            title: "Document 2 - Article 432-11 du Code pénal",
+            text: "Le fait, par une personne dépositaire de l'autorité publique, de solliciter ou d'agréer des offres, promesses, dons, présents ou avantages quelconques pour accomplir ou s'abstenir d'accomplir un acte de sa fonction constitue une corruption passive."
+          },
+          {
+            title: "Document 3 - Code de déontologie, article R.434-9 CSI",
+            text: "Le policier exerce ses fonctions avec probité. Il ne se prévaut pas de sa qualité pour en tirer un avantage personnel et refuse tout avantage de nature à compromettre son impartialité."
+          },
+          {
+            title: "Document 4 - Code de la route, article L.325-1",
+            text: "Les véhicules peuvent être immobilisés, mis en fourrière, retirés de la circulation ou aliénés dans les cas et conditions prévus par le Code de la route, notamment lorsqu'ils gênent la circulation ou compromettent la sécurité."
+          },
+          {
+            title: "Document 5 - Traçabilité professionnelle",
+            text: "Tout incident affectant l'impartialité ou la régularité d'une intervention doit être signalé à la hiérarchie, relaté par écrit et appuyé sur les éléments disponibles : témoins, vidéos, objets remis."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Qualification",
+            prompt: "Quelle qualification pénale envisagez-vous face au comportement d'ALPHA ?",
+            model: "Le comportement d'ALPHA peut être qualifié de tentative ou proposition de corruption active d'une personne dépositaire de l'autorité publique. Il propose un don, deux billets de 50 euros, pour que le policier s'abstienne d'accomplir un acte de sa fonction : maintenir la procédure de mise en fourrière. L'article 433-1 du Code pénal est directement exploitable. Il faut aussi rappeler que l'acceptation par le policier pourrait constituer une corruption passive au sens de l'article 432-11, ce qui impose un refus clair et une traçabilité immédiate.",
+            keypoints: [
+              { label: "Corruption active", keywords: ["corruption active", "433-1", "don"] },
+              { label: "Lien entre argent et acte de fonction", keywords: ["fourriere", "abstienne", "fonction"] },
+              { label: "Mention du risque de corruption passive", keywords: ["passive", "432-11", "accepter"] },
+              { label: "Refus clair", keywords: ["refus", "refuse", "claire"] },
+              { label: "Traçabilité immédiate", keywords: ["trace", "hierarchie", "ecrit"] }
+            ],
+            docs: ["Document 1", "Document 2"]
+          },
+          {
+            title: "Question 2 - Attitude professionnelle",
+            prompt: "Quelle attitude adoptez-vous immédiatement ?",
+            model: "Je refuse immédiatement l'argent, sans ambiguïté et sans plaisanter. Je demande à ALPHA de reprendre les billets ou, si la procédure le nécessite sous contrôle de l'OPJ, je préserve l'objet comme élément matériel. Je garde une posture calme, je poursuis la mise en fourrière si elle est justifiée et je ne négocie pas. J'informe BRAVO, ma hiérarchie et l'OPJ. Je rappelle à ALPHA que sa proposition est susceptible de constituer une infraction. Je veille à ce que la scène reste sécurisée et observable, sans provoquer d'escalade.",
+            keypoints: [
+              { label: "Refus immédiat et explicite", keywords: ["refuse", "immediat", "ambiguite"] },
+              { label: "Pas de négociation", keywords: ["negocie", "poursuis", "fourriere"] },
+              { label: "Information hiérarchie et OPJ", keywords: ["hierarchie", "opj", "informe"] },
+              { label: "Préservation éventuelle des billets comme élément", keywords: ["billets", "element", "materiel"] },
+              { label: "Posture calme et sécurisée", keywords: ["calme", "securisee", "escalade"] }
+            ],
+            docs: ["Document 3", "Document 5"]
+          },
+          {
+            title: "Question 3 - Exploitation des témoins et de la vidéo",
+            prompt: "Comment exploitez-vous la présence de BRAVO et la vidéo de CHARLIE ?",
+            model: "BRAVO est un témoin direct : je lui demande de relater précisément ce qu'il a vu et entendu, sans concertation avec moi. CHARLIE peut détenir une vidéo utile ; je prends ses coordonnées, je préviens l'OPJ pour toute réquisition ou remise volontaire dans un cadre régulier, et je note l'heure, l'angle et la durée de l'enregistrement. Ces éléments ne doivent pas être manipulés de façon informelle. Ils servent à corroborer la proposition d'argent, les paroles d'ALPHA et mon refus.",
+            keypoints: [
+              { label: "Témoignage précis de BRAVO", keywords: ["bravo", "temoin", "precis"] },
+              { label: "Coordonnées de CHARLIE", keywords: ["charlie", "coordonnees", "commercant"] },
+              { label: "Cadre régulier pour la vidéo", keywords: ["opj", "requisition", "video"] },
+              { label: "Pas de manipulation informelle", keywords: ["informelle", "manipule", "cadre"] },
+              { label: "Corroboration des paroles et du geste", keywords: ["paroles", "geste", "corrobore"] }
+            ],
+            docs: ["Document 5"]
+          },
+          {
+            title: "Question 4 - Rédaction et déontologie",
+            prompt: "Quels éléments doivent apparaître dans votre écrit professionnel ?",
+            model: "L'écrit doit présenter la procédure initiale de mise en fourrière, le motif lié au stationnement gênant, l'heure et le lieu. Il doit décrire la remise des billets, les paroles exactes d'ALPHA, mon refus, la présence de BRAVO, l'existence de la vidéo de CHARLIE, les suites données et les avis à la hiérarchie ou à l'OPJ. Je cite les articles 433-1 et 432-11 pour montrer l'enjeu pénal, ainsi que l'exigence de probité de l'article R.434-9 CSI. Le ton reste factuel, sans jugement moral.",
+            keypoints: [
+              { label: "Motif initial de fourrière", keywords: ["fourriere", "stationnement", "passage pieton"] },
+              { label: "Paroles exactes et remise d'argent", keywords: ["paroles", "billets", "argent"] },
+              { label: "Refus et avis hiérarchique", keywords: ["refus", "hierarchie", "opj"] },
+              { label: "Références 433-1, 432-11, R.434-9", keywords: ["433-1", "432-11", "r.434-9"] },
+              { label: "Rédaction factuelle sans jugement moral", keywords: ["factuel", "jugement", "moral"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 4"]
+          }
+        ]
+      },
+      {
+        id: "outrage-rebellion",
+        title: "Outrage et rébellion lors d'une intervention",
+        theme: "Sécurisation, proportionnalité et procédure",
+        situation: [
+          "Vous êtes gardien de la paix à Xville. Vous intervenez avec BRAVO pour un différend bruyant devant un bar à 23 h 30.",
+          "ALPHA, manifestement alcoolisé, vous insulte à plusieurs reprises : \"Sales flics, vous ne servez à rien\". Vous lui demandez de reculer pour sécuriser l'intervention.",
+          "ALPHA refuse, bouscule BRAVO avec l'épaule et tente de se dégager lorsque vous cherchez à le contrôler.",
+          "CHARLIE, ami d'ALPHA, filme la scène et crie que les policiers abusent de leur pouvoir."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 433-5 du Code pénal",
+            text: "Constituent un outrage les paroles, gestes ou menaces, écrits ou images de toute nature non rendus publics, adressés à une personne dépositaire de l'autorité publique et de nature à porter atteinte à sa dignité ou au respect dû à sa fonction."
+          },
+          {
+            title: "Document 2 - Article 433-6 du Code pénal",
+            text: "Constitue une rébellion le fait d'opposer une résistance violente à une personne dépositaire de l'autorité publique agissant dans l'exercice de ses fonctions."
+          },
+          {
+            title: "Document 3 - Article 222-13 du Code pénal",
+            text: "Les violences commises sur une personne dépositaire de l'autorité publique dans l'exercice de ses fonctions constituent une circonstance aggravante."
+          },
+          {
+            title: "Document 4 - Code de déontologie, article R.434-18 CSI",
+            text: "Le policier emploie la force dans le cadre fixé par la loi, seulement lorsque c'est nécessaire, et de façon proportionnée au but à atteindre ou à la gravité de la menace."
+          },
+          {
+            title: "Document 5 - Liberté de filmer",
+            text: "Le fait de filmer une intervention policière dans un lieu public n'est pas interdit en soi. Le policier doit distinguer la captation d'images d'un comportement qui entrave l'intervention ou met en danger les personnes."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Infractions possibles",
+            prompt: "Quelles infractions pouvez-vous relever dans cette situation ?",
+            model: "Les insultes adressées aux policiers peuvent constituer un outrage à personne dépositaire de l'autorité publique, au sens de l'article 433-5, si elles portent atteinte à la dignité ou au respect dû à la fonction. La bousculade de BRAVO peut relever de violences sur personne dépositaire de l'autorité publique. Le fait de tenter de se dégager avec résistance violente lors du contrôle peut caractériser une rébellion au sens de l'article 433-6. Je distingue ces infractions de l'attitude de CHARLIE : filmer n'est pas une infraction en soi, sauf entrave ou mise en danger.",
+            keypoints: [
+              { label: "Outrage pour les insultes", keywords: ["outrage", "insultes", "433-5"] },
+              { label: "Rébellion en cas de résistance violente", keywords: ["rebellion", "resistance", "433-6"] },
+              { label: "Violences sur personne dépositaire", keywords: ["violence", "depositaire", "bravo"] },
+              { label: "Distinction avec le fait de filmer", keywords: ["filmer", "charlie", "pas une infraction"] },
+              { label: "Analyse conditionnelle et factuelle", keywords: ["si", "factuel", "distingue"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 5"]
+          },
+          {
+            title: "Question 2 - Réponse opérationnelle",
+            prompt: "Comment intervenez-vous sans aggraver la situation ?",
+            model: "Je priorise la sécurité : distance, placement, demande claire à ALPHA de reculer, ton ferme mais calme. Je répartis les rôles avec BRAVO : un agent au contact verbal, l'autre en protection. Si ALPHA continue à avancer, bouscule ou résiste, je procède à un contrôle ou à une interpellation dans un cadre légal, avec une force strictement nécessaire et proportionnée. J'évite les échanges d'insultes ou les réactions d'orgueil. Je prends en compte l'alcoolisation et le public présent, car ils augmentent le risque d'escalade.",
+            keypoints: [
+              { label: "Priorité à la sécurité et à la distance", keywords: ["securite", "distance", "placement"] },
+              { label: "Répartition des rôles avec le collègue", keywords: ["bravo", "roles", "protection"] },
+              { label: "Force nécessaire et proportionnée", keywords: ["force", "necessaire", "proportionnee"] },
+              { label: "Pas de réaction d'orgueil", keywords: ["calme", "insultes", "orgueil"] },
+              { label: "Prise en compte du public et de l'alcool", keywords: ["public", "alcool", "escalade"] }
+            ],
+            docs: ["Document 4"]
+          },
+          {
+            title: "Question 3 - Gestion de CHARLIE qui filme",
+            prompt: "Quelle réaction adoptez-vous face à CHARLIE qui filme et critique l'intervention ?",
+            model: "Je ne confisque pas le téléphone et je n'interdis pas la captation au seul motif qu'elle me déplaît. Le document 5 rappelle que filmer une intervention dans l'espace public n'est pas interdit en soi. En revanche, je demande à CHARLIE de rester à distance et de ne pas entraver l'intervention. S'il franchit le périmètre, excite le groupe ou met quelqu'un en danger, j'adapte la réponse : injonctions claires, contrôle si nécessaire, compte rendu. L'objectif est de préserver la sécurité et la procédure sans créer un incident inutile.",
+            keypoints: [
+              { label: "Ne pas interdire automatiquement de filmer", keywords: ["filmer", "pas interdit", "telephone"] },
+              { label: "Demander de rester à distance", keywords: ["distance", "rester", "perimetre"] },
+              { label: "Réagir seulement en cas d'entrave ou danger", keywords: ["entrave", "danger", "necessaire"] },
+              { label: "Injonctions claires", keywords: ["injonction", "claire", "demande"] },
+              { label: "Préserver sécurité et procédure", keywords: ["securite", "procedure", "incident"] }
+            ],
+            docs: ["Document 5"]
+          },
+          {
+            title: "Question 4 - Écrit de procédure",
+            prompt: "Quels points doivent être consignés après l'intervention ?",
+            model: "Je consigne l'heure, le lieu, le motif initial d'intervention, l'état apparent d'ALPHA, les paroles exactes susceptibles de constituer l'outrage, la demande de recul, la bousculade de BRAVO, les gestes de résistance et les mesures de contrainte employées. Je précise pourquoi la force était nécessaire et proportionnée. Je mentionne la présence de CHARLIE, le fait qu'il filmait, les injonctions données et son comportement réel. L'écrit doit être chronologique, circonstancié et neutre, avec les références aux articles 433-5, 433-6, 222-13 et R.434-18.",
+            keypoints: [
+              { label: "Paroles exactes de l'outrage", keywords: ["paroles", "exactes", "outrage"] },
+              { label: "Gestes de résistance ou violence", keywords: ["resistance", "bousculade", "gestes"] },
+              { label: "Justification de la force proportionnée", keywords: ["force", "proportionnee", "necessaire"] },
+              { label: "Mention de CHARLIE et de la vidéo", keywords: ["charlie", "filmait", "injonctions"] },
+              { label: "Références juridiques pertinentes", keywords: ["433-5", "433-6", "222-13", "r.434-18"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 4"]
+          }
+        ]
+      },
+      {
+        id: "vol-arrache",
+        title: "Flagrant délit de vol à l'arraché",
+        theme: "Poursuite, interpellation et protection de la victime",
+        situation: [
+          "Vous êtes gardien de la paix à Xville, en patrouille pédestre avec BRAVO dans une rue commerçante.",
+          "Vous voyez ALPHA arracher le sac de CHARLIE, la faire tomber, puis partir en courant vers une bouche de métro.",
+          "Plusieurs passants crient : \"Au voleur !\" BRAVO part en poursuite pendant que vous restez près de CHARLIE, qui se plaint d'une douleur au poignet.",
+          "Quelques minutes plus tard, BRAVO interpelle ALPHA avec le sac dans les mains."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 311-1 du Code pénal",
+            text: "Le vol est la soustraction frauduleuse de la chose d'autrui."
+          },
+          {
+            title: "Document 2 - Article 311-4 du Code pénal",
+            text: "Le vol est aggravé lorsqu'il est commis avec violence n'ayant pas entraîné une incapacité totale de travail supérieure à huit jours ou lorsqu'il est commis dans certaines circonstances de réunion, de vulnérabilité ou de transport."
+          },
+          {
+            title: "Document 3 - Article 53 du Code de procédure pénale",
+            text: "Le crime ou délit flagrant est celui qui se commet actuellement ou qui vient de se commettre. La personne soupçonnée peut être poursuivie par la clameur publique ou trouvée en possession d'objets laissant penser à sa participation."
+          },
+          {
+            title: "Document 4 - Article 73 du Code de procédure pénale",
+            text: "En cas de crime ou délit flagrant puni d'emprisonnement, toute personne peut appréhender l'auteur et le conduire devant l'officier de police judiciaire le plus proche."
+          },
+          {
+            title: "Document 5 - Premiers secours et victimes",
+            text: "La victime doit être mise en sécurité, évaluée, secourue si nécessaire et orientée vers une prise en charge médicale. Les témoins doivent être identifiés rapidement."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Qualification et flagrance",
+            prompt: "Qualifiez les faits et expliquez pourquoi la flagrance peut être retenue.",
+            model: "Les faits constituent un vol, car ALPHA soustrait frauduleusement le sac de CHARLIE. Le vol peut être aggravé par la violence puisque l'arrachage fait tomber la victime et provoque une douleur au poignet. La flagrance est caractérisée : les policiers voient les faits se commettre, les passants crient au voleur et ALPHA est retrouvé quelques minutes plus tard en possession du sac. Les articles 311-1, 311-4 et 53 CPP doivent donc être mobilisés.",
+            keypoints: [
+              { label: "Vol : soustraction frauduleuse", keywords: ["vol", "soustraction", "sac"] },
+              { label: "Violence aggravante liée à la chute", keywords: ["violence", "chute", "poignet"] },
+              { label: "Flagrance car faits vus directement", keywords: ["flagrance", "vu", "commettre"] },
+              { label: "Clameur publique", keywords: ["clameur", "voleur", "passants"] },
+              { label: "Possession du sac après poursuite", keywords: ["possession", "sac", "minutes"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3"]
+          },
+          {
+            title: "Question 2 - Priorités opérationnelles",
+            prompt: "Comment répartissez-vous les priorités entre poursuite, victime et témoins ?",
+            model: "La réponse doit être coordonnée. BRAVO part en poursuite pour maintenir le contact avec l'auteur présumé, tandis que je reste auprès de CHARLIE pour assurer sa sécurité et évaluer son état. Je demande si elle a besoin de secours, je fais appel aux sapeurs-pompiers ou au SAMU si nécessaire, et je recueille les premiers éléments. Je sollicite des témoins pour obtenir descriptions, direction de fuite et coordonnées. Cette répartition est réaliste : elle permet d'éviter d'abandonner une victime blessée tout en conservant une chance d'interpellation.",
+            keypoints: [
+              { label: "Répartition des rôles", keywords: ["bravo", "poursuite", "reste"] },
+              { label: "Protection et évaluation de la victime", keywords: ["victime", "securite", "etat"] },
+              { label: "Appel secours si nécessaire", keywords: ["secours", "samu", "pompiers"] },
+              { label: "Recueil des témoins", keywords: ["temoins", "coordonnees", "description"] },
+              { label: "Argumentation sur l'équilibre des priorités", keywords: ["priorite", "interpellation", "blessee"] }
+            ],
+            docs: ["Document 5"]
+          },
+          {
+            title: "Question 3 - Interpellation d'ALPHA",
+            prompt: "Quelles étapes suivez-vous après l'interpellation d'ALPHA par BRAVO ?",
+            model: "Après l'interpellation, je sécurise ALPHA, je vérifie l'absence de danger immédiat et je préserve le sac comme élément matériel. Je l'informe du motif de l'interpellation dans les formes adaptées et j'avise l'OPJ sans délai. Je sépare ALPHA de la victime et des témoins. Je note l'heure, le lieu, les conditions de la poursuite et de la découverte du sac. En flagrance, l'article 73 CPP justifie l'appréhension d'un auteur d'un délit puni d'emprisonnement, mais les suites procédurales relèvent de l'OPJ.",
+            keypoints: [
+              { label: "Sécurisation de l'auteur présumé", keywords: ["securise", "danger", "alpha"] },
+              { label: "Préservation du sac", keywords: ["sac", "element", "preserve"] },
+              { label: "Avis OPJ sans délai", keywords: ["opj", "delai", "avise"] },
+              { label: "Séparation des protagonistes", keywords: ["separe", "victime", "temoins"] },
+              { label: "Référence à l'article 73 CPP", keywords: ["73", "cpp", "emprisonnement"] }
+            ],
+            docs: ["Document 3", "Document 4"]
+          },
+          {
+            title: "Question 4 - Éléments de procédure",
+            prompt: "Quels éléments concrets doivent figurer dans la procédure ?",
+            model: "La procédure doit mentionner la patrouille, l'heure, le lieu, la vision directe de l'arrachage, la chute et la douleur de CHARLIE, les cris des passants, la direction de fuite, la poursuite par BRAVO, l'interpellation, la possession du sac, l'état du sac et sa restitution ou conservation selon décision de l'OPJ. Il faut identifier les témoins et mentionner les secours proposés. Les références utiles sont les articles 311-1, 311-4, 53 et 73 CPP. La rédaction doit suivre l'ordre chronologique.",
+            keypoints: [
+              { label: "Vision directe des faits", keywords: ["vision", "directe", "arrachage"] },
+              { label: "État de la victime et secours", keywords: ["douleur", "secours", "charlie"] },
+              { label: "Poursuite et interpellation", keywords: ["poursuite", "interpellation", "bravo"] },
+              { label: "Sac retrouvé et traitement", keywords: ["sac", "restitution", "conservation"] },
+              { label: "Références légales et chronologie", keywords: ["311-1", "53", "73", "chronologique"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 4"]
+          }
+        ]
+      },
+      {
+        id: "rixe-espace-public",
+        title: "Troubles à l'ordre public / rixe en espace public",
+        theme: "Maintien du calme, secours et suites judiciaires",
+        situation: [
+          "Vous êtes gardien de la paix à Xville. À 21 h 10, plusieurs appels signalent une rixe sur une place très fréquentée à la sortie d'un match.",
+          "À votre arrivée avec BRAVO, deux groupes s'invectivent. ALPHA tient une bouteille brisée, CHARLIE saigne légèrement de l'arcade, et des familles quittent les terrasses.",
+          "Un témoin affirme qu'ALPHA a frappé CHARLIE après une dispute. D'autres personnes crient et filment.",
+          "Le gérant d'un café indique que la bagarre fait fuir les clients et qu'il craint des dégradations."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 222-11 du Code pénal",
+            text: "Les violences ayant entraîné une incapacité totale de travail pendant plus de huit jours sont punies de trois ans d'emprisonnement et de 45 000 euros d'amende."
+          },
+          {
+            title: "Document 2 - Article 222-13 du Code pénal",
+            text: "Les violences sont aggravées dans plusieurs circonstances, notamment lorsqu'elles sont commises avec usage ou menace d'une arme ou par plusieurs personnes agissant en qualité d'auteurs ou de complices."
+          },
+          {
+            title: "Document 3 - Article 431-3 du Code pénal",
+            text: "Constitue un attroupement tout rassemblement de personnes sur la voie publique ou dans un lieu public susceptible de troubler l'ordre public."
+          },
+          {
+            title: "Document 4 - Article R.623-2 du Code pénal",
+            text: "Les bruits ou tapages injurieux ou nocturnes troublant la tranquillité d'autrui sont punis de l'amende prévue pour les contraventions de la 3e classe."
+          },
+          {
+            title: "Document 5 - Code de déontologie, article R.434-18 CSI",
+            text: "Le policier ne fait usage de la force que lorsque c'est nécessaire et de façon proportionnée. Il tient compte du risque pour les tiers et de l'objectif de retour au calme."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Analyse de situation",
+            prompt: "Quels sont les risques prioritaires et les qualifications possibles ?",
+            model: "Les risques prioritaires sont la blessure grave, l'usage de la bouteille brisée comme arme, l'extension de la rixe aux groupes présents et le trouble à l'ordre public dans un lieu fréquenté. Les faits peuvent relever de violences volontaires, éventuellement aggravées par l'usage ou la menace d'une arme et par la réunion si plusieurs personnes participent. Le rassemblement peut constituer un attroupement susceptible de troubler l'ordre public. Le tapage nocturne peut être secondaire par rapport à la violence. Je distingue donc l'urgence opérationnelle des qualifications qui seront consolidées par l'enquête.",
+            keypoints: [
+              { label: "Risque lié à la bouteille brisée", keywords: ["bouteille", "arme", "risque"] },
+              { label: "Violences volontaires", keywords: ["violence", "222-11", "222-13"] },
+              { label: "Trouble à l'ordre public ou attroupement", keywords: ["attroupement", "ordre public", "431-3"] },
+              { label: "Tapage secondaire", keywords: ["tapage", "secondaire", "bruit"] },
+              { label: "Distinction urgence / qualification", keywords: ["urgence", "qualification", "distingue"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 4"]
+          },
+          {
+            title: "Question 2 - Actions immédiates sur place",
+            prompt: "Décrivez les actions concrètes à mener dès votre arrivée.",
+            model: "Je demande du renfort si le rapport de force est défavorable. Je sécurise le périmètre, j'éloigne les familles et les tiers, puis je donne des injonctions simples et audibles aux groupes : reculer, poser la bouteille, se séparer. BRAVO et moi nous répartissons les rôles. La priorité est de neutraliser le danger immédiat lié à la bouteille brisée, sans usage disproportionné de la force. Je fais prendre en charge CHARLIE et je protège les témoins. Je rends compte à la salle de commandement et à la hiérarchie.",
+            keypoints: [
+              { label: "Demande de renfort si nécessaire", keywords: ["renfort", "rapport de force", "demande"] },
+              { label: "Périmètre et éloignement des tiers", keywords: ["perimetre", "tiers", "familles"] },
+              { label: "Injonctions claires", keywords: ["injonctions", "reculer", "poser"] },
+              { label: "Neutralisation proportionnée du danger", keywords: ["bouteille", "proportionnee", "danger"] },
+              { label: "Secours pour CHARLIE et compte rendu", keywords: ["charlie", "secours", "rend compte"] }
+            ],
+            docs: ["Document 5"]
+          },
+          {
+            title: "Question 3 - Témoins et vidéos",
+            prompt: "Comment exploitez-vous les témoins, vidéos et déclarations sur place ?",
+            model: "Je fais identifier les témoins sans bloquer inutilement la voie publique : coordonnées, emplacement, ce qu'ils ont vu directement. Je distingue les témoins directs de ceux qui répètent des propos. Les vidéos des passants ou des commerces peuvent aider à déterminer qui a frappé, l'usage de la bouteille et le déroulé chronologique. Je signale ces éléments à l'OPJ pour exploitation régulière. Le gérant du café doit être entendu sur le trouble causé, les clients partis et d'éventuelles dégradations.",
+            keypoints: [
+              { label: "Identification des témoins directs", keywords: ["temoins", "directs", "coordonnees"] },
+              { label: "Distinction entre vu et entendu dire", keywords: ["distingue", "directement", "propos"] },
+              { label: "Exploitation régulière des vidéos", keywords: ["videos", "opj", "exploitation"] },
+              { label: "Chronologie de la rixe", keywords: ["chronologie", "frappe", "bouteille"] },
+              { label: "Déclaration du gérant", keywords: ["gerant", "clients", "degradations"] }
+            ],
+            docs: ["Document 3"]
+          },
+          {
+            title: "Question 4 - Suite procédurale",
+            prompt: "Quelles suites donnez-vous après le retour au calme ?",
+            model: "Après le retour au calme, je vérifie l'état des blessés et les secours, j'identifie les protagonistes, je préserve la bouteille brisée si elle est utile comme élément matériel, et j'informe l'OPJ. Selon les faits établis, ALPHA peut être interpellé si les conditions légales sont réunies, notamment en présence de violences avec arme apparente ou de flagrance. Je rédige un compte rendu chronologique : appels initiaux, arrivée sur place, comportements, injonctions, usage éventuel de la force, témoins, vidéos, blessures, trouble causé aux terrasses. Je reste factuel et proportionné.",
+            keypoints: [
+              { label: "Vérification des blessés et secours", keywords: ["blesses", "secours", "etat"] },
+              { label: "Identification des protagonistes", keywords: ["identifie", "protagonistes", "alpha"] },
+              { label: "Préservation de la bouteille", keywords: ["bouteille", "preserve", "element"] },
+              { label: "Information OPJ et interpellation si conditions réunies", keywords: ["opj", "interpellation", "conditions"] },
+              { label: "Compte rendu chronologique et factuel", keywords: ["chronologique", "factuel", "injonctions"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 5"]
+          }
+        ]
+      }
+    ];
+
+    const modeConfig = {
+      simulation: {
+        label: "🎯 Simulation complète",
+        duration: 120 * 60,
+        buildItems: () => cases.slice(0, 3).flatMap((caseItem) => caseItem.questions.map((question, questionIndex) => ({ caseId: caseItem.id, questionIndex })))
+      },
+      single: {
+        label: "📝 Cas pratique unique",
+        duration: 40 * 60,
+        buildItems: (caseId) => {
+          const selectedCase = cases.find((caseItem) => caseItem.id === caseId) || cases[0];
+          return selectedCase.questions.map((question, questionIndex) => ({ caseId: selectedCase.id, questionIndex }));
+        }
+      },
+      question: {
+        label: "❓ Question isolée",
+        duration: 10 * 60,
+        buildItems: (caseId) => [{ caseId: caseId || cases[0].id, questionIndex: 0 }]
+      }
+    };
+
+    const state = {
+      mode: null,
+      items: [],
+      currentIndex: 0,
+      answers: {},
+      scores: {},
+      remainingSeconds: 0,
+      timerId: null,
+      sessionKey: "cas-pratique-current-session"
+    };
+
+    const homeScreen = document.getElementById("home-screen");
+    const exerciseScreen = document.getElementById("exercise-screen");
+    const correctionScreen = document.getElementById("correction-screen");
+    const examplesScreen = document.getElementById("examples-screen");
+    const caseSelector = document.getElementById("case-selector");
+    const caseGrid = document.getElementById("case-grid");
+    const documentPanel = document.getElementById("document-panel");
+
+    const elements = {
+      modeLabel: document.getElementById("mode-label"),
+      caseTitle: document.getElementById("case-title"),
+      timer: document.getElementById("timer"),
+      progressLabel: document.getElementById("progress-label"),
+      progressBar: document.getElementById("progress-bar"),
+      globalScore: document.getElementById("global-score"),
+      situationBox: document.getElementById("situation-box"),
+      questionTitle: document.getElementById("question-title"),
+      questionPrompt: document.getElementById("question-prompt"),
+      answerInput: document.getElementById("answer-input"),
+      wordCount: document.getElementById("word-count"),
+      autosaveStatus: document.getElementById("autosave-status"),
+      documentList: document.getElementById("document-list"),
+      previousQuestion: document.getElementById("previous-question"),
+      nextQuestion: document.getElementById("next-question")
+    };
+
+    document.querySelectorAll("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => handleMode(button.dataset.mode));
+    });
+
+    document.getElementById("back-to-home").addEventListener("click", showHome);
+    document.getElementById("examples-home").addEventListener("click", showHome);
+    document.getElementById("open-documents").addEventListener("click", () => documentPanel.classList.add("is-open"));
+    document.getElementById("close-documents").addEventListener("click", () => documentPanel.classList.remove("is-open"));
+    document.getElementById("validate-answer").addEventListener("click", validateAnswer);
+    document.getElementById("retry-question").addEventListener("click", hideCorrection);
+    document.getElementById("next-question").addEventListener("click", goNext);
+    document.getElementById("previous-question").addEventListener("click", goPrevious);
+    document.getElementById("download-home").addEventListener("click", downloadPdf);
+    document.getElementById("download-exercise").addEventListener("click", downloadPdf);
+    document.getElementById("download-examples").addEventListener("click", downloadPdf);
+
+    elements.answerInput.addEventListener("input", () => {
+      const key = getCurrentKey();
+      if (!key) {
+        return;
+      }
+      state.answers[key] = elements.answerInput.value;
+      updateWordCount();
+      saveSession();
+      elements.autosaveStatus.textContent = "Réponse sauvegardée automatiquement";
+    });
+
+    function normalizeText(value) {
+      return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[’']/g, " ");
+    }
+
+    function handleMode(mode) {
+      if (mode === "examples") {
+        showExamples();
+        return;
+      }
+
+      if (mode === "simulation") {
+        startSession("simulation");
+        return;
+      }
+
+      renderCaseSelector(mode);
+    }
+
+    function renderCaseSelector(mode) {
+      caseSelector.classList.add("is-visible");
+      document.getElementById("case-selector-title").textContent = mode === "single" ? "Choisissez un cas pratique complet" : "Choisissez le thème de votre question isolée";
+      caseGrid.innerHTML = cases.map((caseItem) => `
+        <button class="case-select" type="button" data-case="${caseItem.id}">
+          <h3>${caseItem.title}</h3>
+          <p>${caseItem.theme}</p>
+          <p><strong>${caseItem.questions.length} questions</strong> + dossier documentaire</p>
+        </button>
+      `).join("");
+
+      caseGrid.querySelectorAll("[data-case]").forEach((button) => {
+        button.addEventListener("click", () => startSession(mode, button.dataset.case));
+      });
+      caseSelector.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function startSession(mode, caseId) {
+      stopTimer();
+      state.mode = mode;
+      state.items = modeConfig[mode].buildItems(caseId);
+      state.currentIndex = 0;
+      state.answers = {};
+      state.scores = {};
+      state.remainingSeconds = modeConfig[mode].duration;
+      state.sessionKey = `cas-pratique-${mode}-${caseId || "simulation"}`;
+
+      const saved = loadSession();
+      if (saved) {
+        state.answers = saved.answers || {};
+        state.scores = saved.scores || {};
+        state.remainingSeconds = Number.isFinite(saved.remainingSeconds) ? saved.remainingSeconds : state.remainingSeconds;
+      }
+
+      homeScreen.classList.add("hidden");
+      examplesScreen.classList.remove("is-visible");
+      correctionScreen.classList.remove("is-visible");
+      exerciseScreen.classList.add("is-visible");
+      renderCurrentQuestion();
+      startTimer();
+    }
+
+    function getCurrentItem() {
+      return state.items[state.currentIndex];
+    }
+
+    function getCase(caseId) {
+      return cases.find((caseItem) => caseItem.id === caseId);
+    }
+
+    function getCurrentCaseAndQuestion() {
+      const item = getCurrentItem();
+      const caseItem = getCase(item.caseId);
+      return {
+        item,
+        caseItem,
+        question: caseItem.questions[item.questionIndex]
+      };
+    }
+
+    function getCurrentKey() {
+      const item = getCurrentItem();
+      return item ? `${item.caseId}-${item.questionIndex}` : "";
+    }
+
+    function renderCurrentQuestion() {
+      const { caseItem, question } = getCurrentCaseAndQuestion();
+      const currentNumber = state.currentIndex + 1;
+      const total = state.items.length;
+      const key = getCurrentKey();
+
+      elements.modeLabel.textContent = modeConfig[state.mode].label;
+      elements.caseTitle.textContent = caseItem.title;
+      elements.progressLabel.textContent = `Question ${currentNumber}/${total}`;
+      elements.progressBar.style.width = `${(currentNumber / total) * 100}%`;
+      elements.situationBox.innerHTML = `
+        <h3>Mise en situation</h3>
+        <p><strong>Commissariat de Xville - rôle : gardien(ne) de la paix.</strong></p>
+        <ol class="steps-list">${caseItem.situation.map((step) => `<li>${step}</li>`).join("")}</ol>
+      `;
+      elements.questionTitle.textContent = question.title;
+      elements.questionPrompt.textContent = question.prompt;
+      elements.answerInput.value = state.answers[key] || "";
+      elements.documentList.innerHTML = caseItem.documents.map((doc) => `
+        <article class="doc-card">
+          <h4>${doc.title}</h4>
+          <p>${doc.text}</p>
+        </article>
+      `).join("");
+      elements.previousQuestion.disabled = state.currentIndex === 0;
+      elements.nextQuestion.textContent = state.currentIndex === state.items.length - 1 ? "Terminer l'entraînement" : "Question suivante";
+      documentPanel.classList.remove("is-open");
+      updateWordCount();
+      updateScoreDisplay();
+      saveSession();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updateWordCount() {
+      const words = elements.answerInput.value.trim().split(/\s+/).filter(Boolean).length;
+      elements.wordCount.textContent = `${words} ${words > 1 ? "mots" : "mot"}`;
+    }
+
+    function validateAnswer() {
+      const key = getCurrentKey();
+      const answer = elements.answerInput.value.trim();
+      state.answers[key] = answer;
+
+      const { caseItem, question } = getCurrentCaseAndQuestion();
+      const normalizedAnswer = normalizeText(answer);
+      const checklist = question.keypoints.map((point) => {
+        const found = point.keywords.some((keyword) => normalizedAnswer.includes(normalizeText(keyword)));
+        return { ...point, found };
+      });
+      const foundCount = checklist.filter((point) => point.found).length;
+      const lengthBonus = answer.split(/\s+/).filter(Boolean).length >= 80 ? 0 : -1;
+      const score = Math.max(0, Math.min(5, foundCount + lengthBonus));
+      state.scores[key] = score;
+      saveSession();
+
+      document.getElementById("correction-title").textContent = `${caseItem.title} - ${question.title}`;
+      document.getElementById("user-answer-box").textContent = answer || "Aucune réponse rédigée.";
+      document.getElementById("model-answer-box").textContent = question.model;
+      document.getElementById("checklist").innerHTML = checklist.map((point) => `
+        <li>
+          <span class="${point.found ? "found" : "missed"}" aria-hidden="true">${point.found ? "✅" : "❌"}</span>
+          <span>${point.label}</span>
+        </li>
+      `).join("");
+      document.getElementById("question-score").textContent = `${score}/5`;
+      document.getElementById("score-converted").textContent = `${calculateConvertedScore().score20}/20`;
+      document.getElementById("personal-advice").textContent = buildAdvice(score, answer, checklist);
+      document.getElementById("highlighted-docs").innerHTML = question.docs.map((docName) => `<p><strong>${docName}</strong> : à citer ou exploiter explicitement pour justifier votre raisonnement.</p>`).join("");
+
+      exerciseScreen.classList.remove("is-visible");
+      correctionScreen.classList.add("is-visible");
+      updateScoreDisplay();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function buildAdvice(score, answer, checklist) {
+      const missing = checklist.filter((point) => !point.found).map((point) => point.label);
+      const words = answer.trim().split(/\s+/).filter(Boolean).length;
+      if (!answer) {
+        return "Commencez par une réponse structurée : qualification des faits, urgence, actions concrètes, documents utilisés. Même une réponse courte doit montrer votre raisonnement.";
+      }
+      if (score >= 4) {
+        return "Bonne base : votre réponse couvre l'essentiel. Pour viser plus haut, renforcez la chronologie, citez les documents avec précision et explicitez les conséquences de chaque action.";
+      }
+      if (words < 80) {
+        return "Votre réponse est trop brève pour un cas pratique. Développez en paragraphes : faits, qualification, priorités, procédure, documents du dossier.";
+      }
+      return `À compléter en priorité : ${missing.slice(0, 3).join(", ")}. Pensez à rester opérationnel et à expliquer l'ordre de vos actions.`;
+    }
+
+    function hideCorrection() {
+      correctionScreen.classList.remove("is-visible");
+      exerciseScreen.classList.add("is-visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goNext() {
+      if (state.currentIndex >= state.items.length - 1) {
+        showHome();
+        return;
+      }
+      state.currentIndex += 1;
+      correctionScreen.classList.remove("is-visible");
+      exerciseScreen.classList.add("is-visible");
+      renderCurrentQuestion();
+    }
+
+    function goPrevious() {
+      if (state.currentIndex === 0) {
+        return;
+      }
+      state.currentIndex -= 1;
+      renderCurrentQuestion();
+    }
+
+    function calculateConvertedScore() {
+      const totalPossible = state.items.length * 5;
+      const raw = Object.values(state.scores).reduce((sum, score) => sum + score, 0);
+      const score50 = totalPossible ? Math.round((raw / totalPossible) * 50) : 0;
+      const score20 = totalPossible ? Math.round((raw / totalPossible) * 20 * 10) / 10 : 0;
+      return { raw, totalPossible, score50, score20 };
+    }
+
+    function updateScoreDisplay() {
+      const score = calculateConvertedScore();
+      elements.globalScore.textContent = `Score global : ${score.score50}/50 - ${score.score20}/20`;
+    }
+
+    function startTimer() {
+      renderTimer();
+      state.timerId = window.setInterval(() => {
+        state.remainingSeconds = Math.max(0, state.remainingSeconds - 1);
+        renderTimer();
+        saveSession();
+        if (state.remainingSeconds === 0) {
+          stopTimer();
+          elements.autosaveStatus.textContent = "Temps écoulé : terminez la réponse en cours puis validez.";
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (state.timerId) {
+        window.clearInterval(state.timerId);
+      }
+      state.timerId = null;
+    }
+
+    function renderTimer() {
+      const minutes = Math.floor(state.remainingSeconds / 60);
+      const seconds = state.remainingSeconds % 60;
+      elements.timer.textContent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      elements.timer.classList.toggle("is-alert", state.remainingSeconds <= 30 * 60);
+    }
+
+    function saveSession() {
+      if (!state.sessionKey) {
+        return;
+      }
+      const payload = {
+        mode: state.mode,
+        currentIndex: state.currentIndex,
+        answers: state.answers,
+        scores: state.scores,
+        remainingSeconds: state.remainingSeconds
+      };
+      localStorage.setItem(state.sessionKey, JSON.stringify(payload));
+    }
+
+    function loadSession() {
+      try {
+        const raw = localStorage.getItem(state.sessionKey);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function showHome() {
+      stopTimer();
+      exerciseScreen.classList.remove("is-visible");
+      correctionScreen.classList.remove("is-visible");
+      examplesScreen.classList.remove("is-visible");
+      homeScreen.classList.remove("hidden");
+      updateScoreDisplay();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showExamples() {
+      stopTimer();
+      homeScreen.classList.add("hidden");
+      exerciseScreen.classList.remove("is-visible");
+      correctionScreen.classList.remove("is-visible");
+      examplesScreen.classList.add("is-visible");
+      document.getElementById("examples-list").innerHTML = cases.map((caseItem) => {
+        const question = caseItem.questions[0];
+        return `
+          <article class="example-case">
+            <h3>${caseItem.title}</h3>
+            <p><strong>${question.title}</strong> - ${question.prompt}</p>
+            <div class="example-answer">${question.model}</div>
+            <p><strong>Commentaire jury :</strong> la réponse qualifie les faits, hiérarchise l'urgence, cite le dossier et reste dans le rôle du gardien de la paix.</p>
+          </article>
+        `;
+      }).join("");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function downloadPdf() {
+      const printableAnswers = state.items.length ? state.items.map((item, index) => {
+        const caseItem = getCase(item.caseId);
+        const question = caseItem.questions[item.questionIndex];
+        const key = `${item.caseId}-${item.questionIndex}`;
+        return `
+          <section>
+            <h2>${index + 1}. ${caseItem.title} - ${question.title}</h2>
+            <p><strong>Question :</strong> ${question.prompt}</p>
+            <h3>Ma réponse</h3>
+            <p>${(state.answers[key] || "Non renseignée").replace(/\n/g, "<br>")}</p>
+            <h3>Réponse modèle</h3>
+            <p>${question.model}</p>
+            <p><strong>Score indicatif :</strong> ${state.scores[key] ?? 0}/5</p>
+          </section>
+        `;
+      }).join("") : "<p>Aucune réponse enregistrée pour le moment.</p>";
+      const score = calculateConvertedScore();
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        alert("Autorisez les fenêtres pop-up pour générer le PDF, puis utilisez l'option Enregistrer au format PDF.");
+        return;
+      }
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <title>Mes réponses - Cas pratiques</title>
+          <style>
+            body { font-family: Arial, sans-serif; color: #243044; line-height: 1.5; padding: 28px; }
+            h1, h2, h3 { color: #1a2744; }
+            section { break-inside: avoid; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid #d8deea; }
+          </style>
+        </head>
+        <body>
+          <h1>Résolution de Cas Pratiques - Mes réponses</h1>
+          <p><strong>Score global :</strong> ${score.score50}/50, soit ${score.score20}/20.</p>
+          ${printableAnswers}
+          <script>window.print();<\/script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+  </script>
+</body>
+</html>

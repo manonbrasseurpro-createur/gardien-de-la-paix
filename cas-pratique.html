@@ -16,7 +16,8 @@
     .exercise-panel,
     .correction-panel,
     .final-score-panel,
-    .examples-panel {
+    .examples-panel,
+    .vocabulary-panel {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 22px;
@@ -32,7 +33,8 @@
     .top-actions,
     .exercise-actions,
     .correction-actions,
-    .methodology-actions {
+    .methodology-actions,
+    .vocabulary-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -44,6 +46,7 @@
     .primary-button,
     .secondary-button,
     .ghost-button,
+    .favorite-button,
     .mode-card,
     .case-select {
       transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
@@ -52,7 +55,8 @@
     .back-link,
     .primary-button,
     .secondary-button,
-    .ghost-button {
+    .ghost-button,
+    .favorite-button {
       display: inline-flex;
       min-height: 44px;
       padding: 10px 16px;
@@ -67,7 +71,8 @@
 
     .back-link,
     .secondary-button,
-    .ghost-button {
+    .ghost-button,
+    .favorite-button {
       color: var(--navy);
       background: var(--white);
       border: 1px solid var(--border);
@@ -82,7 +87,8 @@
     .back-link:hover,
     .secondary-button:hover,
     .ghost-button:hover,
-    .primary-button:hover {
+    .primary-button:hover,
+    .favorite-button:hover {
       box-shadow: 0 10px 22px rgba(26, 39, 68, 0.16);
       transform: translateY(-2px);
     }
@@ -646,12 +652,14 @@
     }
 
     .correction-panel,
-    .examples-panel {
+    .examples-panel,
+    .vocabulary-panel {
       display: none;
     }
 
     .correction-panel.is-visible,
     .examples-panel.is-visible,
+    .vocabulary-panel.is-visible,
     .exercise-panel.is-visible {
       display: block;
     }
@@ -875,6 +883,195 @@
       border-radius: 14px;
     }
 
+    .vocabulary-panel__header {
+      display: grid;
+      gap: 10px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .vocabulary-panel h2,
+    .vocabulary-panel h3,
+    .vocabulary-panel h4,
+    .vocabulary-panel p {
+      margin: 0;
+    }
+
+    .vocabulary-body {
+      display: grid;
+      gap: 20px;
+      padding: 28px;
+    }
+
+    .vocabulary-intro,
+    .vocabulary-search-status {
+      padding: 18px;
+      color: var(--navy);
+      background: #f8fafd;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .vocabulary-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .vocabulary-search {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 16px;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font: inherit;
+    }
+
+    .vocabulary-search:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 4px rgba(26, 39, 68, 0.12);
+      outline: none;
+    }
+
+    .vocabulary-menu {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .vocabulary-tab {
+      min-height: 74px;
+      padding: 14px;
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .vocabulary-tab:hover,
+    .vocabulary-tab:focus,
+    .vocabulary-tab.is-active {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+      outline: none;
+    }
+
+    .vocabulary-content,
+    .vocabulary-sheet,
+    .vocabulary-section,
+    .favorite-results {
+      display: grid;
+      gap: 16px;
+    }
+
+    .vocabulary-sheet {
+      padding: 22px;
+      background: #f8fafd;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .vocabulary-sheet__header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .vocabulary-sheet__title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .vocabulary-section {
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .formula-list,
+    .term-list,
+    .comparison-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .formula-item,
+    .term-item,
+    .comparison-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #f8fafd;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .term-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .term-item {
+      justify-content: flex-start;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .comparison-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    }
+
+    .comparison-bad,
+    .comparison-good {
+      display: grid;
+      gap: 4px;
+    }
+
+    .comparison-bad strong {
+      color: #8a1c1c;
+    }
+
+    .comparison-good strong {
+      color: #166534;
+    }
+
+    .favorite-button {
+      min-height: 38px;
+      padding: 8px 12px;
+      white-space: nowrap;
+    }
+
+    .favorite-button.is-active {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .floating-vocabulary-button {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 20;
+      box-shadow: 0 14px 30px rgba(26, 39, 68, 0.22);
+    }
+
     .hidden {
       display: none !important;
     }
@@ -886,8 +1083,15 @@
       .callout-grid,
       .answer-comparison,
       .score-card,
-      .final-score-grid {
+      .final-score-grid,
+      .vocabulary-menu,
+      .term-list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .vocabulary-tools,
+      .comparison-item {
+        grid-template-columns: 1fr;
       }
 
       .exercise-layout {
@@ -929,13 +1133,21 @@
       .callout-grid,
       .answer-comparison,
       .score-card,
-      .final-score-grid {
+      .final-score-grid,
+      .vocabulary-menu,
+      .term-list {
         grid-template-columns: 1fr;
       }
 
       .mode-card,
       .case-select {
         min-height: auto;
+      }
+
+      .floating-vocabulary-button {
+        right: 14px;
+        bottom: 14px;
+        max-width: calc(100% - 28px);
       }
     }
   </style>
@@ -1064,6 +1276,13 @@
           <h3>Exemples de bonnes réponses</h3>
           <p>Consultez des réponses modèles commentées pour comprendre ce qu'attend le jury.</p>
           <span class="mode-card__duration">Corrigés commentés</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="vocabulary">
+          <span class="mode-card__icon" aria-hidden="true">✍️</span>
+          <h3>Fiches de Vocabulaire Professionnel</h3>
+          <p>Maîtrisez le langage juridique et policier pour rédiger vos réponses avec le bon vocabulaire.</p>
+          <span class="mode-card__duration">8 fiches thématiques</span>
         </button>
       </div>
 
@@ -1322,7 +1541,40 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <div id="examples-list"></div>
       </div>
     </section>
+
+    <section class="vocabulary-panel" id="vocabulary-screen" aria-labelledby="vocabulary-title" aria-live="polite">
+      <div class="vocabulary-panel__header">
+        <p class="hero__label">Fiches de vocabulaire professionnel</p>
+        <h2 id="vocabulary-title">Maîtrisez le langage juridique et policier</h2>
+        <p>Consultez les formules utiles pendant la rédaction, ajoutez vos favoris et téléchargez les fiches en PDF.</p>
+      </div>
+
+      <div class="vocabulary-body">
+        <div class="vocabulary-actions">
+          <button class="secondary-button" type="button" id="vocabulary-back">← Retour</button>
+          <button class="ghost-button" type="button" id="vocabulary-download-all">📄 Tout télécharger</button>
+        </div>
+
+        <article class="vocabulary-intro">
+          <h3>Mode vocabulaire intégré</h3>
+          <p>Les 8 fiches sont accessibles en un clic. La recherche parcourt toutes les fiches, et les favoris sont sauvegardés sur cet appareil.</p>
+        </article>
+
+        <div class="vocabulary-tools">
+          <label class="hidden" for="vocabulary-search">Rechercher dans les fiches</label>
+          <input class="vocabulary-search" type="search" id="vocabulary-search" placeholder="Rechercher un mot, une formule, un article...">
+          <button class="secondary-button" type="button" id="vocabulary-favorites-button">⭐ Mes favoris</button>
+          <button class="ghost-button" type="button" id="vocabulary-clear-search">Effacer</button>
+        </div>
+
+        <nav class="vocabulary-menu" id="vocabulary-menu" aria-label="Menu des fiches de vocabulaire"></nav>
+        <div class="vocabulary-search-status hidden" id="vocabulary-search-status"></div>
+        <div class="vocabulary-content" id="vocabulary-content"></div>
+      </div>
+    </section>
   </main>
+
+  <button class="primary-button floating-vocabulary-button" type="button" id="floating-vocabulary-button">✍️ Fiches de vocabulaire</button>
 
   <script src="progression-storage.js"></script>
   <script>
@@ -1880,6 +2132,274 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       }
     };
 
+    const vocabularyFavoriteKey = "cas-pratique-vocabulary-favorites";
+    const vocabularySheets = [
+      {
+        id: "qualifier-les-faits",
+        number: 1,
+        icon: "📋",
+        title: "Qualifier les faits",
+        sections: [
+          {
+            title: "Formules d'introduction",
+            type: "formula",
+            items: [
+              "Les faits sont susceptibles de constituer...",
+              "Les faits relatés semblent caractériser...",
+              "Au regard des éléments du dossier, les faits pourraient être qualifiés de...",
+              "Il convient de qualifier juridiquement les faits de... au sens de l'article... du Code pénal",
+              "Les éléments constitutifs de l'infraction semblent réunis, à savoir..."
+            ]
+          },
+          {
+            title: "Vocabulaire des infractions",
+            type: "term",
+            items: [
+              "Crime / Délit / Contravention",
+              "Flagrant délit / Flagrance",
+              "Tentative / Complicité",
+              "Circonstances aggravantes",
+              "Auteur / Coauteur / Complice",
+              "Victime / Mis en cause / Suspect / Personne interpellée",
+              "Infraction / Fait pénalement répréhensible",
+              "Trouble à l'ordre public"
+            ]
+          }
+        ]
+      },
+      {
+        id: "decrire-une-intervention",
+        number: 2,
+        icon: "🚨",
+        title: "Décrire une intervention",
+        sections: [
+          {
+            title: "Formules d'action",
+            type: "formula",
+            items: [
+              "Je procède à l'interpellation de...",
+              "Je procède au contrôle d'identité de...",
+              "Je m'enquiers de l'état de...",
+              "Je sécurise le périmètre en...",
+              "Je rends compte sans délai à...",
+              "Je diligente les secours en composant le...",
+              "J'effectue une palpation de sécurité afin de...",
+              "Je place la personne en garde à vue après l'avoir informée de ses droits",
+              "Je recueille les déclarations de...",
+              "Je procède à l'audition de...",
+              "Je consigne les faits dans un procès-verbal"
+            ]
+          },
+          {
+            title: "Vocabulaire des opérations",
+            type: "term",
+            items: [
+              "Interpellation / Arrestation",
+              "Garde à vue (GAV)",
+              "Palpation de sécurité",
+              "Contrôle d'identité",
+              "Périmètre de sécurité",
+              "Constatations / Relevés",
+              "Procès-verbal (PV) / Main courante",
+              "Compte rendu d'intervention",
+              "Officier de police judiciaire (OPJ)",
+              "Agent de police judiciaire (APJ)"
+            ]
+          }
+        ]
+      },
+      {
+        id: "parler-de-la-victime",
+        number: 3,
+        icon: "👥",
+        title: "Parler de la victime",
+        sections: [
+          {
+            title: "Formules",
+            type: "formula",
+            items: [
+              "Je réserve à la victime un accueil adapté en...",
+              "Je garantis la confidentialité des déclarations de la victime conformément à l'article R.434-20",
+              "Je m'assure que la victime bénéficie d'une prise en charge médicale si nécessaire",
+              "J'informe la victime de ses droits, notamment...",
+              "Je remets à la victime le récépissé de dépôt de plainte conformément à l'article 15-3 du CPP",
+              "J'oriente la victime vers les associations d'aide",
+              "Je propose à la victime de se rendre à l'UMJ"
+            ]
+          }
+        ]
+      },
+      {
+        id: "citer-les-textes-de-loi",
+        number: 4,
+        icon: "⚖️",
+        title: "Citer les textes de loi",
+        sections: [
+          {
+            title: "Formules d'introduction",
+            type: "formula",
+            items: [
+              "Conformément à l'article... du Code pénal...",
+              "En application de l'article... du CPP...",
+              "Au regard de l'article... du Code de déontologie...",
+              "En vertu de l'article... qui dispose que...",
+              "Comme le prévoit l'article... je suis tenu(e) de...",
+              "Sur le fondement de l'article... il convient de...",
+              "Le dossier documentaire précise en son document n°... que..."
+            ]
+          },
+          {
+            title: "Références courantes",
+            type: "term",
+            items: [
+              "Article 15-3 CPP : obligation de recevoir les plaintes",
+              "Article 53 CPP : crime ou délit flagrant",
+              "Article 73 CPP : interpellation par tout citoyen",
+              "Article 78-2 CPP : contrôle d'identité",
+              "Article 803 CPP : menottes",
+              "Article R.434-2 : loyauté, honneur, dévouement",
+              "Article R.434-9 : probité / refus de cadeaux",
+              "Article R.434-14 : au service de la population",
+              "Article R.434-20 : accueil des victimes",
+              "Article 222-27 : agression sexuelle",
+              "Article 432-11 : corruption passive",
+              "Article 433-1 : corruption active",
+              "Article 433-5 : outrage",
+              "Article 433-6 : rébellion"
+            ]
+          }
+        ]
+      },
+      {
+        id: "rendre-compte-hierarchie",
+        number: 5,
+        icon: "🏛️",
+        title: "Rendre compte à la hiérarchie",
+        sections: [
+          {
+            title: "Formules",
+            type: "formula",
+            items: [
+              "Je rends compte sans délai à mon supérieur hiérarchique de...",
+              "J'informe le chef de service de la situation",
+              "Je transmets l'information à l'OPJ de permanence",
+              "Je contacte la salle radio (CIC) à l'indicatif...",
+              "Je sollicite des renforts auprès du CIC",
+              "J'avise le procureur de la République via l'OPJ",
+              "Je me conforme aux instructions de ma hiérarchie",
+              "Dans le cadre de mes attributions d'APJ, je...",
+              "Cette décision relevant de la compétence de l'OPJ, je transmets immédiatement l'affaire à..."
+            ]
+          }
+        ]
+      },
+      {
+        id: "structurer-sa-reponse",
+        number: 6,
+        icon: "📝",
+        title: "Structurer sa réponse",
+        sections: [
+          {
+            title: "Introduction",
+            type: "formula",
+            items: [
+              "Dans cette situation, il convient en premier lieu de...",
+              "Face à cette situation, ma première action sera de...",
+              "Après analyse des faits, il apparaît que..."
+            ]
+          },
+          {
+            title: "Transition",
+            type: "formula",
+            items: [
+              "Dans un second temps...",
+              "Parallèlement à ces actions...",
+              "Il convient également de...",
+              "En outre... / Par ailleurs... / Enfin..."
+            ]
+          },
+          {
+            title: "Conclusion",
+            type: "formula",
+            items: [
+              "Ces actions visent à...",
+              "L'ensemble de ces mesures permettra de...",
+              "Je rends compte de l'ensemble de ces éléments à...",
+              "Je consigne l'ensemble de ces faits dans un PV que je transmets à l'OPJ"
+            ]
+          }
+        ]
+      },
+      {
+        id: "vocabulaire-garde-a-vue",
+        number: 7,
+        icon: "🔒",
+        title: "Vocabulaire de la garde à vue",
+        sections: [
+          {
+            title: "Notions clés",
+            type: "term",
+            items: [
+              "Notification des droits",
+              "Droit au silence / à un avocat / à un médecin",
+              "Durée légale : 24h renouvelable une fois",
+              "Seul l'OPJ peut placer en garde à vue"
+            ]
+          },
+          {
+            title: "Formules",
+            type: "formula",
+            items: [
+              "Je procède à la notification des droits de la personne gardée à vue",
+              "La garde à vue étant décidée par l'OPJ, je..."
+            ]
+          }
+        ]
+      },
+      {
+        id: "erreurs-vocabulaire-a-eviter",
+        number: 8,
+        icon: "🚫",
+        title: "Erreurs de vocabulaire à éviter",
+        sections: [
+          {
+            title: "Tableau comparatif",
+            type: "comparison",
+            items: [
+              {
+                bad: "J'arrête la personne",
+                good: "Je procède à l'interpellation de la personne"
+              },
+              {
+                bad: "Je l'emmène au commissariat",
+                good: "Je la conduis dans les locaux de police"
+              },
+              {
+                bad: "Je la mets en garde à vue",
+                good: "L'OPJ décide du placement en garde à vue"
+              },
+              {
+                bad: "J'appelle les secours",
+                good: "Je diligente les secours en composant le 15"
+              },
+              {
+                bad: "Je fais un rapport",
+                good: "Je rédige un procès-verbal / une main courante"
+              },
+              {
+                bad: "La personne est coupable",
+                good: "La personne est mise en cause / suspectée"
+              },
+              {
+                bad: "Je pense que...",
+                good: "Au regard des éléments du dossier..."
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
     const methodologyAdvice = {
       qualification: {
         label: "Qualification des faits",
@@ -1929,7 +2449,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       remainingSeconds: 0,
       timerId: null,
       sessionKey: "cas-pratique-current-session",
-      startedAt: null
+      startedAt: null,
+      vocabularyReturnScreen: "home",
+      activeVocabularySheet: vocabularySheets[0].id
     };
 
     const homeScreen = document.getElementById("home-screen");
@@ -1938,9 +2460,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     const correctionScreen = document.getElementById("correction-screen");
     const finalScoreScreen = document.getElementById("final-score-screen");
     const examplesScreen = document.getElementById("examples-screen");
+    const vocabularyScreen = document.getElementById("vocabulary-screen");
     const caseSelector = document.getElementById("case-selector");
     const caseGrid = document.getElementById("case-grid");
     const documentPanel = document.getElementById("document-panel");
+    const floatingVocabularyButton = document.getElementById("floating-vocabulary-button");
 
     const elements = {
       modeLabel: document.getElementById("mode-label"),
@@ -1962,7 +2486,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       contextHelpList: document.getElementById("context-help-list"),
       documentList: document.getElementById("document-list"),
       previousQuestion: document.getElementById("previous-question"),
-      nextQuestion: document.getElementById("next-question")
+      nextQuestion: document.getElementById("next-question"),
+      vocabularyMenu: document.getElementById("vocabulary-menu"),
+      vocabularyContent: document.getElementById("vocabulary-content"),
+      vocabularySearch: document.getElementById("vocabulary-search"),
+      vocabularySearchStatus: document.getElementById("vocabulary-search-status")
     };
 
     document.querySelectorAll("[data-mode]").forEach((button) => {
@@ -1985,6 +2513,40 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     document.getElementById("download-exercise").addEventListener("click", downloadPdf);
     document.getElementById("download-examples").addEventListener("click", downloadPdf);
     document.getElementById("download-final").addEventListener("click", downloadPdf);
+    document.getElementById("vocabulary-back").addEventListener("click", returnFromVocabulary);
+    document.getElementById("vocabulary-download-all").addEventListener("click", () => downloadVocabularyPdf(vocabularySheets, "Toutes les fiches de vocabulaire professionnel"));
+    document.getElementById("vocabulary-favorites-button").addEventListener("click", () => showVocabularyFavorites());
+    document.getElementById("vocabulary-clear-search").addEventListener("click", () => {
+      elements.vocabularySearch.value = "";
+      renderVocabulary();
+      elements.vocabularySearch.focus();
+    });
+    floatingVocabularyButton.addEventListener("click", () => showVocabulary());
+
+    elements.vocabularySearch.addEventListener("input", renderVocabulary);
+    elements.vocabularyMenu.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-vocabulary-sheet]");
+      if (!button) {
+        return;
+      }
+      state.activeVocabularySheet = button.dataset.vocabularySheet;
+      elements.vocabularySearch.value = "";
+      renderVocabulary();
+    });
+    elements.vocabularyContent.addEventListener("click", (event) => {
+      const favoriteButton = event.target.closest("[data-favorite-formula]");
+      const downloadButton = event.target.closest("[data-download-vocabulary-sheet]");
+      if (favoriteButton) {
+        toggleVocabularyFavorite(favoriteButton.dataset.favoriteFormula);
+        return;
+      }
+      if (downloadButton) {
+        const sheet = vocabularySheets.find((item) => item.id === downloadButton.dataset.downloadVocabularySheet);
+        if (sheet) {
+          downloadVocabularyPdf([sheet], `Fiche ${sheet.number} - ${sheet.title}`);
+        }
+      }
+    });
 
     elements.contextHelpToggle.addEventListener("click", () => {
       const isCollapsed = elements.contextHelp.classList.toggle("is-collapsed");
@@ -2020,9 +2582,397 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         .replace(/'/g, "&#039;");
     }
 
+    function getVisibleScreenKey() {
+      if (!homeScreen.classList.contains("hidden")) {
+        return "home";
+      }
+      if (methodologyScreen.classList.contains("is-visible")) {
+        return "methodology";
+      }
+      if (exerciseScreen.classList.contains("is-visible")) {
+        return "exercise";
+      }
+      if (correctionScreen.classList.contains("is-visible")) {
+        return "correction";
+      }
+      if (finalScoreScreen.classList.contains("is-visible")) {
+        return "final";
+      }
+      if (examplesScreen.classList.contains("is-visible")) {
+        return "examples";
+      }
+      return "home";
+    }
+
+    function hideMainScreens() {
+      homeScreen.classList.add("hidden");
+      methodologyScreen.classList.remove("is-visible");
+      exerciseScreen.classList.remove("is-visible");
+      correctionScreen.classList.remove("is-visible");
+      finalScoreScreen.classList.remove("is-visible");
+      examplesScreen.classList.remove("is-visible");
+    }
+
+    function showVocabulary(returnScreen = getVisibleScreenKey()) {
+      state.vocabularyReturnScreen = returnScreen;
+      hideMainScreens();
+      vocabularyScreen.classList.add("is-visible");
+      floatingVocabularyButton.classList.add("hidden");
+      renderVocabulary();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function returnFromVocabulary() {
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
+
+      if (state.vocabularyReturnScreen === "methodology" && state.items.length) {
+        homeScreen.classList.add("hidden");
+        methodologyScreen.classList.add("is-visible");
+      } else if (state.vocabularyReturnScreen === "exercise" && state.items.length) {
+        homeScreen.classList.add("hidden");
+        exerciseScreen.classList.add("is-visible");
+      } else if (state.vocabularyReturnScreen === "correction" && state.items.length) {
+        homeScreen.classList.add("hidden");
+        correctionScreen.classList.add("is-visible");
+      } else if (state.vocabularyReturnScreen === "final") {
+        homeScreen.classList.add("hidden");
+        finalScoreScreen.classList.add("is-visible");
+      } else if (state.vocabularyReturnScreen === "examples") {
+        homeScreen.classList.add("hidden");
+        examplesScreen.classList.add("is-visible");
+      } else {
+        showHome();
+        return;
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getVocabularyFavoriteIds() {
+      try {
+        return new Set(JSON.parse(localStorage.getItem(vocabularyFavoriteKey)) || []);
+      } catch (error) {
+        return new Set();
+      }
+    }
+
+    function saveVocabularyFavoriteIds(favorites) {
+      localStorage.setItem(vocabularyFavoriteKey, JSON.stringify([...favorites]));
+    }
+
+    function getVocabularyFormulaId(sheet, sectionIndex, itemIndex) {
+      return `${sheet.id}-${sectionIndex}-${itemIndex}`;
+    }
+
+    function getVocabularyFormulaEntries() {
+      return vocabularySheets.flatMap((sheet) => sheet.sections.flatMap((section, sectionIndex) => {
+        if (section.type === "formula") {
+          return section.items.map((formula, itemIndex) => ({
+            id: getVocabularyFormulaId(sheet, sectionIndex, itemIndex),
+            sheet,
+            section,
+            text: formula
+          }));
+        }
+        if (section.type === "comparison") {
+          return section.items.map((formula, itemIndex) => ({
+            id: getVocabularyFormulaId(sheet, sectionIndex, itemIndex),
+            sheet,
+            section,
+            text: formula.good,
+            bad: formula.bad
+          }));
+        }
+        return [];
+      }));
+    }
+
+    function toggleVocabularyFavorite(formulaId) {
+      const favorites = getVocabularyFavoriteIds();
+      if (favorites.has(formulaId)) {
+        favorites.delete(formulaId);
+      } else {
+        favorites.add(formulaId);
+      }
+      saveVocabularyFavoriteIds(favorites);
+      renderVocabulary();
+    }
+
+    function renderFavoriteButton(formulaId, favorites) {
+      const isFavorite = favorites.has(formulaId);
+      return `
+        <button class="favorite-button ${isFavorite ? "is-active" : ""}" type="button" data-favorite-formula="${escapeHtml(formulaId)}" aria-pressed="${isFavorite}">
+          ${isFavorite ? "⭐ Favori" : "⭐ Favoris"}
+        </button>
+      `;
+    }
+
+    function renderVocabularyMenu() {
+      const active = state.activeVocabularySheet;
+      elements.vocabularyMenu.innerHTML = [
+        ...vocabularySheets.map((sheet) => `
+          <button class="vocabulary-tab ${active === sheet.id ? "is-active" : ""}" type="button" data-vocabulary-sheet="${sheet.id}" aria-pressed="${active === sheet.id}">
+            Fiche ${sheet.number} — ${sheet.icon} ${escapeHtml(sheet.title)}
+          </button>
+        `),
+        `<button class="vocabulary-tab ${active === "favorites" ? "is-active" : ""}" type="button" data-vocabulary-sheet="favorites" aria-pressed="${active === "favorites"}">⭐ Mes favoris</button>`
+      ].join("");
+    }
+
+    function itemMatchesQuery(item, query) {
+      if (!query) {
+        return true;
+      }
+      if (typeof item === "string") {
+        return normalizeText(item).includes(query);
+      }
+      return normalizeText(`${item.bad} ${item.good}`).includes(query);
+    }
+
+    function renderVocabularySection(sheet, section, sectionIndex, query = "") {
+      const favorites = getVocabularyFavoriteIds();
+      const normalizedQuery = normalizeText(query);
+      const sectionMatches = !normalizedQuery || normalizeText(`${sheet.title} ${section.title}`).includes(normalizedQuery);
+      const itemShouldRender = (item) => sectionMatches || itemMatchesQuery(item, normalizedQuery);
+
+      if (section.type === "formula") {
+        const items = section.items
+          .map((formula, itemIndex) => ({ formula, itemIndex }))
+          .filter(({ formula }) => itemShouldRender(formula));
+        if (!items.length) {
+          return "";
+        }
+        return `
+          <article class="vocabulary-section">
+            <h4>${escapeHtml(section.title)}</h4>
+            <ul class="formula-list">
+              ${items.map(({ formula, itemIndex }) => {
+                const formulaId = getVocabularyFormulaId(sheet, sectionIndex, itemIndex);
+                return `
+                  <li class="formula-item">
+                    <span>${escapeHtml(formula)}</span>
+                    ${renderFavoriteButton(formulaId, favorites)}
+                  </li>
+                `;
+              }).join("")}
+            </ul>
+          </article>
+        `;
+      }
+
+      if (section.type === "term") {
+        const items = section.items.filter(itemShouldRender);
+        if (!items.length) {
+          return "";
+        }
+        return `
+          <article class="vocabulary-section">
+            <h4>${escapeHtml(section.title)}</h4>
+            <ul class="term-list">
+              ${items.map((term) => `<li class="term-item">${escapeHtml(term)}</li>`).join("")}
+            </ul>
+          </article>
+        `;
+      }
+
+      const items = section.items
+        .map((formula, itemIndex) => ({ formula, itemIndex }))
+        .filter(({ formula }) => itemShouldRender(formula));
+      if (!items.length) {
+        return "";
+      }
+      return `
+        <article class="vocabulary-section">
+          <h4>${escapeHtml(section.title)}</h4>
+          <ul class="comparison-list">
+            ${items.map(({ formula, itemIndex }) => {
+              const formulaId = getVocabularyFormulaId(sheet, sectionIndex, itemIndex);
+              return `
+                <li class="comparison-item">
+                  <span class="comparison-bad"><strong>❌ À éviter</strong>${escapeHtml(formula.bad)}</span>
+                  <span class="comparison-good"><strong>✅ À préférer</strong>${escapeHtml(formula.good)}</span>
+                  ${renderFavoriteButton(formulaId, favorites)}
+                </li>
+              `;
+            }).join("")}
+          </ul>
+        </article>
+      `;
+    }
+
+    function renderVocabularySheet(sheet, query = "") {
+      const sections = sheet.sections
+        .map((section, sectionIndex) => renderVocabularySection(sheet, section, sectionIndex, query))
+        .filter(Boolean)
+        .join("");
+
+      if (!sections) {
+        return "";
+      }
+
+      return `
+        <article class="vocabulary-sheet">
+          <div class="vocabulary-sheet__header">
+            <div class="vocabulary-sheet__title">
+              <p class="hero__label">FICHE ${sheet.number}</p>
+              <h3>${sheet.icon} ${escapeHtml(sheet.title)}</h3>
+            </div>
+            <button class="ghost-button" type="button" data-download-vocabulary-sheet="${sheet.id}">📄 Télécharger la fiche (PDF)</button>
+          </div>
+          ${sections}
+        </article>
+      `;
+    }
+
+    function renderVocabularyFavorites() {
+      const favorites = getVocabularyFavoriteIds();
+      const entries = getVocabularyFormulaEntries().filter((entry) => favorites.has(entry.id));
+      elements.vocabularySearchStatus.classList.add("hidden");
+
+      if (!entries.length) {
+        elements.vocabularyContent.innerHTML = `
+          <article class="vocabulary-sheet">
+            <h3>⭐ Mes favoris</h3>
+            <p>Aucune formule favorite pour le moment. Cliquez sur “⭐ Favoris” dans une fiche pour l'ajouter ici.</p>
+          </article>
+        `;
+        return;
+      }
+
+      elements.vocabularyContent.innerHTML = `
+        <article class="vocabulary-sheet">
+          <div class="vocabulary-sheet__header">
+            <div class="vocabulary-sheet__title">
+              <p class="hero__label">${entries.length} formule${entries.length > 1 ? "s" : ""} sauvegardée${entries.length > 1 ? "s" : ""}</p>
+              <h3>⭐ Mes favoris</h3>
+            </div>
+          </div>
+          <div class="favorite-results">
+            ${entries.map((entry) => `
+              <article class="vocabulary-section">
+                <h4>Fiche ${entry.sheet.number} — ${entry.sheet.icon} ${escapeHtml(entry.sheet.title)} / ${escapeHtml(entry.section.title)}</h4>
+                ${entry.bad ? `<p><strong>À éviter :</strong> ${escapeHtml(entry.bad)}</p>` : ""}
+                <div class="formula-item">
+                  <span>${escapeHtml(entry.text)}</span>
+                  ${renderFavoriteButton(entry.id, favorites)}
+                </div>
+              </article>
+            `).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderVocabularySearchResults(query) {
+      const results = vocabularySheets.map((sheet) => renderVocabularySheet(sheet, query)).filter(Boolean);
+      elements.vocabularySearchStatus.classList.remove("hidden");
+      elements.vocabularySearchStatus.textContent = results.length
+        ? `Résultats de recherche pour “${query}” dans ${results.length} fiche${results.length > 1 ? "s" : ""}.`
+        : `Aucun résultat pour “${query}”.`;
+      elements.vocabularyContent.innerHTML = results.join("") || `
+        <article class="vocabulary-sheet">
+          <h3>Aucun résultat</h3>
+          <p>Essayez un mot plus court : “OPJ”, “victime”, “article”, “interpellation”, “PV”.</p>
+        </article>
+      `;
+    }
+
+    function renderVocabulary() {
+      renderVocabularyMenu();
+      const query = elements.vocabularySearch.value.trim();
+
+      if (query) {
+        renderVocabularySearchResults(query);
+        return;
+      }
+
+      elements.vocabularySearchStatus.classList.add("hidden");
+      if (state.activeVocabularySheet === "favorites") {
+        renderVocabularyFavorites();
+        return;
+      }
+
+      const sheet = vocabularySheets.find((item) => item.id === state.activeVocabularySheet) || vocabularySheets[0];
+      elements.vocabularyContent.innerHTML = renderVocabularySheet(sheet);
+    }
+
+    function showVocabularyFavorites() {
+      state.activeVocabularySheet = "favorites";
+      elements.vocabularySearch.value = "";
+      renderVocabulary();
+    }
+
+    function buildVocabularyPrintableSheet(sheet) {
+      return `
+        <section>
+          <h2>FICHE ${sheet.number} — ${sheet.icon} ${escapeHtml(sheet.title)}</h2>
+          ${sheet.sections.map((section) => `
+            <h3>${escapeHtml(section.title)}</h3>
+            ${section.type === "comparison" ? `
+              <table>
+                <thead>
+                  <tr><th>À éviter</th><th>À préférer</th></tr>
+                </thead>
+                <tbody>
+                  ${section.items.map((item) => `
+                    <tr>
+                      <td>❌ ${escapeHtml(item.bad)}</td>
+                      <td>✅ ${escapeHtml(item.good)}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            ` : `
+              <ul>
+                ${section.items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+              </ul>
+            `}
+          `).join("")}
+        </section>
+      `;
+    }
+
+    function downloadVocabularyPdf(sheets, title) {
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        alert("Autorisez les fenêtres pop-up pour générer le PDF, puis utilisez l'option Enregistrer au format PDF.");
+        return;
+      }
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <title>${escapeHtml(title)}</title>
+          <style>
+            body { font-family: Arial, sans-serif; color: #243044; line-height: 1.5; padding: 28px; }
+            h1, h2, h3 { color: #1a2744; }
+            section { break-inside: avoid; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid #d8deea; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { padding: 10px; border: 1px solid #d8deea; text-align: left; vertical-align: top; }
+            th { color: #fff; background: #1a2744; }
+          </style>
+        </head>
+        <body>
+          <h1>${escapeHtml(title)}</h1>
+          ${sheets.map(buildVocabularyPrintableSheet).join("")}
+          <script>window.print();<\/script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+
     function handleMode(mode) {
       if (mode === "examples") {
         showExamples();
+        return;
+      }
+
+      if (mode === "vocabulary") {
+        showVocabulary("home");
         return;
       }
 
@@ -2076,6 +3026,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       finalScoreScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");
       exerciseScreen.classList.remove("is-visible");
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
       showMethodologyScreen();
     }
 
@@ -2088,12 +3040,16 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       correctionScreen.classList.remove("is-visible");
       examplesScreen.classList.remove("is-visible");
       finalScoreScreen.classList.remove("is-visible");
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
       methodologyScreen.classList.add("is-visible");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function continueAfterMethodology() {
       methodologyScreen.classList.remove("is-visible");
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
       exerciseScreen.classList.add("is-visible");
       renderCurrentQuestion();
       startTimer();
@@ -2471,6 +3427,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       exerciseScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");
       examplesScreen.classList.remove("is-visible");
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
       homeScreen.classList.add("hidden");
       finalScoreScreen.classList.add("is-visible");
 
@@ -2588,6 +3546,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       correctionScreen.classList.remove("is-visible");
       finalScoreScreen.classList.remove("is-visible");
       examplesScreen.classList.remove("is-visible");
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
       homeScreen.classList.remove("hidden");
       updateScoreDisplay();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2600,6 +3560,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       exerciseScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");
       finalScoreScreen.classList.remove("is-visible");
+      vocabularyScreen.classList.remove("is-visible");
+      floatingVocabularyButton.classList.remove("hidden");
       examplesScreen.classList.add("is-visible");
       document.getElementById("examples-list").innerHTML = cases.map((caseItem) => {
         const question = caseItem.questions[0];

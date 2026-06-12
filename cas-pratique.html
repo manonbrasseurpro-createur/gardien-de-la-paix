@@ -170,7 +170,8 @@
     .jury-card,
     .warning-card,
     .knowledge-card,
-    .skills-card {
+    .skills-card,
+    .official-card {
       border-radius: 20px;
       box-shadow: 0 14px 30px rgba(26, 39, 68, 0.1);
     }
@@ -187,6 +188,8 @@
     .info-panel h2,
     .info-panel h3,
     .info-panel p,
+    .official-card h3,
+    .official-card p,
     .method-card h3,
     .method-card p,
     .jury-card h3,
@@ -201,6 +204,7 @@
     }
 
     .info-panel ul,
+    .official-card ul,
     .method-card ol,
     .jury-card ul,
     .knowledge-card ul,
@@ -210,6 +214,7 @@
     }
 
     .info-panel li + li,
+    .official-card li + li,
     .method-card li + li,
     .jury-card li + li,
     .knowledge-card li + li,
@@ -228,7 +233,8 @@
     .jury-card,
     .warning-card,
     .knowledge-card,
-    .skills-card {
+    .skills-card,
+    .official-card {
       display: grid;
       gap: 12px;
       padding: 22px;
@@ -253,6 +259,12 @@
       color: #6a3d00;
       background: #fff4d6;
       border-color: #f1b85d;
+    }
+
+    .official-card {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
     }
 
     .mode-grid {
@@ -953,6 +965,12 @@
         </ul>
       </div>
 
+      <article class="official-card" aria-label="Description officielle de l'épreuve">
+        <h3>Description officielle de l'épreuve</h3>
+        <p>Cette épreuve est commune aux trois concours (externe, premier interne et second interne). Elle évalue les capacités rédactionnelles, de compréhension d'une situation professionnelle, d'analyse et de synthèse, ainsi que la faculté à se projeter dans les missions du corps.</p>
+        <p><strong>Source :</strong> Police Nationale officielle</p>
+      </article>
+
       <div class="callout-grid" aria-label="Conseils méthodologiques">
         <article class="method-card">
           <h3>⚠️ 4 questions clés à se poser pour chaque réponse</h3>
@@ -979,6 +997,11 @@
           <p>Le piège le plus courant est de répondre instinctivement. Chaque réponse doit être construite sur un raisonnement clair et justifié, appuyé sur le dossier.</p>
         </article>
 
+        <article class="official-card">
+          <h3>💡 Vous pouvez utiliser vos connaissances personnelles</h3>
+          <p>En plus des documents du dossier, vous pouvez et devez mobiliser vos connaissances générales et votre bon sens. Le dossier guide mais ne suffit pas toujours.</p>
+        </article>
+
         <article class="knowledge-card">
           <h3>💡 Pas besoin d'apprendre les lois par coeur</h3>
           <p>Les articles de loi sont toujours fournis dans le dossier. Ce qui est évalué, c'est votre capacité à les lire, les comprendre et les utiliser au bon moment.</p>
@@ -993,12 +1016,23 @@
         <article class="skills-card">
           <h3>⚠️ Ce que le jury évalue vraiment</h3>
           <ul>
-            <li>Votre discernement : distinguer urgent, grave, secondaire.</li>
-            <li>Votre analyse de situation : identifier enjeux et risques.</li>
-            <li>Vos solutions concrètes : argumentées et opérationnelles.</li>
-            <li>Votre positionnement hiérarchique : agir à votre niveau.</li>
-            <li>Votre qualité rédactionnelle : syntaxe, orthographe, structure logique.</li>
+            <li>Analyser la situation professionnelle proposée.</li>
+            <li>Hiérarchiser et synthétiser les informations du dossier.</li>
+            <li>Rechercher les solutions appropriées au contexte.</li>
+            <li>Prioriser les actions nécessaires.</li>
+            <li>Prendre des initiatives.</li>
+            <li>Formuler des propositions pratiques et opérationnelles.</li>
+            <li>Se projeter dans un collectif de travail.</li>
+            <li>Se projeter dans une organisation hiérarchique (droits et devoirs).</li>
+            <li>Rédiger avec qualité (expression, orthographe).</li>
+            <li>Gérer le temps imparti (2 heures).</li>
           </ul>
+        </article>
+
+        <article class="official-card">
+          <h3>⏱ Gestion du temps</h3>
+          <p>La gestion du temps est une compétence directement évaluée. 2 heures pour 3 cas pratiques = environ 35-40 minutes par cas.</p>
+          <p><strong>Conseil :</strong> lisez d'abord tout le dossier (10 min), puis traitez les 3 cas dans l'ordre ou commencez par celui que vous maîtrisez le mieux.</p>
         </article>
       </div>
 
@@ -1049,6 +1083,11 @@
         <h2 id="methodology-title">Votre grille de lecture pour réussir</h2>
         <p id="methodology-case-label">Avant de commencer, reprenez les 4 réflexes attendus au concours.</p>
       </div>
+
+      <article class="official-card">
+        <h3>⚠️ Pas de plan en partie / sous-partie !</h3>
+        <p>Contrairement à d'autres concours, l'épreuve GPX ne demande pas de structurer vos réponses en parties et sous-parties. Rédigez de manière fluide, argumentée et pragmatique.</p>
+      </article>
 
       <div class="methodology-steps" aria-label="Méthode officielle en 4 étapes">
         <article class="methodology-step">

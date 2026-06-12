@@ -2652,6 +2652,282 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           { bad: "Je déclenche l'alerte enlèvement.", good: "Je transmets les éléments à l'OPJ ; le déclenchement relève du procureur selon les critères officiels." },
           { bad: "Je conseille seulement aux parents d'appeler ses amis.", good: "Je recueille un signalement complet, je rends compte et je participe aux recherches ordonnées." }
         ]
+      },
+      {
+        id: "standard-degradation-otv-accueil",
+        title: "Standard, dégradation et départ en vacances",
+        theme: "Plainte en ligne, prévention cambriolage et accueil difficile",
+        situation: [
+          "Vous êtes gardien de la paix au commissariat de Xville, affecté au standard et à l'accueil. À 09 h 10, ALPHA appelle le commissariat : la vitrine de son atelier a été rayée dans la nuit et la serrure de la porte a été forcée sans vol constaté.",
+          "ALPHA explique qu'il ne connaît pas l'auteur des faits. Il demande s'il peut déposer plainte à distance car il doit ouvrir son commerce, puis ajoute qu'il part trois semaines chez sa famille et craint un cambriolage de son domicile.",
+          "Pendant l'appel, CHARLIE, voisin d'ALPHA, se présente au commissariat pour dire qu'il a vu deux silhouettes près de l'atelier vers 02 h 30 et qu'il peut donner un signalement approximatif.",
+          "Au même moment, BRAVO, un usager déjà présent à l'accueil pour une démarche administrative, s'impatiente, hausse le ton et dit qu'il va passer devant tout le monde si personne ne s'occupe de lui."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 322-1 du Code pénal",
+            text: "La destruction, la dégradation ou la détérioration d'un bien appartenant à autrui est punie de deux ans d'emprisonnement et de 30 000 euros d'amende, sauf s'il n'en est résulté qu'un dommage léger."
+          },
+          {
+            title: "Document 2 - Article 15-3 du Code de procédure pénale",
+            text: "Les officiers et agents de police judiciaire sont tenus de recevoir les plaintes déposées par les victimes d'infractions et de les transmettre au service ou à l'unité de police judiciaire territorialement compétent."
+          },
+          {
+            title: "Document 3 - Article 15-3-1 du Code de procédure pénale et plainte en ligne",
+            text: "La plainte peut être adressée par voie électronique dans les conditions prévues par les textes. Le recours à cette modalité ne peut pas être imposé à la victime. Le dispositif vise notamment certaines atteintes aux biens lorsque l'auteur est inconnu et ne remplace pas l'urgence ni l'accueil physique si la situation l'exige."
+          },
+          {
+            title: "Document 4 - Opération Tranquillité Vacances",
+            text: "L'Opération Tranquillité Vacances permet à un particulier de signaler une absence prolongée afin que son domicile puisse faire l'objet d'une attention particulière lors des patrouilles. La demande se fait avant le départ, en ligne ou auprès d'un service de police ou de gendarmerie. Ce dispositif n'est pas un service de gardiennage et ne dispense pas des mesures élémentaires de prévention."
+          },
+          {
+            title: "Document 5 - Code de déontologie, article R.434-14 du CSI",
+            text: "Le policier est au service de la population. Sa relation avec celle-ci est empreinte de courtoisie et requiert l'usage du vouvoiement. Respectueux de la dignité des personnes, il veille à se comporter en toute circonstance d'une manière exemplaire."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Orientation de la victime",
+            prompt: "Que répondez-vous à ALPHA sur la qualification des faits et sur le dépôt de plainte à distance ?",
+            model: "Les faits décrits par ALPHA sont susceptibles de constituer une dégradation ou détérioration du bien d'autrui au sens de l'article 322-1 du Code pénal : la vitrine est rayée et la serrure a été forcée. Comme l'auteur est inconnu et qu'il s'agit d'une atteinte aux biens, j'explique que la plainte en ligne peut être conseillée si les conditions du dispositif sont réunies. Je précise toutefois deux limites importantes : en vertu de l'article 15-3-1 du CPP, cette modalité ne peut pas lui être imposée, et elle ne remplace pas l'urgence ni l'accueil physique si des constatations immédiates, des images ou un témoin doivent être exploités rapidement. Je lui rappelle enfin que l'article 15-3 du CPP impose au service de recevoir sa plainte s'il préfère se présenter au commissariat.",
+            keypoints: [
+              { label: "Qualification de dégradation", keywords: ["degradation", "322-1", "serrure"] },
+              { label: "Plainte en ligne possible pour atteinte aux biens auteur inconnu", keywords: ["plainte en ligne", "auteur inconnu", "biens"] },
+              { label: "Dispositif non imposé à la victime", keywords: ["15-3-1", "impose", "victime"] },
+              { label: "Accueil physique possible au titre de l'article 15-3", keywords: ["15-3", "recevoir", "plainte"] },
+              { label: "Limites : urgence, constatations, témoin", keywords: ["urgence", "constatations", "temoin"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3"]
+          },
+          {
+            title: "Question 2 - Prévention cambriolage et OTV",
+            prompt: "Comment informez-vous ALPHA sur la prévention cambriolage avant son départ prolongé ?",
+            model: "Je lui présente l'Opération Tranquillité Vacances de manière concrète. Avant son départ, ALPHA peut déclarer son absence, en ligne ou auprès d'un service de police ou de gendarmerie, afin que son domicile soit intégré aux points d'attention des patrouilles. Je vérifie qu'il a compris les limites du dispositif : il ne s'agit ni d'une surveillance permanente ni d'un gardiennage privé. Je complète par des conseils simples et opérationnels : faire relever le courrier, éviter d'annoncer son absence sur les réseaux sociaux, vérifier portes et fenêtres, ne pas laisser d'objets visibles, prévenir une personne de confiance et communiquer un numéro joignable. Je note les informations utiles seulement dans le cadre prévu par le service.",
+            keypoints: [
+              { label: "Présentation claire de l'OTV", keywords: ["otv", "operation tranquillite vacances", "absence"] },
+              { label: "Demande avant le départ", keywords: ["avant", "depart", "demande"] },
+              { label: "Patrouilles et attention particulière", keywords: ["patrouilles", "domicile", "attention"] },
+              { label: "Limites : pas de gardiennage", keywords: ["gardiennage", "surveillance permanente", "limites"] },
+              { label: "Conseils de prévention cambriolage", keywords: ["courrier", "reseaux", "portes"] }
+            ],
+            docs: ["Document 4"]
+          },
+          {
+            title: "Question 3 - Usager impatient à l'accueil",
+            prompt: "Quelle conduite tenez-vous face à BRAVO qui s'impatiente pendant que vous traitez l'appel ?",
+            model: "Je reste courtois et ferme, conformément à l'article R.434-14 du CSI. Je ne laisse pas l'énervement de BRAVO interrompre la prise en compte d'une victime et d'un témoin potentiel, mais je reconnais son attente pour éviter l'escalade. Concrètement, je garde un ton calme, je lui demande de rester à sa place, je lui indique qu'il sera reçu dans l'ordre des priorités et je sollicite si possible un collègue pour l'orienter. Si son comportement devient menaçant ou perturbe gravement l'accueil, je fixe une limite claire, je sécurise l'espace et je rends compte à ma hiérarchie. L'objectif est de maintenir la qualité d'accueil sans abandonner ALPHA ni CHARLIE.",
+            keypoints: [
+              { label: "Courtoisie et fermeté", keywords: ["courtois", "ferme", "r.434-14"] },
+              { label: "Priorité à la victime et au témoin", keywords: ["victime", "temoin", "priorite"] },
+              { label: "Consignes claires à l'usager", keywords: ["rester", "place", "calme"] },
+              { label: "Sollicitation d'un collègue si possible", keywords: ["collegue", "orienter", "accueil"] },
+              { label: "Réaction graduée en cas de menace", keywords: ["menace", "securise", "hierarchie"] }
+            ],
+            docs: ["Document 2", "Document 5"]
+          },
+          {
+            title: "Question 4 - Exploitation et compte rendu",
+            prompt: "Quels éléments recueillez-vous et transmettez-vous après l'appel et l'arrivée de CHARLIE ?",
+            model: "Je recueille les éléments utiles dans l'ordre : identité et coordonnées d'ALPHA, adresse de l'atelier, heure de découverte, nature des dégradations, existence éventuelle de caméras, préjudice apparent, puis coordonnées et déclarations de CHARLIE sur les silhouettes vues à 02 h 30. Je conseille à ALPHA de préserver les traces sans réparer avant constatations si cela est compatible avec la sécurité du commerce, et je l'oriente vers la plainte en ligne ou l'accueil physique selon sa situation. Je transmets rapidement à l'OPJ ou au service compétent les éléments du témoin, car ils peuvent rendre nécessaire une exploitation immédiate. Dans mon compte rendu, je reste chronologique, neutre et précis : appel, faits dénoncés, conseils donnés, OTV évoquée, arrivée de CHARLIE, incident avec BRAVO et mesures prises.",
+            keypoints: [
+              { label: "Identité, lieu, heure et nature des faits", keywords: ["identite", "adresse", "heure"] },
+              { label: "Préservation des traces", keywords: ["traces", "preserver", "constatations"] },
+              { label: "Exploitation du témoin CHARLIE", keywords: ["charlie", "silhouettes", "coordonnees"] },
+              { label: "Transmission OPJ ou service compétent", keywords: ["opj", "transmet", "service"] },
+              { label: "Compte rendu chronologique incluant l'accueil difficile", keywords: ["chronologique", "bravo", "accueil"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 4", "Document 5"]
+          }
+        ],
+        commonErrors: [
+          { bad: "Je dis à ALPHA de faire uniquement une plainte en ligne.", good: "Je conseille le dispositif si les conditions sont réunies, sans l'imposer, et je rappelle l'accueil possible au titre de l'art. 15-3 du CPP." },
+          { bad: "L'OTV garantit que le logement sera surveillé en permanence.", good: "J'explique que l'OTV permet une attention lors des patrouilles, sans gardiennage permanent." },
+          { bad: "Je réponds sèchement à l'usager impatient.", good: "Je maintiens une posture courtoise et ferme, conforme à l'art. R.434-14 du CSI." }
+        ]
+      },
+      {
+        id: "intervention-nocturne-violences-aggravees",
+        title: "Intervention nocturne pour violences aggravées",
+        theme: "Violences avec ITT, arme par destination et aide aux victimes",
+        situation: [
+          "Vous êtes gardien de la paix à Xville, indicatif TN 42, en patrouille en binôme. À 02 h 05, le CIC vous engage pour des cris et des coups entendus dans un hall d'immeuble de la rue des Tilleuls.",
+          "À votre arrivée, ALPHA est assis au sol, le nez en sang et une douleur importante à l'avant-bras. Il déclare que son ex-concubin BRAVO l'a frappé avec une béquille métallique après une dispute au sujet de clés non rendues.",
+          "BRAVO est encore sur place, agité, alcoolisé en apparence, et tient la béquille à la main. CHARLIE, voisine du premier étage, dit avoir vu deux coups portés avec l'objet et entendu BRAVO menacer ALPHA de revenir le lendemain.",
+          "Les sapeurs-pompiers évoquent un transport aux urgences. Le médecin pourra fixer une ITT ; au vu des douleurs et de la possible fracture, une ITT supérieure à huit jours est envisagée."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article 222-11 du Code pénal",
+            text: "Les violences ayant entraîné une incapacité totale de travail pendant plus de huit jours sont punies de trois ans d'emprisonnement et de 45 000 euros d'amende."
+          },
+          {
+            title: "Document 2 - Article 222-12 du Code pénal",
+            text: "Les violences prévues par l'article 222-11 sont aggravées lorsqu'elles sont commises dans certaines circonstances, notamment avec usage ou menace d'une arme ou par le conjoint, concubin ou partenaire lié à la victime, y compris lorsqu'ils ne cohabitent pas. La peine est portée à cinq ans d'emprisonnement et 75 000 euros d'amende avec une circonstance aggravante, et peut être portée à sept ans et 100 000 euros en présence de deux circonstances aggravantes."
+          },
+          {
+            title: "Document 3 - Article 132-75 du Code pénal",
+            text: "Est une arme tout objet conçu pour tuer ou blesser. Tout autre objet susceptible de présenter un danger pour les personnes est assimilé à une arme dès lors qu'il est utilisé pour tuer, blesser ou menacer, ou destiné par celui qui en est porteur à tuer, blesser ou menacer."
+          },
+          {
+            title: "Document 4 - Article 53 du Code de procédure pénale",
+            text: "Est qualifié crime ou délit flagrant le crime ou le délit qui se commet actuellement ou qui vient de se commettre. Il y a également flagrance lorsque, dans un temps très voisin de l'action, la personne soupçonnée est trouvée en possession d'indices laissant penser à sa participation."
+          },
+          {
+            title: "Document 5 - Article 10-2 du Code de procédure pénale et aide aux victimes",
+            text: "Les victimes doivent recevoir une information sur leurs droits, notamment le droit d'obtenir réparation, de se constituer partie civile, d'être orientées vers une association d'aide aux victimes et, lorsque les circonstances le justifient, de bénéficier de mesures de protection."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Arrivée sur les lieux",
+            prompt: "Quelles sont vos priorités opérationnelles dès l'arrivée dans le hall ?",
+            model: "Ma première priorité est la sécurité des personnes. Je rends compte au CIC de mon arrivée, j'évalue le rapport de force et je demande des renforts si nécessaire. Avec mon collègue, je sépare immédiatement ALPHA et son ex-concubin, j'écarte les voisins du hall et je donne des injonctions claires pour que l'auteur présumé pose la béquille. Je fais prendre en charge ALPHA par les secours et je veille à préserver la scène : emplacement de la béquille, traces de sang, déclarations spontanées. Comme les faits viennent de se commettre et que BRAVO est encore porteur de l'objet, la flagrance de l'article 53 du CPP doit être envisagée et transmise à l'OPJ.",
+            keypoints: [
+              { label: "Sécurité et séparation des protagonistes", keywords: ["securite", "separe", "alpha"] },
+              { label: "Injonction de poser l'objet", keywords: ["bequille", "poser", "injonction"] },
+              { label: "Secours à la victime", keywords: ["secours", "victime", "pompiers"] },
+              { label: "Préservation de la scène et des traces", keywords: ["traces", "sang", "preserve"] },
+              { label: "Flagrance et avis OPJ", keywords: ["flagrance", "53", "opj"] }
+            ],
+            docs: ["Document 3", "Document 4", "Document 5"]
+          },
+          {
+            title: "Question 2 - Qualification et calcul des peines",
+            prompt: "Qualifiez les faits et expliquez le raisonnement sur l'ITT et les circonstances aggravantes.",
+            model: "Les faits sont susceptibles de constituer des violences volontaires. Si le certificat médical fixe une ITT supérieure à huit jours, l'article 222-11 du Code pénal prévoit une peine de base de trois ans d'emprisonnement et 45 000 euros d'amende. Ici, deux circonstances aggravantes doivent être relevées sous réserve des constatations : l'usage d'une béquille métallique comme arme par destination au sens de l'article 132-75, et le lien d'ex-concubinage visé par l'article 222-12. Avec une circonstance aggravante, la peine encourue est portée à cinq ans et 75 000 euros ; avec deux circonstances aggravantes, elle peut être portée à sept ans et 100 000 euros. Je formule cela comme une qualification possible, car l'ITT et la qualification définitive relèvent de l'autorité judiciaire.",
+            keypoints: [
+              { label: "Violences volontaires avec ITT à fixer", keywords: ["violences", "itt", "222-11"] },
+              { label: "Peine de base 3 ans / 45 000 euros", keywords: ["3 ans", "45000", "base"] },
+              { label: "Béquille comme arme par destination", keywords: ["arme par destination", "132-75", "bequille"] },
+              { label: "Aggravation par ex-concubin", keywords: ["concubin", "222-12", "aggravante"] },
+              { label: "Calcul avec deux circonstances", keywords: ["7 ans", "100000", "deux"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3"]
+          },
+          {
+            title: "Question 3 - Aide et protection de la victime",
+            prompt: "Quels dispositifs d'aide et de protection proposez-vous à ALPHA ?",
+            model: "Je traite ALPHA comme une victime prioritaire. Je l'isole de BRAVO, je m'assure de sa prise en charge médicale et j'explique l'importance du certificat fixant l'ITT. Je l'informe de son droit de déposer plainte et des droits prévus par l'article 10-2 du CPP : réparation du préjudice, accompagnement par une association d'aide aux victimes, information sur la procédure et possibilité de mesures de protection si le danger persiste. Compte tenu des menaces de retour, je signale le risque à l'OPJ et à ma hiérarchie pour que les suites adaptées soient décidées. Je recueille ses coordonnées fiables et je m'assure qu'il ne rentre pas seul au contact de l'auteur présumé.",
+            keypoints: [
+              { label: "Isolement et protection d'ALPHA", keywords: ["isole", "protection", "alpha"] },
+              { label: "Prise en charge médicale et certificat ITT", keywords: ["medical", "certificat", "itt"] },
+              { label: "Droit de plainte et information article 10-2", keywords: ["10-2", "plainte", "droits"] },
+              { label: "Orientation association d'aide aux victimes", keywords: ["association", "aide", "victimes"] },
+              { label: "Signalement du risque lié aux menaces", keywords: ["menaces", "risque", "opj"] }
+            ],
+            docs: ["Document 5"]
+          },
+          {
+            title: "Question 4 - Procédure et éléments à transmettre",
+            prompt: "Quels éléments doivent figurer dans votre compte rendu à l'OPJ ?",
+            model: "Mon compte rendu doit permettre de comprendre la scène sans interprétation excessive. Je mentionne l'heure d'engagement par le CIC, l'adresse, l'état d'ALPHA, ses déclarations spontanées, la présence de BRAVO sur place, son état apparent, la béquille tenue en main, les injonctions données, les propos de menace rapportés et les déclarations de CHARLIE. J'ajoute les secours sollicités, l'orientation médicale pour fixer l'ITT, les traces constatées et les mesures de sécurité. Je cite les textes utiles : article 53 CPP pour la flagrance, articles 222-11 et 222-12 pour les violences avec ITT et circonstances aggravantes, et article 132-75 pour l'arme par destination. La rédaction reste chronologique, factuelle et respectueuse du rôle du GPX.",
+            keypoints: [
+              { label: "Chronologie CIC et arrivée", keywords: ["cic", "heure", "adresse"] },
+              { label: "Blessures, ITT et secours", keywords: ["blessures", "itt", "secours"] },
+              { label: "Béquille et menaces", keywords: ["bequille", "menaces", "objet"] },
+              { label: "Témoignage de CHARLIE", keywords: ["charlie", "declarations", "temoin"] },
+              { label: "Références 53, 222-11, 222-12, 132-75", keywords: ["53", "222-12", "132-75"] }
+            ],
+            docs: ["Document 1", "Document 2", "Document 3", "Document 4", "Document 5"]
+          }
+        ],
+        commonErrors: [
+          { bad: "Je conclus que BRAVO est coupable.", good: "Je relève des faits susceptibles de violences aggravées et je transmets les éléments à l'OPJ." },
+          { bad: "La béquille n'est pas une arme.", good: "Je l'analyse comme une possible arme par destination au sens de l'art. 132-75 du Code pénal." },
+          { bad: "J'attends l'ITT avant d'aider la victime.", good: "Je protège et oriente immédiatement la victime ; l'ITT consolidera ensuite la qualification." }
+        ]
+      },
+      {
+        id: "controle-routier-refus-igpn",
+        title: "Contrôle routier, refus d'obtempérer et IGPN",
+        theme: "Sécurité du contrôle, usage des armes et enquête compétente",
+        situation: [
+          "Vous êtes gardien de la paix à Xville, en contrôle routier de nuit avec BRAVO sur l'avenue des Frênes. Le dispositif est installé après une zone éclairée, avec un véhicule de police sérigraphié, des cônes et un agent en amont chargé de ralentir les véhicules.",
+          "À 23 h 40, vous faites signe à ALPHA, conducteur d'une berline sombre, de s'arrêter. Il ralentit, puis accélère brutalement en braquant vers la droite. BRAVO, placé trop près de l'axe de fuite, doit reculer pour ne pas être percuté.",
+          "Le véhicule emporte un cône et manque CHARLIE, piéton qui traversait à proximité. Vous notez partiellement la plaque et diffusez immédiatement le signalement au CIC.",
+          "Quelques minutes plus tard, une patrouille retrouve la berline accidentée contre un muret, sans blessé grave apparent. Un passant affirme que les policiers auraient tiré, alors qu'aucun coup de feu n'a été fait par votre équipage."
+        ],
+        documents: [
+          {
+            title: "Document 1 - Article R.233-1 du Code de la route",
+            text: "Tout conducteur d'un véhicule à moteur doit être en mesure de présenter aux agents compétents les pièces exigées pour la conduite et la circulation du véhicule, notamment le permis de conduire, le certificat d'immatriculation et les documents relatifs à l'assurance."
+          },
+          {
+            title: "Document 2 - Article L.233-1 du Code de la route",
+            text: "Le fait, pour tout conducteur, d'omettre d'obtempérer à une sommation de s'arrêter émanant d'un fonctionnaire ou agent chargé de constater les infractions et muni des insignes extérieurs et apparents de sa qualité est puni de deux ans d'emprisonnement et de 15 000 euros d'amende."
+          },
+          {
+            title: "Document 3 - Article L.233-1-1 du Code de la route",
+            text: "Les peines du refus d'obtempérer sont aggravées lorsque les faits exposent directement autrui à un risque de mort ou de blessures graves, et plus encore lorsque ce risque concerne les personnes chargées de constater les infractions."
+          },
+          {
+            title: "Document 4 - Article L.435-1 du Code de la sécurité intérieure",
+            text: "Les policiers peuvent faire usage de leurs armes, dans l'exercice de leurs fonctions et revêtus de leur uniforme ou insignes apparents, en cas d'absolue nécessité et de manière strictement proportionnée. Le texte vise notamment les véhicules dont les conducteurs n'obtempèrent pas à l'ordre d'arrêt lorsque les occupants sont susceptibles de perpétrer, dans leur fuite, des atteintes à la vie ou à l'intégrité physique des agents ou d'autrui."
+          },
+          {
+            title: "Document 5 - Décret n° 2013-784 du 28 août 2013 et plateforme IGPN",
+            text: "L'Inspection générale de la police nationale est un service de contrôle de la police nationale chargé notamment d'enquêtes administratives et judiciaires lorsque les autorités compétentes la saisissent. Le public peut aussi utiliser une plateforme administrative de signalement IGPN, qui ne constitue ni un service d'urgence, ni un dépôt de plainte."
+          }
+        ],
+        questions: [
+          {
+            title: "Question 1 - Mise en place du contrôle",
+            prompt: "Quels sont les points de vigilance sur le positionnement des agents, les documents à vérifier et les fichiers à consulter ?",
+            model: "Un contrôle routier doit d'abord être pensé en termes de sécurité. Les agents doivent être visibles, éclairés, porteurs de leurs insignes, placés hors de l'axe direct de fuite et protégés par le véhicule de service ou le balisage. Un agent ne doit pas se tenir devant un véhicule contrôlé ni dans une zone où il serait coincé en cas d'accélération. Si le véhicule s'arrête, je vérifie les documents prévus par l'article R.233-1 du Code de la route : permis de conduire, certificat d'immatriculation et assurance. Selon les instructions du service et sous le cadre légal applicable, les consultations utiles peuvent porter sur le véhicule et la plaque via le SIV, la validité du permis, une éventuelle inscription au fichier des véhicules volés ou au FPR si un motif le justifie. Je rends compte au CIC et je ne multiplie pas les consultations sans finalité opérationnelle.",
+            keypoints: [
+              { label: "Agents visibles et hors axe de fuite", keywords: ["visible", "axe", "fuite"] },
+              { label: "Balisage et protection", keywords: ["balisage", "cones", "vehicule"] },
+              { label: "Documents : permis, immatriculation, assurance", keywords: ["permis", "immatriculation", "assurance"] },
+              { label: "Fichiers utiles SIV, permis, véhicule volé, FPR si justifié", keywords: ["siv", "fpr", "vole"] },
+              { label: "Consultations avec finalité et compte rendu CIC", keywords: ["finalite", "cic", "rend compte"] }
+            ],
+            docs: ["Document 1"]
+          },
+          {
+            title: "Question 2 - Refus d'obtempérer et risques",
+            prompt: "Comment qualifiez-vous le comportement d'ALPHA et quelles actions menez-vous immédiatement ?",
+            model: "Le comportement d'ALPHA est susceptible de constituer un refus d'obtempérer au sens de l'article L.233-1 du Code de la route : l'ordre d'arrêt était donné par des policiers identifiables, dans un dispositif visible, et le conducteur a accéléré au lieu de s'arrêter. L'article L.233-1-1 doit être envisagé car la manoeuvre expose BRAVO et CHARLIE à un risque direct de blessures graves. Immédiatement, je ne me lance pas dans une poursuite dangereuse sans consigne ; je sécurise BRAVO et CHARLIE, je relève la plaque, la marque, la couleur, la direction de fuite et les dégâts, puis je diffuse au CIC. Je rends compte à la hiérarchie et je préserve les éléments matériels comme le cône déplacé ou les images disponibles.",
+            keypoints: [
+              { label: "Refus d'obtempérer L.233-1", keywords: ["l.233-1", "refus d'obtemperer", "ordre"] },
+              { label: "Agents identifiables et ordre clair", keywords: ["identifiables", "insignes", "clair"] },
+              { label: "Aggravation par risque pour BRAVO et CHARLIE", keywords: ["l.233-1-1", "risque", "bravo"] },
+              { label: "Pas de poursuite dangereuse improvisée", keywords: ["poursuite", "dangereuse", "consigne"] },
+              { label: "Diffusion CIC et préservation des indices", keywords: ["cic", "plaque", "indices"] }
+            ],
+            docs: ["Document 2", "Document 3"]
+          },
+          {
+            title: "Question 3 - Usage des armes",
+            prompt: "Dans quelles conditions légales l'usage des armes pourrait-il être envisagé face à un véhicule qui refuse d'obtempérer ?",
+            model: "L'article L.435-1 du CSI ne permet pas de tirer automatiquement sur un véhicule qui refuse d'obtempérer. L'usage de l'arme n'est légal qu'en cas d'absolue nécessité et de manière strictement proportionnée. Pour un véhicule, il faut notamment que les policiers soient dans l'exercice de leurs fonctions, identifiables, qu'ils ne puissent immobiliser autrement le véhicule et que les occupants soient susceptibles de commettre, dans leur fuite, des atteintes à la vie ou à l'intégrité physique des agents ou d'autrui. Dans la situation, le fait que BRAVO et CHARLIE aient été exposés est grave, mais la décision doit être appréciée à l'instant, avec les possibilités de retrait, de balisage, de diffusion radio ou d'interception différée. Comme GPX, je rends compte précisément ; je ne justifie jamais un tir par la seule fuite ou par la volonté d'interpeller.",
+            keypoints: [
+              { label: "Pas d'automaticité du tir", keywords: ["automatique", "seule fuite", "pas"] },
+              { label: "Absolue nécessité", keywords: ["absolue necessite", "necessaire", "l.435-1"] },
+              { label: "Strictement proportionné", keywords: ["strictement proportionne", "proportion"] },
+              { label: "Danger d'atteinte à la vie ou intégrité", keywords: ["vie", "integrite", "danger"] },
+              { label: "Immobilisation impossible autrement", keywords: ["immobiliser", "autrement", "vehicule"] }
+            ],
+            docs: ["Document 4"]
+          },
+          {
+            title: "Question 4 - IGPN et suites de l'incident",
+            prompt: "Quel service peut être compétent pour enquêter sur une mise en cause policière et quelles précautions prenez-vous ?",
+            model: "Si une mise en cause policière apparaît, notamment en cas d'allégation de tir, de blessure ou de manquement déontologique, l'IGPN peut être compétente pour mener une enquête administrative ou judiciaire lorsqu'elle est saisie par les autorités compétentes, conformément au décret du 28 août 2013. Le public peut également effectuer un signalement sur la plateforme IGPN, mais ce signalement n'est ni une urgence ni un dépôt de plainte. Dans l'immédiat, je rends compte sans délai à ma hiérarchie et à l'OPJ, je précise qu'aucun tir n'a été effectué par mon équipage si tel est le cas, je préserve les éléments objectifs : radio, caméras, armes administratives, témoins, positions des agents et dégâts. Je ne cherche pas à dissuader le témoin de signaler les faits ; je reste factuel, transparent et disponible pour toute vérification.",
+            keypoints: [
+              { label: "IGPN compétente pour contrôle/enquête selon saisine", keywords: ["igpn", "enquete", "saisine"] },
+              { label: "Plateforme signalement distincte d'une plainte", keywords: ["plateforme", "plainte", "signalement"] },
+              { label: "Compte rendu hiérarchie et OPJ", keywords: ["hierarchie", "opj", "rend compte"] },
+              { label: "Préservation des éléments objectifs", keywords: ["cameras", "temoins", "armes"] },
+              { label: "Posture factuelle et transparente", keywords: ["factuel", "transparent", "verification"] }
+            ],
+            docs: ["Document 5"]
+          }
+        ],
+        commonErrors: [
+          { bad: "Je me place devant le véhicule pour l'obliger à s'arrêter.", good: "Je reste visible mais hors de l'axe de fuite afin de limiter le risque de percussion." },
+          { bad: "Un refus d'obtempérer autorise automatiquement l'usage de l'arme.", good: "Je raisonne avec l'art. L.435-1 du CSI : absolue nécessité, stricte proportionnalité et danger d'atteinte à la vie ou à l'intégrité." },
+          { bad: "La plateforme IGPN remplace une plainte.", good: "Je distingue le signalement administratif IGPN d'un dépôt de plainte ou d'une enquête judiciaire." }
+        ]
       }
     ];
 
@@ -2808,7 +3084,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               "Auteur / Coauteur / Complice",
               "Victime / Mis en cause / Suspect / Personne interpellée",
               "Infraction / Fait pénalement répréhensible",
-              "Trouble à l'ordre public"
+              "Trouble à l'ordre public",
+              "ITT (incapacité totale de travail)",
+              "Arme par destination",
+              "Refus d'obtempérer"
             ]
           }
         ]
@@ -2849,7 +3128,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               "Procès-verbal (PV) / Main courante",
               "Compte rendu d'intervention",
               "Officier de police judiciaire (OPJ)",
-              "Agent de police judiciaire (APJ)"
+              "Agent de police judiciaire (APJ)",
+              "OTV (Opération Tranquillité Vacances)"
             ]
           }
         ]
@@ -2911,7 +3191,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               "Article 432-11 : corruption passive",
               "Article 433-1 : corruption active",
               "Article 433-5 : outrage",
-              "Article 433-6 : rébellion"
+              "Article 433-6 : rébellion",
+              "Article L.233-1 Code de la route : refus d'obtempérer",
+              "Article L.435-1 CSI : usage des armes",
+              "Décret n° 2013-784 : missions et organisation de l'IGPN"
             ]
           }
         ]
@@ -2935,6 +3218,14 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               "Je me conforme aux instructions de ma hiérarchie",
               "Dans le cadre de mes attributions d'APJ, je...",
               "Cette décision relevant de la compétence de l'OPJ, je transmets immédiatement l'affaire à..."
+            ]
+          },
+          {
+            title: "Services et autorités",
+            type: "term",
+            items: [
+              "IGPN (Inspection Générale de la Police Nationale) : service de contrôle pouvant mener des enquêtes administratives ou judiciaires selon saisine",
+              "Plateforme IGPN : signalement administratif distinct d'une plainte ou d'une urgence"
             ]
           }
         ]

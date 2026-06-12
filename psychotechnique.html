@@ -964,6 +964,7 @@
 
   <script src="spatial-bank.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="progression-storage.js"></script>
   <script>
     const letters = ["A", "B", "C", "D"];
     const cubeLabels = {
@@ -1216,6 +1217,7 @@
     let remainingSeconds = 30;
     let questionResults = [];
     let testStartedAt = null;
+    let personalityStartedAt = null;
     let lastCompletedAttempt = null;
     let currentMode = "cognitive";
     let activeCategoryKeys = [...categoryOrder];
@@ -1335,6 +1337,7 @@
 
     function startPersonalityTest(nextStep) {
       personalityNextStep = nextStep;
+      personalityStartedAt = new Date();
       clearInterval(intervalId);
       clearTimeout(nextButtonTimeoutId);
       clearPersonalityForm();
@@ -1578,6 +1581,28 @@
         <p>${coherence.message}</p>
         ${detail}
       `;
+      savePersonalityProgression(scores);
+    }
+
+    function savePersonalityProgression(scores) {
+      const total = 10;
+      const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const categories = scores.reduce((result, item) => {
+        result[item.label] = {
+          score: item.score,
+          total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score: Math.round(scoreValue * 10) / 10,
+        total,
+        duree: personalityStartedAt ? Math.round((new Date() - personalityStartedAt) / 1000) : 0,
+        categories
+      });
     }
 
     function personalityOverallMessage(average) {
@@ -1811,6 +1836,27 @@
         completedAt: new Date(),
         results: questionResults.slice()
       };
+      saveCognitiveProgression();
+    }
+
+    function saveCognitiveProgression() {
+      const categoriesDetail = activeCategoryKeys.reduce((result, key) => {
+        const item = categoryScores[key];
+        result[categories[key].title] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: testStartedAt ? Math.round((new Date() - testStartedAt) / 1000) : 0,
+        categories: categoriesDetail
+      });
     }
 
     function getEncouragement(value, total) {

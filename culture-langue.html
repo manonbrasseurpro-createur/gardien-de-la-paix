@@ -711,6 +711,7 @@
     </section>
   </main>
 
+  <script src="progression-storage.js"></script>
   <script>
     const letters = ["A", "B", "C"];
     const languageLabels = {
@@ -1815,6 +1816,7 @@
     let answered = false;
     let mistakes = [];
     let categoryScores = {};
+    let quizStartedAt = null;
 
     languageButtons.forEach((button) => {
       button.addEventListener("click", () => selectLanguage(button.dataset.language));
@@ -1856,6 +1858,7 @@
       answered = false;
       mistakes = [];
       categoryScores = initCategoryScores(currentQuestions);
+      quizStartedAt = new Date();
 
       homeView.classList.add("hidden");
       resultsView.classList.add("hidden");
@@ -2062,6 +2065,46 @@
       mistakeSummary.textContent = mistakes.length === 0
         ? "Aucune erreur : votre fiche PDF confirmera les points maîtrisés."
         : `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir dans la fiche PDF.`;
+      saveProgressionResult();
+    }
+
+    function saveProgressionResult() {
+      const duration = quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0;
+      const groups = [
+        {
+          module: "culture-generale",
+          entries: Object.entries(categoryScores).filter(([key]) => !key.startsWith("langue-"))
+        },
+        {
+          module: "langue-etrangere",
+          entries: Object.entries(categoryScores).filter(([key]) => key.startsWith("langue-"))
+        }
+      ];
+
+      groups.forEach((group) => {
+        const total = group.entries.reduce((sum, [, item]) => sum + item.total, 0);
+        if (total <= 0) {
+          return;
+        }
+
+        const moduleScore = group.entries.reduce((sum, [, item]) => sum + item.correct, 0);
+        const categories = group.entries.reduce((result, [key, item]) => {
+          result[categoryInfo[key].label] = {
+            score: item.correct,
+            total: item.total
+          };
+          return result;
+        }, {});
+
+        window.GpxProgression?.saveSession({
+          module: group.module,
+          date: new Date().toISOString(),
+          score: moduleScore,
+          total,
+          duree: Math.round(duration * (total / currentQuestions.length)),
+          categories
+        });
+      });
     }
 
     function getEncouragement(value, total) {

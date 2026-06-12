@@ -887,6 +887,7 @@
     </section>
   </main>
 
+  <script src="progression-storage.js"></script>
   <script>
     const cases = [
       {
@@ -1442,7 +1443,8 @@
       scores: {},
       remainingSeconds: 0,
       timerId: null,
-      sessionKey: "cas-pratique-current-session"
+      sessionKey: "cas-pratique-current-session",
+      startedAt: null
     };
 
     const homeScreen = document.getElementById("home-screen");
@@ -1555,6 +1557,7 @@
       state.scores = {};
       state.remainingSeconds = modeConfig[mode].duration;
       state.sessionKey = `cas-pratique-${mode}-${caseId || "simulation"}`;
+      state.startedAt = new Date();
 
       const saved = loadSession();
       if (saved) {
@@ -1696,6 +1699,7 @@
 
     function goNext() {
       if (state.currentIndex >= state.items.length - 1) {
+        saveProgressionResult();
         showHome();
         return;
       }
@@ -1719,6 +1723,36 @@
       const score50 = totalPossible ? Math.round((raw / totalPossible) * 50) : 0;
       const score20 = totalPossible ? Math.round((raw / totalPossible) * 20 * 10) / 10 : 0;
       return { raw, totalPossible, score50, score20 };
+    }
+
+    function saveProgressionResult() {
+      const convertedScore = calculateConvertedScore();
+      if (convertedScore.totalPossible <= 0) {
+        return;
+      }
+
+      const categories = state.items.reduce((result, item) => {
+        const caseItem = getCase(item.caseId);
+        const key = `${item.caseId}-${item.questionIndex}`;
+        if (!result[caseItem.theme]) {
+          result[caseItem.theme] = {
+            score: 0,
+            total: 0
+          };
+        }
+        result[caseItem.theme].score += state.scores[key] || 0;
+        result[caseItem.theme].total += 5;
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "cas-pratique",
+        date: new Date().toISOString(),
+        score: convertedScore.raw,
+        total: convertedScore.totalPossible,
+        duree: Math.max(0, modeConfig[state.mode].duration - state.remainingSeconds),
+        categories
+      });
     }
 
     function updateScoreDisplay() {

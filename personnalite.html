@@ -533,6 +533,7 @@
     </section>
   </main>
 
+  <script src="progression-storage.js"></script>
   <script>
     const dimensions = {
       emotional: {
@@ -678,16 +679,20 @@
       updateProgress();
     });
 
+    let testStartedAt = new Date();
+
     document.getElementById("restart-button").addEventListener("click", () => {
       form.reset();
       formWarning.textContent = "";
       resultsSection.classList.add("hidden");
       testSection.classList.remove("hidden");
+      testStartedAt = new Date();
       updateProgress();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
     form.addEventListener("input", updateProgress);
+
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const answers = collectAnswers();
@@ -752,6 +757,7 @@
       renderScores(scores);
       renderRadar(scores);
       renderAnalysis(scores, coherence);
+      saveProgressionResult(scores);
 
       testSection.classList.add("hidden");
       resultsSection.classList.remove("hidden");
@@ -779,6 +785,27 @@
           advice: dimensions[key].advice,
           score: Math.round(average * 10) / 10
         };
+      });
+    }
+
+    function saveProgressionResult(scores) {
+      const total = 10;
+      const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const categories = scores.reduce((result, item) => {
+        result[item.label] = {
+          score: item.score,
+          total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score: Math.round(scoreValue * 10) / 10,
+        total,
+        duree: testStartedAt ? Math.round((new Date() - testStartedAt) / 1000) : 0,
+        categories
       });
     }
 

@@ -457,6 +457,7 @@
     </section>
   </main>
 
+  <script src="progression-storage.js"></script>
   <script>
     const letters = ["A", "B", "C", "D"];
     const secondsPerQuestion = 45;
@@ -611,6 +612,7 @@
     let timeoutAdvanceId = null;
     let remainingSeconds = secondsPerQuestion;
     let lastCompletedAttempt = null;
+    let quizStartedAt = null;
 
     const homeView = document.getElementById("home-view");
     const quizView = document.getElementById("quiz-view");
@@ -690,6 +692,7 @@
       mistakes = [];
       typeScores = initTypeScores(currentQuestions);
       lastCompletedAttempt = null;
+      quizStartedAt = new Date();
 
       clearInterval(intervalId);
       clearTimeout(timeoutAdvanceId);
@@ -871,6 +874,26 @@
         mistakes,
         completedAt: new Date()
       };
+      saveProgressionResult();
+    }
+
+    function saveProgressionResult() {
+      const categories = Object.entries(typeScores).reduce((result, [key, item]) => {
+        result[`Numérique - ${typeInfo[key].label}`] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0,
+        categories
+      });
     }
 
     function getEncouragement(value, total) {

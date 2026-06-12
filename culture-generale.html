@@ -664,6 +664,7 @@
     </section>
   </main>
 
+  <script src="progression-storage.js"></script>
   <script>
     const letters = ["A", "B", "C"];
     const categoryInfo = {
@@ -927,6 +928,8 @@
       };
     }
 
+    let quizStartedAt = null;
+
     function startQuiz(mode) {
       currentMode = mode;
       currentQuestions = buildQuestionSet(mode).map(prepareQuestion);
@@ -935,6 +938,7 @@
       answered = false;
       mistakes = [];
       categoryScores = initCategoryScores(currentQuestions);
+      quizStartedAt = new Date();
 
       homeView.classList.add("hidden");
       resultsView.classList.add("hidden");
@@ -1117,6 +1121,26 @@
       mistakeSummary.textContent = mistakes.length === 0
         ? "Aucune erreur : votre fiche PDF confirmera les points maîtrisés."
         : `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir dans la fiche PDF.`;
+      saveProgressionResult();
+    }
+
+    function saveProgressionResult() {
+      const categories = Object.entries(categoryScores).reduce((result, [key, item]) => {
+        result[categoryInfo[key].label] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "culture-generale",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0,
+        categories
+      });
     }
 
     function getEncouragement(value, total) {

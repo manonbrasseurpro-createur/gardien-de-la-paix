@@ -449,6 +449,7 @@
     </section>
   </main>
 
+  <script src="progression-storage.js"></script>
   <script>
     const letters = ["A", "B", "C", "D"];
     const completeQuestionsPerType = 10;
@@ -613,6 +614,7 @@
     let answered = false;
     let mistakes = [];
     let typeScores = {};
+    let quizStartedAt = null;
 
     document.getElementById("full-test-button").addEventListener("click", () => startQuiz("complete"));
     document.getElementById("next-button").addEventListener("click", nextQuestion);
@@ -666,6 +668,7 @@
       answered = false;
       mistakes = [];
       typeScores = initTypeScores(currentQuestions);
+      quizStartedAt = new Date();
 
       homeView.classList.add("hidden");
       resultsView.classList.add("hidden");
@@ -805,6 +808,26 @@
       mistakeSummary.textContent = mistakes.length === 0
         ? "Aucune erreur : votre fiche PDF récapitulera le test réussi."
         : `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir dans la fiche PDF.`;
+      saveProgressionResult();
+    }
+
+    function saveProgressionResult() {
+      const categories = Object.entries(typeScores).reduce((result, [key, item]) => {
+        result[`Verbal - ${typeInfo[key].label}`] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0,
+        categories
+      });
     }
 
     function getEncouragement(value, total) {

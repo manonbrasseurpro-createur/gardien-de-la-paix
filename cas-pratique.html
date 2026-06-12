@@ -12,8 +12,10 @@
     }
 
     .module-shell,
+    .methodology-screen,
     .exercise-panel,
     .correction-panel,
+    .final-score-panel,
     .examples-panel {
       background: var(--white);
       border: 1px solid var(--border);
@@ -22,13 +24,15 @@
       overflow: hidden;
     }
 
-    .module-shell {
+    .module-shell,
+    .methodology-screen {
       padding: 30px;
     }
 
     .top-actions,
     .exercise-actions,
-    .correction-actions {
+    .correction-actions,
+    .methodology-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -88,6 +92,77 @@
       cursor: not-allowed;
       opacity: 0.55;
       transform: none;
+    }
+
+    .methodology-screen {
+      display: none;
+      gap: 24px;
+    }
+
+    .methodology-screen.is-visible {
+      display: grid;
+    }
+
+    .methodology-intro {
+      display: grid;
+      gap: 10px;
+      padding: 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+      border-radius: 20px;
+    }
+
+    .methodology-intro h2,
+    .methodology-intro p {
+      margin: 0;
+    }
+
+    .methodology-intro h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      line-height: 1.2;
+    }
+
+    .methodology-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .methodology-step {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+      background: #f8fafd;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .methodology-step__icon {
+      display: inline-flex;
+      width: 52px;
+      height: 52px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 18px;
+      font-size: 1.7rem;
+    }
+
+    .methodology-step h3,
+    .methodology-step p {
+      margin: 0;
+    }
+
+    .methodology-step h3 {
+      color: var(--navy);
+      font-size: 1.02rem;
+      line-height: 1.35;
+    }
+
+    .methodology-step p {
+      color: var(--muted);
+      white-space: pre-line;
     }
 
     .info-panel,
@@ -361,8 +436,13 @@
 
     .situation-box,
     .method-reminder,
+    .context-help,
+    .gpx-reminder-bar,
     .documents-highlight,
-    .advice-box {
+    .advice-box,
+    .common-errors-box,
+    .score-breakdown-box,
+    .structured-answer {
       padding: 18px;
       border-radius: 16px;
       border: 1px solid var(--border);
@@ -371,10 +451,90 @@
 
     .situation-box h3,
     .method-reminder h3,
+    .context-help h3,
     .documents-highlight h3,
-    .advice-box h3 {
+    .advice-box h3,
+    .common-errors-box h3,
+    .score-breakdown-box h3,
+    .structured-answer h3,
+    .structured-answer h4 {
       color: var(--navy);
       margin-bottom: 8px;
+    }
+
+    .context-help {
+      display: grid;
+      gap: 12px;
+      border-color: rgba(26, 39, 68, 0.18);
+    }
+
+    .context-help__toggle {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--navy);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .context-help__body {
+      display: grid;
+      gap: 10px;
+    }
+
+    .context-help.is-collapsed .context-help__body {
+      display: none;
+    }
+
+    .context-help__type {
+      width: fit-content;
+      padding: 6px 10px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .context-help ul,
+    .score-breakdown,
+    .common-errors-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .context-help li,
+    .score-breakdown li,
+    .common-errors-list li {
+      padding: 10px 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .gpx-reminder-bar {
+      position: sticky;
+      bottom: 12px;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+      box-shadow: 0 12px 28px rgba(26, 39, 68, 0.18);
+      font-weight: 800;
+      text-align: center;
     }
 
     .steps-list {
@@ -525,6 +685,30 @@
       border-color: #8ad0a0;
     }
 
+    .structured-answer {
+      display: grid;
+      gap: 14px;
+      background: #edf7f0;
+      border-color: #8ad0a0;
+    }
+
+    .structured-answer__part {
+      padding: 14px;
+      background: var(--white);
+      border: 1px solid #c4e3cc;
+      border-radius: 14px;
+    }
+
+    .structured-answer__part h4,
+    .structured-answer__part p {
+      margin: 0;
+    }
+
+    .structured-answer__part p {
+      margin-top: 8px;
+      white-space: pre-wrap;
+    }
+
     .checklist {
       display: grid;
       gap: 10px;
@@ -551,6 +735,13 @@
       color: #166534;
     }
 
+    .checklist input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--navy);
+    }
+
     .score-card {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -568,6 +759,88 @@
       display: block;
       font-size: clamp(1.6rem, 4vw, 2.4rem);
       line-height: 1.1;
+    }
+
+    .score-breakdown-box,
+    .common-errors-box {
+      display: grid;
+      gap: 12px;
+    }
+
+    .score-breakdown li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .score-breakdown__status {
+      color: var(--navy);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .common-errors-list strong {
+      display: block;
+      color: var(--navy);
+    }
+
+    .documents-highlight mark {
+      display: inline;
+      padding: 0 4px;
+      color: var(--navy);
+      background: #fff4d6;
+      border-radius: 6px;
+    }
+
+    .final-score-panel {
+      display: none;
+    }
+
+    .final-score-panel.is-visible {
+      display: block;
+    }
+
+    .final-score-body {
+      display: grid;
+      gap: 20px;
+      padding: 28px;
+    }
+
+    .final-score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .final-score-card {
+      padding: 20px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 16px;
+    }
+
+    .final-score-card span {
+      display: block;
+      font-weight: 700;
+      opacity: 0.88;
+    }
+
+    .final-score-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1;
+    }
+
+    .final-message {
+      padding: 20px;
+      color: var(--navy);
+      background: #f8fafd;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font-weight: 800;
+      text-align: center;
     }
 
     .example-case {
@@ -597,9 +870,11 @@
     @media (max-width: 980px) {
       .mode-grid,
       .case-grid,
+      .methodology-steps,
       .callout-grid,
       .answer-comparison,
-      .score-card {
+      .score-card,
+      .final-score-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -631,15 +906,18 @@
       .module-shell,
       .question-workspace,
       .correction-body,
-      .examples-body {
+      .examples-body,
+      .final-score-body {
         padding: 22px;
       }
 
       .mode-grid,
       .case-grid,
+      .methodology-steps,
       .callout-grid,
       .answer-comparison,
-      .score-card {
+      .score-card,
+      .final-score-grid {
         grid-template-columns: 1fr;
       }
 
@@ -761,6 +1039,58 @@
       </section>
     </section>
 
+    <section class="methodology-screen" id="methodology-screen" aria-labelledby="methodology-title" aria-live="polite">
+      <div class="top-actions">
+        <button class="secondary-button" type="button" id="methodology-home">← Accueil du module</button>
+      </div>
+
+      <div class="methodology-intro">
+        <p class="hero__label">Rappel méthodologique</p>
+        <h2 id="methodology-title">Votre grille de lecture pour réussir</h2>
+        <p id="methodology-case-label">Avant de commencer, reprenez les 4 réflexes attendus au concours.</p>
+      </div>
+
+      <div class="methodology-steps" aria-label="Méthode officielle en 4 étapes">
+        <article class="methodology-step">
+          <span class="methodology-step__icon" aria-hidden="true">🔍</span>
+          <h3>ÉTAPE 1 — Analysez la situation</h3>
+          <p>Lisez attentivement la mise en situation.
+Identifiez : Qui ? Quoi ? Où ? Quand ?
+Ne négligez aucun détail, même anodin.</p>
+        </article>
+
+        <article class="methodology-step">
+          <span class="methodology-step__icon" aria-hidden="true">⚡</span>
+          <h3>ÉTAPE 2 — Identifiez l'urgence</h3>
+          <p>Qu'est-ce qui doit être traité EN PRIORITÉ ?
+Y a-t-il une personne en danger ?
+Un trouble à l'ordre public immédiat ?
+Une infraction en cours ?</p>
+        </article>
+
+        <article class="methodology-step">
+          <span class="methodology-step__icon" aria-hidden="true">✅</span>
+          <h3>ÉTAPE 3 — Proposez des actions concrètes</h3>
+          <p>Que feriez-vous concrètement sur le terrain ?
+Restez dans votre rôle de gardien de la paix.
+Argumentez chaque décision.</p>
+        </article>
+
+        <article class="methodology-step">
+          <span class="methodology-step__icon" aria-hidden="true">📄</span>
+          <h3>ÉTAPE 4 — Exploitez le dossier documentaire</h3>
+          <p>Appuyez TOUJOURS vos réponses sur les documents fournis.
+Citez les articles de loi pertinents.
+C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
+        </article>
+      </div>
+
+      <div class="methodology-actions">
+        <button class="primary-button" type="button" id="methodology-start">J'ai compris, commencer le cas pratique</button>
+        <button class="ghost-button" type="button" id="methodology-skip">Passer (je connais déjà la méthode)</button>
+      </div>
+    </section>
+
     <section class="exercise-panel" id="exercise-screen" aria-live="polite">
       <div class="exercise-panel__header">
         <div class="exercise-title-row">
@@ -787,6 +1117,17 @@
 
           <article class="situation-box" id="situation-box"></article>
 
+          <article class="context-help" id="context-help">
+            <button class="context-help__toggle" type="button" id="context-help-toggle" aria-expanded="true">
+              <span>💡 Aide méthodologique</span>
+              <span id="context-help-toggle-label">Réduire</span>
+            </button>
+            <div class="context-help__body" id="context-help-body">
+              <span class="context-help__type" id="context-help-type">Conseil ciblé</span>
+              <ul id="context-help-list"></ul>
+            </div>
+          </article>
+
           <article class="question-card">
             <h3 id="question-title"></h3>
             <p id="question-prompt"></p>
@@ -801,6 +1142,13 @@
             <h3>Rappel méthodologique</h3>
             <p>Pensez à : qualifier les faits / citer le dossier / argumenter vos actions / rester dans votre rôle.</p>
           </article>
+
+          <div class="gpx-reminder-bar" role="note">
+            <span>⚠️ Restez dans votre rôle de GPX</span>
+            <span>| 📄 Exploitez le dossier</span>
+            <span>| ✍️ Argumentez chaque action</span>
+            <span>| 🚫 Pas d'opinion personnelle</span>
+          </div>
 
           <div class="exercise-actions">
             <button class="secondary-button" type="button" id="previous-question">Question précédente</button>
@@ -833,7 +1181,7 @@
             <div class="answer-box" id="user-answer-box"></div>
           </article>
           <article>
-            <h3>Réponse modèle détaillée</h3>
+            <h3>Réponse modèle synthétique</h3>
             <div class="model-box" id="model-answer-box"></div>
           </article>
         </div>
@@ -843,10 +1191,30 @@
           <ul class="checklist" id="checklist"></ul>
         </article>
 
+        <article class="structured-answer">
+          <h3>Réponse modèle structurée en 3 parties</h3>
+          <div id="structured-model-answer"></div>
+        </article>
+
+        <article class="common-errors-box">
+          <h3>Erreurs fréquentes à éviter</h3>
+          <ul class="common-errors-list" id="common-errors"></ul>
+        </article>
+
+        <article class="documents-highlight">
+          <h3>Extrait du dossier à exploiter</h3>
+          <div id="highlighted-docs"></div>
+        </article>
+
+        <article class="score-breakdown-box">
+          <h3>Score détaillé sur 5 points</h3>
+          <ul class="score-breakdown" id="score-breakdown"></ul>
+        </article>
+
         <div class="score-card">
           <div>
             <span>Score indicatif de la question</span>
-            <small>Barème : 5 points clés attendus</small>
+            <small>Barème : identification, actions, dossier, rôle GPX, argumentation</small>
             <strong id="question-score">0/5</strong>
           </div>
           <div>
@@ -860,14 +1228,44 @@
           <p id="personal-advice"></p>
         </article>
 
-        <article class="documents-highlight">
-          <h3>Documents du dossier à exploiter</h3>
-          <div id="highlighted-docs"></div>
-        </article>
-
         <div class="correction-actions">
           <button class="secondary-button" type="button" id="retry-question">Modifier ma réponse</button>
           <button class="primary-button" type="button" id="next-question">Question suivante</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-score-panel" id="final-score-screen" aria-live="polite">
+      <div class="correction-panel__header">
+        <p class="hero__label">Bilan du cas pratique</p>
+        <h2>Score final</h2>
+      </div>
+      <div class="final-score-body">
+        <div class="final-score-grid">
+          <article class="final-score-card">
+            <span>Score concours</span>
+            <strong id="final-score-50">0/50</strong>
+          </article>
+          <article class="final-score-card">
+            <span>Conversion</span>
+            <strong id="final-score-20">0/20</strong>
+          </article>
+          <article class="final-score-card">
+            <span>Orthographe estimée</span>
+            <strong id="final-spelling-score">0/5</strong>
+          </article>
+        </div>
+
+        <div class="final-message" id="final-score-message"></div>
+
+        <article class="score-breakdown-box">
+          <h3>Détail du barème concours</h3>
+          <ul class="score-breakdown" id="final-score-breakdown"></ul>
+        </article>
+
+        <div class="correction-actions">
+          <button class="secondary-button" type="button" id="final-home">← Revenir à l'accueil</button>
+          <button class="ghost-button" type="button" id="download-final">Télécharger mes réponses (PDF)</button>
         </div>
       </div>
     </section>
@@ -920,6 +1318,14 @@
           {
             title: "Document 5 - Dispositifs de protection des victimes",
             text: "L'accueil de la victime implique la mise en sécurité, la prise de plainte, l'orientation vers une unité médico-judiciaire, l'information du parquet et l'orientation vers les associations d'aide aux victimes."
+          },
+          {
+            title: "Document 6 - Article 15-3 du Code de procédure pénale",
+            text: "Les officiers et agents de police judiciaire sont tenus de recevoir les plaintes déposées par les victimes d'infractions et de les transmettre, le cas échéant, au service territorialement compétent."
+          },
+          {
+            title: "Document 7 - Évaluation du danger en violences conjugales",
+            text: "L'accueil d'une victime de violences conjugales se fait dans un cadre confidentiel. L'évaluation du danger peut s'appuyer sur une grille de questions portant notamment sur la répétition des violences, les menaces, la présence d'enfants, l'isolement et les besoins médicaux ou sociaux."
           }
         ],
         questions: [
@@ -939,15 +1345,15 @@
           {
             title: "Question 2 - Actions immédiates",
             prompt: "Quelles actions concrètes menez-vous en priorité à l'accueil du commissariat ?",
-            model: "La priorité est la mise en sécurité d'ALPHA et de l'enfant. Je l'isole de BRAVO dans un espace calme, je préviens immédiatement ma hiérarchie et je fais en sorte que BRAVO ne puisse pas entrer en contact avec elle. Je recueille les premiers éléments sans la brusquer, je constate les traces visibles, je propose le dépôt de plainte et je rappelle que son hésitation ne doit pas empêcher la protection. Je demande une évaluation médicale ou une orientation vers l'unité médico-judiciaire pour fixer l'ITT. J'informe l'officier de police judiciaire, puis le parquet selon la procédure interne. J'oriente ALPHA vers les dispositifs d'aide aux victimes et je consigne les appels de BRAVO ainsi que le signalement de CHARLIE.",
+            model: "La priorité est la mise en sécurité d'ALPHA et de l'enfant. Je l'isole de BRAVO dans un espace calme et confidentiel, je préviens immédiatement ma hiérarchie et je fais en sorte que BRAVO ne puisse pas entrer en contact avec elle. Je recueille les premiers éléments sans la brusquer, je constate les traces visibles, je propose le dépôt de plainte et je rappelle l'obligation de recevoir sa plainte au regard de l'article 15-3 du CPP. J'évalue le danger avec les éléments du dossier, notamment la répétition des violences, les menaces, l'isolement et la présence de l'enfant. Je demande une évaluation médicale ou une orientation vers l'unité médico-judiciaire pour fixer l'ITT. J'informe l'officier de police judiciaire, puis le parquet selon la procédure interne. J'oriente ALPHA vers les associations d'aide aux victimes et je consigne les appels de BRAVO ainsi que le signalement de CHARLIE.",
             keypoints: [
-              { label: "Mise en sécurité de la victime et de l'enfant", keywords: ["securite", "enfant", "isole"] },
-              { label: "Information de la hiérarchie ou de l'OPJ", keywords: ["hierarchie", "opj", "officier"] },
-              { label: "Recueil de plainte et constat des traces", keywords: ["plainte", "trace", "constat"] },
-              { label: "Orientation médicale ou UMJ pour l'ITT", keywords: ["umj", "medical", "itt"] },
-              { label: "Orientation vers aide aux victimes", keywords: ["victime", "association", "aide"] }
+              { label: "A mentionné la mise en confidentialité de l'entretien", keywords: ["confidentiel", "espace calme", "isole"] },
+              { label: "A cité l'article 15-3 du CPP sur la réception de plainte", keywords: ["15-3", "plainte", "recevoir"] },
+              { label: "A séparé la victime de BRAVO et protégé l'enfant", keywords: ["bravo", "separe", "enfant"] },
+              { label: "A évoqué l'évaluation du danger", keywords: ["danger", "evaluation", "menaces"] },
+              { label: "A mentionné les associations d'aide aux victimes et l'accompagnement médical", keywords: ["association", "medical", "umj"] }
             ],
-            docs: ["Document 4", "Document 5"]
+            docs: ["Document 4", "Document 5", "Document 6", "Document 7"]
           },
           {
             title: "Question 3 - Gestion de BRAVO devant le commissariat",
@@ -1435,6 +1841,46 @@
       }
     };
 
+    const methodologyAdvice = {
+      qualification: {
+        label: "Qualification des faits",
+        tips: [
+          "→ Identifiez l'infraction commise",
+          "→ Citez l'article de loi du dossier",
+          "→ Précisez les éléments constitutifs de l'infraction",
+          "→ Exemple : \"Les faits constituent une agression sexuelle au sens de l'article 222-22 du Code pénal car...\""
+        ]
+      },
+      actions: {
+        label: "Actions à mener",
+        tips: [
+          "→ Listez vos actions dans l'ordre chronologique",
+          "→ Commencez par la sécurisation de la scène",
+          "→ Pensez aux victimes, aux témoins, à l'auteur",
+          "→ N'oubliez pas : rendre compte à votre hiérarchie",
+          "→ Restez dans votre rôle : vous êtes GPX, pas OPJ"
+        ]
+      },
+      procedure: {
+        label: "Procédure",
+        tips: [
+          "→ Décrivez chaque étape dans l'ordre",
+          "→ Citez les textes qui vous y obligent",
+          "→ Pensez aux droits de la personne concernée",
+          "→ Mentionnez les formulaires/documents à rédiger"
+        ]
+      },
+      protection: {
+        label: "Dispositifs de protection",
+        tips: [
+          "→ Cherchez dans le dossier documentaire",
+          "→ Citez les dispositifs par leur nom officiel",
+          "→ Expliquez le fonctionnement de chaque dispositif",
+          "→ Précisez les conditions d'accès"
+        ]
+      }
+    };
+
     const state = {
       mode: null,
       items: [],
@@ -1448,8 +1894,10 @@
     };
 
     const homeScreen = document.getElementById("home-screen");
+    const methodologyScreen = document.getElementById("methodology-screen");
     const exerciseScreen = document.getElementById("exercise-screen");
     const correctionScreen = document.getElementById("correction-screen");
+    const finalScoreScreen = document.getElementById("final-score-screen");
     const examplesScreen = document.getElementById("examples-screen");
     const caseSelector = document.getElementById("case-selector");
     const caseGrid = document.getElementById("case-grid");
@@ -1468,6 +1916,11 @@
       answerInput: document.getElementById("answer-input"),
       wordCount: document.getElementById("word-count"),
       autosaveStatus: document.getElementById("autosave-status"),
+      contextHelp: document.getElementById("context-help"),
+      contextHelpToggle: document.getElementById("context-help-toggle"),
+      contextHelpToggleLabel: document.getElementById("context-help-toggle-label"),
+      contextHelpType: document.getElementById("context-help-type"),
+      contextHelpList: document.getElementById("context-help-list"),
       documentList: document.getElementById("document-list"),
       previousQuestion: document.getElementById("previous-question"),
       nextQuestion: document.getElementById("next-question")
@@ -1477,8 +1930,12 @@
       button.addEventListener("click", () => handleMode(button.dataset.mode));
     });
 
+    document.getElementById("methodology-home").addEventListener("click", showHome);
+    document.getElementById("methodology-start").addEventListener("click", continueAfterMethodology);
+    document.getElementById("methodology-skip").addEventListener("click", continueAfterMethodology);
     document.getElementById("back-to-home").addEventListener("click", showHome);
     document.getElementById("examples-home").addEventListener("click", showHome);
+    document.getElementById("final-home").addEventListener("click", showHome);
     document.getElementById("open-documents").addEventListener("click", () => documentPanel.classList.add("is-open"));
     document.getElementById("close-documents").addEventListener("click", () => documentPanel.classList.remove("is-open"));
     document.getElementById("validate-answer").addEventListener("click", validateAnswer);
@@ -1488,6 +1945,13 @@
     document.getElementById("download-home").addEventListener("click", downloadPdf);
     document.getElementById("download-exercise").addEventListener("click", downloadPdf);
     document.getElementById("download-examples").addEventListener("click", downloadPdf);
+    document.getElementById("download-final").addEventListener("click", downloadPdf);
+
+    elements.contextHelpToggle.addEventListener("click", () => {
+      const isCollapsed = elements.contextHelp.classList.toggle("is-collapsed");
+      elements.contextHelpToggle.setAttribute("aria-expanded", String(!isCollapsed));
+      elements.contextHelpToggleLabel.textContent = isCollapsed ? "Afficher" : "Réduire";
+    });
 
     elements.answerInput.addEventListener("input", () => {
       const key = getCurrentKey();
@@ -1568,8 +2032,29 @@
       }
 
       homeScreen.classList.add("hidden");
+      methodologyScreen.classList.remove("is-visible");
       examplesScreen.classList.remove("is-visible");
+      finalScoreScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");
+      exerciseScreen.classList.remove("is-visible");
+      showMethodologyScreen();
+    }
+
+    function showMethodologyScreen() {
+      stopTimer();
+      const { caseItem } = getCurrentCaseAndQuestion();
+      document.getElementById("methodology-case-label").textContent = `Avant de commencer : ${caseItem.title}. Reprenez les 4 réflexes attendus au concours.`;
+      homeScreen.classList.add("hidden");
+      exerciseScreen.classList.remove("is-visible");
+      correctionScreen.classList.remove("is-visible");
+      examplesScreen.classList.remove("is-visible");
+      finalScoreScreen.classList.remove("is-visible");
+      methodologyScreen.classList.add("is-visible");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function continueAfterMethodology() {
+      methodologyScreen.classList.remove("is-visible");
       exerciseScreen.classList.add("is-visible");
       renderCurrentQuestion();
       startTimer();
@@ -1618,6 +2103,7 @@
       `;
       elements.questionTitle.textContent = question.title;
       elements.questionPrompt.textContent = question.prompt;
+      renderContextHelp(caseItem, question);
       elements.answerInput.value = state.answers[key] || "";
       elements.documentList.innerHTML = caseItem.documents.map((doc) => `
         <article class="doc-card">
@@ -1632,6 +2118,26 @@
       updateScoreDisplay();
       saveSession();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getQuestionType(caseItem, question) {
+      const text = normalizeText(`${caseItem.theme} ${question.title} ${question.prompt}`);
+      if (text.includes("dispositif") || text.includes("protection des victimes")) {
+        return "protection";
+      }
+      if (text.includes("qualification") || text.includes("qualifiez") || text.includes("infractions") || text.includes("infraction")) {
+        return "qualification";
+      }
+      if (text.includes("procedure") || text.includes("compte rendu") || text.includes("ecrit") || text.includes("redigez") || text.includes("redaction") || text.includes("suite procedurale")) {
+        return "procedure";
+      }
+      return "actions";
+    }
+
+    function renderContextHelp(caseItem, question) {
+      const advice = methodologyAdvice[getQuestionType(caseItem, question)];
+      elements.contextHelpType.textContent = advice.label;
+      elements.contextHelpList.innerHTML = advice.tips.map((tip) => `<li>${escapeHtml(tip)}</li>`).join("");
     }
 
     function updateWordCount() {
@@ -1650,9 +2156,8 @@
         const found = point.keywords.some((keyword) => normalizedAnswer.includes(normalizeText(keyword)));
         return { ...point, found };
       });
-      const foundCount = checklist.filter((point) => point.found).length;
-      const lengthBonus = answer.split(/\s+/).filter(Boolean).length >= 80 ? 0 : -1;
-      const score = Math.max(0, Math.min(5, foundCount + lengthBonus));
+      const scoreDetails = buildScoreDetails(answer, question, checklist);
+      const score = scoreDetails.filter((criterion) => criterion.earned).length;
       state.scores[key] = score;
       saveSession();
 
@@ -1661,19 +2166,155 @@
       document.getElementById("model-answer-box").textContent = question.model;
       document.getElementById("checklist").innerHTML = checklist.map((point) => `
         <li>
+          <input type="checkbox" ${point.found ? "checked" : ""} disabled aria-label="${escapeHtml(point.label)}">
           <span class="${point.found ? "found" : "missed"}" aria-hidden="true">${point.found ? "✅" : "❌"}</span>
           <span>${point.label}</span>
+        </li>
+      `).join("");
+      document.getElementById("structured-model-answer").innerHTML = buildStructuredModel(question);
+      document.getElementById("common-errors").innerHTML = buildCommonErrors(getQuestionType(caseItem, question)).map((error) => `
+        <li>
+          <strong>❌ Ne pas dire : ${escapeHtml(error.bad)}</strong>
+          <span>✅ Dire : ${escapeHtml(error.good)}</span>
+        </li>
+      `).join("");
+      document.getElementById("highlighted-docs").innerHTML = buildDocumentHighlights(caseItem, question);
+      document.getElementById("score-breakdown").innerHTML = scoreDetails.map((criterion) => `
+        <li>
+          <span>${criterion.label}</span>
+          <span class="score-breakdown__status">${criterion.earned ? "1/1" : "0/1"}</span>
         </li>
       `).join("");
       document.getElementById("question-score").textContent = `${score}/5`;
       document.getElementById("score-converted").textContent = `${calculateConvertedScore().score20}/20`;
       document.getElementById("personal-advice").textContent = buildAdvice(score, answer, checklist);
-      document.getElementById("highlighted-docs").innerHTML = question.docs.map((docName) => `<p><strong>${docName}</strong> : à citer ou exploiter explicitement pour justifier votre raisonnement.</p>`).join("");
 
       exerciseScreen.classList.remove("is-visible");
       correctionScreen.classList.add("is-visible");
       updateScoreDisplay();
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function buildScoreDetails(answer, question, checklist) {
+      const normalizedAnswer = normalizeText(answer);
+      const words = answer.trim().split(/\s+/).filter(Boolean).length;
+      const hasChronology = /\b(d'abord|ensuite|puis|enfin|priorite|chronologique|avant|apres)\b/.test(normalizedAnswer);
+      const hasDocumentReference = /\b(document|article|code|cpp|csi|penal|r\.\d+|\d{2,3}-\d+)\b/.test(normalizedAnswer);
+      const hasGpxRole = /\b(gpx|gardien|opj|hierarchie|parquet|rend compte|rendre compte|transmet|avise|informe)\b/.test(normalizedAnswer);
+      const hasArgumentation = words >= 80 && /\b(car|afin|pour|donc|ainsi|ce qui|permet)\b/.test(normalizedAnswer);
+
+      return [
+        {
+          label: "1 point : Identification correcte de la situation",
+          earned: checklist.some((point) => point.found)
+        },
+        {
+          label: "1 point : Actions dans le bon ordre",
+          earned: hasChronology || checklist.filter((point) => point.found).length >= 3
+        },
+        {
+          label: "1 point : Références au dossier documentaire",
+          earned: hasDocumentReference
+        },
+        {
+          label: "1 point : Respect du rôle de GPX",
+          earned: hasGpxRole
+        },
+        {
+          label: "1 point : Qualité de l'argumentation",
+          earned: hasArgumentation
+        }
+      ];
+    }
+
+    function splitModelSentences(model) {
+      const sentences = model.match(/[^.!?]+[.!?]+/g);
+      return sentences && sentences.length ? sentences.map((sentence) => sentence.trim()) : [model];
+    }
+
+    function buildStructuredModel(question) {
+      const sentences = splitModelSentences(question.model);
+      const introduction = sentences[0] || question.model;
+      const conclusion = sentences.length > 2 ? sentences[sentences.length - 1] : "Je termine par un compte rendu neutre, chronologique et transmis à la hiérarchie ou à l'OPJ selon la procédure.";
+      const development = sentences.length > 2 ? sentences.slice(1, -1).join(" ") : question.model;
+
+      return `
+        <div class="structured-answer__part">
+          <h4>Introduction : qualification de la situation</h4>
+          <p>${escapeHtml(introduction)}</p>
+        </div>
+        <div class="structured-answer__part">
+          <h4>Développement : actions dans l'ordre chronologique</h4>
+          <p>${escapeHtml(development)}</p>
+        </div>
+        <div class="structured-answer__part">
+          <h4>Conclusion : transmission à la hiérarchie / suites</h4>
+          <p>${escapeHtml(conclusion)}</p>
+        </div>
+      `;
+    }
+
+    function buildCommonErrors(type) {
+      const errors = {
+        qualification: [
+          {
+            bad: "\"Il est coupable, il faut le condamner.\"",
+            good: "\"Les faits sont susceptibles de recevoir telle qualification au regard de tel article, sous réserve de l'appréciation de l'autorité judiciaire.\""
+          },
+          {
+            bad: "\"C'est grave\" sans citer le dossier.",
+            good: "\"Je qualifie les faits avec l'article du dossier et je rattache chaque élément aux faits observés.\""
+          }
+        ],
+        actions: [
+          {
+            bad: "\"J'appellerais les secours.\"",
+            good: "\"Je contacte le SAMU via le 15 afin d'obtenir une prise en charge adaptée car la victime présente des signes de blessure ou de choc.\""
+          },
+          {
+            bad: "\"Je règle seul la situation.\"",
+            good: "\"Je sécurise, je rends compte à ma hiérarchie et j'avise l'OPJ lorsque la procédure l'exige.\""
+          }
+        ],
+        procedure: [
+          {
+            bad: "\"Je rédige un rapport\" sans contenu précis.",
+            good: "\"Je rédige un compte rendu chronologique mentionnant heure, lieu, déclarations, constatations, témoins, mesures prises et textes exploités.\""
+          },
+          {
+            bad: "\"Je place en garde à vue.\"",
+            good: "\"J'avise l'OPJ : les décisions de garde à vue et les actes d'enquête relèvent de son cadre procédural.\""
+          }
+        ],
+        protection: [
+          {
+            bad: "\"Je conseille simplement à la victime de rentrer chez elle.\"",
+            good: "\"Je recherche dans le dossier les dispositifs de protection, j'en explique les conditions et j'oriente la victime vers les interlocuteurs compétents.\""
+          },
+          {
+            bad: "\"Je promets une solution immédiate.\"",
+            good: "\"Je présente les dispositifs officiels, leurs limites et les démarches à engager avec l'OPJ, le parquet ou les associations.\""
+          }
+        ]
+      };
+
+      return errors[type] || errors.actions;
+    }
+
+    function buildDocumentHighlights(caseItem, question) {
+      return question.docs.map((docName) => {
+        const documentItem = caseItem.documents.find((doc) => doc.title.includes(docName));
+        if (!documentItem) {
+          return `<p><strong>${escapeHtml(docName)}</strong> : à citer ou exploiter explicitement pour justifier votre raisonnement.</p>`;
+        }
+
+        return `
+          <article class="doc-card">
+            <h4>${escapeHtml(documentItem.title)}</h4>
+            <p><mark>${escapeHtml(documentItem.text)}</mark></p>
+          </article>
+        `;
+      }).join("");
     }
 
     function buildAdvice(score, answer, checklist) {
@@ -1700,11 +2341,16 @@
     function goNext() {
       if (state.currentIndex >= state.items.length - 1) {
         saveProgressionResult();
-        showHome();
+        showFinalScore();
         return;
       }
+      const previousCaseId = getCurrentItem().caseId;
       state.currentIndex += 1;
       correctionScreen.classList.remove("is-visible");
+      if (getCurrentItem().caseId !== previousCaseId) {
+        showMethodologyScreen();
+        return;
+      }
       exerciseScreen.classList.add("is-visible");
       renderCurrentQuestion();
     }
@@ -1723,6 +2369,91 @@
       const score50 = totalPossible ? Math.round((raw / totalPossible) * 50) : 0;
       const score20 = totalPossible ? Math.round((raw / totalPossible) * 20 * 10) / 10 : 0;
       return { raw, totalPossible, score50, score20 };
+    }
+
+    function calculateSpellingScore() {
+      const answers = Object.values(state.answers).filter(Boolean);
+      if (!answers.length) {
+        return 0;
+      }
+
+      const text = answers.join(" ");
+      const words = text.trim().split(/\s+/).filter(Boolean).length;
+      let score = 5;
+
+      if (words < state.items.length * 60) {
+        score -= 1;
+      }
+      if ((text.match(/[.!?]/g) || []).length < answers.length) {
+        score -= 1;
+      }
+      if ((text.match(/\b[a-zàâçéèêëîïôûùüÿñæœ]{18,}\b/gi) || []).length > answers.length) {
+        score -= 1;
+      }
+
+      return Math.max(0, score);
+    }
+
+    function calculateFinalScore() {
+      const convertedScore = calculateConvertedScore();
+      const spellingScore = calculateSpellingScore();
+      const caseScore45 = convertedScore.totalPossible ? Math.round((convertedScore.raw / convertedScore.totalPossible) * 45 * 10) / 10 : 0;
+      const score50 = Math.min(50, Math.round((caseScore45 + spellingScore) * 10) / 10);
+      const score20 = Math.round((score50 / 50) * 20 * 10) / 10;
+      return {
+        ...convertedScore,
+        caseScore45,
+        spellingScore,
+        score50,
+        score20
+      };
+    }
+
+    function getFinalMessage(score20) {
+      if (score20 < 5) {
+        return "⚠️ Note éliminatoire - Travaillez la méthode";
+      }
+      if (score20 < 10) {
+        return "Insuffisant - Relisez la méthodologie";
+      }
+      if (score20 < 14) {
+        return "Correct - Continuez à vous entraîner";
+      }
+      if (score20 <= 17) {
+        return "Bien - Vous êtes sur la bonne voie !";
+      }
+      return "Excellent - Niveau concours atteint ! 🏆";
+    }
+
+    function showFinalScore() {
+      stopTimer();
+      const finalScore = calculateFinalScore();
+      methodologyScreen.classList.remove("is-visible");
+      exerciseScreen.classList.remove("is-visible");
+      correctionScreen.classList.remove("is-visible");
+      examplesScreen.classList.remove("is-visible");
+      homeScreen.classList.add("hidden");
+      finalScoreScreen.classList.add("is-visible");
+
+      document.getElementById("final-score-50").textContent = `${finalScore.score50}/50`;
+      document.getElementById("final-score-20").textContent = `${finalScore.score20}/20`;
+      document.getElementById("final-spelling-score").textContent = `${finalScore.spellingScore}/5`;
+      document.getElementById("final-score-message").textContent = getFinalMessage(finalScore.score20);
+      document.getElementById("final-score-breakdown").innerHTML = `
+        <li>
+          <span>Cas pratiques : 15 × 3 cas = 45 points</span>
+          <span class="score-breakdown__status">${finalScore.caseScore45}/45</span>
+        </li>
+        <li>
+          <span>Orthographe, syntaxe et lisibilité : 5 points</span>
+          <span class="score-breakdown__status">${finalScore.spellingScore}/5</span>
+        </li>
+        <li>
+          <span>Total final converti</span>
+          <span class="score-breakdown__status">${finalScore.score50}/50 soit ${finalScore.score20}/20</span>
+        </li>
+      `;
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function saveProgressionResult() {
@@ -1761,6 +2492,7 @@
     }
 
     function startTimer() {
+      stopTimer();
       renderTimer();
       state.timerId = window.setInterval(() => {
         state.remainingSeconds = Math.max(0, state.remainingSeconds - 1);
@@ -1812,8 +2544,10 @@
 
     function showHome() {
       stopTimer();
+      methodologyScreen.classList.remove("is-visible");
       exerciseScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");
+      finalScoreScreen.classList.remove("is-visible");
       examplesScreen.classList.remove("is-visible");
       homeScreen.classList.remove("hidden");
       updateScoreDisplay();
@@ -1823,8 +2557,10 @@
     function showExamples() {
       stopTimer();
       homeScreen.classList.add("hidden");
+      methodologyScreen.classList.remove("is-visible");
       exerciseScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");
+      finalScoreScreen.classList.remove("is-visible");
       examplesScreen.classList.add("is-visible");
       document.getElementById("examples-list").innerHTML = cases.map((caseItem) => {
         const question = caseItem.questions[0];
@@ -1857,7 +2593,7 @@
           </section>
         `;
       }).join("") : "<p>Aucune réponse enregistrée pour le moment.</p>";
-      const score = calculateConvertedScore();
+      const score = calculateFinalScore();
       const printWindow = window.open("", "_blank");
       if (!printWindow) {
         alert("Autorisez les fenêtres pop-up pour générer le PDF, puis utilisez l'option Enregistrer au format PDF.");
@@ -1877,7 +2613,8 @@
         </head>
         <body>
           <h1>Résolution de Cas Pratiques - Mes réponses</h1>
-          <p><strong>Score global :</strong> ${score.score50}/50, soit ${score.score20}/20.</p>
+          <p><strong>Score final estimé :</strong> ${score.score50}/50, soit ${score.score20}/20.</p>
+          <p><strong>Détail :</strong> cas pratiques ${score.caseScore45}/45 + orthographe ${score.spellingScore}/5.</p>
           ${printableAnswers}
           <script>window.print();<\/script>
         </body>

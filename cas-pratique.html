@@ -382,6 +382,10 @@
       padding-left: 20px;
     }
 
+    .steps-list p {
+      margin: 0 0 8px;
+    }
+
     .steps-list li + li {
       margin-top: 8px;
     }
@@ -442,6 +446,10 @@
     }
 
     .document-toggle {
+      display: inline-flex;
+    }
+
+    #close-documents {
       display: none;
     }
 
@@ -614,7 +622,7 @@
         max-height: none;
       }
 
-      .document-toggle {
+      #close-documents {
         display: inline-flex;
       }
     }
@@ -838,6 +846,7 @@
         <div class="score-card">
           <div>
             <span>Score indicatif de la question</span>
+            <small>Barème : 5 points clés attendus</small>
             <strong id="question-score">0/5</strong>
           </div>
           <div>
@@ -1497,6 +1506,15 @@
         .replace(/[’']/g, " ");
     }
 
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     function handleMode(mode) {
       if (mode === "examples") {
         showExamples();
@@ -1542,6 +1560,7 @@
       if (saved) {
         state.answers = saved.answers || {};
         state.scores = saved.scores || {};
+        state.currentIndex = Number.isFinite(saved.currentIndex) && saved.currentIndex < state.items.length ? saved.currentIndex : 0;
         state.remainingSeconds = Number.isFinite(saved.remainingSeconds) ? saved.remainingSeconds : state.remainingSeconds;
       }
 
@@ -1589,7 +1608,10 @@
       elements.situationBox.innerHTML = `
         <h3>Mise en situation</h3>
         <p><strong>Commissariat de Xville - rôle : gardien(ne) de la paix.</strong></p>
-        <ol class="steps-list">${caseItem.situation.map((step) => `<li>${step}</li>`).join("")}</ol>
+        <div class="steps-list">${caseItem.situation.map((step, index) => `
+          <p>${step}</p>
+          ${index < caseItem.situation.length - 1 ? "<p><strong>**</strong></p>" : ""}
+        `).join("")}</div>
       `;
       elements.questionTitle.textContent = question.title;
       elements.questionPrompt.textContent = question.prompt;
@@ -1791,12 +1813,12 @@
         const key = `${item.caseId}-${item.questionIndex}`;
         return `
           <section>
-            <h2>${index + 1}. ${caseItem.title} - ${question.title}</h2>
-            <p><strong>Question :</strong> ${question.prompt}</p>
+            <h2>${index + 1}. ${escapeHtml(caseItem.title)} - ${escapeHtml(question.title)}</h2>
+            <p><strong>Question :</strong> ${escapeHtml(question.prompt)}</p>
             <h3>Ma réponse</h3>
-            <p>${(state.answers[key] || "Non renseignée").replace(/\n/g, "<br>")}</p>
+            <p>${escapeHtml(state.answers[key] || "Non renseignée").replace(/\n/g, "<br>")}</p>
             <h3>Réponse modèle</h3>
-            <p>${question.model}</p>
+            <p>${escapeHtml(question.model)}</p>
             <p><strong>Score indicatif :</strong> ${state.scores[key] ?? 0}/5</p>
           </section>
         `;

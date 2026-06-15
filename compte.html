@@ -30,7 +30,7 @@
     <section id="logged-out-view" class="auth-grid" aria-label="Connexion et inscription">
       <article class="auth-card">
         <h2>Créer un compte</h2>
-        <p class="auth-card__intro">Nom, prénom, e-mail et mot de passe. Sans abonnement : <strong>1 petit test gratuit</strong> (mini test ou question isolée).</p>
+        <p class="auth-card__intro">Nom, prénom, e-mail, téléphone et mot de passe. Sans abonnement : <strong>1 petit test gratuit</strong> (mini test ou question isolée).</p>
         <form id="register-form" class="auth-form" novalidate>
           <label>
             Prénom
@@ -43,6 +43,10 @@
           <label>
             Adresse e-mail
             <input type="email" name="email" required autocomplete="email">
+          </label>
+          <label>
+            Numéro de téléphone
+            <input type="tel" name="phone" required autocomplete="tel" placeholder="06 12 34 56 78">
           </label>
           <label>
             Mot de passe (8 caractères minimum)
@@ -149,6 +153,7 @@
           firstName: form.firstName.value,
           lastName: form.lastName.value,
           email: form.email.value,
+          phone: form.phone.value,
           password: form.password.value
         });
         if (result.emailConfirmationRequired) {

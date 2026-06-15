@@ -9,6 +9,8 @@ window.GPX_SUPABASE = {
 };
 
 window.GPX_STRIPE = {
-  paymentLinkMonthly: "",
-  paymentLinkYearly: ""
+  /** Affichage tarifs (le montant réel est configuré côté Stripe / Edge Function). */
+  monthlyPriceLabel: "19,90 €",
+  monthlyPriceCents: 1990,
+  currency: "EUR"
 };

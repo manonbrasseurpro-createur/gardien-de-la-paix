@@ -1,5 +1,5 @@
 (function () {
-  const PUBLIC_PAGES = new Set(["index.html", "compte.html", "tarifs.html"]);
+  const PUBLIC_PAGES = new Set(["index.html", "compte.html", "tarifs.html", "confirmation.html"]);
 
   /** Modes « petits tests » : un seul essai gratuit pour les comptes sans abonnement. */
   const SMALL_TEST_MODES = {

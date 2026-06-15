@@ -63,6 +63,7 @@
       email: profile.email || fallbackEmail || "",
       firstName: profile.first_name || profile.firstName || "",
       lastName: profile.last_name || profile.lastName || "",
+      phone: profile.phone || "",
       subscriptionStatus: profile.subscription_status || profile.subscriptionStatus || "none",
       subscriptionEndsAt: profile.subscription_ends_at || profile.subscriptionEndsAt || null,
       freeTrialUsed: Boolean(profile.free_trial_used ?? profile.freeTrialUsed),
@@ -127,6 +128,27 @@
     return normalizedEmail;
   }
 
+  function normalizePhone(phone) {
+    const trimmed = String(phone || "").trim();
+    if (!trimmed) {
+      throw new Error("Le numéro de téléphone est obligatoire.");
+    }
+    const digits = trimmed.replace(/\D/g, "");
+    if (digits.length < 10) {
+      throw new Error("Numéro de téléphone invalide (10 chiffres minimum).");
+    }
+    return trimmed;
+  }
+
+  async function saveProfilePhone(userId, phone) {
+    const client = getSupabaseClient();
+    const { error } = await client.from("profiles").update({ phone }).eq("id", userId);
+    if (error) {
+      console.warn("[GPX Auth] profiles.phone update:", error);
+      throw new Error(error.message);
+    }
+  }
+
   async function profileFromAuthUser(client, userId, fallbackEmail) {
     const { data, error } = await client.auth.getUser();
     if (error) {
@@ -139,7 +161,8 @@
         id: userId,
         email: user?.email || fallbackEmail,
         first_name: meta.first_name || "",
-        last_name: meta.last_name || ""
+        last_name: meta.last_name || "",
+        phone: meta.phone || ""
       },
       fallbackEmail
     );
@@ -171,7 +194,7 @@
     }
   }
 
-  async function register({ firstName, lastName, email, password }) {
+  async function register({ firstName, lastName, email, phone, password }) {
     const normalizedEmail = validateCredentials({
       firstName,
       lastName,
@@ -179,6 +202,7 @@
       password,
       requireName: true
     });
+    const normalizedPhone = normalizePhone(phone);
 
     const client = getSupabaseClient();
     console.info("[GPX Auth] signUp…", { email: normalizedEmail });
@@ -189,7 +213,8 @@
       options: {
         data: {
           first_name: String(firstName).trim(),
-          last_name: String(lastName).trim()
+          last_name: String(lastName).trim(),
+          phone: normalizedPhone
         }
       }
     });
@@ -208,6 +233,10 @@
       session: Boolean(data.session)
     });
 
+    if (data.session) {
+      await saveProfilePhone(data.user.id, normalizedPhone);
+    }
+
     const profile = data.session
       ? await fetchProfile(data.user.id, data.user.email)
       : normalizeProfile(
@@ -215,7 +244,8 @@
             id: data.user.id,
             email: data.user.email,
             first_name: String(firstName).trim(),
-            last_name: String(lastName).trim()
+            last_name: String(lastName).trim(),
+            phone: normalizedPhone
           },
           data.user.email
         );
@@ -302,6 +332,23 @@
     }
   }
 
+  async function getAccessToken() {
+    if (!isSupabaseConfigured() || !resolveCreateClient()) {
+      return null;
+    }
+
+    try {
+      const client = getSupabaseClient();
+      const { data, error } = await client.auth.getSession();
+      if (error) {
+        return null;
+      }
+      return data?.session?.access_token ?? null;
+    } catch (error) {
+      return null;
+    }
+  }
+
   async function updateProfile(userId, patch) {
     const client = getSupabaseClient();
     const dbPatch = {};
@@ -382,6 +429,7 @@
     isLocalMode: () => false,
     isLoggedIn,
     getCurrentUser,
+    getAccessToken,
     register,
     login,
     logout,

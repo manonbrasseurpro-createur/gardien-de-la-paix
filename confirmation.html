@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paiement confirmé — Gardien de la Paix</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Abonnement</p>
+      <h1>Paiement confirmé</h1>
+      <p class="hero__subtitle">Merci pour votre abonnement</p>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <section class="auth-card auth-card--wide" aria-live="polite">
+      <h2>✅ Votre paiement a été accepté</h2>
+      <p id="confirmation-message">
+        Votre abonnement est en cours d'activation. Cela peut prendre quelques secondes.
+      </p>
+      <p id="subscription-detail" class="auth-status"></p>
+      <div class="auth-actions">
+        <a class="primary-button" href="index.html">Commencer l'entraînement</a>
+        <a class="secondary-button" href="compte.html">Mon compte</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    async function refreshStatus() {
+      const messageEl = document.getElementById("confirmation-message");
+      const detailEl = document.getElementById("subscription-detail");
+      const user = await window.GPXAuth.getCurrentUser();
+
+      if (!user) {
+        messageEl.textContent = "Connectez-vous pour vérifier l'activation de votre abonnement.";
+        detailEl.textContent = "";
+        return;
+      }
+
+      const active = window.GPXAuth.hasActiveSubscription(user);
+      if (active) {
+        messageEl.textContent = "Votre abonnement est actif. Tous les tests et simulations sont débloqués.";
+        detailEl.textContent = user.subscriptionEndsAt
+          ? `Valide jusqu'au ${new Date(user.subscriptionEndsAt).toLocaleDateString("fr-FR")}.`
+          : "Abonnement actif.";
+      } else {
+        messageEl.textContent =
+          "Paiement reçu. Si l'abonnement n'apparaît pas encore, patientez quelques instants puis rechargez cette page.";
+        detailEl.textContent = "L'activation est automatique via Stripe.";
+      }
+    }
+
+    refreshStatus();
+    setTimeout(refreshStatus, 4000);
+  </script>
+</body>
+</html>

@@ -49,6 +49,7 @@
             <input type="password" name="password" required minlength="8" autocomplete="new-password">
           </label>
           <button class="primary-button" type="submit">Créer mon compte</button>
+          <p id="register-success" class="auth-success" role="status"></p>
           <p id="register-error" class="auth-error" role="alert"></p>
         </form>
       </article>
@@ -89,10 +90,12 @@
   </main>
 
   <script src="supabase-config.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
   <script src="auth-service.js"></script>
   <script src="access-control.js"></script>
   <script>
+    console.info("[GPX Auth] Diagnostic au chargement:", window.GPXAuth.getDiagnostics());
+
     const params = new URLSearchParams(window.location.search);
     const redirectTarget = params.get("redirect") || "index.html";
 
@@ -102,14 +105,10 @@
     const demoButton = document.getElementById("demo-subscription-button");
     const demoHint = document.getElementById("demo-subscription-hint");
 
-    if (window.GPXAuth.isLocalMode()) {
+    if (!window.GPXAuth.isSupabaseConfigured()) {
       authModeBanner.hidden = false;
       authModeBanner.textContent =
-        "Mode local actif : les comptes sont stockés sur cet appareil. Configurez Supabase dans supabase-config.js pour la production.";
-      demoHint.classList.remove("hidden");
-      demoHint.textContent =
-        "En mode local, vous pouvez activer un abonnement démo pour tester toutes les fonctionnalités.";
-      demoButton.classList.remove("hidden");
+        "Supabase n'est pas configuré. Renseignez supabase-config.js pour activer les comptes.";
     }
 
     async function refreshDashboard() {
@@ -142,16 +141,25 @@
       event.preventDefault();
       const form = event.target;
       const errorEl = document.getElementById("register-error");
+      const successEl = document.getElementById("register-success");
       errorEl.textContent = "";
+      successEl.textContent = "";
       try {
-        await window.GPXAuth.register({
+        const result = await window.GPXAuth.register({
           firstName: form.firstName.value,
           lastName: form.lastName.value,
           email: form.email.value,
           password: form.password.value
         });
+        if (result.emailConfirmationRequired) {
+          successEl.textContent =
+            "Compte créé. Vérifiez votre boîte e-mail et confirmez votre inscription, puis connectez-vous.";
+          form.reset();
+          return;
+        }
         window.location.href = redirectTarget;
       } catch (error) {
+        console.error("[GPX Auth] register failed:", error);
         errorEl.textContent = error.message || "Inscription impossible.";
       }
     });
@@ -168,6 +176,7 @@
         });
         window.location.href = redirectTarget;
       } catch (error) {
+        console.error("[GPX Auth] login failed:", error);
         errorEl.textContent = error.message || "Connexion impossible.";
       }
     });

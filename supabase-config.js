@@ -1,11 +1,11 @@
 /**
  * Configuration Supabase (production).
- * Créez un projet sur https://supabase.com puis renseignez les clés ci-dessous.
- * Sans configuration, le site utilise un mode local (localStorage) pour les tests.
+ * SUPABASE_URL et anonKey (clé publishable sb_publishable_...) sont utilisés par auth-service.js.
  */
 window.GPX_SUPABASE = {
-  url: "",
-  anonKey: ""
+  SUPABASE_URL: "https://ivrafclenoukjhmubrgq.supabase.co",
+  url: "https://ivrafclenoukjhmubrgq.supabase.co",
+  anonKey: "sb_publishable_2qTM2nZuSi54q56juJz1Nw_RDPzMdR6"
 };
 
 window.GPX_STRIPE = {

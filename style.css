@@ -369,6 +369,13 @@ a {
   margin: 0;
 }
 
+.auth-success {
+  color: #0d6832;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.5;
+}
+
 .auth-status {
   margin: 8px 0;
   color: var(--muted);

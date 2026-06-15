@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Remplacez l'URL ci-dessous par votre domaine de production (voir site-seo.js)
+Sitemap: https://votre-domaine.fr/sitemap.xml

@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma progression | Préparation concours gardien de la paix</title>
+  <meta name="description" content="Suivez votre préparation concours GPX : historique des scores, progression par épreuve et tableau de bord pour le concours gardien de la paix.">
+  <meta name="keywords" content="préparation concours GPX, entraînement gardien de la paix, concours gardien de la paix, s'entraîner concours GPX en ligne">
+  <meta name="robots" content="noindex, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <style>
+    .progression-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .progression-panel,
+    .progress-card,
+    .objective-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .progression-panel {
+      padding: 28px;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .back-link,
+    .train-link,
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      min-height: 44px;
+      padding: 10px 16px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .back-link,
+    .secondary-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button,
+    .train-link {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .back-link:hover,
+    .back-link:focus,
+    .train-link:hover,
+    .train-link:focus,
+    .primary-button:hover,
+    .primary-button:focus,
+    .secondary-button:hover,
+    .secondary-button:focus {
+      box-shadow: 0 10px 22px rgba(26, 39, 68, 0.16);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 360px) 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .score-overview {
+      display: grid;
+      gap: 20px;
+      padding: 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+      border-radius: 22px;
+      box-shadow: 0 18px 38px rgba(26, 39, 68, 0.24);
+      text-align: center;
+    }
+
+    .score-circle-large {
+      display: grid;
+      width: min(240px, 70vw);
+      height: min(240px, 70vw);
+      margin: 0 auto;
+      place-items: center;
+      border: 14px solid rgba(255, 255, 255, 0.18);
+      border-top-color: var(--white);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .score-circle-large strong {
+      display: block;
+      font-size: clamp(2.8rem, 8vw, 4.8rem);
+      line-height: 1;
+    }
+
+    .score-circle-large span {
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .score-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric-box {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 16px;
+    }
+
+    .metric-box strong {
+      display: block;
+      font-size: 1.45rem;
+      line-height: 1.15;
+    }
+
+    .motivation-box {
+      display: grid;
+      gap: 10px;
+      align-content: center;
+      padding: 28px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+    }
+
+    .motivation-box h2,
+    .motivation-box p,
+    .progression-panel h2,
+    .progress-card h3,
+    .objective-card h3 {
+      margin: 0;
+    }
+
+    .motivation-box h2,
+    .progression-panel h2,
+    .progress-card h3,
+    .objective-card h3 {
+      color: var(--navy);
+    }
+
+    .motivation-message {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .section-heading {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-heading p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .progress-card {
+      display: grid;
+      gap: 16px;
+      padding: 22px;
+    }
+
+    .progress-card__title {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-card__title span {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .stats-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .stats-list li {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-list span {
+      color: var(--muted);
+    }
+
+    .mini-chart {
+      display: flex;
+      height: 82px;
+      gap: 7px;
+      align-items: end;
+      padding: 12px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .mini-chart__bar {
+      flex: 1;
+      min-width: 8px;
+      background: linear-gradient(180deg, #4f6287, var(--navy));
+      border-radius: 999px 999px 4px 4px;
+    }
+
+    .empty-note {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .evolution-wrap {
+      overflow-x: auto;
+    }
+
+    .evolution-chart {
+      width: 100%;
+      min-width: 620px;
+      min-height: 300px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .weak-grid,
+    .objectives-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .weak-card,
+    .objective-card {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .weak-card {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .weak-card strong {
+      color: var(--navy);
+      font-size: 1.08rem;
+    }
+
+    .weak-score {
+      display: inline-flex;
+      width: fit-content;
+      padding: 7px 12px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .objectives-panel {
+      display: grid;
+      gap: 18px;
+    }
+
+    .target-date-row {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) 2fr;
+      gap: 18px;
+      align-items: end;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    input:focus {
+      border-color: var(--navy);
+      outline: 3px solid rgba(26, 39, 68, 0.18);
+    }
+
+    .countdown-box {
+      padding: 16px 18px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 16px;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .history-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      background: var(--white);
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      color: var(--white);
+      background: var(--navy);
+      font-size: 0.92rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .score-pill {
+      display: inline-flex;
+      padding: 6px 10px;
+      color: var(--navy);
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 1100px) {
+      .module-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .weak-grid,
+      .objectives-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .dashboard-grid,
+      .target-date-row {
+        grid-template-columns: 1fr;
+      }
+
+      .score-metrics,
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .progression-panel {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Suivi personnel</p>
+      <h1>Ma Progression</h1>
+      <p class="hero__subtitle">Suivez vos résultats, vos objectifs et vos points à travailler.</p>
+    </div>
+  </header>
+
+  <main class="container progression-page">
+    <nav class="top-nav" aria-label="Navigation">
+      <a class="back-link" href="index.html">← Retour à l'accueil</a>
+    </nav>
+
+    <section class="dashboard-grid" aria-labelledby="dashboard-title">
+      <article class="score-overview">
+        <h2 id="dashboard-title">Score global</h2>
+        <div class="score-circle-large" aria-label="Moyenne générale">
+          <div>
+            <strong id="global-score">0%</strong>
+            <span>Moyenne</span>
+          </div>
+        </div>
+        <div class="score-metrics">
+          <div class="metric-box">
+            <strong id="total-tests">0</strong>
+            <span>tests réalisés</span>
+          </div>
+          <div class="metric-box">
+            <strong id="total-duration">0 min</strong>
+            <span>temps total</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="motivation-box">
+        <h2>Message de motivation</h2>
+        <p class="motivation-message" id="motivation-message">Continuez, vous débutez !</p>
+        <p id="dashboard-summary">Lancez un entraînement pour alimenter votre tableau de bord.</p>
+      </article>
+    </section>
+
+    <section class="progression-panel" aria-labelledby="objectives-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="objectives-title">Objectifs personnels</h2>
+          <p>Définissez votre date de concours cible et un objectif de score pour chaque module.</p>
+        </div>
+      </div>
+      <div class="objectives-panel">
+        <div class="target-date-row">
+          <label for="target-date">
+            Date de concours cible
+            <input id="target-date" type="date">
+          </label>
+          <div class="countdown-box" id="countdown">Définissez une date de concours cible.</div>
+        </div>
+        <div class="objectives-grid" id="objectives-grid"></div>
+      </div>
+    </section>
+
+    <section class="progression-panel" aria-labelledby="modules-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="modules-title">Progression par module</h2>
+          <p>Chaque carte affiche les derniers résultats enregistrés automatiquement après vos tests.</p>
+        </div>
+      </div>
+      <div class="module-grid" id="module-grid"></div>
+    </section>
+
+    <section class="progression-panel" aria-labelledby="evolution-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="evolution-title">Graphique d'évolution général</h2>
+          <p>Courbe des 10 derniers tests, toutes épreuves confondues.</p>
+        </div>
+      </div>
+      <div class="evolution-wrap">
+        <svg class="evolution-chart" id="evolution-chart" viewBox="0 0 760 300" role="img" aria-label="Evolution des derniers tests"></svg>
+      </div>
+    </section>
+
+    <section class="progression-panel" aria-labelledby="weak-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="weak-title">Points faibles à travailler</h2>
+          <p>Les 3 catégories où vos scores moyens sont les plus bas.</p>
+        </div>
+      </div>
+      <div class="weak-grid" id="weak-grid"></div>
+    </section>
+
+    <section class="progression-panel" aria-labelledby="history-title">
+      <div class="history-actions">
+        <div>
+          <h2 id="history-title">Historique des sessions</h2>
+          <p class="empty-note" id="history-count">Aucune session enregistrée.</p>
+        </div>
+        <button class="secondary-button" id="clear-history" type="button">Effacer l'historique</button>
+      </div>
+      <div class="history-table-wrap" aria-live="polite">
+        <table>
+          <thead>
+            <tr>
+              <th>Date et heure</th>
+              <th>Module testé</th>
+              <th>Score obtenu</th>
+              <th>Durée de la session</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script src="progression-storage.js"></script>
+  <script>
+    const GOALS_KEY = "gpxProgressionGoals";
+
+    const modules = {
+      psychotechnique: {
+        label: "🧬 Test de Personnalité & Psychotechniques",
+        shortLabel: "Psychotechniques",
+        link: "psychotechnique.html",
+        defaultGoal: 70
+      },
+      "culture-generale": {
+        label: "🇫🇷 Culture Générale",
+        shortLabel: "Culture générale",
+        link: "culture-generale.html",
+        defaultGoal: 70
+      },
+      "langue-etrangere": {
+        label: "🌍 Langue Étrangère",
+        shortLabel: "Langue étrangère",
+        link: "culture-langue.html",
+        defaultGoal: 70
+      },
+      "cas-pratique": {
+        label: "📋 Cas Pratique",
+        shortLabel: "Cas pratique",
+        link: "cas-pratique.html",
+        defaultGoal: 70
+      }
+    };
+
+    const moduleAliases = {
+      psychotechniques: "psychotechnique",
+      personnalite: "psychotechnique",
+      "culture": "culture-generale",
+      "culture-generale": "culture-generale",
+      "langue": "langue-etrangere",
+      "langue-etrangere": "langue-etrangere",
+      "cas-pratique": "cas-pratique"
+    };
+
+    const elements = {
+      globalScore: document.getElementById("global-score"),
+      totalTests: document.getElementById("total-tests"),
+      totalDuration: document.getElementById("total-duration"),
+      motivationMessage: document.getElementById("motivation-message"),
+      dashboardSummary: document.getElementById("dashboard-summary"),
+      moduleGrid: document.getElementById("module-grid"),
+      evolutionChart: document.getElementById("evolution-chart"),
+      weakGrid: document.getElementById("weak-grid"),
+      historyBody: document.getElementById("history-body"),
+      historyCount: document.getElementById("history-count"),
+      clearHistory: document.getElementById("clear-history"),
+      objectivesGrid: document.getElementById("objectives-grid"),
+      targetDate: document.getElementById("target-date"),
+      countdown: document.getElementById("countdown")
+    };
+
+    function readSessions() {
+      return (window.GpxProgression?.readSessions() || [])
+        .map((session) => ({
+          ...session,
+          module: moduleAliases[session.module] || session.module,
+          score: Number(session.score) || 0,
+          total: Number(session.total) || 0,
+          duree: Number(session.duree) || 0,
+          date: session.date || new Date().toISOString()
+        }))
+        .filter((session) => modules[session.module] && session.total > 0);
+    }
+
+    function readGoals() {
+      try {
+        const raw = localStorage.getItem(GOALS_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return {
+          targetDate: parsed.targetDate || "",
+          targets: parsed.targets || {}
+        };
+      } catch (error) {
+        return { targetDate: "", targets: {} };
+      }
+    }
+
+    function saveGoals(goals) {
+      localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+    }
+
+    function percent(session) {
+      return session.total > 0 ? (session.score / session.total) * 100 : 0;
+    }
+
+    function roundedPercent(value) {
+      return `${Math.round(value)}%`;
+    }
+
+    function scoreText(session) {
+      if (!session) {
+        return "Aucun test";
+      }
+      return `${formatScore(session.score)}/${formatScore(session.total)} (${roundedPercent(percent(session))})`;
+    }
+
+    function formatScore(value) {
+      const number = Number(value) || 0;
+      return Number.isInteger(number) ? String(number) : number.toFixed(1).replace(".", ",");
+    }
+
+    function formatDuration(seconds) {
+      const safeSeconds = Math.max(0, Math.round(seconds || 0));
+      const hours = Math.floor(safeSeconds / 3600);
+      const minutes = Math.floor((safeSeconds % 3600) / 60);
+      const remainingSeconds = safeSeconds % 60;
+
+      if (hours > 0) {
+        return `${hours} h ${String(minutes).padStart(2, "0")} min`;
+      }
+      if (minutes > 0) {
+        return `${minutes} min`;
+      }
+      return `${remainingSeconds} s`;
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return value;
+      }
+      return new Intl.DateTimeFormat("fr-FR", {
+        dateStyle: "short",
+        timeStyle: "short"
+      }).format(date);
+    }
+
+    function sortByDateAscending(sessions) {
+      return [...sessions].sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+
+    function sortByDateDescending(sessions) {
+      return [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    function getMotivation(testCount, average) {
+      if (testCount < 5) {
+        return "Continuez, vous débutez !";
+      }
+      if (average > 85) {
+        return "Performance remarquable ! 🏆";
+      }
+      if (average > 70) {
+        return "Excellent niveau, vous êtes prêt(e) !";
+      }
+      if (average >= 50) {
+        return "Bon niveau, continuez ainsi !";
+      }
+      return "Persévérez, vous progressez !";
+    }
+
+    function computeAverage(sessions) {
+      const totals = sessions.reduce((accumulator, session) => {
+        accumulator.score += session.score;
+        accumulator.total += session.total;
+        return accumulator;
+      }, { score: 0, total: 0 });
+
+      return totals.total > 0 ? (totals.score / totals.total) * 100 : 0;
+    }
+
+    function renderDashboard(sessions) {
+      const average = computeAverage(sessions);
+      const totalDuration = sessions.reduce((sum, session) => sum + session.duree, 0);
+
+      elements.globalScore.textContent = roundedPercent(average);
+      elements.totalTests.textContent = sessions.length;
+      elements.totalDuration.textContent = formatDuration(totalDuration);
+      elements.motivationMessage.textContent = getMotivation(sessions.length, average);
+      elements.dashboardSummary.textContent = sessions.length
+        ? `Votre moyenne est calculée sur ${sessions.length} test${sessions.length > 1 ? "s" : ""} enregistré${sessions.length > 1 ? "s" : ""}.`
+        : "Lancez un entraînement pour alimenter votre tableau de bord.";
+    }
+
+    function moduleSessions(sessions, moduleKey) {
+      return sortByDateAscending(sessions.filter((session) => session.module === moduleKey));
+    }
+
+    function renderModules(sessions, goals) {
+      elements.moduleGrid.innerHTML = Object.entries(modules).map(([moduleKey, moduleInfo]) => {
+        const items = moduleSessions(sessions, moduleKey);
+        const last = items[items.length - 1];
+        const best = items.length
+          ? items.reduce((bestSession, session) => percent(session) > percent(bestSession) ? session : bestSession, items[0])
+          : null;
+        const goal = Number(goals.targets[moduleKey] || moduleInfo.defaultGoal);
+        const chartBars = items.slice(-8).map((session) => `
+          <span class="mini-chart__bar" style="height: ${Math.max(6, percent(session))}%;" title="${roundedPercent(percent(session))}"></span>
+        `).join("");
+
+        return `
+          <article class="progress-card">
+            <div class="progress-card__title">
+              <h3>${moduleInfo.label}</h3>
+              <span>Objectif : ${goal}%</span>
+            </div>
+            <ul class="stats-list">
+              <li><span>Dernier score</span><strong>${scoreText(last)}</strong></li>
+              <li><span>Meilleur score</span><strong>${scoreText(best)}</strong></li>
+              <li><span>Tests effectués</span><strong>${items.length}</strong></li>
+            </ul>
+            <div class="mini-chart" aria-label="Graphique d'évolution ${moduleInfo.shortLabel}">
+              ${chartBars || '<p class="empty-note">Aucune donnée</p>'}
+            </div>
+            <a class="train-link" href="${moduleInfo.link}">S'entraîner</a>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderEvolution(sessions) {
+      const latest = sortByDateAscending(sessions).slice(-10);
+      const svg = elements.evolutionChart;
+      const width = 760;
+      const height = 300;
+      const padding = 42;
+      svg.innerHTML = "";
+
+      function add(tag, attributes, text) {
+        const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, value));
+        if (text) {
+          node.textContent = text;
+        }
+        svg.appendChild(node);
+        return node;
+      }
+
+      [0, 25, 50, 75, 100].forEach((value) => {
+        const y = height - padding - ((height - padding * 2) * value / 100);
+        add("line", { x1: padding, y1: y, x2: width - padding, y2: y, stroke: "#d8deea", "stroke-width": "1" });
+        add("text", { x: 12, y: y + 4, fill: "#5d687a", "font-size": "12" }, `${value}%`);
+      });
+
+      if (latest.length === 0) {
+        add("text", { x: width / 2, y: height / 2, fill: "#5d687a", "font-size": "18", "font-weight": "700", "text-anchor": "middle" }, "Aucun test enregistré pour le moment");
+        return;
+      }
+
+      const points = latest.map((session, index) => {
+        const x = latest.length === 1
+          ? width / 2
+          : padding + (index * (width - padding * 2) / (latest.length - 1));
+        const y = height - padding - ((height - padding * 2) * percent(session) / 100);
+        return { x, y, session };
+      });
+
+      add("polyline", {
+        points: points.map((point) => `${point.x},${point.y}`).join(" "),
+        fill: "none",
+        stroke: "#1a2744",
+        "stroke-width": "4",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round"
+      });
+
+      points.forEach((point, index) => {
+        add("circle", { cx: point.x, cy: point.y, r: "6", fill: "#1a2744" });
+        add("text", { x: point.x, y: point.y - 12, fill: "#1a2744", "font-size": "12", "font-weight": "800", "text-anchor": "middle" }, roundedPercent(percent(point.session)));
+        add("text", { x: point.x, y: height - 12, fill: "#5d687a", "font-size": "11", "text-anchor": "middle" }, String(index + 1));
+      });
+    }
+
+    function getWeakPoints(sessions) {
+      const categories = {};
+
+      sessions.forEach((session) => {
+        if (session.categories && typeof session.categories === "object") {
+          Object.entries(session.categories).forEach(([label, result]) => {
+            if (!categories[label]) {
+              categories[label] = {
+                label,
+                score: 0,
+                total: 0,
+                module: session.module
+              };
+            }
+            categories[label].score += Number(result.score) || 0;
+            categories[label].total += Number(result.total) || 0;
+          });
+        }
+      });
+
+      if (Object.keys(categories).length === 0) {
+        Object.keys(modules).forEach((moduleKey) => {
+          const items = sessions.filter((session) => session.module === moduleKey);
+          if (!items.length) {
+            return;
+          }
+          categories[moduleKey] = {
+            label: modules[moduleKey].shortLabel,
+            score: items.reduce((sum, session) => sum + session.score, 0),
+            total: items.reduce((sum, session) => sum + session.total, 0),
+            module: moduleKey
+          };
+        });
+      }
+
+      return Object.values(categories)
+        .filter((item) => item.total > 0)
+        .sort((a, b) => (a.score / a.total) - (b.score / b.total))
+        .slice(0, 3);
+    }
+
+    function renderWeakPoints(sessions) {
+      const weakPoints = getWeakPoints(sessions);
+      if (!weakPoints.length) {
+        elements.weakGrid.innerHTML = '<p class="empty-note">Aucun point faible détecté. Réalisez quelques tests pour obtenir une analyse ciblée.</p>';
+        return;
+      }
+
+      elements.weakGrid.innerHTML = weakPoints.map((item) => {
+        const moduleInfo = modules[item.module] || modules.psychotechnique;
+        const rate = item.total > 0 ? (item.score / item.total) * 100 : 0;
+        return `
+          <article class="weak-card">
+            <strong>${item.label}</strong>
+            <span class="weak-score">${roundedPercent(rate)}</span>
+            <p>Score moyen : ${formatScore(item.score)}/${formatScore(item.total)}</p>
+            <a class="train-link" href="${moduleInfo.link}">Travailler ce point</a>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderHistory(sessions) {
+      const sorted = sortByDateDescending(sessions);
+      elements.historyCount.textContent = sorted.length
+        ? `${sorted.length} session${sorted.length > 1 ? "s" : ""} enregistrée${sorted.length > 1 ? "s" : ""}.`
+        : "Aucune session enregistrée.";
+      elements.historyBody.innerHTML = sorted.length
+        ? sorted.map((session) => `
+          <tr>
+            <td>${formatDate(session.date)}</td>
+            <td>${modules[session.module].shortLabel}</td>
+            <td><span class="score-pill">${scoreText(session)}</span></td>
+            <td>${formatDuration(session.duree)}</td>
+          </tr>
+        `).join("")
+        : '<tr><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
+    }
+
+    function renderObjectives(goals) {
+      elements.targetDate.value = goals.targetDate || "";
+      elements.objectivesGrid.innerHTML = Object.entries(modules).map(([moduleKey, moduleInfo]) => `
+        <article class="objective-card">
+          <h3>${moduleInfo.label}</h3>
+          <label for="goal-${moduleKey}">
+            Objectif de score (%)
+            <input id="goal-${moduleKey}" type="number" min="0" max="100" step="1" value="${Number(goals.targets[moduleKey] || moduleInfo.defaultGoal)}" data-goal="${moduleKey}">
+          </label>
+        </article>
+      `).join("");
+
+      renderCountdown(goals.targetDate);
+      document.querySelectorAll("[data-goal]").forEach((input) => {
+        input.addEventListener("input", () => {
+          const nextGoals = readGoals();
+          nextGoals.targets[input.dataset.goal] = Math.max(0, Math.min(100, Number(input.value) || 0));
+          saveGoals(nextGoals);
+          renderAll();
+        });
+      });
+    }
+
+    function renderCountdown(targetDate) {
+      if (!targetDate) {
+        elements.countdown.textContent = "Définissez une date de concours cible.";
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const target = new Date(`${targetDate}T00:00:00`);
+      const diffDays = Math.ceil((target - today) / 86400000);
+
+      if (Number.isNaN(diffDays)) {
+        elements.countdown.textContent = "Date de concours invalide.";
+        return;
+      }
+
+      if (diffDays > 1) {
+        elements.countdown.textContent = `Il reste ${diffDays} jours avant votre concours.`;
+      } else if (diffDays === 1) {
+        elements.countdown.textContent = "Il reste 1 jour avant votre concours.";
+      } else if (diffDays === 0) {
+        elements.countdown.textContent = "Votre concours est aujourd'hui : restez concentré(e).";
+      } else {
+        elements.countdown.textContent = "La date cible est passée : définissez un nouvel objectif.";
+      }
+    }
+
+    function renderAll() {
+      const sessions = readSessions();
+      const goals = readGoals();
+      renderDashboard(sessions);
+      renderModules(sessions, goals);
+      renderEvolution(sessions);
+      renderWeakPoints(sessions);
+      renderHistory(sessions);
+    }
+
+    elements.targetDate.addEventListener("change", () => {
+      const goals = readGoals();
+      goals.targetDate = elements.targetDate.value;
+      saveGoals(goals);
+      renderCountdown(goals.targetDate);
+    });
+
+    elements.clearHistory.addEventListener("click", () => {
+      if (!confirm("Effacer tout l'historique de progression ?")) {
+        return;
+      }
+      window.GpxProgression?.clearSessions();
+      renderAll();
+    });
+
+    if (window.GPXAccess) {
+      window.GPXAccess.guard("progression.html", "full", null, () => {});
+    }
+
+    renderObjectives(readGoals());
+    renderAll();
+  </script>
+</body>
+</html>

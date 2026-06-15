@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarifs | Entraînement concours GPX et gardien de la paix</title>
+  <meta name="description" content="Entraînement gratuit concours gardien de la paix (petit test) et abonnement pour s'entraîner au concours GPX en ligne : simulations complètes et progression.">
+  <meta name="keywords" content="entraînement gratuit concours gardien de la paix, s'entraîner concours GPX en ligne, préparation concours GPX, concours gardien de la paix">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Tarifs entraînement concours GPX">
+  <meta property="og:description" content="Petit test gratuit et abonnement pour la préparation concours gardien de la paix en ligne.">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Abonnement</p>
+      <h1>Tarifs</h1>
+      <p class="hero__subtitle">Tous les tests, simulations et la progression</p>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <section class="pricing-grid" aria-label="Offres d'abonnement">
+      <article class="pricing-card">
+        <h2>Gratuit</h2>
+        <p class="pricing-price">0 €</p>
+        <ul>
+          <li>Compte obligatoire (nom, prénom, e-mail)</li>
+          <li><strong>1 petit test</strong> au choix (mini test ou question isolée)</li>
+          <li>Pas de simulations complètes</li>
+        </ul>
+        <a class="secondary-button" href="compte.html">Créer un compte</a>
+      </article>
+
+      <article class="pricing-card pricing-card--featured">
+        <h2>Abonnement mensuel</h2>
+        <p class="pricing-price">À définir</p>
+        <ul>
+          <li>Simulations complètes (psychotechnique, culture, cas pratiques)</li>
+          <li>Tests par catégorie et entraînements approfondis</li>
+          <li>Suivi de progression</li>
+          <li>Nouveaux contenus inclus</li>
+        </ul>
+        <button id="subscribe-monthly" class="primary-button" type="button">S'abonner (mensuel)</button>
+      </article>
+
+      <article class="pricing-card">
+        <h2>Abonnement annuel</h2>
+        <p class="pricing-price">À définir</p>
+        <ul>
+          <li>Tout le contenu de l'offre mensuelle</li>
+          <li>Meilleur tarif pour une préparation longue</li>
+        </ul>
+        <button id="subscribe-yearly" class="primary-button" type="button">S'abonner (annuel)</button>
+      </article>
+    </section>
+
+    <section class="auth-card auth-card--wide">
+      <h2>Petits tests vs tests complets</h2>
+      <p><strong>Petits tests</strong> (1 essai gratuit sans abonnement) : mini tests cognitifs, mini culture/langue, mini test culture générale, entraînement par catégorie (10 questions), question isolée en cas pratiques.</p>
+      <p><strong>Tests complets</strong> (abonnement requis) : simulations alignées sur le concours externe — psychotechniques ~2 h (non notés au concours), culture + langue ~1 h, cas pratiques ~2 h (mode entraînement 3 cas), personnalité 60 affirmations, entraînements verbal/spatial/numérique, page Ma progression.</p>
+      <p class="auth-hint">Paiement via Stripe. Après paiement, votre compte est activé automatiquement (configuration Supabase + webhook Stripe requise — voir README).</p>
+    </section>
+
+    <p class="auth-footer">
+      <a href="compte.html">Mon compte</a> · <a href="index.html">Retour à l'accueil</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    async function openCheckout(period) {
+      const user = await window.GPXAuth.getCurrentUser();
+      if (!user) {
+        window.location.href = `compte.html?redirect=tarifs.html`;
+        return;
+      }
+
+      const stripe = window.GPX_STRIPE || {};
+      const url = period === "yearly" ? stripe.paymentLinkYearly : stripe.paymentLinkMonthly;
+
+      if (!url) {
+        alert(
+          "Lien de paiement non configuré. Renseignez GPX_STRIPE dans supabase-config.js, ou utilisez l'abonnement démo en mode local depuis Mon compte."
+        );
+        return;
+      }
+
+      const checkoutUrl = new URL(url);
+      checkoutUrl.searchParams.set("client_reference_id", user.id);
+      window.location.href = checkoutUrl.toString();
+    }
+
+    document.getElementById("subscribe-monthly").addEventListener("click", () => openCheckout("monthly"));
+    document.getElementById("subscribe-yearly").addEventListener("click", () => openCheckout("yearly"));
+  </script>
+</body>
+</html>

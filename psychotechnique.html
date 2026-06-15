@@ -1,0 +1,2776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Psychotechnique concours police | Test personnalité concours GPX</title>
+  <meta name="description" content="Tests psychotechniques et test de personnalité concours GPX : logique, spatial, numérique, verbal. Entraînement psychotechnique concours police nationale en ligne.">
+  <meta name="keywords" content="psychotechnique concours police, test personnalité concours GPX, entraînement gardien de la paix, préparation concours GPX, s'entraîner concours GPX en ligne">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Psychotechnique concours police | Test personnalité GPX">
+  <meta property="og:description" content="Simulation psychotechnique et test de personnalité pour le concours gardien de la paix : entraînement cognitif en ligne.">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <style>
+    .psychotechnique-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .module-shell,
+    .quiz-panel,
+    .results-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .module-shell {
+      padding: 30px;
+    }
+
+    .exam-info-panel {
+      display: grid;
+      gap: 14px;
+      margin: 24px 0 30px;
+      padding: 26px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 20px;
+      box-shadow: 0 16px 36px rgba(26, 39, 68, 0.22);
+    }
+
+    .exam-info-panel h3 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      line-height: 1.25;
+    }
+
+    .exam-info-panel ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .exam-info-panel li + li {
+      margin-top: 8px;
+    }
+
+    .exam-info-panel a {
+      color: var(--white);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .home-nav {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .home-nav--bottom {
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .mode-grid,
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .mode-card,
+    .category-card {
+      display: flex;
+      min-height: 100%;
+      padding: 24px;
+      flex-direction: column;
+      gap: 14px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .mode-card:hover,
+    .mode-card:focus,
+    .category-card:hover,
+    .category-card:focus {
+      border-color: var(--navy);
+      box-shadow: var(--shadow);
+      outline: none;
+      transform: translateY(-4px);
+    }
+
+    .mode-card:focus-visible,
+    .category-card:focus-visible,
+    .scale-option:focus-within,
+    .option-button:focus-visible,
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: 3px solid rgba(26, 39, 68, 0.32);
+      outline-offset: 3px;
+    }
+
+    .mode-card__title {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--navy);
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .mode-card__icon {
+      font-size: 1.9rem;
+      line-height: 1;
+    }
+
+    .mode-card__duration {
+      display: inline-flex;
+      width: fit-content;
+      padding: 7px 12px;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .mode-card__description {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .mode-card__action {
+      margin-top: auto;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .category-training-panel {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+      padding: 22px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .category-training-panel h3,
+    .category-training-panel p {
+      margin: 0;
+    }
+
+    .category-training-panel h3 {
+      color: var(--navy);
+      font-size: 1.25rem;
+    }
+
+    .category-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 0;
+    }
+
+    .category-card__number,
+    .timer-badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .category-card__number {
+      width: 46px;
+      height: 46px;
+      font-size: 1.15rem;
+    }
+
+    .category-card h3 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1.18rem;
+      line-height: 1.3;
+    }
+
+    .category-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .personality-panel__body,
+    .personality-results-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .personality-question-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .personality-question-card,
+    .score-card,
+    .analysis-card,
+    .important-note {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .personality-question-card {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .personality-question-card__title {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .question-number {
+      display: inline-flex;
+      min-width: 42px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .scale-options {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .scale-option {
+      display: grid;
+      cursor: pointer;
+    }
+
+    .scale-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scale-option > span {
+      display: grid;
+      gap: 6px;
+      height: 100%;
+      padding: 12px;
+      align-content: center;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      text-align: center;
+      transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .scale-option input:checked + span {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .scale-option__value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .scale-option__label {
+      font-size: 0.82rem;
+      line-height: 1.25;
+    }
+
+    .form-warning {
+      min-height: 24px;
+      margin: 0;
+      color: #b3261e;
+      font-weight: 700;
+    }
+
+    .personality-results-panel {
+      text-align: left;
+    }
+
+    .scores-grid,
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .score-card,
+    .analysis-card,
+    .important-note {
+      padding: 20px;
+    }
+
+    .score-card h3,
+    .analysis-card h3 {
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.25;
+    }
+
+    .score-value {
+      color: var(--navy);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-value small {
+      font-size: 0.95rem;
+    }
+
+    .score-meter {
+      height: 10px;
+      margin-top: 14px;
+      background: #d8deea;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .score-meter span {
+      display: block;
+      height: 100%;
+      background: var(--navy);
+      border-radius: inherit;
+    }
+
+    .analysis-card p,
+    .analysis-card ul,
+    .important-note {
+      margin: 0;
+    }
+
+    .analysis-card ul {
+      padding-left: 20px;
+    }
+
+    .analysis-card li + li {
+      margin-top: 8px;
+    }
+
+    .category-card ul {
+      margin: auto 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .quiz-panel__header {
+      display: grid;
+      gap: 18px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .quiz-title-row,
+    .quiz-meta,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quiz-panel h2,
+    .results-panel h2 {
+      margin: 0;
+    }
+
+    .timer-badge {
+      min-width: 128px;
+      padding: 8px 14px;
+      color: var(--navy);
+      background: var(--white);
+    }
+
+    .timer-badge--danger {
+      color: #7a1e1e;
+      background: #ffe4e4;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--white);
+      border-radius: inherit;
+      transition: width 220ms ease;
+    }
+
+    .quiz-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 18px;
+    }
+
+    .question-type {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.25;
+    }
+
+    .visual-zone {
+      display: grid;
+      gap: 14px;
+      max-width: 720px;
+      padding: 18px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .visual-zone:empty {
+      display: none;
+    }
+
+    .visual-zone__label {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .svg-card {
+      display: inline-flex;
+      min-height: 138px;
+      padding: 12px;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .svg-card svg {
+      display: block;
+      width: min(100%, 220px);
+      height: auto;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .option-button {
+      display: grid;
+      min-height: 64px;
+      padding: 16px;
+      align-items: center;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, opacity 160ms ease, transform 160ms ease;
+    }
+
+    .option-button:hover:not(:disabled) {
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .option-button:disabled {
+      cursor: default;
+    }
+
+    .option-button.is-correct,
+    .option-button.is-wrong {
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      color: var(--white);
+      animation: answer-pop 320ms ease;
+    }
+
+    .option-button.is-correct::before,
+    .option-button.is-wrong::before {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .option-button.is-correct {
+      background: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .option-button.is-correct::before {
+      content: "✓";
+    }
+
+    .option-button.is-wrong {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .option-button.is-wrong::before {
+      content: "✗";
+    }
+
+    .option-button.is-inactive {
+      color: #64748b;
+      background: #e5e7eb;
+      border-color: #cbd5e1;
+      opacity: 0.72;
+    }
+
+    .option-button.is-inactive svg {
+      opacity: 0.62;
+      filter: grayscale(1);
+    }
+
+    @keyframes answer-pop {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.035);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .option-label {
+      font-weight: 700;
+    }
+
+    .option-visual {
+      display: grid;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .option-visual .svg-card {
+      min-height: 118px;
+      padding: 8px;
+    }
+
+    .feedback {
+      min-height: 70px;
+      padding: 16px 18px;
+      background: var(--off-white);
+      border-left: 5px solid var(--navy);
+      border-radius: 14px;
+      color: var(--text);
+    }
+
+    .feedback:empty {
+      display: none;
+    }
+
+    .feedback strong {
+      color: var(--navy);
+    }
+
+    .feedback__status {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      min-height: 46px;
+      padding: 12px 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .primary-button {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .secondary-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .results-panel {
+      display: grid;
+      gap: 18px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .score-circle {
+      display: inline-flex;
+      width: 150px;
+      height: 150px;
+      margin: 4px auto;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 50%;
+      font-size: 2.3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .download-pdf-button {
+      width: fit-content;
+      margin: 0 auto;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .mode-grid,
+      .scores-grid,
+      .analysis-grid,
+      .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .scale-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .module-shell,
+      .quiz-panel__body,
+      .personality-panel__body,
+      .personality-results-panel__body,
+      .results-panel {
+        padding: 22px;
+      }
+
+      .quiz-panel__header {
+        padding: 22px;
+      }
+
+      .mode-grid,
+      .category-grid,
+      .scores-grid,
+      .analysis-grid,
+      .scale-options,
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Test de Personnalité et Tests Psychotechniques</h1>
+      <p class="hero__subtitle">Personnalité, logique, spatial, numérique et verbal</p>
+    </div>
+  </header>
+
+  <main class="container psychotechnique-page">
+    <section id="home-view" class="module-shell" aria-labelledby="psychotechnique-title">
+      <div class="home-nav">
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+
+      <div class="intro">
+        <h2 id="psychotechnique-title">Test de Personnalité et Tests Psychotechniques</h2>
+        <p>
+          Choisissez le mode d'entraînement adapté à votre objectif : simulation complète, personnalité,
+          tests cognitifs, session courte ou entraînement ciblé.
+        </p>
+      </div>
+
+      <section class="exam-info-panel" aria-labelledby="official-psycho-title">
+        <h3 id="official-psycho-title">Épreuve officielle — concours externe</h3>
+        <ul>
+          <li><strong>2 heures</strong> de tests psychotechniques.</li>
+          <li><strong>Obligatoires</strong> et <strong>non notés</strong> (pas de note sur 20 pour cette épreuve).</li>
+          <li>Les résultats sont transmis au jury de l'<strong>entretien avec le jury</strong> (coefficient 5).</li>
+        </ul>
+        <p>Les modes ci-dessous sont des simulations d'entraînement inspirées de cette épreuve.</p>
+        <p>
+          <a href="https://www.police-nationale.interieur.gouv.fr/nous-rejoindre/nos-voies-dacces/devenir-policier/gpx/ext" target="_blank" rel="noopener noreferrer">Police nationale — concours externe GPX</a>
+        </p>
+      </section>
+
+      <div class="mode-grid" aria-label="Modes de test disponibles">
+        <button class="mode-card" type="button" data-mode="complete">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🚀</span> Test Complet</span>
+          <span class="mode-card__duration">⏱ ~2 heures</span>
+          <p class="mode-card__description">
+            Simulation d'entraînement sur ~2 h : test de personnalité (60 questions) puis 4 tests cognitifs
+            (40 questions). Au concours : épreuve officielle de 2 h, non notée.
+          </p>
+          <span class="mode-card__action">Lancer personnalité puis cognitif</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="personality">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🧬</span> Test de Personnalité uniquement</span>
+          <span class="mode-card__duration">⏱ ~20-30 min</span>
+          <p class="mode-card__description">
+            60 affirmations pour évaluer votre profil psychologique. Non chronométré.
+          </p>
+          <span class="mode-card__action">Lancer les 60 affirmations</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="cognitive">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🧠</span> Tests Cognitifs uniquement (40 questions)</span>
+          <span class="mode-card__duration">⏱ ~15-20 min</span>
+          <p class="mode-card__description">
+            40 questions mélangées : logique, spatial, numérique et verbal. Chronométré.
+          </p>
+          <span class="mode-card__action">Lancer 40 questions cognitives</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="mini">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">⚡</span> Mini test cognitif</span>
+          <span class="mode-card__duration">⏱ ~5 min</span>
+          <p class="mode-card__description">
+            10 questions rapides pour s'entraîner en quelques minutes. Idéal quand on manque de temps.
+          </p>
+          <span class="mode-card__action">Lancer 10 questions aléatoires</span>
+        </button>
+
+        <button class="mode-card" type="button" data-mode="category" aria-controls="category-training-panel" aria-expanded="false">
+          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">📚</span> Entraînement par catégorie</span>
+          <span class="mode-card__duration">⏱ ~10 min</span>
+          <p class="mode-card__description">
+            Choisissez une catégorie spécifique pour vous concentrer sur vos points faibles.
+          </p>
+          <span class="mode-card__action">Afficher les 4 catégories</span>
+        </button>
+      </div>
+
+      <div id="category-training-panel" class="category-training-panel hidden">
+        <h3>Choisissez une catégorie d'entraînement</h3>
+        <p>Chaque session propose 10 questions ciblées dans la catégorie sélectionnée.</p>
+
+        <div class="category-grid" aria-label="Catégories de tests cognitifs">
+          <button class="category-card" type="button" data-category="logic">
+            <span class="category-card__number" aria-hidden="true">🧠</span>
+            <h3>Raisonnement logique</h3>
+          </button>
+
+          <button class="category-card" type="button" data-category="spatial">
+            <span class="category-card__number" aria-hidden="true">📐</span>
+            <h3>Raisonnement spatial</h3>
+          </button>
+
+          <button class="category-card" type="button" data-category="numeric">
+            <span class="category-card__number" aria-hidden="true">🔢</span>
+            <h3>Tests numériques</h3>
+          </button>
+
+          <button class="category-card" type="button" data-category="verbal">
+            <span class="category-card__number" aria-hidden="true">📖</span>
+            <h3>Logique verbale</h3>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-nav home-nav--bottom">
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+
+    <section id="personality-view" class="quiz-panel hidden" aria-labelledby="personality-title">
+      <div class="quiz-panel__header">
+        <div class="quiz-meta">
+          <div>
+            <p class="hero__label" id="personality-label">60 affirmations - échelle de 1 à 5</p>
+            <h2 id="personality-title">Test simulé de personnalité</h2>
+          </div>
+          <strong id="personality-answered-count">0/60 réponses</strong>
+        </div>
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress-track">
+            <div id="personality-progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <form id="personality-form" class="personality-panel__body" novalidate>
+        <p>
+          Pour chaque affirmation, sélectionnez votre niveau d'accord :
+          <strong>1 = Pas du tout d'accord</strong>,
+          <strong>2 = Plutôt pas d'accord</strong>,
+          <strong>3 = Neutre</strong>,
+          <strong>4 = Plutôt d'accord</strong>,
+          <strong>5 = Tout à fait d'accord</strong>.
+        </p>
+
+        <div id="personality-question-list" class="personality-question-list"></div>
+        <p id="personality-form-warning" class="form-warning" role="alert"></p>
+
+        <div class="actions">
+          <button id="personality-submit-button" class="primary-button" type="submit">Continuer</button>
+          <button id="personality-clear-button" class="secondary-button" type="button">Effacer mes réponses</button>
+          <button id="personality-menu-button" class="secondary-button" type="button">Retour accueil du test</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </form>
+    </section>
+
+    <section id="personality-results-view" class="results-panel personality-results-panel hidden" aria-labelledby="personality-results-title">
+      <p class="hero__label" style="color: var(--navy);">Analyse du profil</p>
+      <h2 id="personality-results-title">Résultats de votre simulation</h2>
+      <div class="personality-results-panel__body">
+        <div id="personality-scores-grid" class="scores-grid"></div>
+        <div id="personality-analysis-summary" class="analysis-card"></div>
+        <div class="analysis-grid">
+          <article class="analysis-card">
+            <h3>Points forts du candidat</h3>
+            <ul id="personality-strengths-list"></ul>
+          </article>
+          <article class="analysis-card">
+            <h3>Axes de progrès à travailler</h3>
+            <ul id="personality-progress-list"></ul>
+          </article>
+          <article id="personality-coherence-card" class="analysis-card"></article>
+        </div>
+        <p class="important-note">
+          Ce test est une simulation d'entraînement. Le vrai test de personnalité du concours GPX est interprété
+          par un psychologue agréé. Soyez toujours authentique dans vos réponses.
+        </p>
+        <div class="actions">
+          <button id="personality-restart-button" class="primary-button" type="button">Refaire le test</button>
+          <button id="personality-results-menu-button" class="secondary-button" type="button">Retour accueil du test</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz-view" class="quiz-panel hidden" aria-live="polite">
+      <div class="quiz-panel__header">
+        <div class="quiz-title-row">
+          <div>
+            <p class="hero__label" id="category-label">Test mixte</p>
+            <h2 id="quiz-title">Test de Personnalité et Tests Psychotechniques</h2>
+          </div>
+          <div id="timer" class="timer-badge hidden">Temps : 30s</div>
+        </div>
+
+        <div class="progress-wrap" aria-label="Progression">
+          <div class="quiz-meta">
+            <strong id="progress-text">Question en cours</strong>
+            <span id="score-text">Score : 0</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-panel__body">
+        <article class="question-card">
+          <p id="question-type" class="question-type"></p>
+          <h3 id="question-text" class="question-text"></h3>
+          <div id="visual-zone" class="visual-zone"></div>
+          <div id="options" class="options-grid"></div>
+          <div id="feedback" class="feedback"></div>
+        </article>
+
+        <div class="actions">
+          <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
+          <button id="restart-quiz-button" class="secondary-button" type="button">Nouveau test</button>
+          <button id="menu-button" class="secondary-button" type="button">Retour accueil du test</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="results-view" class="results-panel hidden" aria-live="polite">
+      <p class="hero__label" style="color: var(--navy);">Résultat final</p>
+      <h2 id="results-title">Score final</h2>
+      <div id="score-circle" class="score-circle">0</div>
+      <button id="download-pdf-button" class="primary-button download-pdf-button" type="button">📄 Télécharger ma fiche de révision (PDF)</button>
+      <p id="encouragement"></p>
+      <div id="category-results" class="feedback"></div>
+      <p id="penalty-summary"></p>
+      <div class="actions">
+        <button id="restart-button" class="primary-button" type="button">Nouveau test</button>
+        <button id="back-menu-button" class="secondary-button" type="button">Retour accueil du test</button>
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script src="spatial-bank.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="progression-storage.js"></script>
+  <script>
+    const letters = ["A", "B", "C", "D"];
+    const cubeLabels = {
+      cubeCross: "Cube avec face bleue au centre",
+      cubeLine: "Cube avec bande bleue alignée",
+      cubeStair: "Cube avec faces en escalier",
+      cubePyramid: "Cube avec trois faces autour du sommet"
+    };
+
+    const categories = {
+      logic: {
+        number: 1,
+        title: "Raisonnement logique et abstrait",
+        label: "Catégorie 1",
+        timerMode: "elapsed",
+        questions: [
+          q("Série de chiffres", "2, 4, 8, 16, __ ?", ["18", "24", "32", "36"], 2, "Chaque nombre est multiplié par 2 : 16 x 2 = 32."),
+          q("Série de lettres", "A, C, E, G, __ ?", ["H", "I", "J", "K"], 1, "On avance de deux lettres à chaque fois : A, C, E, G, I."),
+          q("Analogie logique", "3 est à 9 ce que 4 est à __ ?", ["12", "14", "16", "18"], 2, "Le lien est le carré : 3² = 9, donc 4² = 16."),
+          q("Série de chiffres", "5, 10, 20, 40, __ ?", ["45", "50", "60", "80"], 3, "La suite double à chaque étape : 40 x 2 = 80."),
+          q("Série de lettres", "B, D, G, K, __ ?", ["M", "N", "O", "P"], 3, "Les écarts augmentent de 1 : +2, +3, +4, puis +5 donne P."),
+          q("Analogie logique", "7 est à 14 ce que 11 est à __ ?", ["18", "20", "22", "24"], 2, "Le second nombre vaut le double du premier : 11 x 2 = 22."),
+          q("Série de chiffres", "1, 4, 9, 16, __ ?", ["20", "24", "25", "30"], 2, "Ce sont les carrés : 1², 2², 3², 4², puis 5² = 25."),
+          q("Série de lettres", "Z, X, V, T, __ ?", ["R", "S", "Q", "P"], 0, "On recule de deux lettres : Z, X, V, T, R."),
+          q("Analogie logique", "6 est à 36 ce que 8 est à __ ?", ["48", "56", "64", "72"], 2, "Le lien est le carré : 8² = 64."),
+          q("Série de chiffres", "3, 6, 12, 24, __ ?", ["30", "36", "42", "48"], 3, "Chaque terme est multiplié par 2."),
+          q("Série de lettres", "C, F, I, L, __ ?", ["M", "N", "O", "P"], 2, "On avance de trois lettres : C, F, I, L, O."),
+          q("Analogie logique", "12 est à 6 ce que 20 est à __ ?", ["8", "9", "10", "12"], 2, "Le second nombre est la moitié du premier : 20 / 2 = 10."),
+          q("Série de chiffres", "4, 7, 11, 16, __ ?", ["20", "21", "22", "24"], 2, "Les écarts sont +3, +4, +5, puis +6 : 16 + 6 = 22."),
+          q("Série de lettres", "A, B, D, G, K, __ ?", ["N", "O", "P", "Q"], 2, "Les écarts sont +1, +2, +3, +4, puis +5 : K + 5 = P."),
+          q("Analogie logique", "9 est à 3 ce que 25 est à __ ?", ["4", "5", "6", "7"], 1, "Le second nombre est la racine carrée : √25 = 5."),
+          q("Série de chiffres", "81, 27, 9, 3, __ ?", ["0", "1", "2", "6"], 1, "Chaque nombre est divisé par 3 : 3 / 3 = 1."),
+          q("Série de lettres", "D, H, L, P, __ ?", ["R", "S", "T", "U"], 2, "On avance de quatre lettres à chaque fois : P + 4 = T."),
+          q("Analogie logique", "15 est à 45 ce que 6 est à __ ?", ["12", "18", "24", "30"], 1, "Le second nombre vaut trois fois le premier : 6 x 3 = 18."),
+          q("Série de chiffres", "2, 3, 5, 8, 12, __ ?", ["15", "16", "17", "18"], 2, "Les écarts sont +1, +2, +3, +4, puis +5 : 12 + 5 = 17."),
+          q("Série de lettres", "M, O, R, V, __ ?", ["X", "Y", "Z", "A"], 3, "Les écarts sont +2, +3, +4, puis +5. Après V, on revient à A.")
+        ]
+      },
+      spatial: {
+        number: 2,
+        title: "Raisonnement spatial",
+        label: "Catégorie 2",
+        timerMode: "elapsed",
+        questions: []
+      },
+      numeric: {
+        number: 3,
+        title: "Tests numériques",
+        label: "Catégorie 3",
+        timerMode: "countdown",
+        questions: [
+          q("Calcul mental rapide", "37 + 48 = ?", ["75", "85", "95", "82"], 1, "37 + 48 = 85."),
+          q("Calcul mental rapide", "96 - 39 = ?", ["47", "57", "67", "59"], 1, "96 - 39 = 57."),
+          q("Calcul mental rapide", "12 x 7 = ?", ["74", "82", "84", "96"], 2, "12 x 7 = 84."),
+          q("Pourcentages", "20% de 150 = ?", ["20", "25", "30", "35"], 2, "10% de 150 vaut 15, donc 20% vaut 30."),
+          q("Conversions", "2,5 km correspondent à combien de mètres ?", ["250 m", "2 500 m", "25 000 m", "250 000 m"], 1, "1 km = 1 000 m, donc 2,5 km = 2 500 m."),
+          q("Calcul mental rapide", "15 x 6 = ?", ["80", "90", "95", "100"], 1, "15 x 6 = 90."),
+          q("Pourcentages", "10% de 460 = ?", ["36", "46", "56", "64"], 1, "10% revient à diviser par 10 : 460 / 10 = 46."),
+          q("Périmètres", "Un carré de côté 8 cm a un périmètre de :", ["16 cm", "24 cm", "32 cm", "64 cm"], 2, "Le périmètre d'un carré vaut 4 x côté : 4 x 8 = 32 cm."),
+          q("Aires", "Un rectangle de 9 m par 4 m a une aire de :", ["13 m²", "26 m²", "36 m²", "40 m²"], 2, "Aire = longueur x largeur : 9 x 4 = 36 m²."),
+          q("Calcul mental rapide", "144 / 12 = ?", ["10", "11", "12", "14"], 2, "12 x 12 = 144."),
+          q("Pourcentages", "25% de 80 = ?", ["15", "20", "25", "30"], 1, "25% correspond à un quart : 80 / 4 = 20."),
+          q("Conversions", "3 heures correspondent à combien de minutes ?", ["120", "150", "180", "210"], 2, "1 heure = 60 minutes, donc 3 x 60 = 180."),
+          q("Calcul mental rapide", "58 + 27 = ?", ["75", "80", "85", "95"], 2, "58 + 27 = 85."),
+          q("Calcul mental rapide", "13 x 4 = ?", ["42", "48", "52", "56"], 2, "13 x 4 = 52."),
+          q("Pourcentages", "50% de 126 = ?", ["53", "58", "63", "76"], 2, "50% correspond à la moitié : 126 / 2 = 63."),
+          q("Problème arithmétique", "Un billet coûte 12 €. Combien coûtent 5 billets ?", ["50 €", "55 €", "60 €", "65 €"], 2, "12 x 5 = 60 €."),
+          q("Périmètres", "Un rectangle de 7 cm par 5 cm a un périmètre de :", ["12 cm", "20 cm", "24 cm", "35 cm"], 2, "Périmètre = 2 x (7 + 5) = 24 cm."),
+          q("Conversions", "750 g + 250 g = ?", ["0,5 kg", "1 kg", "1,25 kg", "1,5 kg"], 1, "750 g + 250 g = 1 000 g, soit 1 kg."),
+          q("Calcul mental rapide", "81 - 46 = ?", ["25", "35", "45", "55"], 1, "81 - 46 = 35."),
+          q("Pourcentages", "30% de 200 = ?", ["40", "50", "60", "70"], 2, "10% de 200 vaut 20, donc 30% vaut 60.")
+        ]
+      },
+      verbal: {
+        number: 4,
+        title: "Logique verbale et compréhension",
+        label: "Catégorie 4",
+        timerMode: "elapsed",
+        questions: [
+          q("Trouver l'intrus", "Quel mot est l'intrus ?", ["Police", "Gendarmerie", "Pompier", "Banane"], 3, "Les trois premiers sont liés aux services publics de sécurité ou de secours."),
+          q("Analogie verbale", "Chaud est à froid ce que rapide est à :", ["Vif", "Lent", "Pressé", "Brusque"], 1, "Le lien est l'opposition : l'antonyme de rapide est lent."),
+          q("Proverbe", "Que signifie « Il ne faut pas vendre la peau de l'ours avant de l'avoir tué » ?", ["Il faut chasser souvent", "Il ne faut pas se réjouir trop tôt", "Il faut protéger les animaux", "Il faut agir seul"], 1, "Ce proverbe invite à attendre le résultat avant de célébrer."),
+          q("Synonyme", "Quel est le synonyme de « prudent » ?", ["Imprudent", "Méfiant", "Téméraire", "Distrait"], 1, "Une personne prudente agit avec attention et méfiance raisonnable."),
+          q("Antonyme", "Quel est l'antonyme de « légal » ?", ["Officiel", "Illégal", "Public", "Valable"], 1, "Illégal signifie contraire à la loi."),
+          q("Trouver l'intrus", "Quel mot est l'intrus ?", ["Rouge", "Bleu", "Vert", "Table"], 3, "Rouge, bleu et vert sont des couleurs."),
+          q("Analogie verbale", "Main est à gant ce que pied est à :", ["Chaussette", "Casquette", "Ceinture", "Écharpe"], 0, "Le gant couvre la main, la chaussette couvre le pied."),
+          q("Proverbe", "Que signifie « Petit à petit, l'oiseau fait son nid » ?", ["La patience permet de réussir", "Il faut voyager souvent", "Les oiseaux travaillent la nuit", "Il faut éviter les détails"], 0, "Le proverbe valorise la progression régulière."),
+          q("Synonyme", "Quel est le synonyme de « exact » ?", ["Faux", "Précis", "Vague", "Lent"], 1, "Exact signifie juste ou précis."),
+          q("Antonyme", "Quel est l'antonyme de « courageux » ?", ["Brave", "Audacieux", "Craintif", "Déterminé"], 2, "Craintif s'oppose à courageux."),
+          q("Trouver l'intrus", "Quel mot est l'intrus ?", ["Marteau", "Tournevis", "Clé", "Citron"], 3, "Les trois premiers sont des outils."),
+          q("Analogie verbale", "Médecin est à hôpital ce que professeur est à :", ["Tribunal", "École", "Garage", "Casque"], 1, "Le professeur exerce principalement à l'école."),
+          q("Proverbe", "Que signifie « Mieux vaut prévenir que guérir » ?", ["La prévention évite des problèmes", "Il faut toujours courir", "La guérison est impossible", "Il faut attendre avant d'agir"], 0, "Agir en amont permet souvent d'éviter les difficultés."),
+          q("Synonyme", "Quel est le synonyme de « rapide » ?", ["Lent", "Vif", "Faible", "Calme"], 1, "Vif peut signifier rapide."),
+          q("Antonyme", "Quel est l'antonyme de « ancien » ?", ["Vieux", "Historique", "Récent", "Passé"], 2, "Récent s'oppose à ancien."),
+          q("Trouver l'intrus", "Quel mot est l'intrus ?", ["Justice", "Tribunal", "Juge", "Fourchette"], 3, "Les trois premiers appartiennent au champ de la justice."),
+          q("Analogie verbale", "Livre est à lire ce que musique est à :", ["Regarder", "Écouter", "Écrire", "Compter"], 1, "On lit un livre et on écoute de la musique."),
+          q("Proverbe", "Que signifie « Qui ne tente rien n'a rien » ?", ["Il faut éviter les risques", "L'action peut être nécessaire pour réussir", "Il faut toujours gagner", "Il faut attendre un ordre"], 1, "Sans tentative, on ne peut pas obtenir le résultat espéré."),
+          q("Synonyme", "Quel est le synonyme de « calme » ?", ["Paisible", "Bruyant", "Agité", "Pressé"], 0, "Paisible signifie calme."),
+          q("Antonyme", "Quel est l'antonyme de « clair » ?", ["Lumineux", "Net", "Obscur", "Simple"], 2, "Obscur s'oppose à clair.")
+        ]
+      }
+    };
+
+    const categoryOrder = ["logic", "spatial", "numeric", "verbal"];
+    const categoryBadges = {
+      logic: "🧠 Logique",
+      spatial: "📐 Spatial",
+      numeric: "🔢 Numérique",
+      verbal: "📖 Verbal"
+    };
+
+    const cognitiveModeLabels = {
+      complete: {
+        label: "Test complet - étape cognitive",
+        title: "Tests cognitifs du test complet"
+      },
+      cognitive: {
+        label: "Tests cognitifs",
+        title: "Tests Cognitifs uniquement - 40 questions"
+      },
+      mini: {
+        label: "Mini test cognitif",
+        title: "Mini test cognitif - 10 questions"
+      },
+      category: {
+        label: "Entraînement par catégorie",
+        title: "Entraînement ciblé"
+      }
+    };
+
+    const personalityDimensions = {
+      emotional: {
+        label: "Stabilité émotionnelle",
+        advice: "Travaillez la prise de recul, la respiration et la maîtrise du ton dans les situations tendues."
+      },
+      authority: {
+        label: "Rapport à l'autorité",
+        advice: "Renforcez votre compréhension de la hiérarchie, des consignes et du compte rendu professionnel."
+      },
+      service: {
+        label: "Sens du service et empathie",
+        advice: "Développez l'écoute active, la distance professionnelle et l'attention portée aux personnes vulnérables."
+      },
+      integrity: {
+        label: "Intégrité et éthique",
+        advice: "Gardez comme repères la probité, la confidentialité, l'exemplarité et le refus des arrangements."
+      },
+      teamwork: {
+        label: "Travail en équipe",
+        advice: "Entraînez-vous à partager l'information, accepter les avis différents et soutenir le collectif."
+      },
+      stress: {
+        label: "Gestion du stress et des situations difficiles",
+        advice: "Travaillez la priorisation, la sécurité, la décision sous pression et l'adaptation aux imprévus."
+      }
+    };
+
+    const personalityQuestions = [
+      { id: "emo1", dimension: "emotional", text: "Je garde mon calme dans les situations de tension." },
+      { id: "emo2", dimension: "emotional", text: "Je supporte bien la pression et le stress." },
+      { id: "emo3", dimension: "emotional", text: "Je ne me laisse pas déborder par mes émotions." },
+      { id: "emo4", dimension: "emotional", text: "Je prends du recul avant de réagir à une provocation." },
+      { id: "emo5", dimension: "emotional", text: "Je reste maître de mon ton même face à une personne agressive." },
+      { id: "emo6", dimension: "emotional", text: "Je perds facilement patience lorsque la situation se complique.", reverse: true },
+      { id: "emo7", dimension: "emotional", text: "Le stress me fait rapidement perdre mes moyens.", reverse: true },
+      { id: "emo8", dimension: "emotional", text: "Je retrouve rapidement mon équilibre après un moment difficile." },
+      { id: "emo9", dimension: "emotional", text: "Je sais reconnaître mes émotions sans les laisser guider toutes mes décisions." },
+      { id: "emo10", dimension: "emotional", text: "Je conserve une attitude posée lorsque plusieurs demandes arrivent en même temps." },
+      { id: "auth1", dimension: "authority", text: "Je respecte les décisions de ma hiérarchie même si je ne les partage pas toujours." },
+      { id: "auth2", dimension: "authority", text: "Je suis à l'aise pour travailler dans un cadre avec des règles strictes." },
+      { id: "auth3", dimension: "authority", text: "J'applique les consignes sans les remettre constamment en question." },
+      { id: "auth4", dimension: "authority", text: "Je demande une clarification avant d'agir lorsqu'une consigne me semble ambiguë." },
+      { id: "auth5", dimension: "authority", text: "Je comprends l'importance de la chaîne de commandement dans une intervention." },
+      { id: "auth6", dimension: "authority", text: "J'ai du mal à appliquer une décision hiérarchique qui ne correspond pas à mon avis.", reverse: true },
+      { id: "auth7", dimension: "authority", text: "Les règles strictes me donnent souvent envie de les contourner.", reverse: true },
+      { id: "auth8", dimension: "authority", text: "Je peux faire preuve d'initiative tout en respectant le cadre fixé." },
+      { id: "auth9", dimension: "authority", text: "Je rends compte loyalement à ma hiérarchie après une action." },
+      { id: "auth10", dimension: "authority", text: "Je distingue une remarque professionnelle d'une attaque personnelle." },
+      { id: "serv1", dimension: "service", text: "Aider les personnes en difficulté me tient profondément à cœur." },
+      { id: "serv2", dimension: "service", text: "Je suis sensible aux situations de vulnérabilité." },
+      { id: "serv3", dimension: "service", text: "Je m'investis naturellement pour les autres." },
+      { id: "serv4", dimension: "service", text: "J'écoute attentivement avant de proposer une aide." },
+      { id: "serv5", dimension: "service", text: "Je traite chaque personne avec considération, même dans une situation tendue." },
+      { id: "serv6", dimension: "service", text: "Je fais preuve de patience avec des personnes désorientées ou inquiètes." },
+      { id: "serv7", dimension: "service", text: "Les difficultés des autres me touchent rarement.", reverse: true },
+      { id: "serv8", dimension: "service", text: "Je cherche à comprendre le contexte avant de juger une réaction." },
+      { id: "serv9", dimension: "service", text: "Le sens du service public est une motivation importante pour moi." },
+      { id: "serv10", dimension: "service", text: "Je sais rester humain tout en gardant une distance professionnelle." },
+      { id: "int1", dimension: "integrity", text: "Je ne transige jamais avec les règles d'honnêteté." },
+      { id: "int2", dimension: "integrity", text: "Je signale toujours une irrégularité même si cela peut être inconfortable." },
+      { id: "int3", dimension: "integrity", text: "L'exemplarité dans le comportement est essentielle." },
+      { id: "int4", dimension: "integrity", text: "Je reconnais mes erreurs lorsqu'elles peuvent avoir une conséquence professionnelle." },
+      { id: "int5", dimension: "integrity", text: "Je protège les informations confidentielles auxquelles je peux avoir accès." },
+      { id: "int6", dimension: "integrity", text: "Il m'arrive de considérer qu'un petit arrangement avec les règles n'est pas grave.", reverse: true },
+      { id: "int7", dimension: "integrity", text: "Je préfère fermer les yeux sur une irrégularité pour éviter les tensions.", reverse: true },
+      { id: "int8", dimension: "integrity", text: "Je prends une décision juste même lorsqu'elle est impopulaire." },
+      { id: "int9", dimension: "integrity", text: "Je refuse les avantages ou faveurs qui pourraient influencer mon jugement." },
+      { id: "int10", dimension: "integrity", text: "Je considère la probité comme indispensable dans une mission de police." },
+      { id: "team1", dimension: "teamwork", text: "Je m'adapte facilement à différents collègues." },
+      { id: "team2", dimension: "teamwork", text: "Je place l'intérêt collectif avant mon intérêt personnel." },
+      { id: "team3", dimension: "teamwork", text: "Je communique facilement en situation difficile." },
+      { id: "team4", dimension: "teamwork", text: "Je partage les informations utiles avec mon équipe." },
+      { id: "team5", dimension: "teamwork", text: "J'accepte les avis différents lorsqu'ils améliorent l'action collective." },
+      { id: "team6", dimension: "teamwork", text: "Je soutiens un collègue en difficulté tout en respectant les consignes." },
+      { id: "team7", dimension: "teamwork", text: "Je préfère travailler seul plutôt que de coordonner mes actions avec un groupe.", reverse: true },
+      { id: "team8", dimension: "teamwork", text: "Je sais demander de l'aide lorsque la situation l'exige." },
+      { id: "team9", dimension: "teamwork", text: "Je contribue à maintenir une ambiance professionnelle dans un groupe." },
+      { id: "team10", dimension: "teamwork", text: "Je respecte le rôle de chacun au sein d'une équipe." },
+      { id: "stress1", dimension: "stress", text: "Je peux prendre des décisions rapides sous pression." },
+      { id: "stress2", dimension: "stress", text: "Les imprévus ne me déstabilisent pas." },
+      { id: "stress3", dimension: "stress", text: "Je suis capable d'intervenir dans des situations potentiellement dangereuses." },
+      { id: "stress4", dimension: "stress", text: "Je priorise les actions à mener lorsqu'une situation devient confuse." },
+      { id: "stress5", dimension: "stress", text: "Je garde une vision claire des risques avant d'agir." },
+      { id: "stress6", dimension: "stress", text: "Sous pression, j'ai tendance à éviter de prendre des décisions.", reverse: true },
+      { id: "stress7", dimension: "stress", text: "Un changement soudain de situation me paralyse facilement.", reverse: true },
+      { id: "stress8", dimension: "stress", text: "Je peux gérer plusieurs informations urgentes sans paniquer." },
+      { id: "stress9", dimension: "stress", text: "Je sais protéger ma sécurité et celle des autres avant d'intervenir." },
+      { id: "stress10", dimension: "stress", text: "Je reste concentré même lorsque l'environnement est bruyant ou conflictuel." }
+    ];
+
+    const personalityMirrorPairs = [
+      { direct: "emo1", reverse: "emo6" },
+      { direct: "emo2", reverse: "emo7" },
+      { direct: "auth1", reverse: "auth6" },
+      { direct: "auth2", reverse: "auth7" },
+      { direct: "serv2", reverse: "serv7" },
+      { direct: "int1", reverse: "int6" },
+      { direct: "int2", reverse: "int7" },
+      { direct: "team2", reverse: "team7" },
+      { direct: "stress1", reverse: "stress6" },
+      { direct: "stress2", reverse: "stress7" }
+    ];
+
+    const personalityScaleLabels = [
+      "Pas du tout d'accord",
+      "Plutôt pas d'accord",
+      "Neutre",
+      "Plutôt d'accord",
+      "Tout à fait d'accord"
+    ];
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let categoryScores = {};
+    let numericTimeouts = 0;
+    let answered = false;
+    let intervalId = null;
+    let nextButtonTimeoutId = null;
+    let remainingSeconds = 30;
+    let questionResults = [];
+    let testStartedAt = null;
+    let personalityStartedAt = null;
+    let lastCompletedAttempt = null;
+    let currentMode = "cognitive";
+    let activeCategoryKeys = [...categoryOrder];
+    let activeCognitiveCounts = {};
+    let personalityNextStep = "results";
+    let lastPersonalityAnalysis = null;
+
+    const homeView = document.getElementById("home-view");
+    const categoryTrainingPanel = document.getElementById("category-training-panel");
+    const categoryModeButton = document.querySelector('[data-mode="category"]');
+    const personalityView = document.getElementById("personality-view");
+    const personalityResultsView = document.getElementById("personality-results-view");
+    const personalityLabel = document.getElementById("personality-label");
+    const personalityTitle = document.getElementById("personality-title");
+    const personalityForm = document.getElementById("personality-form");
+    const personalityQuestionList = document.getElementById("personality-question-list");
+    const personalityFormWarning = document.getElementById("personality-form-warning");
+    const personalityAnsweredCount = document.getElementById("personality-answered-count");
+    const personalityProgressBar = document.getElementById("personality-progress-bar");
+    const personalitySubmitButton = document.getElementById("personality-submit-button");
+    const quizView = document.getElementById("quiz-view");
+    const resultsView = document.getElementById("results-view");
+    const categoryLabel = document.getElementById("category-label");
+    const quizTitle = document.getElementById("quiz-title");
+    const timer = document.getElementById("timer");
+    const progressText = document.getElementById("progress-text");
+    const scoreText = document.getElementById("score-text");
+    const progressBar = document.getElementById("progress-bar");
+    const questionType = document.getElementById("question-type");
+    const questionText = document.getElementById("question-text");
+    const visualZone = document.getElementById("visual-zone");
+    const optionsContainer = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-button");
+    const resultsTitle = document.getElementById("results-title");
+    const scoreCircle = document.getElementById("score-circle");
+    const encouragement = document.getElementById("encouragement");
+    const categoryResults = document.getElementById("category-results");
+    const penaltySummary = document.getElementById("penalty-summary");
+    const downloadPdfButton = document.getElementById("download-pdf-button");
+
+    extendQuestionBank();
+    renderPersonalityQuestions();
+    updatePersonalityProgress();
+
+    document.querySelectorAll("[data-mode]").forEach((button) => {
+      button.addEventListener("click", () => handleModeSelection(button.dataset.mode));
+    });
+    document.querySelectorAll("[data-category]").forEach((button) => {
+      button.addEventListener("click", () => startCategoryTraining(button.dataset.category));
+    });
+    personalityForm.addEventListener("input", updatePersonalityProgress);
+    personalityForm.addEventListener("submit", handlePersonalitySubmit);
+    document.getElementById("personality-clear-button").addEventListener("click", clearPersonalityForm);
+    document.getElementById("personality-menu-button").addEventListener("click", showHome);
+    document.getElementById("personality-restart-button").addEventListener("click", () => startMode("personality"));
+    document.getElementById("personality-results-menu-button").addEventListener("click", showHome);
+    nextButton.addEventListener("click", nextQuestion);
+    document.getElementById("restart-button").addEventListener("click", restartCurrentMode);
+    document.getElementById("restart-quiz-button").addEventListener("click", restartCurrentMode);
+    document.getElementById("menu-button").addEventListener("click", showHome);
+    document.getElementById("back-menu-button").addEventListener("click", showHome);
+    downloadPdfButton.addEventListener("click", generateRevisionPdf);
+
+    function q(type, text, options, answer, explanation) {
+      return { type, text, options, answer, explanation };
+    }
+
+    function handleModeSelection(mode) {
+      if (mode === "category") {
+        const isHidden = categoryTrainingPanel.classList.toggle("hidden");
+        categoryModeButton.setAttribute("aria-expanded", String(!isHidden));
+        if (!isHidden) {
+          categoryTrainingPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        return;
+      }
+
+      startMode(mode);
+    }
+
+    function startMode(mode, bypassGuard) {
+      if (!bypassGuard && window.GPXAccess) {
+        window.GPXAccess.guard("psychotechnique.html", mode, null, () => startMode(mode, true));
+        return;
+      }
+
+      currentMode = mode;
+      lastPersonalityAnalysis = null;
+      if (mode === "complete") {
+        startPersonalityTest("cognitive");
+        return;
+      }
+
+      if (mode === "personality") {
+        startPersonalityTest("results");
+        return;
+      }
+
+      if (mode === "mini") {
+        startCognitiveQuiz("mini", buildMiniCategoryCounts());
+        return;
+      }
+
+      startCognitiveQuiz("cognitive", buildFixedCategoryCounts(categoryOrder, 10));
+    }
+
+    function restartCurrentMode() {
+      if (currentMode === "category") {
+        startCognitiveQuiz("category", activeCognitiveCounts);
+        return;
+      }
+
+      startMode(currentMode);
+    }
+
+    function startCategoryTraining(categoryKey, bypassGuard) {
+      if (!bypassGuard && window.GPXAccess) {
+        window.GPXAccess.guard("psychotechnique.html", "category", categoryKey, () => startCategoryTraining(categoryKey, true));
+        return;
+      }
+
+      currentMode = "category";
+      lastPersonalityAnalysis = null;
+      startCognitiveQuiz("category", { [categoryKey]: 10 });
+    }
+
+    function startPersonalityTest(nextStep) {
+      personalityNextStep = nextStep;
+      personalityStartedAt = new Date();
+      clearInterval(intervalId);
+      clearTimeout(nextButtonTimeoutId);
+      clearPersonalityForm();
+      homeView.classList.add("hidden");
+      quizView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      personalityResultsView.classList.add("hidden");
+      personalityView.classList.remove("hidden");
+      personalityLabel.textContent = nextStep === "cognitive"
+        ? "Étape 1/2 - 60 affirmations - non chronométré"
+        : "60 affirmations - échelle de 1 à 5";
+      personalityTitle.textContent = nextStep === "cognitive"
+        ? "Test de personnalité - Test complet"
+        : "Test de Personnalité uniquement";
+      personalitySubmitButton.textContent = nextStep === "cognitive"
+        ? "Continuer vers les tests cognitifs"
+        : "Voir mon analyse";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startCognitiveQuiz(mode, counts) {
+      const selectedKeys = categoryOrder.filter((key) => counts[key] > 0);
+      const modeInfo = cognitiveModeLabels[mode];
+      currentMode = mode;
+      activeCategoryKeys = selectedKeys;
+      activeCognitiveCounts = { ...counts };
+      currentQuestions = buildCognitiveTest(counts);
+      currentQuestionIndex = 0;
+      score = 0;
+      numericTimeouts = 0;
+      categoryScores = selectedKeys.reduce((scores, key) => {
+        scores[key] = { correct: 0, total: counts[key] };
+        return scores;
+      }, {});
+      questionResults = [];
+      testStartedAt = new Date();
+      lastCompletedAttempt = null;
+      clearInterval(intervalId);
+      clearTimeout(nextButtonTimeoutId);
+      homeView.classList.add("hidden");
+      personalityView.classList.add("hidden");
+      personalityResultsView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      quizView.classList.remove("hidden");
+      categoryLabel.textContent = modeInfo.label;
+      quizTitle.textContent = mode === "category"
+        ? `${modeInfo.title} - ${categories[selectedKeys[0]].title}`
+        : modeInfo.title;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      renderQuestion();
+    }
+
+    function showHome() {
+      clearInterval(intervalId);
+      clearTimeout(nextButtonTimeoutId);
+      personalityView.classList.add("hidden");
+      personalityResultsView.classList.add("hidden");
+      quizView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderPersonalityQuestions() {
+      personalityQuestionList.innerHTML = personalityQuestions.map((question, index) => `
+        <fieldset class="personality-question-card">
+          <legend class="personality-question-card__title">
+            <span class="question-number">${index + 1}</span>
+            <span>${question.text}</span>
+          </legend>
+          <div class="scale-options">
+            ${personalityScaleLabels.map((label, valueIndex) => {
+              const value = valueIndex + 1;
+              return `
+                <label class="scale-option">
+                  <input type="radio" name="${question.id}" value="${value}">
+                  <span>
+                    <span class="scale-option__value">${value}</span>
+                    <span class="scale-option__label">${label}</span>
+                  </span>
+                </label>
+              `;
+            }).join("")}
+          </div>
+        </fieldset>
+      `).join("");
+    }
+
+    function clearPersonalityForm() {
+      personalityForm.reset();
+      personalityFormWarning.textContent = "";
+      updatePersonalityProgress();
+    }
+
+    function collectPersonalityAnswers() {
+      const data = new FormData(personalityForm);
+      return personalityQuestions.reduce((answers, question) => {
+        const value = data.get(question.id);
+        answers[question.id] = value ? Number(value) : null;
+        return answers;
+      }, {});
+    }
+
+    function updatePersonalityProgress() {
+      const answers = collectPersonalityAnswers();
+      const answeredCount = personalityQuestions.filter((question) => answers[question.id]).length;
+      const percent = Math.round((answeredCount / personalityQuestions.length) * 100);
+      personalityAnsweredCount.textContent = `${answeredCount}/${personalityQuestions.length} réponses`;
+      personalityProgressBar.style.width = `${percent}%`;
+    }
+
+    function handlePersonalitySubmit(event) {
+      event.preventDefault();
+      const answers = collectPersonalityAnswers();
+      const missingQuestion = personalityQuestions.find((question) => !answers[question.id]);
+
+      if (missingQuestion) {
+        personalityFormWarning.textContent = "Merci de répondre aux 60 affirmations avant de continuer.";
+        document.querySelector(`[name="${missingQuestion.id}"]`)
+          .closest(".personality-question-card")
+          .scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      personalityFormWarning.textContent = "";
+      lastPersonalityAnalysis = buildPersonalityAnalysis(answers);
+
+      if (personalityNextStep === "cognitive") {
+        startCognitiveQuiz("complete", buildFixedCategoryCounts(categoryOrder, 10));
+        return;
+      }
+
+      showPersonalityResults(lastPersonalityAnalysis);
+    }
+
+    function buildPersonalityAnalysis(answers) {
+      const scores = calculatePersonalityScores(answers);
+      const coherence = analyzePersonalityCoherence(answers);
+      return { scores, coherence };
+    }
+
+    function calculatePersonalityScores(answers) {
+      const grouped = Object.keys(personalityDimensions).reduce((accumulator, key) => {
+        accumulator[key] = [];
+        return accumulator;
+      }, {});
+
+      personalityQuestions.forEach((question) => {
+        const rawAnswer = answers[question.id];
+        const adjustedAnswer = question.reverse ? 6 - rawAnswer : rawAnswer;
+        grouped[question.dimension].push(((adjustedAnswer - 1) / 4) * 10);
+      });
+
+      return Object.entries(grouped).map(([key, values]) => {
+        const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+        return {
+          key,
+          label: personalityDimensions[key].label,
+          advice: personalityDimensions[key].advice,
+          score: Math.round(average * 10) / 10
+        };
+      });
+    }
+
+    function analyzePersonalityCoherence(answers) {
+      const issues = personalityMirrorPairs.map((pair) => {
+        const directAnswer = answers[pair.direct];
+        const reverseAnswer = answers[pair.reverse];
+        const expectedDirect = 6 - reverseAnswer;
+        return {
+          ...pair,
+          gap: Math.abs(directAnswer - expectedDirect)
+        };
+      }).filter((issue) => issue.gap >= 3);
+
+      if (issues.length === 0) {
+        return {
+          title: "Cohérence des réponses : satisfaisante",
+          message: "Vos réponses aux questions miroir restent globalement constantes. Continuez à privilégier des réponses spontanées et authentiques.",
+          issues
+        };
+      }
+
+      if (issues.length <= 3) {
+        return {
+          title: "Cohérence des réponses : quelques écarts",
+          message: "Certaines réponses à des affirmations inversées semblent contradictoires. Relisez calmement les consignes et évitez de répondre mécaniquement.",
+          issues
+        };
+      }
+
+      return {
+        title: "Cohérence des réponses : avertissement",
+        message: "Plusieurs incohérences sont détectées entre des questions miroir. Dans un vrai test, ce type d'écart peut attirer l'attention du psychologue ou du jury.",
+        issues
+      };
+    }
+
+    function showPersonalityResults(analysis) {
+      renderPersonalityResults(analysis);
+      personalityView.classList.add("hidden");
+      personalityResultsView.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderPersonalityResults({ scores, coherence }) {
+      const average = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const sortedScores = [...scores].sort((a, b) => b.score - a.score);
+      const lowScores = scores.filter((item) => item.score < 6);
+      const solidScores = scores.filter((item) => item.score >= 7.5);
+
+      document.getElementById("personality-scores-grid").innerHTML = scores.map((item) => `
+        <article class="score-card">
+          <h3>${item.label}</h3>
+          <div class="score-value">${formatPersonalityScore(item.score)}<small>/10</small></div>
+          <div class="score-meter" aria-hidden="true"><span style="width: ${item.score * 10}%"></span></div>
+        </article>
+      `).join("");
+
+      document.getElementById("personality-analysis-summary").innerHTML = `
+        <h3>Lecture personnalisée</h3>
+        <p>${personalityOverallMessage(average)}</p>
+        ${scores.map((item) => `<p><strong>${item.label} :</strong> ${personalityDimensionMessage(item)}</p>`).join("")}
+      `;
+
+      document.getElementById("personality-strengths-list").innerHTML = (solidScores.length ? solidScores : sortedScores.slice(0, 2)).map((item) => `
+        <li><strong>${item.label}</strong> : ${personalityStrengthMessage(item)}</li>
+      `).join("");
+
+      const progressItems = lowScores.length ? lowScores : sortedScores.slice(-2).reverse();
+      document.getElementById("personality-progress-list").innerHTML = progressItems.map((item) => `
+        <li><strong>${item.label}</strong> : ${item.advice}</li>
+      `).join("");
+
+      const detail = coherence.issues.length
+        ? `<p>Nombre d'écarts marqués sur les questions miroir : <strong>${coherence.issues.length}/10</strong>.</p>`
+        : "<p>Aucun écart marqué n'a été relevé sur les 10 questions miroir.</p>";
+
+      document.getElementById("personality-coherence-card").innerHTML = `
+        <h3>${coherence.title}</h3>
+        <p>${coherence.message}</p>
+        ${detail}
+      `;
+      savePersonalityProgression(scores);
+    }
+
+    function savePersonalityProgression(scores) {
+      const total = 10;
+      const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const categories = scores.reduce((result, item) => {
+        result[item.label] = {
+          score: item.score,
+          total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score: Math.round(scoreValue * 10) / 10,
+        total,
+        duree: personalityStartedAt ? Math.round((new Date() - personalityStartedAt) / 1000) : 0,
+        categories
+      });
+    }
+
+    function personalityOverallMessage(average) {
+      if (average >= 8) {
+        return "Votre profil simulé montre un équilibre solide sur les dimensions attendues pour le concours GPX. L'enjeu est de rester authentique et constant dans vos réponses.";
+      }
+
+      if (average >= 6.5) {
+        return "Votre profil simulé présente des bases cohérentes avec les attentes du concours. Certaines dimensions peuvent encore être renforcées par un travail de préparation ciblé.";
+      }
+
+      return "Votre profil simulé met en évidence plusieurs points à consolider. Utilisez ces résultats comme support d'entraînement et de réflexion personnelle avant l'entretien.";
+    }
+
+    function personalityDimensionMessage(item) {
+      if (item.score >= 8) {
+        return `score élevé (${formatPersonalityScore(item.score)}/10), indicateur positif à maintenir avec des réponses naturelles.`;
+      }
+
+      if (item.score >= 6) {
+        return `score intermédiaire (${formatPersonalityScore(item.score)}/10), base correcte mais encore perfectible selon les situations.`;
+      }
+
+      return `score fragile (${formatPersonalityScore(item.score)}/10), dimension à travailler pour gagner en crédibilité et en constance.`;
+    }
+
+    function personalityStrengthMessage(item) {
+      if (item.score >= 8) {
+        return `point d'appui net avec un score de ${formatPersonalityScore(item.score)}/10.`;
+      }
+
+      return `dimension la plus favorable de cette simulation avec un score de ${formatPersonalityScore(item.score)}/10.`;
+    }
+
+    function formatPersonalityScore(score) {
+      return score.toFixed(1).replace(".", ",");
+    }
+
+    function renderQuestion() {
+      const question = currentQuestions[currentQuestionIndex];
+      answered = false;
+      clearTimeout(nextButtonTimeoutId);
+      feedback.innerHTML = "";
+      nextButton.disabled = true;
+      nextButton.classList.add("hidden");
+      nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
+      timer.classList.remove("timer-badge--danger");
+
+      progressText.textContent = "Question en cours";
+      scoreText.textContent = `Score : ${score}`;
+      progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+      questionType.textContent = `${categoryBadges[question.categoryKey]} | ${question.type}`;
+      questionText.textContent = question.text;
+      renderVisual(question);
+      renderOptions(question);
+      startTimer(question.categoryKey);
+    }
+
+    function renderVisual(question) {
+      if (!question.visual) {
+        visualZone.innerHTML = "";
+        return;
+      }
+
+      visualZone.innerHTML = `
+        <p class="visual-zone__label">${question.visual.label}</p>
+        <div class="svg-card">${question.visual.svg}</div>
+      `;
+    }
+
+    function renderOptions(question) {
+      optionsContainer.innerHTML = "";
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option-button";
+        button.dataset.index = index;
+
+        if (typeof option === "string") {
+          button.innerHTML = `<span><span class="option-label">${letters[index]}.</span> ${option}</span>`;
+        } else {
+          button.innerHTML = `
+            <span class="option-visual">
+              <span class="option-label">${letters[index]}</span>
+              <span class="svg-card">${option.svg}</span>
+              <span>${option.label}</span>
+            </span>
+          `;
+        }
+
+        button.addEventListener("click", () => answerQuestion(index));
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function startTimer(categoryKey) {
+      clearInterval(intervalId);
+      timer.classList.toggle("hidden", categoryKey !== "numeric");
+      if (categoryKey !== "numeric") {
+        return;
+      }
+
+      remainingSeconds = 30;
+      updateTimerText();
+      intervalId = setInterval(() => {
+        remainingSeconds -= 1;
+        updateTimerText();
+        if (remainingSeconds <= 0) {
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerText() {
+      timer.textContent = `Temps : ${remainingSeconds}s`;
+      timer.classList.toggle("timer-badge--danger", remainingSeconds <= 10);
+    }
+
+    function answerQuestion(selectedIndex) {
+      if (answered) {
+        return;
+      }
+
+      const question = currentQuestions[currentQuestionIndex];
+      const isCorrect = selectedIndex === question.answer;
+      if (isCorrect) {
+        score += 1;
+        categoryScores[question.categoryKey].correct += 1;
+      }
+
+      showCorrection(selectedIndex, isCorrect, false);
+    }
+
+    function handleTimeout() {
+      if (answered) {
+        return;
+      }
+
+      numericTimeouts += 1;
+      showCorrection(null, false, true);
+    }
+
+    function showCorrection(selectedIndex, isCorrect, timedOut) {
+      const question = currentQuestions[currentQuestionIndex];
+      answered = true;
+      clearInterval(intervalId);
+      progressBar.style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
+      scoreText.textContent = `Score : ${score}`;
+
+      optionsContainer.querySelectorAll(".option-button").forEach((button) => {
+        const index = Number(button.dataset.index);
+        const isAnswer = index === question.answer;
+        const isSelected = index === selectedIndex;
+        button.disabled = true;
+        if (isAnswer) {
+          button.classList.add("is-correct");
+        } else if (isSelected) {
+          button.classList.add("is-wrong");
+        } else {
+          button.classList.add("is-inactive");
+        }
+      });
+
+      const correctOption = question.options[question.answer];
+      const correctLabel = getPlainOptionText(correctOption);
+      const selectedOption = selectedIndex === null ? null : question.options[selectedIndex];
+      const userAnswerLabel = selectedOption
+        ? getOptionAnswerLabel(selectedOption, selectedIndex)
+        : "Aucune réponse (temps écoulé)";
+      const correctAnswerLabel = getOptionAnswerLabel(correctOption, question.answer);
+      questionResults[currentQuestionIndex] = {
+        categoryKey: question.categoryKey,
+        categoryTitle: categories[question.categoryKey].title,
+        questionNumber: currentQuestionIndex + 1,
+        questionType: question.type,
+        questionText: question.text,
+        userAnswer: userAnswerLabel,
+        correctAnswer: correctAnswerLabel,
+        isCorrect,
+        timedOut,
+        explanation: question.explanation || ""
+      };
+      const correctAnswerText = `${letters[question.answer]}. ${correctLabel}`;
+      const status = isCorrect ? "✅ Bonne réponse !" : timedOut ? "❌ Temps écoulé !" : "❌ Mauvaise réponse !";
+      const correction = isCorrect ? "" : `<br>La bonne réponse était : ${correctAnswerText}`;
+      feedback.innerHTML = `
+        <strong class="feedback__status">${status}</strong>
+        ${correction}<br>
+        ${question.explanation}
+      `;
+      nextButtonTimeoutId = setTimeout(() => {
+        nextButton.classList.remove("hidden");
+        nextButton.disabled = false;
+      }, 1000);
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex += 1;
+        renderQuestion();
+        return;
+      }
+
+      showResults();
+    }
+
+    function showResults() {
+      clearInterval(intervalId);
+      quizView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+      timer.classList.add("hidden");
+      resultsTitle.textContent = cognitiveModeLabels[currentMode]?.title || "Score final";
+      scoreCircle.textContent = `${score}/${currentQuestions.length}`;
+      encouragement.textContent = getEncouragement(score, currentQuestions.length);
+      categoryResults.innerHTML = activeCategoryKeys.map((key) => {
+        const result = categoryScores[key];
+        return `<strong>${categoryBadges[key]}</strong> : ${result.correct}/${result.total}`;
+      }).join(" | ");
+      penaltySummary.textContent = numericTimeouts > 0
+        ? `Questions numériques non répondues dans les 30 secondes : ${numericTimeouts}.`
+        : "Aucune question numérique n'a dépassé les 30 secondes.";
+      lastCompletedAttempt = {
+        score,
+        total: currentQuestions.length,
+        mode: currentMode,
+        numericTimeouts,
+        categoryScores: copyCategoryScores(categoryScores),
+        categoryKeys: [...activeCategoryKeys],
+        personalityAnalysis: lastPersonalityAnalysis,
+        startedAt: testStartedAt || new Date(),
+        completedAt: new Date(),
+        results: questionResults.slice()
+      };
+      saveCognitiveProgression();
+    }
+
+    function saveCognitiveProgression() {
+      const categoriesDetail = activeCategoryKeys.reduce((result, key) => {
+        const item = categoryScores[key];
+        result[categories[key].title] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: testStartedAt ? Math.round((new Date() - testStartedAt) / 1000) : 0,
+        categories: categoriesDetail
+      });
+    }
+
+    function getEncouragement(value, total) {
+      const ratio = total > 0 ? value / total : 0;
+      if (ratio >= 0.85) {
+        return "Excellent niveau : vous maîtrisez très bien les quatre catégories.";
+      }
+      if (ratio >= 0.7) {
+        return "Bon résultat : consolidez les automatismes pour gagner encore en régularité.";
+      }
+      if (ratio >= 0.5) {
+        return "Résultat encourageant : reprenez les corrections par catégorie et recommencez.";
+      }
+      return "Entraînement à poursuivre : avancez question par question et repérez les méthodes utiles.";
+    }
+
+    function copyCategoryScores(scores) {
+      return activeCategoryKeys.reduce((copy, key) => {
+        const result = scores[key] || { correct: 0, total: activeCognitiveCounts[key] || 0 };
+        copy[key] = { correct: result.correct, total: result.total };
+        return copy;
+      }, {});
+    }
+
+    function buildFixedCategoryCounts(keys, count) {
+      return keys.reduce((counts, key) => {
+        counts[key] = count;
+        return counts;
+      }, {});
+    }
+
+    function buildMiniCategoryCounts() {
+      const counts = buildFixedCategoryCounts(categoryOrder, 2);
+      shuffle(categoryOrder).slice(0, 2).forEach((key) => {
+        counts[key] += 1;
+      });
+      return counts;
+    }
+
+    function buildCognitiveTest(counts) {
+      const selectedQuestions = categoryOrder.flatMap((categoryKey) => {
+        const count = counts[categoryKey] || 0;
+        return sample(categories[categoryKey].questions, count).map((question) => prepareQuestion(question, categoryKey));
+      });
+      return shuffle(selectedQuestions);
+    }
+
+    function prepareQuestion(question, categoryKey) {
+      const shuffledOptions = shuffle(question.options.map((option, index) => ({
+        option,
+        originalIndex: index
+      })));
+      return {
+        ...question,
+        categoryKey,
+        options: shuffledOptions.map((item) => item.option),
+        answer: shuffledOptions.findIndex((item) => item.originalIndex === question.answer)
+      };
+    }
+
+    function sample(items, count) {
+      return shuffle(items).slice(0, count);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function getPlainOptionText(option) {
+      return typeof option === "string" ? option : option.label;
+    }
+
+    function getOptionAnswerLabel(option, index) {
+      return `${letters[index]}. ${getPlainOptionText(option)}`;
+    }
+
+    function generateRevisionPdf() {
+      const attempt = lastCompletedAttempt;
+      const jsPDFConstructor = window.jspdf && window.jspdf.jsPDF;
+      if (!attempt || !jsPDFConstructor) {
+        alert("La fiche PDF n'est pas encore disponible. Vérifiez votre connexion puis réessayez.");
+        return;
+      }
+
+      const doc = new jsPDFConstructor();
+      const navy = [26, 39, 68];
+      const muted = [79, 92, 119];
+      const red = [179, 38, 30];
+      const green = [30, 114, 59];
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 16;
+      const maxWidth = pageWidth - margin * 2;
+      let y = 18;
+
+      doc.setFillColor(...navy);
+      doc.roundedRect(margin, y - 7, 12, 12, 3, 3, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text("GP", margin + 2.6, y + 1);
+      doc.setTextColor(...navy);
+      doc.setFontSize(15);
+      doc.text("Fiche de révision - Entraînement Gardien de la Paix", margin + 17, y);
+      y += 9;
+      doc.setDrawColor(...navy);
+      doc.setLineWidth(0.5);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 10;
+
+      y = addPdfText(doc, `Date et heure du test : ${formatDateTime(attempt.startedAt)}`, margin, y, maxWidth, {
+        fontSize: 11,
+        color: muted
+      });
+      y = addPdfText(doc, `Score obtenu : ${attempt.score}/${attempt.total}`, margin, y + 2, maxWidth, {
+        fontSize: 13,
+        style: "bold",
+        color: navy
+      });
+      if (attempt.personalityAnalysis) {
+        y = addPdfText(doc, "Étape personnalité réalisée avant les tests cognitifs.", margin, y + 2, maxWidth, {
+          fontSize: 11,
+          color: muted
+        });
+      }
+      y = addPdfText(doc, "Détail par catégorie :", margin, y + 4, maxWidth, {
+        fontSize: 12,
+        style: "bold",
+        color: navy
+      });
+      attempt.categoryKeys.forEach((key) => {
+        const result = attempt.categoryScores[key] || { correct: 0, total: 0 };
+        y = addPdfText(doc, `• ${categories[key].title} : ${result.correct}/${result.total}`, margin + 4, y + 1, maxWidth - 4, {
+          fontSize: 11,
+          color: muted
+        });
+      });
+      y = addPdfText(doc, `Questions numériques hors délai : ${attempt.numericTimeouts}`, margin + 4, y + 1, maxWidth - 4, {
+        fontSize: 11,
+        color: muted
+      });
+      y += 4;
+
+      const wrongAnswersByCategory = groupWrongAnswersByCategory(attempt.results);
+      if (wrongAnswersByCategory.length === 0) {
+        y = ensurePdfSpace(doc, y, 18, margin);
+        doc.setFillColor(232, 247, 237);
+        doc.roundedRect(margin, y, maxWidth, 15, 3, 3, "F");
+        y = addPdfText(doc, "Félicitations, aucune erreur !", margin + 5, y + 10, maxWidth - 10, {
+          fontSize: 13,
+          style: "bold",
+          color: green
+        });
+      } else {
+        y = addPdfText(doc, "Questions à revoir", margin, y + 4, maxWidth, {
+          fontSize: 14,
+          style: "bold",
+          color: navy
+        });
+
+        let wrongQuestionNumber = 1;
+        wrongAnswersByCategory.forEach(({ title, answers }) => {
+          y = ensurePdfSpace(doc, y + 4, 16, margin);
+          doc.setFillColor(245, 247, 251);
+          doc.setDrawColor(216, 222, 234);
+          doc.roundedRect(margin, y, maxWidth, 11, 2, 2, "FD");
+          y = addPdfText(doc, title, margin + 4, y + 7.5, maxWidth - 8, {
+            fontSize: 12,
+            style: "bold",
+            color: navy
+          });
+          y += 3;
+
+          answers.forEach((answer) => {
+            y = ensurePdfSpace(doc, y, 42, margin);
+            y = addPdfText(
+              doc,
+              `${wrongQuestionNumber}. Question ${answer.questionNumber} - ${answer.questionType}`,
+              margin,
+              y + 2,
+              maxWidth,
+              { fontSize: 11, style: "bold", color: navy }
+            );
+            y = addPdfText(doc, answer.questionText, margin + 4, y + 1, maxWidth - 4, {
+              fontSize: 11,
+              color: [33, 39, 55]
+            });
+            y = addPdfText(doc, `❌ Réponse donnée : ${answer.userAnswer}`, margin + 4, y + 1, maxWidth - 4, {
+              fontSize: 10.5,
+              color: red
+            });
+            y = addPdfText(doc, `✅ Bonne réponse : ${answer.correctAnswer}`, margin + 4, y + 1, maxWidth - 4, {
+              fontSize: 10.5,
+              color: green
+            });
+            if (answer.explanation) {
+              y = addPdfText(doc, `Explication : ${answer.explanation}`, margin + 4, y + 1, maxWidth - 4, {
+                fontSize: 10.5,
+                color: muted
+              });
+            }
+            doc.setDrawColor(216, 222, 234);
+            doc.line(margin, y + 2, pageWidth - margin, y + 2);
+            y += 7;
+            wrongQuestionNumber += 1;
+          });
+        });
+      }
+
+      addPdfFooters(doc, margin, pageWidth, pageHeight);
+      doc.save(`fiche-revision-psychotechnique-${formatFileDate(attempt.startedAt)}.pdf`);
+    }
+
+    function groupWrongAnswersByCategory(results) {
+      const grouped = [];
+      results
+        .filter((result) => result && !result.isCorrect)
+        .forEach((result) => {
+          let group = grouped.find((item) => item.key === result.categoryKey);
+          if (!group) {
+            group = { key: result.categoryKey, title: result.categoryTitle, answers: [] };
+            grouped.push(group);
+          }
+          group.answers.push(result);
+        });
+      return grouped.sort((first, second) => categoryOrder.indexOf(first.key) - categoryOrder.indexOf(second.key));
+    }
+
+    function addPdfText(doc, text, x, y, maxWidth, options = {}) {
+      const lineHeight = options.lineHeight || 5.5;
+      let currentY = y;
+      doc.setFont("helvetica", options.style || "normal");
+      doc.setFontSize(options.fontSize || 11);
+      doc.setTextColor(...(options.color || [33, 39, 55]));
+      const lines = doc.splitTextToSize(String(text), maxWidth);
+      lines.forEach((line) => {
+        currentY = ensurePdfSpace(doc, currentY, lineHeight, 16);
+        doc.text(line, x, currentY);
+        currentY += lineHeight;
+      });
+      return currentY;
+    }
+
+    function ensurePdfSpace(doc, y, requiredHeight, margin) {
+      const pageHeight = doc.internal.pageSize.getHeight();
+      if (y + requiredHeight <= pageHeight - margin) {
+        return y;
+      }
+      doc.addPage();
+      return margin;
+    }
+
+    function addPdfFooters(doc, margin, pageWidth, pageHeight) {
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let page = 1; page <= pageCount; page += 1) {
+        doc.setPage(page);
+        doc.setDrawColor(216, 222, 234);
+        doc.line(margin, pageHeight - 12, pageWidth - margin, pageHeight - 12);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(79, 92, 119);
+        doc.text(`Page ${page}/${pageCount}`, pageWidth - margin, pageHeight - 7, { align: "right" });
+      }
+    }
+
+    function formatDateTime(value) {
+      return new Intl.DateTimeFormat("fr-FR", {
+        dateStyle: "long",
+        timeStyle: "short"
+      }).format(value);
+    }
+
+    function formatFileDate(value) {
+      const date = value instanceof Date ? value : new Date(value);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function spatialRotation(type, text, shape, baseAngle, answerAngle, optionAngles, answer) {
+      return {
+        type,
+        text,
+        answer,
+        visual: {
+          label: "Figure de départ",
+          svg: shapeSvg(shape, baseAngle)
+        },
+        options: optionAngles.map((angle) => ({
+          label: "Figure proposée",
+          svg: shapeSvg(shape, angle)
+        })),
+        explanation: `La rotation attendue place la figure à ${answerAngle}°.`
+      };
+    }
+
+    function spatialMirror(type, text, shape, axis, optionTransforms, answer) {
+      return {
+        type,
+        text,
+        answer,
+        visual: {
+          label: axis === "h" ? "Figure de départ - symétrie horizontale demandée" : "Figure de départ - symétrie verticale demandée",
+          svg: shapeSvg(shape, 0)
+        },
+        options: optionTransforms.map((transforms) => ({
+          label: "Figure proposée",
+          svg: shapeSvg(shape, 0, transforms)
+        })),
+        explanation: axis === "h"
+          ? "Le symétrique horizontal inverse le haut et le bas de la figure."
+          : "Le symétrique vertical inverse la gauche et la droite de la figure."
+      };
+    }
+
+    function spatialCube(type, text, net, cubeOptions, answer) {
+      return {
+        type,
+        text,
+        answer,
+        visual: {
+          label: "Patron déplié",
+          svg: netSvg(net)
+        },
+        options: cubeOptions.map((cube) => ({
+          label: "Cube proposé",
+          svg: cubeSvg(cube)
+        })),
+        explanation: "Le bon cube respecte la disposition relative des faces colorées dans le patron."
+      };
+    }
+
+    function shapeSvg(shape, angle = 0, transforms = []) {
+      const scaleX = transforms.includes("v") ? -1 : 1;
+      const scaleY = transforms.includes("h") ? -1 : 1;
+      const shapes = {
+        arrow: `
+          <path d="M56 30 L126 100 L56 170 L56 128 L24 128 L24 72 L56 72 Z" fill="#1a2744"/>
+          <circle cx="72" cy="100" r="8" fill="#ffffff"/>
+        `,
+        triangleMark: `
+          <path d="M100 24 L174 162 H26 Z" fill="#1a2744"/>
+          <circle cx="76" cy="124" r="12" fill="#ffffff"/>
+        `,
+        flag: `
+          <rect x="48" y="28" width="16" height="146" rx="8" fill="#1a2744"/>
+          <path d="M64 36 H156 L132 76 L156 116 H64 Z" fill="#2f5f9f"/>
+          <circle cx="94" cy="76" r="10" fill="#ffffff"/>
+        `,
+        lShape: `
+          <path d="M54 34 H96 V112 H148 V154 H54 Z" fill="#1a2744"/>
+          <rect x="72" y="52" width="18" height="18" fill="#ffffff"/>
+        `,
+        cornerDots: `
+          <path d="M44 44 H156 V86 H86 V156 H44 Z" fill="#1a2744"/>
+          <circle cx="132" cy="64" r="10" fill="#ffffff"/>
+          <circle cx="64" cy="132" r="10" fill="#ffffff"/>
+        `,
+        chevron: `
+          <path d="M58 32 L150 100 L58 168 L40 142 L96 100 L40 58 Z" fill="#1a2744"/>
+          <path d="M74 72 L112 100 L74 128" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+        `,
+        stairs: `
+          <path d="M44 150 H78 V116 H112 V82 H146 V48 H168 V172 H44 Z" fill="#1a2744"/>
+          <circle cx="62" cy="156" r="7" fill="#ffffff"/>
+        `,
+        zigzag: `
+          <path d="M42 54 H104 L82 96 H150 L96 158 H44 L78 116 H26 Z" fill="#1a2744"/>
+          <circle cx="112" cy="118" r="9" fill="#ffffff"/>
+        `,
+        tShape: `
+          <path d="M42 40 H158 V82 H122 V160 H78 V82 H42 Z" fill="#1a2744"/>
+          <circle cx="100" cy="61" r="9" fill="#ffffff"/>
+        `
+      };
+
+      return `
+        <svg viewBox="0 0 200 200" role="img" aria-label="Illustration géométrique">
+          <rect x="8" y="8" width="184" height="184" rx="20" fill="#f5f7fb" stroke="#d8deea"/>
+          <g transform="translate(100 100) rotate(${angle}) scale(${scaleX} ${scaleY}) translate(-100 -100)">
+            ${shapes[shape]}
+          </g>
+        </svg>
+      `;
+    }
+
+    function netSvg(kind) {
+      const layouts = {
+        cross: [[1, 0, "#dce7ff"], [0, 1, "#ffffff"], [1, 1, "#2f5f9f"], [2, 1, "#ffffff"], [1, 2, "#8fb3e8"], [1, 3, "#ffffff"]],
+        line: [[0, 1, "#2f5f9f"], [1, 1, "#8fb3e8"], [2, 1, "#dce7ff"], [3, 1, "#ffffff"], [1, 0, "#ffffff"], [1, 2, "#ffffff"]],
+        stair: [[0, 0, "#ffffff"], [0, 1, "#2f5f9f"], [1, 1, "#8fb3e8"], [1, 2, "#ffffff"], [2, 2, "#dce7ff"], [2, 3, "#ffffff"]],
+        pyramid: [[1, 0, "#ffffff"], [0, 1, "#8fb3e8"], [1, 1, "#2f5f9f"], [2, 1, "#dce7ff"], [1, 2, "#ffffff"], [1, 3, "#ffffff"]]
+      };
+      const cells = layouts[kind].map(([x, y, fill]) => {
+        const size = 40;
+        const gap = 3;
+        const left = 22 + x * (size + gap);
+        const top = 18 + y * (size + gap);
+        return `<rect x="${left}" y="${top}" width="${size}" height="${size}" fill="${fill}" stroke="#1a2744" stroke-width="2"/>`;
+      }).join("");
+
+      return `
+        <svg viewBox="0 0 200 200" role="img" aria-label="Patron de cube">
+          <rect x="8" y="8" width="184" height="184" rx="20" fill="#f5f7fb" stroke="#d8deea"/>
+          ${cells}
+        </svg>
+      `;
+    }
+
+    function cubeSvg(kind) {
+      const labels = {
+        cubeCross: "Cube avec face bleue au centre",
+        cubeLine: "Cube avec bande bleue alignée",
+        cubeStair: "Cube avec faces en escalier",
+        cubePyramid: "Cube avec trois faces autour du sommet"
+      };
+      const palettes = {
+        cubeCross: ["#2f5f9f", "#8fb3e8", "#dce7ff"],
+        cubeLine: ["#2f5f9f", "#2f5f9f", "#8fb3e8"],
+        cubeStair: ["#8fb3e8", "#ffffff", "#2f5f9f"],
+        cubePyramid: ["#dce7ff", "#2f5f9f", "#8fb3e8"]
+      };
+      const [top, left, right] = palettes[kind];
+      return `
+        <svg viewBox="0 0 200 200" role="img" aria-label="${labels[kind]}">
+          <rect x="8" y="8" width="184" height="184" rx="20" fill="#f5f7fb" stroke="#d8deea"/>
+          <polygon points="100,28 158,62 100,96 42,62" fill="${top}" stroke="#1a2744" stroke-width="2"/>
+          <polygon points="42,62 100,96 100,166 42,132" fill="${left}" stroke="#1a2744" stroke-width="2"/>
+          <polygon points="158,62 100,96 100,166 158,132" fill="${right}" stroke="#1a2744" stroke-width="2"/>
+        </svg>
+      `;
+    }
+
+    function extendQuestionBank() {
+      fillCategory("logic", createLogicQuestions());
+      fillCategory("spatial", createSpatialQuestions());
+      fillCategory("numeric", createNumericQuestions());
+      fillCategory("verbal", createVerbalQuestions());
+
+      categoryOrder.forEach((key) => {
+        if (categories[key].questions.length !== 100) {
+          throw new Error(`La banque ${key} contient ${categories[key].questions.length} questions au lieu de 100.`);
+        }
+      });
+    }
+
+    function fillCategory(categoryKey, generatedQuestions) {
+      const needed = 100 - categories[categoryKey].questions.length;
+      categories[categoryKey].questions.push(...generatedQuestions.slice(0, needed));
+    }
+
+    function createLogicQuestions() {
+      const questions = [];
+
+      for (let index = 0; index < 20; index += 1) {
+        const start = 3 + index;
+        const step = 2 + (index % 7);
+        const sequence = [0, 1, 2, 3].map((offset) => start + offset * step);
+        const correct = start + 4 * step;
+        questions.push(q(
+          "Série de chiffres",
+          `${sequence.join(", ")}, __ ?`,
+          numberOptions(correct, [correct + step, correct - step, correct + 2 * step]),
+          0,
+          `On ajoute ${step} à chaque étape : ${sequence[3]} + ${step} = ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const multiplier = index % 2 === 0 ? 3 : 2;
+        const start = 7 + index;
+        const sequence = [0, 1, 2, 3].map((offset) => start * multiplier ** offset);
+        const correct = start * multiplier ** 4;
+        questions.push(q(
+          "Série de chiffres",
+          `${sequence.join(", ")}, __ ?`,
+          numberOptions(correct, [correct - start, correct + start, correct + start * multiplier]),
+          0,
+          `Chaque terme est multiplié par ${multiplier} : ${sequence[3]} x ${multiplier} = ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const start = 1 + index;
+        const firstGap = 2 + (index % 5);
+        const sequence = [start];
+        for (let step = 0; step < 4; step += 1) {
+          sequence.push(sequence[step] + firstGap + step);
+        }
+        const visible = sequence.slice(0, 4);
+        const correct = sequence[4];
+        questions.push(q(
+          "Écarts progressifs",
+          `${visible.join(", ")}, __ ?`,
+          numberOptions(correct, [correct - 1, correct + 1, correct + firstGap]),
+          0,
+          `Les écarts augmentent de 1 : +${firstGap}, +${firstGap + 1}, +${firstGap + 2}, puis +${firstGap + 3}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const start = 4 + index;
+        const step = 2 + (index % 4);
+        const sequence = [0, 1, 2, 3].map((offset) => letterFromIndex(start + offset * step));
+        const correct = letterFromIndex(start + 4 * step);
+        questions.push(q(
+          "Série de lettres",
+          `${sequence.join(", ")}, __ ?`,
+          textOptions(correct, [
+            letterFromIndex(start + 4 * step + 1),
+            letterFromIndex(start + 4 * step - 1),
+            letterFromIndex(start + 4 * step + 2)
+          ]),
+          0,
+          `On avance de ${step} lettres à chaque fois${start + 4 * step >= 26 ? " en reprenant au début de l'alphabet après Z" : ""} : la lettre attendue est ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const left = 3 + index;
+        const right = 5 + (index % 12);
+        const mode = index % 5;
+        let transformedLeft;
+        let correct;
+        let explanation;
+        if (mode === 0) {
+          transformedLeft = left * 2;
+          correct = right * 2;
+          explanation = "Le second nombre vaut le double du premier.";
+        } else if (mode === 1) {
+          transformedLeft = left + 7;
+          correct = right + 7;
+          explanation = "On ajoute 7 au premier nombre.";
+        } else if (mode === 2) {
+          transformedLeft = left * left;
+          correct = right * right;
+          explanation = "Le lien est le carré du nombre.";
+        } else if (mode === 3) {
+          transformedLeft = left * 3;
+          correct = right * 3;
+          explanation = "Le second nombre vaut trois fois le premier.";
+        } else {
+          transformedLeft = left + 4;
+          correct = right + 4;
+          explanation = "On ajoute 4 au premier nombre.";
+        }
+        questions.push(q(
+          "Analogie logique",
+          `${left} est à ${transformedLeft} ce que ${right} est à __ ?`,
+          numberOptions(correct, [correct - 2, correct + 2, correct + 4]),
+          0,
+          explanation
+        ));
+      }
+
+      return questions;
+    }
+
+    function createSpatialQuestions() {
+      return SpatialQuestionBank.createQuestions();
+    }
+
+    function createNumericQuestions() {
+      const questions = [];
+
+      for (let index = 0; index < 20; index += 1) {
+        const a = 28 + index * 3;
+        const b = 17 + (index % 9) * 6;
+        if (index % 2 === 0) {
+          const correct = a + b;
+          questions.push(q(
+            "Calcul mental rapide",
+            `${a} + ${b} = ?`,
+            numberOptions(correct, [correct - 10, correct + 10, correct + 5]),
+            0,
+            `${a} + ${b} = ${correct}.`
+          ));
+        } else {
+          const larger = a + b;
+          const correct = larger - a;
+          questions.push(q(
+            "Calcul mental rapide",
+            `${larger} - ${a} = ?`,
+            numberOptions(correct, [correct - 6, correct + 6, correct + 12]),
+            0,
+            `${larger} - ${a} = ${correct}.`
+          ));
+        }
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const factorA = 6 + (index % 9);
+        const factorB = 3 + (index % 7);
+        const product = factorA * factorB;
+        if (index % 3 === 0) {
+          questions.push(q(
+            "Multiplications",
+            `${factorA} x ${factorB} = ?`,
+            numberOptions(product, [product - factorA, product + factorB, product + factorA]),
+            0,
+            `${factorA} x ${factorB} = ${product}.`
+          ));
+        } else {
+          questions.push(q(
+            "Divisions",
+            `${product} / ${factorA} = ?`,
+            numberOptions(factorB, [factorB + 1, factorB + 2, Math.max(1, factorB - 1)]),
+            0,
+            `${product} / ${factorA} = ${factorB}.`
+          ));
+        }
+      }
+
+      const percentages = [10, 20, 25, 30, 40, 50, 60, 75];
+      for (let index = 0; index < 15; index += 1) {
+        const percent = percentages[index % percentages.length];
+        const base = 80 + index * 20;
+        const correct = base * percent / 100;
+        questions.push(q(
+          "Pourcentages",
+          `${percent}% de ${base} = ?`,
+          numberOptions(correct, [correct + 5, correct + 10, Math.max(1, correct - 5)]),
+          0,
+          `${percent}% de ${base} = ${correct}.`
+        ));
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const mode = index % 3;
+        if (mode === 0) {
+          const hours = 4 + Math.floor(index / 3);
+          const correct = hours * 60;
+          questions.push(q(
+            "Conversions",
+            `${hours} heures correspondent à combien de minutes ?`,
+            numberOptions(correct, [correct - 30, correct + 30, correct + 60]),
+            0,
+            `1 heure vaut 60 minutes, donc ${hours} x 60 = ${correct}.`
+          ));
+        } else if (mode === 1) {
+          const km = 2 + Math.floor(index / 3);
+          const correct = km * 1000;
+          questions.push(q(
+            "Conversions",
+            `${km} km correspondent à combien de mètres ?`,
+            numberOptions(correct, [correct / 10, correct + 500, correct * 10], "m"),
+            0,
+            `1 km vaut 1 000 m, donc ${km} km = ${correct} m.`
+          ));
+        } else {
+          const grams = 250 * (4 + Math.floor(index / 3));
+          const correct = grams / 1000;
+          questions.push(q(
+            "Conversions",
+            `${grams} g correspondent à combien de kilogrammes ?`,
+            textOptions(`${formatDecimal(correct)} kg`, [`${formatDecimal(correct + 0.25)} kg`, `${formatDecimal(Math.max(0.25, correct - 0.25))} kg`, `${formatDecimal(correct * 10)} kg`]),
+            0,
+            `1 kg vaut 1 000 g, donc ${grams} g = ${formatDecimal(correct)} kg.`
+          ));
+        }
+      }
+
+      for (let index = 0; index < 15; index += 1) {
+        const unitPrice = 4 + (index % 9);
+        const quantity = 3 + (index % 6);
+        const correct = unitPrice * quantity;
+        questions.push(q(
+          "Problème arithmétique",
+          `Un carnet coûte ${unitPrice} €. Combien coûtent ${quantity} carnets ?`,
+          numberOptions(correct, [correct + unitPrice, correct - unitPrice, correct + quantity], "€"),
+          0,
+          `${unitPrice} x ${quantity} = ${correct} €.`
+        ));
+      }
+
+      return questions;
+    }
+
+    function createVerbalQuestions() {
+      const questions = [];
+      const synonyms = [
+        ["attentif", "vigilant", "distrait", "bruyant", "lent"],
+        ["bref", "court", "long", "lourd", "ancien"],
+        ["évident", "manifeste", "caché", "douteux", "faible"],
+        ["utile", "pratique", "inutile", "risqué", "fragile"],
+        ["solide", "robuste", "léger", "vide", "tardif"],
+        ["sincère", "franc", "secret", "froid", "large"],
+        ["réfléchi", "posé", "bruyant", "hâtif", "violent"],
+        ["difficile", "complexe", "simple", "clair", "court"],
+        ["important", "essentiel", "mineur", "rare", "lointain"],
+        ["âgé", "vieux", "récent", "neuf", "futur"],
+        ["humide", "mouillé", "sec", "chaud", "dur"],
+        ["bruyant", "sonore", "silencieux", "discret", "lisse"],
+        ["courageux", "brave", "craintif", "timide", "faible"],
+        ["obscur", "sombre", "clair", "net", "visible"],
+        ["prévoir", "anticiper", "oublier", "subir", "retarder"]
+      ];
+      synonyms.forEach(([word, correct, ...distractors]) => {
+        questions.push(q(
+          "Synonyme",
+          `Quel est le synonyme de « ${word} » ?`,
+          textOptions(correct, distractors),
+          0,
+          `« ${correct} » est le mot le plus proche de « ${word} ».`
+        ));
+      });
+
+      const antonyms = [
+        ["autorisé", "interdit", "officiel", "public", "valable"],
+        ["visible", "invisible", "clair", "présent", "direct"],
+        ["simple", "complexe", "facile", "rapide", "utile"],
+        ["stable", "instable", "solide", "régulier", "fixe"],
+        ["ouvrir", "fermer", "entrer", "poser", "tenir"],
+        ["augmenter", "diminuer", "monter", "grandir", "ajouter"],
+        ["échec", "réussite", "faute", "retard", "refus"],
+        ["public", "privé", "commun", "visible", "collectif"],
+        ["absent", "présent", "lointain", "discret", "retiré"],
+        ["opaque", "transparent", "sombre", "épais", "fermé"],
+        ["rapide", "lent", "vif", "pressé", "actif"],
+        ["prudent", "imprudent", "attentif", "mesuré", "vigilant"],
+        ["moderne", "ancien", "neuf", "actuel", "récent"],
+        ["calme", "agité", "paisible", "silencieux", "posé"],
+        ["fragile", "résistant", "délicat", "fin", "léger"]
+      ];
+      antonyms.forEach(([word, correct, ...distractors]) => {
+        questions.push(q(
+          "Antonyme",
+          `Quel est l'antonyme de « ${word} » ?`,
+          textOptions(correct, distractors),
+          0,
+          `« ${correct} » exprime l'idée opposée à « ${word} ».`
+        ));
+      });
+
+      const intruders = [
+        ["Horloge", "Veste", "Pantalon", "Chemise", "Les trois autres sont des vêtements."],
+        ["Crayon", "Sapin", "Chêne", "Bouleau", "Les trois autres sont des arbres."],
+        ["Téléphone", "Soleil", "Lune", "Étoile", "Les trois autres sont des astres."],
+        ["Coussin", "Rugby", "Handball", "Volley", "Les trois autres sont des sports collectifs."],
+        ["Nuage", "Bus", "Train", "Métro", "Les trois autres sont des moyens de transport."],
+        ["Stylo", "Chien", "Chat", "Cheval", "Les trois autres sont des animaux."],
+        ["Été", "Nord", "Sud", "Ouest", "Les trois autres sont des directions."],
+        ["Sel", "Janvier", "Mars", "Avril", "Les trois autres sont des mois."],
+        ["Livre", "Football", "Basket", "Tennis", "Les trois autres sont des sports."],
+        ["Fenêtre", "Pomme", "Poire", "Raisin", "Les trois autres sont des fruits."],
+        ["Lampe", "Neuf", "Sept", "Trois", "Les trois autres sont des nombres."],
+        ["Rivière", "Souris", "Clavier", "Écran", "Les trois autres sont liés à l'informatique."],
+        ["Montagne", "Médecin", "Infirmier", "Pharmacien", "Les trois autres sont des métiers de santé."],
+        ["Bouteille", "Chêne", "Hêtre", "Pin", "Les trois autres sont des arbres."],
+        ["Couteau", "Paris", "Lyon", "Marseille", "Les trois autres sont des villes."]
+      ];
+      intruders.forEach(([correct, wordA, wordB, wordC, explanation]) => {
+        questions.push(q(
+          "Trouver l'intrus",
+          "Quel mot est l'intrus ?",
+          textOptions(correct, [wordA, wordB, wordC]),
+          0,
+          explanation
+        ));
+      });
+
+      const analogies = [
+        ["Couteau", "couper", "stylo", "écrire", ["coller", "mesurer", "porter"], "Un couteau sert à couper, un stylo sert à écrire."],
+        ["Pilote", "avion", "conducteur", "voiture", ["bateau", "vélo", "gare"], "Le pilote dirige un avion, le conducteur dirige une voiture."],
+        ["Clé", "ouvrir", "frein", "ralentir", ["peindre", "chauffer", "ranger"], "La clé sert à ouvrir, le frein sert à ralentir."],
+        ["Serrure", "clé", "vis", "tournevis", ["marteau", "pince", "règle"], "La clé actionne une serrure, le tournevis actionne une vis."],
+        ["Oiseau", "nid", "abeille", "ruche", ["étable", "terrier", "aquarium"], "L'abeille vit dans une ruche."],
+        ["Jour", "nuit", "clair", "sombre", ["propre", "simple", "rapide"], "Le lien est l'opposition."],
+        ["Thermomètre", "température", "horloge", "heure", ["distance", "poids", "vitesse"], "L'horloge mesure l'heure."],
+        ["Peintre", "pinceau", "écrivain", "stylo", ["sifflet", "couteau", "casque"], "Le stylo est l'outil courant de l'écrivain."],
+        ["Question", "réponse", "problème", "solution", ["doute", "ordre", "texte"], "Une solution répond à un problème."],
+        ["Oreille", "entendre", "œil", "voir", ["parler", "sentir", "toucher"], "L'œil sert à voir."],
+        ["Carte", "orientation", "règle", "mesure", ["peinture", "repos", "lecture"], "Une règle sert à mesurer."],
+        ["Capitaine", "équipe", "chef", "service", ["mur", "route", "papier"], "Un chef dirige un service."],
+        ["Feu", "chaleur", "glace", "froid", ["lumière", "vent", "bruit"], "La glace est associée au froid."],
+        ["Avocat", "tribunal", "pilote", "cockpit", ["cuisine", "jardin", "atelier"], "Le pilote travaille dans un cockpit."],
+        ["Grammaire", "phrase", "calcul", "nombre", ["couleur", "route", "image"], "Le calcul manipule des nombres."]
+      ];
+      analogies.forEach(([first, second, third, correct, distractors, explanation]) => {
+        questions.push(q(
+          "Analogie verbale",
+          `${first} est à ${second} ce que ${third} est à :`,
+          textOptions(correct, distractors),
+          0,
+          explanation
+        ));
+      });
+
+      const comprehension = [
+        ["Tous les agents présents ont signé le registre. Karim est agent et était présent.", "Karim a signé le registre", ["Karim était absent", "Personne n'a signé", "Le registre est vide"]],
+        ["Aucun véhicule rouge n'est autorisé dans la zone. La voiture de Léa est rouge.", "La voiture de Léa n'est pas autorisée", ["La voiture de Léa est prioritaire", "La zone est rouge", "Tous les véhicules entrent"]],
+        ["Si l'alarme sonne, l'équipe évacue. L'alarme vient de sonner.", "L'équipe évacue", ["L'équipe reste en place", "L'alarme est éteinte", "Personne n'entend rien"]],
+        ["Tous les dossiers urgents sont traités avant midi. Ce dossier est urgent.", "Ce dossier est traité avant midi", ["Ce dossier est archivé", "Ce dossier est refusé", "Ce dossier attend demain"]],
+        ["Les candidats admis ont une convocation. Inès est admise.", "Inès a une convocation", ["Inès n'a pas candidaté", "Inès est absente", "La convocation est inutile"]],
+        ["Aucun sac non contrôlé ne peut entrer. Ce sac n'a pas été contrôlé.", "Ce sac ne peut pas entrer", ["Ce sac est prioritaire", "Le contrôle est terminé", "Tous les sacs entrent"]],
+        ["Quand la route est barrée, le bus prend une déviation. La route est barrée.", "Le bus prend une déviation", ["Le bus s'arrête définitivement", "La route est libre", "Le bus change de couleur"]],
+        ["Tous les rapports signés sont valides. Ce rapport est signé.", "Ce rapport est valide", ["Ce rapport est perdu", "Ce rapport est oral", "Ce rapport est ancien"]],
+        ["Si une pièce manque, le dossier est incomplet. Une pièce manque.", "Le dossier est incomplet", ["Le dossier est accepté", "La pièce est inutile", "Le dossier est doublé"]],
+        ["Les visiteurs doivent présenter une pièce d'identité. Nora est visiteuse.", "Nora doit présenter une pièce d'identité", ["Nora est exemptée", "Nora est agent", "Nora refuse le contrôle"]],
+        ["Tous les témoins entendus ont donné une déclaration. Paul a été entendu.", "Paul a donné une déclaration", ["Paul n'a rien vu", "Paul est absent", "Paul est enquêteur"]],
+        ["Si le feu est vert, les véhicules peuvent passer. Le feu est vert.", "Les véhicules peuvent passer", ["Les véhicules reculent", "Le feu est rouge", "La route disparaît"]],
+        ["Aucun document illisible n'est accepté. Ce document est illisible.", "Ce document n'est pas accepté", ["Ce document est prioritaire", "Ce document est parfait", "Ce document est verbal"]],
+        ["Les convocations envoyées par mail arrivent le jour même. Celle-ci est envoyée par mail.", "Elle arrive le jour même", ["Elle arrive dans un mois", "Elle n'existe pas", "Elle est manuscrite"]],
+        ["Tout objet trouvé est enregistré. Cette clé a été trouvée.", "Cette clé est enregistrée", ["Cette clé est jetée", "Cette clé est vendue", "Cette clé ouvre tout"]],
+        ["Si un candidat arrive après la fermeture, il n'entre pas. Hugo arrive après la fermeture.", "Hugo n'entre pas", ["Hugo entre en premier", "Hugo ferme la salle", "Hugo est surveillant"]],
+        ["Tous les messages prioritaires sont lus immédiatement. Ce message est prioritaire.", "Ce message est lu immédiatement", ["Ce message est supprimé", "Ce message est ignoré", "Ce message est anonyme"]],
+        ["Aucun badge expiré ne permet l'accès. Le badge de Samir est expiré.", "Le badge de Samir ne permet pas l'accès", ["Samir est invité", "Le badge ouvre tout", "L'accès est automatique"]],
+        ["Quand la consigne change, les candidats sont informés. La consigne change.", "Les candidats sont informés", ["Les candidats quittent la salle", "La consigne disparaît", "Personne ne sait lire"]],
+        ["Tous les objets fragiles sont manipulés avec soin. Ce vase est fragile.", "Ce vase est manipulé avec soin", ["Ce vase est jeté", "Ce vase est interdit", "Ce vase est métallique"]]
+      ];
+      comprehension.forEach(([premise, correct, distractors]) => {
+        questions.push(q(
+          "Compréhension",
+          `${premise} Que peut-on conclure ?`,
+          textOptions(correct, distractors),
+          0,
+          "La conclusion reprend uniquement ce qui découle logiquement de l'énoncé."
+        ));
+      });
+
+      return questions;
+    }
+
+    function numberOptions(correct, distractors, unit = "") {
+      return textOptions(formatNumberWithUnit(correct, unit), distractors.map((value) => formatNumberWithUnit(value, unit)));
+    }
+
+    function textOptions(correct, distractors) {
+      const options = [String(correct)];
+      distractors.forEach((value) => {
+        const text = String(value);
+        if (!options.includes(text)) {
+          options.push(text);
+        }
+      });
+
+      if (options.length < 4) {
+        throw new Error(`Choix insuffisants ou dupliqués pour la réponse « ${correct} ».`);
+      }
+
+      return options.slice(0, 4);
+    }
+
+    function formatNumberWithUnit(value, unit) {
+      const formatted = Number.isInteger(value) ? formatInteger(value) : formatDecimal(value);
+      return unit ? `${formatted} ${unit}` : formatted;
+    }
+
+    function formatInteger(value) {
+      const sign = value < 0 ? "-" : "";
+      const digits = String(Math.abs(value));
+      return `${sign}${digits.replace(/\B(?=(\d{3})+(?!\d))/g, " ")}`;
+    }
+
+    function formatDecimal(value) {
+      return String(Number(value.toFixed(2))).replace(".", ",");
+    }
+
+    function letterFromIndex(index) {
+      return String.fromCharCode(65 + ((index % 26) + 26) % 26);
+    }
+
+    function normalizeAngle(angle) {
+      return ((angle % 360) + 360) % 360;
+    }
+  </script>
+</body>
+</html>

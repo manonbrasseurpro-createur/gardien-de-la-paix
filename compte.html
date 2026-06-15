@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer un compte | Entraînement concours gardien de la paix</title>
+  <meta name="description" content="Créez votre compte pour accéder à l'entraînement gardien de la paix en ligne : cas pratiques GPX, psychotechnique, culture générale et test personnalité.">
+  <meta name="keywords" content="entraînement gardien de la paix, concours gardien de la paix, s'entraîner concours GPX en ligne, entraînement gratuit concours gardien de la paix">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Compte entraînement concours GPX">
+  <meta property="og:description" content="Inscription pour la préparation concours gardien de la paix en ligne.">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Mon compte</h1>
+      <p class="hero__subtitle">Créez un compte pour accéder aux entraînements</p>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <div id="auth-mode-banner" class="auth-banner" hidden></div>
+
+    <section id="logged-out-view" class="auth-grid" aria-label="Connexion et inscription">
+      <article class="auth-card">
+        <h2>Créer un compte</h2>
+        <p class="auth-card__intro">Nom, prénom, e-mail et mot de passe. Sans abonnement : <strong>1 petit test gratuit</strong> (mini test ou question isolée).</p>
+        <form id="register-form" class="auth-form" novalidate>
+          <label>
+            Prénom
+            <input type="text" name="firstName" required autocomplete="given-name">
+          </label>
+          <label>
+            Nom
+            <input type="text" name="lastName" required autocomplete="family-name">
+          </label>
+          <label>
+            Adresse e-mail
+            <input type="email" name="email" required autocomplete="email">
+          </label>
+          <label>
+            Mot de passe (8 caractères minimum)
+            <input type="password" name="password" required minlength="8" autocomplete="new-password">
+          </label>
+          <button class="primary-button" type="submit">Créer mon compte</button>
+          <p id="register-error" class="auth-error" role="alert"></p>
+        </form>
+      </article>
+
+      <article class="auth-card">
+        <h2>Se connecter</h2>
+        <form id="login-form" class="auth-form" novalidate>
+          <label>
+            Adresse e-mail
+            <input type="email" name="email" required autocomplete="email">
+          </label>
+          <label>
+            Mot de passe
+            <input type="password" name="password" required autocomplete="current-password">
+          </label>
+          <button class="primary-button" type="submit">Connexion</button>
+          <p id="login-error" class="auth-error" role="alert"></p>
+        </form>
+      </article>
+    </section>
+
+    <section id="logged-in-view" class="auth-card auth-card--wide hidden" aria-label="Tableau de bord">
+      <h2>Bonjour, <span id="user-display-name"></span></h2>
+      <p id="subscription-status" class="auth-status"></p>
+      <p id="trial-status" class="auth-status"></p>
+      <div class="auth-actions">
+        <a class="primary-button" href="index.html">Accéder aux modules</a>
+        <a class="secondary-button" href="tarifs.html">Voir les tarifs</a>
+        <button id="logout-button" class="secondary-button" type="button">Déconnexion</button>
+      </div>
+      <p id="demo-subscription-hint" class="auth-hint hidden"></p>
+      <button id="demo-subscription-button" class="secondary-button hidden" type="button">Activer l'abonnement démo (mode local)</button>
+    </section>
+
+    <p class="auth-footer">
+      <a href="index.html">Retour à l'accueil</a> · <a href="tarifs.html">Tarifs et abonnement</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const redirectTarget = params.get("redirect") || "index.html";
+
+    const loggedOutView = document.getElementById("logged-out-view");
+    const loggedInView = document.getElementById("logged-in-view");
+    const authModeBanner = document.getElementById("auth-mode-banner");
+    const demoButton = document.getElementById("demo-subscription-button");
+    const demoHint = document.getElementById("demo-subscription-hint");
+
+    if (window.GPXAuth.isLocalMode()) {
+      authModeBanner.hidden = false;
+      authModeBanner.textContent =
+        "Mode local actif : les comptes sont stockés sur cet appareil. Configurez Supabase dans supabase-config.js pour la production.";
+      demoHint.classList.remove("hidden");
+      demoHint.textContent =
+        "En mode local, vous pouvez activer un abonnement démo pour tester toutes les fonctionnalités.";
+      demoButton.classList.remove("hidden");
+    }
+
+    async function refreshDashboard() {
+      const user = await window.GPXAuth.getCurrentUser();
+      if (!user) {
+        loggedOutView.classList.remove("hidden");
+        loggedInView.classList.add("hidden");
+        return;
+      }
+
+      loggedOutView.classList.add("hidden");
+      loggedInView.classList.remove("hidden");
+      document.getElementById("user-display-name").textContent = `${user.firstName} ${user.lastName}`;
+
+      const subscribed = window.GPXAuth.hasActiveSubscription(user);
+      document.getElementById("subscription-status").textContent = subscribed
+        ? "Abonnement actif — accès illimité à tous les tests et simulations."
+        : "Pas d'abonnement actif — accès limité à un petit test gratuit.";
+
+      document.getElementById("trial-status").textContent = user.freeTrialUsed
+        ? `Essai gratuit utilisé (${user.freeTrialKey || "test enregistré"}).`
+        : "Essai gratuit disponible : choisissez un mini test ou une question isolée (cas pratiques).";
+
+      if (subscribed && window.location.search.includes("redirect=")) {
+        window.location.href = redirectTarget;
+      }
+    }
+
+    document.getElementById("register-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const errorEl = document.getElementById("register-error");
+      errorEl.textContent = "";
+      try {
+        await window.GPXAuth.register({
+          firstName: form.firstName.value,
+          lastName: form.lastName.value,
+          email: form.email.value,
+          password: form.password.value
+        });
+        window.location.href = redirectTarget;
+      } catch (error) {
+        errorEl.textContent = error.message || "Inscription impossible.";
+      }
+    });
+
+    document.getElementById("login-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const errorEl = document.getElementById("login-error");
+      errorEl.textContent = "";
+      try {
+        await window.GPXAuth.login({
+          email: form.email.value,
+          password: form.password.value
+        });
+        window.location.href = redirectTarget;
+      } catch (error) {
+        errorEl.textContent = error.message || "Connexion impossible.";
+      }
+    });
+
+    document.getElementById("logout-button").addEventListener("click", async () => {
+      await window.GPXAuth.logout();
+      await refreshDashboard();
+    });
+
+    demoButton.addEventListener("click", async () => {
+      const user = await window.GPXAuth.getCurrentUser();
+      if (!user) {
+        return;
+      }
+      await window.GPXAuth.activateDemoSubscription(user.id);
+      await refreshDashboard();
+    });
+
+    refreshDashboard();
+  </script>
+</body>
+</html>

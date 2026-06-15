@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raisonnement spatial | Psychotechnique concours GPX</title>
+  <meta name="description" content="Entraînement raisonnement spatial pour le psychotechnique concours police et la préparation concours GPX. Tests cognitifs gardien de la paix en ligne.">
+  <meta name="keywords" content="psychotechnique concours police, préparation concours GPX, entraînement gardien de la paix">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <style>
+    .spatial-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .module-shell,
+    .quiz-panel,
+    .results-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .module-shell {
+      padding: 30px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .type-card {
+      display: flex;
+      min-height: 230px;
+      padding: 22px;
+      flex-direction: column;
+      gap: 12px;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .type-card:hover,
+    .type-card:focus {
+      border-color: var(--navy);
+      box-shadow: var(--shadow);
+      outline: none;
+      transform: translateY(-4px);
+    }
+
+    .type-card:focus-visible,
+    .option-button:focus-visible,
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: 3px solid rgba(26, 39, 68, 0.32);
+      outline-offset: 3px;
+    }
+
+    .type-card__icon {
+      display: inline-flex;
+      width: 48px;
+      height: 48px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: 1.45rem;
+      font-weight: 800;
+    }
+
+    .type-card h3 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.3;
+    }
+
+    .type-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .quiz-panel__header {
+      display: grid;
+      gap: 18px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .quiz-title-row,
+    .quiz-meta,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quiz-panel h2,
+    .results-panel h2 {
+      margin: 0;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--white);
+      border-radius: inherit;
+      transition: width 220ms ease;
+    }
+
+    .quiz-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 18px;
+    }
+
+    .question-type {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.25;
+    }
+
+    .visual-zone {
+      display: grid;
+      gap: 14px;
+      max-width: 780px;
+      padding: 18px;
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .visual-zone__label {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .svg-card {
+      display: inline-flex;
+      min-height: 138px;
+      padding: 12px;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .svg-card svg {
+      display: block;
+      width: min(100%, 240px);
+      height: auto;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .option-button {
+      display: grid;
+      min-height: 64px;
+      padding: 16px;
+      align-items: center;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .option-button:hover:not(:disabled) {
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .option-button:disabled {
+      cursor: default;
+    }
+
+    .option-button.is-correct {
+      color: #174525;
+      background: #e8f7ed;
+      border-color: #2c8a45;
+    }
+
+    .option-button.is-wrong {
+      color: #6f1d1d;
+      background: #fde8e8;
+      border-color: #c73838;
+    }
+
+    .option-label {
+      font-weight: 700;
+    }
+
+    .option-visual {
+      display: grid;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .option-visual .svg-card {
+      min-height: 118px;
+      padding: 8px;
+    }
+
+    .feedback {
+      min-height: 70px;
+      padding: 16px 18px;
+      background: var(--off-white);
+      border-left: 5px solid var(--navy);
+      border-radius: 14px;
+      color: var(--text);
+    }
+
+    .feedback:empty {
+      display: none;
+    }
+
+    .feedback strong {
+      color: var(--navy);
+    }
+
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      min-height: 46px;
+      padding: 12px 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .primary-button {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .secondary-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .results-panel {
+      display: grid;
+      gap: 18px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .score-circle {
+      display: inline-flex;
+      width: 150px;
+      height: 150px;
+      margin: 4px auto;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 50%;
+      font-size: 2.3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1100px) {
+      .type-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .module-shell,
+      .quiz-panel__body,
+      .results-panel {
+        padding: 22px;
+      }
+
+      .quiz-panel__header {
+        padding: 22px;
+      }
+
+      .type-grid,
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Entraînement Spatial Approfondi</h1>
+      <p class="hero__subtitle">Rotations, symétries, pliages, cubes et suites visuelles</p>
+    </div>
+  </header>
+
+  <main class="container spatial-page">
+    <section id="home-view" class="module-shell" aria-labelledby="spatial-title">
+      <div class="intro">
+        <h2 id="spatial-title">Choisissez un entraînement spatial</h2>
+        <p>
+          La banque contient 100 questions visuelles en SVG, réparties en 5 types.
+          Le test complet pioche 20 questions aléatoires dans toute la banque.
+        </p>
+      </div>
+
+      <div id="type-grid" class="type-grid" aria-label="Types de raisonnement spatial"></div>
+
+      <div class="actions" style="margin-top: 24px;">
+        <button id="full-test-button" class="primary-button" type="button">Test complet - 20 questions aléatoires</button>
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+
+    <section id="quiz-view" class="quiz-panel hidden" aria-live="polite">
+      <div class="quiz-panel__header">
+        <div class="quiz-title-row">
+          <div>
+            <p class="hero__label" id="mode-label">Raisonnement spatial</p>
+            <h2 id="quiz-title">Test spatial</h2>
+          </div>
+        </div>
+
+        <div class="progress-wrap" aria-label="Progression">
+          <div class="quiz-meta">
+            <strong id="progress-text">Question 1/20</strong>
+            <span id="score-text">Score : 0/20</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-panel__body">
+        <article class="question-card">
+          <p id="question-type" class="question-type"></p>
+          <h3 id="question-text" class="question-text"></h3>
+          <div id="visual-zone" class="visual-zone"></div>
+          <div id="options" class="options-grid"></div>
+          <div id="feedback" class="feedback"></div>
+        </article>
+
+        <div class="actions">
+          <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
+          <button id="restart-quiz-button" class="secondary-button" type="button">Recommencer ce mode</button>
+          <button id="menu-button" class="secondary-button" type="button">Retour au menu spatial</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="results-view" class="results-panel hidden" aria-live="polite">
+      <p class="hero__label" style="color: var(--navy);">Résultat final</p>
+      <h2 id="results-title">Score final</h2>
+      <div id="score-circle" class="score-circle">0/20</div>
+      <p id="encouragement"></p>
+      <div id="type-results" class="feedback"></div>
+      <p id="mistake-summary"></p>
+      <div class="actions">
+        <button id="download-pdf-button" class="primary-button" type="button">Télécharger ma fiche de révision (PDF)</button>
+        <button id="restart-button" class="secondary-button" type="button">Recommencer ce mode</button>
+        <button id="back-menu-button" class="secondary-button" type="button">Retour au menu spatial</button>
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script src="spatial-bank.js"></script>
+  <script src="progression-storage.js"></script>
+  <script>
+    const letters = ["A", "B", "C", "D"];
+    const typeInfo = {
+      rotations: {
+        icon: "↻",
+        label: "Rotations",
+        description: "Triangles, flèches, croix et étoiles à orienter mentalement."
+      },
+      symmetries: {
+        icon: "↔",
+        label: "Symétries",
+        description: "Axes horizontaux, verticaux et diagonaux à reconnaître."
+      },
+      folding: {
+        icon: "▧",
+        label: "Pliages de papier",
+        description: "Feuille pliée, découpée, puis résultat déplié à retrouver."
+      },
+      cubes: {
+        icon: "□",
+        label: "Patrons de cubes",
+        description: "Patrons colorés et cube correspondant à identifier."
+      },
+      sequences: {
+        icon: "→",
+        label: "Suites de figures",
+        description: "Figure suivante à déduire dans une progression visuelle."
+      }
+    };
+
+    const questionBank = SpatialQuestionBank.createQuestions();
+    const typeOrder = SpatialQuestionBank.types.map((type) => type.key);
+
+    let currentMode = "complete";
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = false;
+    let typeScores = {};
+    let mistakes = [];
+    let quizStartedAt = null;
+
+    const homeView = document.getElementById("home-view");
+    const quizView = document.getElementById("quiz-view");
+    const resultsView = document.getElementById("results-view");
+    const typeGrid = document.getElementById("type-grid");
+    const modeLabel = document.getElementById("mode-label");
+    const quizTitle = document.getElementById("quiz-title");
+    const progressText = document.getElementById("progress-text");
+    const scoreText = document.getElementById("score-text");
+    const progressBar = document.getElementById("progress-bar");
+    const questionType = document.getElementById("question-type");
+    const questionText = document.getElementById("question-text");
+    const visualZone = document.getElementById("visual-zone");
+    const optionsContainer = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-button");
+    const resultsTitle = document.getElementById("results-title");
+    const scoreCircle = document.getElementById("score-circle");
+    const encouragement = document.getElementById("encouragement");
+    const typeResults = document.getElementById("type-results");
+    const mistakeSummary = document.getElementById("mistake-summary");
+
+    renderTypeMenu();
+
+    document.getElementById("full-test-button").addEventListener("click", () => startQuiz("complete"));
+    nextButton.addEventListener("click", nextQuestion);
+    document.getElementById("restart-button").addEventListener("click", () => startQuiz(currentMode));
+    document.getElementById("restart-quiz-button").addEventListener("click", () => startQuiz(currentMode));
+    document.getElementById("menu-button").addEventListener("click", showHome);
+    document.getElementById("back-menu-button").addEventListener("click", showHome);
+    document.getElementById("download-pdf-button").addEventListener("click", downloadRevisionPdf);
+
+    function renderTypeMenu() {
+      typeGrid.innerHTML = typeOrder.map((typeKey) => {
+        const info = typeInfo[typeKey];
+        const count = questionBank.filter((question) => question.spatialType === typeKey).length;
+        return `
+          <button class="type-card" type="button" data-type="${typeKey}">
+            <span class="type-card__icon" aria-hidden="true">${info.icon}</span>
+            <h3>${info.label}</h3>
+            <p>${info.description}</p>
+            <p><strong>${count} questions</strong></p>
+          </button>
+        `;
+      }).join("");
+
+      typeGrid.querySelectorAll(".type-card").forEach((button) => {
+        button.addEventListener("click", () => startQuiz(button.dataset.type));
+      });
+    }
+
+    function startQuiz(mode, bypassGuard) {
+      if (!bypassGuard && window.GPXAccess) {
+        const accessMode = mode === "complete" ? "complete" : `type:${mode}`;
+        window.GPXAccess.guard("spatial.html", accessMode, null, () => startQuiz(mode, true));
+        return;
+      }
+
+      currentMode = mode;
+      const selected = mode === "complete"
+        ? sample(questionBank, 20)
+        : questionBank.filter((question) => question.spatialType === mode);
+      currentQuestions = selected.map(prepareQuestion);
+      currentQuestionIndex = 0;
+      score = 0;
+      answered = false;
+      mistakes = [];
+      typeScores = initTypeScores(currentQuestions);
+      quizStartedAt = new Date();
+
+      homeView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      quizView.classList.remove("hidden");
+      modeLabel.textContent = mode === "complete" ? "Test complet" : typeInfo[mode].label;
+      quizTitle.textContent = mode === "complete" ? "20 questions spatiales aléatoires" : `${typeInfo[mode].label} - 20 questions`;
+      renderQuestion();
+    }
+
+    function initTypeScores(questions) {
+      return questions.reduce((scores, question) => {
+        const key = question.spatialType;
+        if (!scores[key]) {
+          scores[key] = { correct: 0, total: 0 };
+        }
+        scores[key].total += 1;
+        return scores;
+      }, {});
+    }
+
+    function showHome() {
+      quizView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    }
+
+    function renderQuestion() {
+      const question = currentQuestions[currentQuestionIndex];
+      answered = false;
+      feedback.innerHTML = "";
+      nextButton.disabled = true;
+      nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
+
+      progressText.textContent = `Question ${currentQuestionIndex + 1}/${currentQuestions.length}`;
+      scoreText.textContent = `Score : ${score}/${currentQuestions.length}`;
+      progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+      questionType.textContent = `${typeInfo[question.spatialType].label} | ${question.type}`;
+      questionText.textContent = question.text;
+      visualZone.innerHTML = `
+        <p class="visual-zone__label">${question.visual.label}</p>
+        <div class="svg-card">${question.visual.svg}</div>
+      `;
+      renderOptions(question);
+    }
+
+    function renderOptions(question) {
+      optionsContainer.innerHTML = "";
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option-button";
+        button.dataset.index = index;
+        button.innerHTML = `
+          <span class="option-visual">
+            <span class="option-label">${letters[index]}</span>
+            <span class="svg-card">${option.svg}</span>
+            <span>${option.label}</span>
+          </span>
+        `;
+        button.addEventListener("click", () => answerQuestion(index));
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function answerQuestion(selectedIndex) {
+      if (answered) {
+        return;
+      }
+
+      const question = currentQuestions[currentQuestionIndex];
+      const isCorrect = selectedIndex === question.answer;
+      answered = true;
+      if (isCorrect) {
+        score += 1;
+        typeScores[question.spatialType].correct += 1;
+      } else {
+        mistakes.push({
+          question,
+          selected: selectedIndex,
+          correct: question.answer
+        });
+      }
+
+      showCorrection(selectedIndex, isCorrect);
+    }
+
+    function showCorrection(selectedIndex, isCorrect) {
+      const question = currentQuestions[currentQuestionIndex];
+      progressBar.style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
+      scoreText.textContent = `Score : ${score}/${currentQuestions.length}`;
+
+      optionsContainer.querySelectorAll(".option-button").forEach((button) => {
+        const index = Number(button.dataset.index);
+        button.disabled = true;
+        if (index === question.answer) {
+          button.classList.add("is-correct");
+        } else if (index === selectedIndex) {
+          button.classList.add("is-wrong");
+        }
+      });
+
+      feedback.innerHTML = `
+        <strong>${isCorrect ? "Bonne réponse." : "Réponse incorrecte."}</strong><br>
+        Bonne réponse : ${letters[question.answer]}.<br>
+        ${question.explanation}
+      `;
+      nextButton.disabled = false;
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex += 1;
+        renderQuestion();
+        return;
+      }
+
+      showResults();
+    }
+
+    function showResults() {
+      quizView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+      resultsTitle.textContent = currentMode === "complete" ? "Score final - test complet" : `Score final - ${typeInfo[currentMode].label}`;
+      scoreCircle.textContent = `${score}/${currentQuestions.length}`;
+      encouragement.textContent = getEncouragement(score, currentQuestions.length);
+      typeResults.innerHTML = `
+        <ul class="detail-list">
+          ${Object.entries(typeScores).map(([key, result]) => `
+            <li><strong>${typeInfo[key].label}</strong> : ${result.correct}/${result.total}</li>
+          `).join("")}
+        </ul>
+      `;
+      mistakeSummary.textContent = mistakes.length === 0
+        ? "Aucune erreur : votre fiche PDF récapitulera le test réussi."
+        : `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir dans la fiche PDF.`;
+      saveProgressionResult();
+    }
+
+    function saveProgressionResult() {
+      const categories = Object.entries(typeScores).reduce((result, [key, item]) => {
+        result[`Spatial - ${typeInfo[key].label}`] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0,
+        categories
+      });
+    }
+
+    function getEncouragement(value, total) {
+      const ratio = value / total;
+      if (ratio >= 0.85) {
+        return "Excellent niveau : les manipulations spatiales sont bien maîtrisées.";
+      }
+      if (ratio >= 0.7) {
+        return "Bon résultat : continuez à automatiser les rotations et symétries.";
+      }
+      if (ratio >= 0.5) {
+        return "Résultat encourageant : reprenez les erreurs par type de figure.";
+      }
+      return "Entraînement à poursuivre : observez les axes, les repères colorés et les relations entre faces.";
+    }
+
+    function prepareQuestion(question) {
+      const shuffledOptions = shuffle(question.options.map((option, index) => ({
+        option,
+        originalIndex: index
+      })));
+      return {
+        ...question,
+        options: shuffledOptions.map((item) => item.option),
+        answer: shuffledOptions.findIndex((item) => item.originalIndex === question.answer)
+      };
+    }
+
+    function sample(items, count) {
+      return shuffle(items).slice(0, count);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function downloadRevisionPdf() {
+      const lines = buildRevisionLines();
+      const pdf = buildPdf(lines);
+      const blob = new Blob([pdf], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "fiche-revision-spatial.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function buildRevisionLines() {
+      const lines = [
+        "Fiche de revision - Raisonnement spatial",
+        `Score : ${score}/${currentQuestions.length}`,
+        "",
+        "Detail par type :"
+      ];
+
+      Object.entries(typeScores).forEach(([key, result]) => {
+        lines.push(`- ${typeInfo[key].label} : ${result.correct}/${result.total}`);
+      });
+
+      lines.push("");
+      if (mistakes.length === 0) {
+        lines.push("Aucune erreur relevee. Refaire le test en mode complet pour entretenir les automatismes.");
+        return lines;
+      }
+
+      lines.push("Erreurs a revoir :");
+      mistakes.forEach((mistake, index) => {
+        const question = mistake.question;
+        lines.push("");
+        lines.push(`${index + 1}. ${typeInfo[question.spatialType].label} - ${question.type}`);
+        wrapText(question.text, 88).forEach((line) => lines.push(`   Question : ${line}`));
+        lines.push(`   Votre reponse : ${letters[mistake.selected]}`);
+        lines.push(`   Bonne reponse : ${letters[mistake.correct]}`);
+        wrapText(question.explanation, 88).forEach((line) => lines.push(`   Methode : ${line}`));
+      });
+
+      return lines;
+    }
+
+    function wrapText(text, maxLength) {
+      const words = toPdfSafe(text).split(/\s+/);
+      const lines = [];
+      let current = "";
+      words.forEach((word) => {
+        if (`${current} ${word}`.trim().length > maxLength) {
+          lines.push(current);
+          current = word;
+        } else {
+          current = `${current} ${word}`.trim();
+        }
+      });
+      if (current) {
+        lines.push(current);
+      }
+      return lines;
+    }
+
+    function buildPdf(rawLines) {
+      const lines = rawLines.map(toPdfSafe);
+      const linesPerPage = 58;
+      const pages = [];
+      for (let index = 0; index < lines.length; index += linesPerPage) {
+        pages.push(lines.slice(index, index + linesPerPage));
+      }
+
+      const objects = [
+        "",
+        "",
+        "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>"
+      ];
+      const pageIds = [];
+
+      pages.forEach((pageLines) => {
+        const content = [
+          "BT",
+          "/F1 10 Tf",
+          "50 790 Td",
+          ...pageLines.flatMap((line) => [`(${escapePdfText(line)}) Tj`, "0 -13 Td"]),
+          "ET"
+        ].join("\n");
+        const contentId = objects.push(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+        const pageId = objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentId} 0 R >>`);
+        pageIds.push(pageId);
+      });
+
+      objects[0] = "<< /Type /Catalog /Pages 2 0 R >>";
+      objects[1] = `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(" ")}] /Count ${pageIds.length} >>`;
+
+      let pdf = "%PDF-1.4\n";
+      const offsets = [0];
+      objects.forEach((object, index) => {
+        offsets[index + 1] = pdf.length;
+        pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+      });
+      const xrefStart = pdf.length;
+      pdf += `xref\n0 ${objects.length + 1}\n`;
+      pdf += "0000000000 65535 f \n";
+      for (let index = 1; index <= objects.length; index += 1) {
+        pdf += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
+      }
+      pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+      return pdf;
+    }
+
+    function escapePdfText(text) {
+      return text.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+    }
+
+    function toPdfSafe(text) {
+      return String(text)
+        .replace(/°/g, " deg")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\x20-\x7E]/g, "");
+    }
+  </script>
+</body>
+</html>

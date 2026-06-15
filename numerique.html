@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tests numériques | Psychotechnique concours GPX</title>
+  <meta name="description" content="Entraînement tests numériques pour le psychotechnique concours police et le concours gardien de la paix. Calcul, proportions et logique en ligne.">
+  <meta name="keywords" content="psychotechnique concours police, préparation concours GPX, entraînement gardien de la paix">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <style>
+    .numeric-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .module-shell,
+    .quiz-panel,
+    .results-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .module-shell {
+      padding: 30px;
+    }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .type-card {
+      display: flex;
+      min-height: 250px;
+      padding: 22px;
+      flex-direction: column;
+      gap: 12px;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .type-card:hover,
+    .type-card:focus {
+      border-color: var(--navy);
+      box-shadow: var(--shadow);
+      outline: none;
+      transform: translateY(-4px);
+    }
+
+    .type-card:focus-visible,
+    .option-button:focus-visible,
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible {
+      outline: 3px solid rgba(26, 39, 68, 0.32);
+      outline-offset: 3px;
+    }
+
+    .type-card__icon,
+    .timer-badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-weight: 800;
+    }
+
+    .type-card__icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.35rem;
+    }
+
+    .type-card h3 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.3;
+    }
+
+    .type-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .type-card ul {
+      margin: auto 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .quiz-panel__header {
+      display: grid;
+      gap: 18px;
+      padding: 24px 28px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .quiz-title-row,
+    .quiz-meta,
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quiz-panel h2,
+    .results-panel h2 {
+      margin: 0;
+    }
+
+    .timer-badge {
+      min-width: 138px;
+      padding: 8px 14px;
+      color: var(--navy);
+      background: var(--white);
+    }
+
+    .timer-badge--danger {
+      color: #7a1e1e;
+      background: #ffe4e4;
+    }
+
+    .progress-wrap,
+    .timer-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-track,
+    .timer-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar,
+    .timer-bar {
+      height: 100%;
+      border-radius: inherit;
+      transition: width 220ms ease, background 220ms ease;
+    }
+
+    .progress-bar {
+      width: 0%;
+      background: var(--white);
+    }
+
+    .timer-bar {
+      width: 100%;
+      background: #8fd6ff;
+    }
+
+    .timer-bar--danger {
+      background: #ff7676;
+    }
+
+    .quiz-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 28px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 18px;
+    }
+
+    .question-type {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      line-height: 1.25;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .option-button {
+      display: grid;
+      min-height: 64px;
+      padding: 16px;
+      align-items: center;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .option-button:hover:not(:disabled) {
+      border-color: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .option-button:disabled {
+      cursor: default;
+    }
+
+    .option-button.is-correct {
+      color: #174525;
+      background: #e8f7ed;
+      border-color: #2c8a45;
+    }
+
+    .option-button.is-wrong {
+      color: #6f1d1d;
+      background: #fde8e8;
+      border-color: #c73838;
+    }
+
+    .option-label {
+      font-weight: 700;
+    }
+
+    .feedback {
+      min-height: 70px;
+      padding: 16px 18px;
+      background: var(--off-white);
+      border-left: 5px solid var(--navy);
+      border-radius: 14px;
+      color: var(--text);
+    }
+
+    .feedback:empty {
+      display: none;
+    }
+
+    .feedback strong {
+      color: var(--navy);
+    }
+
+    .feedback--correct {
+      border-left-color: #2c8a45;
+      background: #e8f7ed;
+    }
+
+    .feedback--wrong {
+      border-left-color: #c73838;
+      background: #fde8e8;
+    }
+
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      min-height: 46px;
+      padding: 12px 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .primary-button {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .secondary-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .primary-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .results-panel {
+      display: grid;
+      gap: 18px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .score-circle {
+      display: inline-flex;
+      width: 150px;
+      height: 150px;
+      margin: 4px auto;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 50%;
+      font-size: 2.3rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .type-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .module-shell,
+      .quiz-panel__body,
+      .results-panel {
+        padding: 22px;
+      }
+
+      .quiz-panel__header {
+        padding: 22px;
+      }
+
+      .type-grid,
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Entraînement Numérique Approfondi</h1>
+      <p class="hero__subtitle">Calcul mental, pourcentages, problèmes, fractions et décimaux</p>
+    </div>
+  </header>
+
+  <main class="container numeric-page">
+    <section id="home-view" class="module-shell" aria-labelledby="numeric-title">
+      <div class="intro">
+        <h2 id="numeric-title">Choisissez un entraînement numérique</h2>
+        <p>
+          La banque contient 100 questions, réparties en 4 types de difficulté progressive.
+          Le test complet pioche 10 questions par type, puis les mélange.
+        </p>
+      </div>
+
+      <div id="type-grid" class="type-grid" aria-label="Types de tests numériques"></div>
+
+      <div class="actions" style="margin-top: 24px;">
+        <button id="full-test-button" class="primary-button" type="button">Test complet aléatoire (40 questions)</button>
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+
+    <section id="quiz-view" class="quiz-panel hidden" aria-live="polite">
+      <div class="quiz-panel__header">
+        <div class="quiz-title-row">
+          <div>
+            <p class="hero__label" id="mode-label">Tests numériques</p>
+            <h2 id="quiz-title">Test numérique</h2>
+          </div>
+          <div id="timer" class="timer-badge">Temps : 45s</div>
+        </div>
+
+        <div class="timer-wrap" aria-label="Temps restant pour cette question">
+          <div class="timer-track" aria-hidden="true">
+            <div id="timer-bar" class="timer-bar"></div>
+          </div>
+        </div>
+
+        <div class="progress-wrap" aria-label="Progression du test">
+          <div class="quiz-meta">
+            <strong id="progress-text">Question 1/40</strong>
+            <span id="score-text">Score : 0/40</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-panel__body">
+        <article class="question-card">
+          <p id="question-type" class="question-type"></p>
+          <h3 id="question-text" class="question-text"></h3>
+          <div id="options" class="options-grid"></div>
+          <div id="feedback" class="feedback"></div>
+        </article>
+
+        <div class="actions">
+          <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
+          <button id="restart-quiz-button" class="secondary-button" type="button">Recommencer ce mode</button>
+          <button id="menu-button" class="secondary-button" type="button">Retour au menu numérique</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="results-view" class="results-panel hidden" aria-live="polite">
+      <p class="hero__label" style="color: var(--navy);">Résultat final</p>
+      <h2 id="results-title">Score final</h2>
+      <div id="score-circle" class="score-circle">0/40</div>
+      <p id="encouragement"></p>
+      <div id="type-results" class="feedback"></div>
+      <p id="mistake-summary"></p>
+      <div class="actions">
+        <button id="download-pdf-button" class="primary-button" type="button">Télécharger ma fiche de révision (PDF)</button>
+        <button id="restart-button" class="secondary-button" type="button">Recommencer ce mode</button>
+        <button id="back-menu-button" class="secondary-button" type="button">Retour au menu numérique</button>
+        <a class="secondary-button" href="index.html">Retour vers index.html</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script src="progression-storage.js"></script>
+  <script>
+    const letters = ["A", "B", "C", "D"];
+    const secondsPerQuestion = 45;
+
+    const typeInfo = {
+      mental: {
+        number: 1,
+        icon: "1",
+        label: "Calcul mental rapide",
+        description: "Additions, soustractions, multiplications et divisions, du facile vers le difficile.",
+        examples: ["47 + 38", "124 x 7", "856 / 4"]
+      },
+      percentages: {
+        number: 2,
+        icon: "2",
+        label: "Pourcentages et proportions",
+        description: "Pourcentages simples, règles de trois et situations proportionnelles.",
+        examples: ["20% de 350", "3 objets = 12 euros", "échelle"]
+      },
+      arithmetic: {
+        number: 3,
+        icon: "3",
+        label: "Problèmes arithmétiques",
+        description: "Aires, périmètres, conversions, vitesse, distance et temps.",
+        examples: ["aire d'un carré", "km en m", "vitesse moyenne"]
+      },
+      fractions: {
+        number: 4,
+        icon: "4",
+        label: "Fractions et décimaux",
+        description: "Opérations, conversions fractions/décimaux et comparaisons.",
+        examples: ["3/4 + 1/2", "0,75 ou 3/5", "fractions simples"]
+      }
+    };
+
+    const typeOrder = ["mental", "percentages", "arithmetic", "fractions"];
+
+    const questionBank = [
+      q("mental", "Calcul mental rapide", "47 + 38 = ?", "85", ["75", "84", "95"], "47 + 38 = 47 + 30 + 8 = 85."),
+      q("mental", "Calcul mental rapide", "96 - 39 = ?", "57", ["47", "59", "67"], "96 - 39 = 96 - 40 + 1 = 57."),
+      q("mental", "Calcul mental rapide", "12 x 7 = ?", "84", ["72", "82", "96"], "12 x 7 = 84."),
+      q("mental", "Calcul mental rapide", "144 / 12 = ?", "12", ["10", "11", "14"], "12 x 12 = 144, donc 144 / 12 = 12."),
+      q("mental", "Calcul mental rapide", "58 + 27 = ?", "85", ["75", "80", "95"], "58 + 27 = 58 + 20 + 7 = 85."),
+      q("mental", "Calcul mental rapide", "81 - 46 = ?", "35", ["25", "34", "45"], "81 - 46 = 35."),
+      q("mental", "Calcul mental rapide", "13 x 4 = ?", "52", ["42", "48", "56"], "13 x 4 = 52."),
+      q("mental", "Calcul mental rapide", "125 / 5 = ?", "25", ["20", "24", "30"], "125 / 5 = 25."),
+      q("mental", "Calcul mental rapide", "76 + 49 = ?", "125", ["115", "124", "135"], "76 + 49 = 76 + 50 - 1 = 125."),
+      q("mental", "Calcul mental rapide", "203 - 87 = ?", "116", ["106", "114", "126"], "203 - 87 = 203 - 80 - 7 = 116."),
+      q("mental", "Calcul mental rapide", "18 x 6 = ?", "108", ["98", "104", "118"], "18 x 6 = 108."),
+      q("mental", "Calcul mental rapide", "225 / 9 = ?", "25", ["15", "24", "35"], "9 x 25 = 225."),
+      q("mental", "Calcul mental rapide", "148 + 76 = ?", "224", ["214", "222", "234"], "148 + 76 = 148 + 70 + 6 = 224."),
+      q("mental", "Calcul mental rapide", "312 - 158 = ?", "154", ["144", "152", "164"], "312 - 158 = 154."),
+      q("mental", "Calcul mental rapide", "24 x 8 = ?", "192", ["182", "188", "204"], "24 x 8 = 192."),
+      q("mental", "Calcul mental rapide", "576 / 12 = ?", "48", ["46", "52", "58"], "12 x 48 = 576."),
+      q("mental", "Calcul mental rapide", "389 + 247 = ?", "636", ["626", "634", "646"], "389 + 247 = 389 + 200 + 40 + 7 = 636."),
+      q("mental", "Calcul mental rapide", "700 - 368 = ?", "332", ["322", "342", "352"], "700 - 368 = 332."),
+      q("mental", "Calcul mental rapide", "36 x 14 = ?", "504", ["494", "500", "514"], "36 x 14 = 36 x 10 + 36 x 4 = 504."),
+      q("mental", "Calcul mental rapide", "864 / 16 = ?", "54", ["44", "52", "64"], "16 x 54 = 864."),
+      q("mental", "Calcul mental rapide", "124 x 7 = ?", "868", ["858", "878", "888"], "124 x 7 = 700 + 140 + 28 = 868."),
+      q("mental", "Calcul mental rapide", "856 / 4 = ?", "214", ["204", "216", "224"], "856 / 4 = 214."),
+      q("mental", "Calcul mental rapide", "475 + 689 = ?", "1 164", ["1 154", "1 104", "1 174"], "475 + 689 = 475 + 600 + 80 + 9 = 1 164."),
+      q("mental", "Calcul mental rapide", "1 000 - 457 = ?", "543", ["533", "553", "557"], "1 000 - 457 = 543."),
+      q("mental", "Calcul mental rapide", "27 x 32 = ?", "864", ["854", "874", "894"], "27 x 32 = 27 x 30 + 27 x 2 = 864."),
+
+      q("percentages", "Pourcentages", "20% de 350 = ?", "70", ["60", "75", "80"], "10% de 350 vaut 35, donc 20% vaut 70."),
+      q("percentages", "Pourcentages", "25% de 240 = ?", "60", ["50", "65", "80"], "25% correspond au quart : 240 / 4 = 60."),
+      q("percentages", "Pourcentages", "10% de 680 = ?", "68", ["58", "78", "86"], "10% revient à diviser par 10 : 680 / 10 = 68."),
+      q("percentages", "Pourcentages", "50% de 126 = ?", "63", ["53", "66", "76"], "50% correspond à la moitié : 126 / 2 = 63."),
+      q("percentages", "Pourcentages", "15% de 200 = ?", "30", ["20", "25", "35"], "10% de 200 vaut 20 et 5% vaut 10, donc 15% vaut 30."),
+      q("percentages", "Pourcentages", "30% de 450 = ?", "135", ["125", "130", "145"], "10% de 450 vaut 45, donc 30% vaut 135."),
+      q("percentages", "Pourcentages", "75% de 80 = ?", "60", ["55", "65", "70"], "75% correspond aux trois quarts : 80 x 3 / 4 = 60."),
+      q("percentages", "Pourcentages", "5% de 900 = ?", "45", ["40", "50", "55"], "10% de 900 vaut 90, donc 5% vaut 45."),
+      q("percentages", "Pourcentages", "12% de 500 = ?", "60", ["50", "62", "72"], "1% de 500 vaut 5, donc 12% vaut 60."),
+      q("percentages", "Pourcentages", "40% de 275 = ?", "110", ["100", "115", "120"], "10% de 275 vaut 27,5, donc 40% vaut 110."),
+      q("percentages", "Proportions", "Si 3 objets coûtent 12 euros, combien coûtent 7 objets ?", "28 euros", ["24 euros", "30 euros", "32 euros"], "Un objet coûte 12 / 3 = 4 euros, donc 7 objets coûtent 28 euros."),
+      q("percentages", "Proportions", "Si 5 kg coûtent 18 euros, combien coûtent 2 kg ?", "7,20 euros", ["6,80 euros", "8 euros", "9 euros"], "1 kg coûte 18 / 5 = 3,60 euros, donc 2 kg coûtent 7,20 euros."),
+      q("percentages", "Proportions", "8 billets coûtent 56 euros. Combien coûtent 11 billets ?", "77 euros", ["67 euros", "72 euros", "88 euros"], "Un billet coûte 56 / 8 = 7 euros, donc 11 billets coûtent 77 euros."),
+      q("percentages", "Proportions", "4 L de peinture couvrent 28 m². Quelle surface couvrent 10 L ?", "70 m²", ["56 m²", "68 m²", "80 m²"], "1 L couvre 7 m², donc 10 L couvrent 70 m²."),
+      q("percentages", "Proportions", "6 cahiers coûtent 15 euros. Combien coûtent 14 cahiers ?", "35 euros", ["30 euros", "34 euros", "40 euros"], "Un cahier coûte 15 / 6 = 2,50 euros, donc 14 cahiers coûtent 35 euros."),
+      q("percentages", "Proportions", "Une machine produit 48 pièces en 2 h. Combien produit-elle en 5 h ?", "120 pièces", ["96 pièces", "110 pièces", "140 pièces"], "La machine produit 24 pièces par heure, donc 5 h donnent 120 pièces."),
+      q("percentages", "Proportions", "9 stylos coûtent 13,50 euros. Combien coûtent 12 stylos ?", "18 euros", ["16 euros", "17,50 euros", "20 euros"], "Un stylo coûte 13,50 / 9 = 1,50 euro, donc 12 stylos coûtent 18 euros."),
+      q("percentages", "Proportions", "7 agents rédigent 21 rapports. Au même rythme, 10 agents rédigent combien de rapports ?", "30 rapports", ["24 rapports", "28 rapports", "35 rapports"], "Chaque agent rédige 3 rapports, donc 10 agents rédigent 30 rapports."),
+      q("percentages", "Proportions", "Une recette utilise 250 g de farine pour 4 personnes. Combien faut-il pour 10 personnes ?", "625 g", ["500 g", "600 g", "750 g"], "250 / 4 = 62,5 g par personne ; pour 10 personnes : 625 g."),
+      q("percentages", "Proportions", "À vitesse constante, 180 km sont parcourus en 3 h. Quelle distance en 5 h ?", "300 km", ["240 km", "280 km", "360 km"], "La vitesse est 180 / 3 = 60 km/h, donc 5 h donnent 300 km."),
+      q("percentages", "Pourcentages", "18 représente quel pourcentage de 60 ?", "30%", ["20%", "25%", "35%"], "18 / 60 = 0,30, soit 30%."),
+      q("percentages", "Pourcentages", "45 est 15% de quel nombre ?", "300", ["250", "275", "350"], "Si 15% vaut 45, alors 1% vaut 3 et 100% vaut 300."),
+      q("percentages", "Pourcentages", "Un prix de 80 euros augmente de 10%. Nouveau prix ?", "88 euros", ["82 euros", "86 euros", "90 euros"], "10% de 80 vaut 8 ; 80 + 8 = 88 euros."),
+      q("percentages", "Pourcentages", "Un prix de 120 euros baisse de 25%. Nouveau prix ?", "90 euros", ["80 euros", "95 euros", "100 euros"], "25% de 120 vaut 30 ; 120 - 30 = 90 euros."),
+      q("percentages", "Proportions", "Sur une carte, 1 cm représente 2,5 km. Que représentent 6 cm ?", "15 km", ["12 km", "14 km", "18 km"], "6 x 2,5 km = 15 km."),
+
+      q("arithmetic", "Aires", "Un carré de 8 cm de côté a une aire de :", "64 cm²", ["16 cm²", "32 cm²", "72 cm²"], "Aire d'un carré = côté x côté = 8 x 8 = 64 cm²."),
+      q("arithmetic", "Aires", "Un rectangle de 9 m par 4 m a une aire de :", "36 m²", ["13 m²", "26 m²", "40 m²"], "Aire = longueur x largeur = 9 x 4 = 36 m²."),
+      q("arithmetic", "Périmètres", "Un carré de 11 cm de côté a un périmètre de :", "44 cm", ["22 cm", "33 cm", "121 cm"], "Périmètre d'un carré = 4 x côté = 4 x 11 = 44 cm."),
+      q("arithmetic", "Périmètres", "Un rectangle de 7 cm par 5 cm a un périmètre de :", "24 cm", ["12 cm", "20 cm", "35 cm"], "Périmètre = 2 x (7 + 5) = 24 cm."),
+      q("arithmetic", "Aires", "Un triangle de base 12 cm et de hauteur 5 cm a une aire de :", "30 cm²", ["17 cm²", "60 cm²", "120 cm²"], "Aire d'un triangle = base x hauteur / 2 = 12 x 5 / 2 = 30 cm²."),
+      q("arithmetic", "Aires", "Avec pi = 3,14, un cercle de rayon 3 cm a une aire de :", "28,26 cm²", ["18,84 cm²", "26,28 cm²", "31,40 cm²"], "Aire = pi x rayon² = 3,14 x 3² = 28,26 cm²."),
+      q("arithmetic", "Périmètres", "Avec pi = 3,14, un cercle de diamètre 10 cm a une circonférence de :", "31,4 cm", ["15,7 cm", "30 cm", "62,8 cm"], "Circonférence = pi x diamètre = 3,14 x 10 = 31,4 cm."),
+      q("arithmetic", "Conversions", "2,5 km correspondent à combien de mètres ?", "2 500 m", ["250 m", "25 000 m", "250 000 m"], "1 km = 1 000 m, donc 2,5 km = 2 500 m."),
+      q("arithmetic", "Conversions", "350 cm correspondent à combien de mètres ?", "3,5 m", ["0,35 m", "35 m", "350 m"], "100 cm = 1 m, donc 350 cm = 3,5 m."),
+      q("arithmetic", "Conversions", "1,2 kg correspondent à combien de grammes ?", "1 200 g", ["120 g", "12 000 g", "102 g"], "1 kg = 1 000 g, donc 1,2 kg = 1 200 g."),
+      q("arithmetic", "Conversions", "3,4 L correspondent à combien de cL ?", "340 cL", ["34 cL", "304 cL", "3 400 cL"], "1 L = 100 cL, donc 3,4 L = 340 cL."),
+      q("arithmetic", "Conversions", "2 h 45 min correspondent à combien de minutes ?", "165 min", ["145 min", "160 min", "175 min"], "2 h = 120 min ; 120 + 45 = 165 min."),
+      q("arithmetic", "Conversions", "210 minutes correspondent à :", "3 h 30", ["2 h 10", "3 h 10", "4 h 30"], "210 min = 180 min + 30 min = 3 h 30."),
+      q("arithmetic", "Vitesse, distance, temps", "À 90 km/h pendant 2 h 30, quelle distance est parcourue ?", "225 km", ["180 km", "215 km", "270 km"], "2 h 30 = 2,5 h ; 90 x 2,5 = 225 km."),
+      q("arithmetic", "Vitesse, distance, temps", "150 km parcourus en 2 h donnent une vitesse moyenne de :", "75 km/h", ["60 km/h", "70 km/h", "80 km/h"], "Vitesse = distance / temps = 150 / 2 = 75 km/h."),
+      q("arithmetic", "Vitesse, distance, temps", "Combien de temps faut-il pour marcher 5 km à 4 km/h ?", "1 h 15", ["1 h", "1 h 20", "1 h 30"], "Temps = 5 / 4 h = 1,25 h, soit 1 h 15."),
+      q("arithmetic", "Périmètres", "Un bassin rectangulaire de 12 m par 5 m a un périmètre de :", "34 m", ["17 m", "29 m", "60 m"], "Périmètre = 2 x (12 + 5) = 34 m."),
+      q("arithmetic", "Aires", "Une pièce de 6 m par 4 m a une aire de :", "24 m²", ["10 m²", "20 m²", "28 m²"], "Aire = 6 x 4 = 24 m²."),
+      q("arithmetic", "Périmètres", "Il faut clôturer un terrain carré de 18 m de côté. Longueur de clôture ?", "72 m", ["36 m", "64 m", "324 m"], "Périmètre du carré = 4 x 18 = 72 m."),
+      q("arithmetic", "Vitesse, distance, temps", "Un train parcourt 240 km en 3 h. Sa vitesse moyenne est :", "80 km/h", ["70 km/h", "90 km/h", "120 km/h"], "240 / 3 = 80 km/h."),
+      q("arithmetic", "Vitesse, distance, temps", "À 60 km/h pendant 45 min, quelle distance est parcourue ?", "45 km", ["30 km", "40 km", "60 km"], "45 min = 0,75 h ; 60 x 0,75 = 45 km."),
+      q("arithmetic", "Conversions", "5 m 30 cm correspondent à :", "530 cm", ["350 cm", "503 cm", "5 030 cm"], "5 m = 500 cm ; 500 + 30 = 530 cm."),
+      q("arithmetic", "Conversions", "2,75 kg + 450 g = ?", "3,2 kg", ["2,8 kg", "3,02 kg", "3,25 kg"], "450 g = 0,45 kg ; 2,75 + 0,45 = 3,20 kg."),
+      q("arithmetic", "Conversions", "1,5 L + 35 cL = ?", "185 cL", ["150 cL", "165 cL", "200 cL"], "1,5 L = 150 cL ; 150 + 35 = 185 cL."),
+      q("arithmetic", "Périmètres", "Un triangle a pour côtés 6 cm, 8 cm et 10 cm. Son périmètre est :", "24 cm", ["18 cm", "22 cm", "48 cm"], "Périmètre = 6 + 8 + 10 = 24 cm."),
+
+      q("fractions", "Fractions", "3/4 + 1/2 = ?", "5/4", ["1", "3/6", "7/8"], "1/2 = 2/4, donc 3/4 + 2/4 = 5/4."),
+      q("fractions", "Fractions", "2/3 + 1/6 = ?", "5/6", ["3/9", "1/2", "1"], "2/3 = 4/6 ; 4/6 + 1/6 = 5/6."),
+      q("fractions", "Fractions", "5/8 - 1/4 = ?", "3/8", ["4/8", "1/4", "1/8"], "1/4 = 2/8 ; 5/8 - 2/8 = 3/8."),
+      q("fractions", "Fractions", "3/5 x 10 = ?", "6", ["5", "7", "30/50"], "10 x 3/5 = 30/5 = 6."),
+      q("fractions", "Fractions", "4/7 x 14 = ?", "8", ["6", "7", "10"], "14 x 4/7 = 2 x 4 = 8."),
+      q("fractions", "Décimaux", "9/10 - 0,3 = ?", "0,6", ["0,3", "0,5", "0,7"], "9/10 = 0,9 ; 0,9 - 0,3 = 0,6."),
+      q("fractions", "Comparaisons", "Quel est le plus grand : 0,75 ou 3/5 ?", "0,75", ["3/5", "Ils sont égaux", "Impossible à comparer"], "3/5 = 0,6 ; 0,75 est plus grand."),
+      q("fractions", "Conversions", "2/5 sous forme décimale vaut :", "0,4", ["0,2", "0,25", "0,5"], "2 / 5 = 0,4."),
+      q("fractions", "Conversions", "0,125 sous forme de fraction simple vaut :", "1/8", ["1/4", "1/5", "1/10"], "0,125 = 125/1000 = 1/8."),
+      q("fractions", "Décimaux", "1/4 + 0,5 = ?", "0,75", ["0,25", "0,6", "1"], "1/4 = 0,25 ; 0,25 + 0,5 = 0,75."),
+      q("fractions", "Conversions", "7/8 sous forme décimale vaut :", "0,875", ["0,78", "0,825", "0,9"], "7 / 8 = 0,875."),
+      q("fractions", "Décimaux", "0,2 + 3/10 = ?", "0,5", ["0,23", "0,4", "0,6"], "3/10 = 0,3 ; 0,2 + 0,3 = 0,5."),
+      q("fractions", "Décimaux", "1,5 / 0,5 = ?", "3", ["0,3", "1", "5"], "1,5 divisé par 0,5 revient à chercher combien de demis dans 1,5 : il y en a 3."),
+      q("fractions", "Décimaux", "2,75 + 1,6 = ?", "4,35", ["3,35", "4,25", "4,45"], "2,75 + 1,60 = 4,35."),
+      q("fractions", "Comparaisons", "Quel est le plus grand : 5/6 ou 0,8 ?", "5/6", ["0,8", "Ils sont égaux", "1/2"], "5/6 vaut environ 0,833, donc c'est plus grand que 0,8."),
+      q("fractions", "Fractions", "3/4 de 28 = ?", "21", ["18", "20", "24"], "28 / 4 = 7, puis 7 x 3 = 21."),
+      q("fractions", "Fractions", "2/3 de 45 = ?", "30", ["25", "28", "35"], "45 / 3 = 15, puis 15 x 2 = 30."),
+      q("fractions", "Fractions", "1/5 + 2/10 = ?", "2/5", ["3/15", "1/2", "3/10"], "1/5 = 2/10 ; 2/10 + 2/10 = 4/10 = 2/5."),
+      q("fractions", "Fractions", "4/9 + 2/9 = ?", "2/3", ["6/18", "1/2", "8/9"], "4/9 + 2/9 = 6/9 = 2/3."),
+      q("fractions", "Décimaux", "7/10 - 0,45 = ?", "0,25", ["0,15", "0,30", "0,35"], "7/10 = 0,70 ; 0,70 - 0,45 = 0,25."),
+      q("fractions", "Conversions", "0,6 sous forme de fraction simple vaut :", "3/5", ["6/100", "1/6", "2/3"], "0,6 = 6/10 = 3/5."),
+      q("fractions", "Conversions", "11/4 sous forme décimale vaut :", "2,75", ["2,25", "2,5", "3,25"], "11 / 4 = 2,75."),
+      q("fractions", "Fractions", "1/3 + 1/3 + 1/3 = ?", "1", ["1/3", "2/3", "3"], "Trois tiers forment un entier : 3/3 = 1."),
+      q("fractions", "Conversions", "0,05 sous forme de fraction simple vaut :", "1/20", ["1/5", "1/10", "5/10"], "0,05 = 5/100 = 1/20."),
+      q("fractions", "Comparaisons", "Quel est le plus petit : 0,4 ou 3/8 ?", "3/8", ["0,4", "Ils sont égaux", "3/4"], "3/8 = 0,375, donc c'est plus petit que 0,4.")
+    ];
+
+    let currentMode = "complete";
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answered = false;
+    let typeScores = {};
+    let mistakes = [];
+    let intervalId = null;
+    let timeoutAdvanceId = null;
+    let remainingSeconds = secondsPerQuestion;
+    let lastCompletedAttempt = null;
+    let quizStartedAt = null;
+
+    const homeView = document.getElementById("home-view");
+    const quizView = document.getElementById("quiz-view");
+    const resultsView = document.getElementById("results-view");
+    const typeGrid = document.getElementById("type-grid");
+    const modeLabel = document.getElementById("mode-label");
+    const quizTitle = document.getElementById("quiz-title");
+    const timer = document.getElementById("timer");
+    const timerBar = document.getElementById("timer-bar");
+    const progressText = document.getElementById("progress-text");
+    const scoreText = document.getElementById("score-text");
+    const progressBar = document.getElementById("progress-bar");
+    const questionType = document.getElementById("question-type");
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const nextButton = document.getElementById("next-button");
+    const resultsTitle = document.getElementById("results-title");
+    const scoreCircle = document.getElementById("score-circle");
+    const encouragement = document.getElementById("encouragement");
+    const typeResults = document.getElementById("type-results");
+    const mistakeSummary = document.getElementById("mistake-summary");
+
+    validateQuestionBank();
+    renderTypeMenu();
+
+    document.getElementById("full-test-button").addEventListener("click", () => startQuiz("complete"));
+    nextButton.addEventListener("click", nextQuestion);
+    document.getElementById("restart-button").addEventListener("click", () => startQuiz(currentMode));
+    document.getElementById("restart-quiz-button").addEventListener("click", () => startQuiz(currentMode));
+    document.getElementById("menu-button").addEventListener("click", showHome);
+    document.getElementById("back-menu-button").addEventListener("click", showHome);
+    document.getElementById("download-pdf-button").addEventListener("click", downloadRevisionPdf);
+
+    function q(typeKey, type, text, correct, distractors, explanation) {
+      return {
+        typeKey,
+        type,
+        text,
+        correct,
+        options: [correct, ...distractors],
+        answer: 0,
+        explanation
+      };
+    }
+
+    function renderTypeMenu() {
+      typeGrid.innerHTML = typeOrder.map((typeKey) => {
+        const info = typeInfo[typeKey];
+        const count = questionBank.filter((question) => question.typeKey === typeKey).length;
+        return `
+          <button class="type-card" type="button" data-type="${typeKey}">
+            <span class="type-card__icon" aria-hidden="true">${info.icon}</span>
+            <h3>Type ${info.number} - ${info.label}</h3>
+            <p>${info.description}</p>
+            <p><strong>${count} questions</strong></p>
+            <ul>${info.examples.map((example) => `<li>${example}</li>`).join("")}</ul>
+          </button>
+        `;
+      }).join("");
+
+      typeGrid.querySelectorAll(".type-card").forEach((button) => {
+        button.addEventListener("click", () => startQuiz(button.dataset.type));
+      });
+    }
+
+    function startQuiz(mode, bypassGuard) {
+      if (!bypassGuard && window.GPXAccess) {
+        const accessMode = mode === "complete" ? "complete" : `type:${mode}`;
+        window.GPXAccess.guard("numerique.html", accessMode, null, () => startQuiz(mode, true));
+        return;
+      }
+
+      currentMode = mode;
+      const selected = mode === "complete"
+        ? shuffle(typeOrder.flatMap((typeKey) => sample(getQuestionsByType(typeKey), 10)))
+        : getQuestionsByType(mode);
+
+      currentQuestions = selected.map(prepareQuestion);
+      currentQuestionIndex = 0;
+      score = 0;
+      answered = false;
+      mistakes = [];
+      typeScores = initTypeScores(currentQuestions);
+      lastCompletedAttempt = null;
+      quizStartedAt = new Date();
+
+      clearInterval(intervalId);
+      clearTimeout(timeoutAdvanceId);
+      homeView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      quizView.classList.remove("hidden");
+      modeLabel.textContent = mode === "complete" ? "Test complet" : `Type ${typeInfo[mode].number}`;
+      quizTitle.textContent = mode === "complete"
+        ? "Test complet aléatoire - 40 questions"
+        : `${typeInfo[mode].label} - 25 questions`;
+      renderQuestion();
+    }
+
+    function initTypeScores(questions) {
+      return questions.reduce((scores, question) => {
+        if (!scores[question.typeKey]) {
+          scores[question.typeKey] = { correct: 0, total: 0 };
+        }
+        scores[question.typeKey].total += 1;
+        return scores;
+      }, {});
+    }
+
+    function showHome() {
+      clearInterval(intervalId);
+      clearTimeout(timeoutAdvanceId);
+      quizView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+    }
+
+    function renderQuestion() {
+      const question = currentQuestions[currentQuestionIndex];
+      answered = false;
+      clearInterval(intervalId);
+      clearTimeout(timeoutAdvanceId);
+      feedback.innerHTML = "";
+      feedback.className = "feedback";
+      nextButton.disabled = true;
+      nextButton.classList.add("hidden");
+      nextButton.textContent = currentQuestionIndex === currentQuestions.length - 1 ? "Voir le score" : "Question suivante";
+
+      progressText.textContent = `Question ${currentQuestionIndex + 1}/${currentQuestions.length}`;
+      scoreText.textContent = `Score : ${score}/${currentQuestions.length}`;
+      progressBar.style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+      questionType.textContent = `Type ${typeInfo[question.typeKey].number} - ${typeInfo[question.typeKey].label} | ${question.type}`;
+      questionText.textContent = question.text;
+      renderOptions(question);
+      startTimer();
+    }
+
+    function renderOptions(question) {
+      optionsContainer.innerHTML = "";
+      question.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "option-button";
+        button.dataset.index = index;
+        button.innerHTML = `<span><span class="option-label">${letters[index]}.</span> ${option}</span>`;
+        button.addEventListener("click", () => answerQuestion(index, false));
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function startTimer() {
+      remainingSeconds = secondsPerQuestion;
+      renderTimer();
+      intervalId = setInterval(() => {
+        remainingSeconds -= 1;
+        renderTimer();
+        if (remainingSeconds <= 0) {
+          answerQuestion(null, true);
+        }
+      }, 1000);
+    }
+
+    function renderTimer() {
+      const safeRemaining = Math.max(remainingSeconds, 0);
+      const percent = (safeRemaining / secondsPerQuestion) * 100;
+      timer.textContent = `Temps : ${safeRemaining}s`;
+      timer.classList.toggle("timer-badge--danger", safeRemaining <= 10);
+      timerBar.style.width = `${percent}%`;
+      timerBar.classList.toggle("timer-bar--danger", safeRemaining <= 10);
+    }
+
+    function answerQuestion(selectedIndex, timedOut) {
+      if (answered) {
+        return;
+      }
+
+      const question = currentQuestions[currentQuestionIndex];
+      const isCorrect = selectedIndex === question.answer;
+      answered = true;
+      clearInterval(intervalId);
+
+      if (isCorrect) {
+        score += 1;
+        typeScores[question.typeKey].correct += 1;
+      } else {
+        mistakes.push({
+          question,
+          selected: selectedIndex,
+          correct: question.answer,
+          timedOut
+        });
+      }
+
+      showCorrection(selectedIndex, isCorrect, timedOut);
+
+      if (timedOut) {
+        timeoutAdvanceId = setTimeout(nextQuestion, 2200);
+      }
+    }
+
+    function showCorrection(selectedIndex, isCorrect, timedOut) {
+      const question = currentQuestions[currentQuestionIndex];
+      progressBar.style.width = `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%`;
+      scoreText.textContent = `Score : ${score}/${currentQuestions.length}`;
+      timerBar.style.width = "0%";
+      timer.classList.add("timer-badge--danger");
+      timerBar.classList.add("timer-bar--danger");
+
+      optionsContainer.querySelectorAll(".option-button").forEach((button) => {
+        const index = Number(button.dataset.index);
+        button.disabled = true;
+        if (index === question.answer) {
+          button.classList.add("is-correct");
+        } else if (index === selectedIndex) {
+          button.classList.add("is-wrong");
+        }
+      });
+
+      feedback.className = `feedback ${isCorrect ? "feedback--correct" : "feedback--wrong"}`;
+      feedback.innerHTML = `
+        <strong>${isCorrect ? "✓ Réponse correcte." : timedOut ? "✗ Temps dépassé." : "✗ Réponse fausse."}</strong><br>
+        Bonne réponse : ${letters[question.answer]}. ${question.correct}<br>
+        ${question.explanation}
+      `;
+      nextButton.disabled = false;
+      nextButton.classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      clearTimeout(timeoutAdvanceId);
+      if (currentQuestionIndex < currentQuestions.length - 1) {
+        currentQuestionIndex += 1;
+        renderQuestion();
+        return;
+      }
+
+      showResults();
+    }
+
+    function showResults() {
+      clearInterval(intervalId);
+      clearTimeout(timeoutAdvanceId);
+      quizView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+      resultsTitle.textContent = currentMode === "complete"
+        ? "Score final - test complet"
+        : `Score final - ${typeInfo[currentMode].label}`;
+      scoreCircle.textContent = `${score}/${currentQuestions.length}`;
+      encouragement.textContent = getEncouragement(score, currentQuestions.length);
+      typeResults.innerHTML = `
+        <ul class="detail-list">
+          ${Object.entries(typeScores).map(([key, result]) => `
+            <li><strong>Type ${typeInfo[key].number} - ${typeInfo[key].label}</strong> : ${result.correct}/${result.total}</li>
+          `).join("")}
+        </ul>
+      `;
+      mistakeSummary.textContent = mistakes.length === 0
+        ? "Aucune erreur : votre fiche PDF récapitulera le test réussi."
+        : `${mistakes.length} erreur${mistakes.length > 1 ? "s" : ""} à revoir dans la fiche PDF.`;
+      lastCompletedAttempt = {
+        mode: currentMode,
+        questions: currentQuestions,
+        score,
+        typeScores,
+        mistakes,
+        completedAt: new Date()
+      };
+      saveProgressionResult();
+    }
+
+    function saveProgressionResult() {
+      const categories = Object.entries(typeScores).reduce((result, [key, item]) => {
+        result[`Numérique - ${typeInfo[key].label}`] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0,
+        categories
+      });
+    }
+
+    function getEncouragement(value, total) {
+      const ratio = value / total;
+      if (ratio >= 0.9) {
+        return "Excellent niveau : les automatismes numériques sont solides.";
+      }
+      if (ratio >= 0.75) {
+        return "Bon résultat : continuez à gagner en rapidité sur les calculs.";
+      }
+      if (ratio >= 0.55) {
+        return "Résultat encourageant : reprenez les erreurs par type de question.";
+      }
+      return "Entraînement à poursuivre : posez les calculs clés et révisez les conversions.";
+    }
+
+    function prepareQuestion(question) {
+      const shuffledOptions = shuffle(question.options.map((option, index) => ({
+        option,
+        originalIndex: index
+      })));
+      return {
+        ...question,
+        options: shuffledOptions.map((item) => item.option),
+        answer: shuffledOptions.findIndex((item) => item.originalIndex === question.answer)
+      };
+    }
+
+    function getQuestionsByType(typeKey) {
+      return questionBank.filter((question) => question.typeKey === typeKey);
+    }
+
+    function sample(items, count) {
+      return shuffle(items).slice(0, count);
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function validateQuestionBank() {
+      const counts = typeOrder.reduce((result, typeKey) => {
+        result[typeKey] = getQuestionsByType(typeKey).length;
+        return result;
+      }, {});
+      const invalidType = typeOrder.find((typeKey) => counts[typeKey] !== 25);
+      const invalidQuestion = questionBank.find((question) => (
+        question.options.length !== 4
+        || question.answer !== 0
+        || question.options[0] !== question.correct
+        || new Set(question.options).size !== 4
+      ));
+
+      if (questionBank.length !== 100 || invalidType || invalidQuestion) {
+        throw new Error("Banque numérique invalide : vérifiez les 100 questions et leurs réponses.");
+      }
+    }
+
+    function downloadRevisionPdf() {
+      const attempt = lastCompletedAttempt || {
+        mode: currentMode,
+        questions: currentQuestions,
+        score,
+        typeScores,
+        mistakes,
+        completedAt: new Date()
+      };
+      const lines = buildRevisionLines(attempt);
+      const pdf = buildPdf(lines);
+      const blob = new Blob([pdf], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "fiche-revision-numerique.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function buildRevisionLines(attempt) {
+      const lines = [
+        "Fiche de revision - Entrainement numerique",
+        `Mode : ${attempt.mode === "complete" ? "Test complet aleatoire" : typeInfo[attempt.mode].label}`,
+        `Score : ${attempt.score}/${attempt.questions.length}`,
+        `Date : ${attempt.completedAt.toLocaleString("fr-FR")}`,
+        "",
+        "Detail par type :"
+      ];
+
+      Object.entries(attempt.typeScores).forEach(([key, result]) => {
+        lines.push(`- Type ${typeInfo[key].number} - ${typeInfo[key].label} : ${result.correct}/${result.total}`);
+      });
+
+      lines.push("");
+      if (attempt.mistakes.length === 0) {
+        lines.push("Aucune erreur a revoir.");
+      } else {
+        lines.push("Questions a revoir :");
+        attempt.mistakes.forEach((mistake, index) => {
+          lines.push(`${index + 1}. ${typeInfo[mistake.question.typeKey].label} - ${mistake.question.text}`);
+          lines.push(`   Votre reponse : ${mistake.timedOut ? "Temps depasse" : mistake.question.options[mistake.selected]}`);
+          lines.push(`   Bonne reponse : ${mistake.question.correct}`);
+          lines.push(`   Methode : ${mistake.question.explanation}`);
+        });
+      }
+
+      lines.push("");
+      lines.push("Conseils :");
+      lines.push("- Refaire les questions fausses sans regarder les choix.");
+      lines.push("- Memoriser les conversions courantes : 1 km = 1000 m, 1 L = 100 cL, 1 h = 60 min.");
+      lines.push("- Pour les pourcentages, commencer par 10%, 5%, 25% et 50%.");
+      return lines;
+    }
+
+    function buildPdf(lines) {
+      const escapedLines = lines.flatMap((line) => wrapPdfLine(line, 88));
+      const pageChunks = chunk(escapedLines, 42);
+      const objects = [];
+      const pages = [];
+
+      pageChunks.forEach((pageLines, index) => {
+        const content = buildPageContent(pageLines);
+        const contentObjectNumber = 4 + index * 2;
+        const pageObjectNumber = contentObjectNumber + 1;
+        objects[contentObjectNumber] = `<< /Length ${content.length} >>\nstream\n${content}\nendstream`;
+        objects[pageObjectNumber] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contentObjectNumber} 0 R >>`;
+        pages.push(`${pageObjectNumber} 0 R`);
+      });
+
+      objects[1] = "<< /Type /Catalog /Pages 2 0 R >>";
+      objects[2] = `<< /Type /Pages /Kids [${pages.join(" ")}] /Count ${pages.length} >>`;
+      objects[3] = "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>";
+
+      let pdf = "%PDF-1.4\n";
+      const offsets = [0];
+      for (let index = 1; index < objects.length; index += 1) {
+        offsets[index] = pdf.length;
+        pdf += `${index} 0 obj\n${objects[index]}\nendobj\n`;
+      }
+
+      const xrefOffset = pdf.length;
+      pdf += `xref\n0 ${objects.length}\n0000000000 65535 f \n`;
+      for (let index = 1; index < objects.length; index += 1) {
+        pdf += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
+      }
+      pdf += `trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+      return pdf;
+    }
+
+    function buildPageContent(lines) {
+      const commands = ["BT", "/F1 11 Tf", "50 790 Td", "14 TL"];
+      lines.forEach((line, index) => {
+        if (index > 0) {
+          commands.push("T*");
+        }
+        commands.push(`(${escapePdfText(line)}) Tj`);
+      });
+      commands.push("ET");
+      return commands.join("\n");
+    }
+
+    function wrapPdfLine(line, maxLength) {
+      const normalized = line.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\x20-\x7E]/g, "");
+      if (normalized.length <= maxLength) {
+        return [normalized];
+      }
+
+      const words = normalized.split(" ");
+      const wrapped = [];
+      let current = "";
+      words.forEach((word) => {
+        const candidate = current ? `${current} ${word}` : word;
+        if (candidate.length > maxLength) {
+          wrapped.push(current);
+          current = word;
+        } else {
+          current = candidate;
+        }
+      });
+      if (current) {
+        wrapped.push(current);
+      }
+      return wrapped;
+    }
+
+    function escapePdfText(text) {
+      return text.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+    }
+
+    function chunk(items, size) {
+      const chunks = [];
+      for (let index = 0; index < items.length; index += size) {
+        chunks.push(items.slice(index, index + size));
+      }
+      return chunks.length ? chunks : [[]];
+    }
+  </script>
+</body>
+</html>

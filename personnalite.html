@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test personnalité concours GPX | Entraînement gardien de la paix</title>
+  <meta name="description" content="Test de personnalité concours GPX : 60 affirmations pour préparer le concours gardien de la paix et le concours police nationale. Entraînement en ligne.">
+  <meta name="keywords" content="test personnalité concours GPX, psychotechnique concours police, entraînement gardien de la paix, préparation concours GPX">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <style>
+    .personality-page {
+      display: grid;
+      gap: 24px;
+    }
+
+    .advice-panel,
+    .quiz-panel,
+    .results-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: grid;
+      gap: 10px;
+      padding: 28px 30px;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+    }
+
+    .panel-header h2,
+    .panel-header p {
+      margin: 0;
+    }
+
+    .panel-header p {
+      opacity: 0.9;
+    }
+
+    .advice-content,
+    .quiz-panel__body,
+    .results-panel__body {
+      display: grid;
+      gap: 24px;
+      padding: 30px;
+    }
+
+    .advice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .advice-card,
+    .question-card,
+    .score-card,
+    .analysis-card,
+    .important-note {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .advice-card {
+      padding: 22px;
+    }
+
+    .advice-card h3 {
+      margin: 0 0 14px;
+      color: var(--navy);
+      font-size: 1.15rem;
+      line-height: 1.3;
+    }
+
+    .advice-card ul,
+    .analysis-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .advice-card li + li,
+    .analysis-card li + li {
+      margin-top: 8px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .primary-button,
+    .secondary-button {
+      display: inline-flex;
+      min-height: 46px;
+      padding: 12px 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+    }
+
+    .primary-button {
+      color: var(--white);
+      background: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .secondary-button {
+      color: var(--navy);
+      background: var(--white);
+      border: 1px solid var(--border);
+    }
+
+    .primary-button:hover,
+    .secondary-button:hover {
+      box-shadow: 0 10px 24px rgba(26, 39, 68, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .primary-button:focus-visible,
+    .secondary-button:focus-visible,
+    .scale-option:focus-within {
+      outline: 3px solid rgba(26, 39, 68, 0.32);
+      outline-offset: 3px;
+    }
+
+    .quiz-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 8px;
+    }
+
+    .progress-track {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--white);
+      border-radius: inherit;
+      transition: width 220ms ease;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .question-card {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .question-card__title {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .question-number {
+      display: inline-flex;
+      min-width: 42px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: 0.92rem;
+    }
+
+    .scale-options {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .scale-option {
+      display: grid;
+      min-height: 82px;
+      padding: 12px;
+      place-items: center;
+      color: var(--text);
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+    }
+
+    .scale-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scale-option__value {
+      display: block;
+      color: var(--navy);
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .scale-option__label {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.82rem;
+      line-height: 1.25;
+    }
+
+    .scale-option:has(input:checked) {
+      color: var(--white);
+      background: var(--navy);
+      border-color: var(--navy);
+    }
+
+    .scale-option:has(input:checked) .scale-option__value {
+      color: var(--white);
+    }
+
+    .form-warning {
+      min-height: 24px;
+      margin: 0;
+      color: #8a2f17;
+      font-weight: 700;
+    }
+
+    .form-warning:empty {
+      display: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .score-card {
+      display: grid;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .score-card h3 {
+      margin: 0;
+      color: var(--navy);
+      font-size: 1rem;
+    }
+
+    .score-value {
+      color: var(--navy);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-meter {
+      height: 10px;
+      background: #dbe4f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .score-meter span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, var(--navy));
+      border-radius: inherit;
+    }
+
+    .results-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .radar-card {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .radar-card h3 {
+      margin: 0;
+      color: var(--navy);
+    }
+
+    .radar-chart {
+      width: min(100%, 420px);
+      height: auto;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .analysis-card {
+      padding: 20px;
+    }
+
+    .analysis-card h3 {
+      margin: 0 0 12px;
+      color: var(--navy);
+    }
+
+    .analysis-card p {
+      margin: 0;
+    }
+
+    .analysis-card p + p {
+      margin-top: 10px;
+    }
+
+    .coherence-card {
+      grid-column: 1 / -1;
+    }
+
+    .important-note {
+      padding: 18px 20px;
+      color: #5e4300;
+      background: var(--warning-bg);
+      border-color: #f1d27a;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .advice-grid,
+      .scores-grid,
+      .results-layout,
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .panel-header,
+      .advice-content,
+      .quiz-panel__body,
+      .results-panel__body {
+        padding: 22px;
+      }
+
+      .scale-options {
+        grid-template-columns: 1fr;
+      }
+
+      .scale-option {
+        min-height: auto;
+        grid-template-columns: 42px 1fr;
+        gap: 10px;
+        text-align: left;
+      }
+
+      .scale-option__label {
+        margin-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Test de personnalité</h1>
+      <p class="hero__subtitle">Simulation d'entraînement au profil psychologique GPX</p>
+    </div>
+  </header>
+
+  <main class="container personality-page">
+    <section id="intro-section" class="advice-panel" aria-labelledby="intro-title">
+      <div class="panel-header">
+        <h2 id="intro-title">Préparer le test de personnalité</h2>
+        <p>Avant de répondre, prenez le temps de comprendre l'objectif de cette épreuve.</p>
+      </div>
+
+      <div class="advice-content">
+        <div class="advice-grid">
+          <article class="advice-card">
+            <h3>🎯 Comment fonctionne le test de personnalité ?</h3>
+            <ul>
+              <li>Ce test n'a pas de bonne ou mauvaise réponse.</li>
+              <li>Il évalue : stabilité émotionnelle, rapport à l'autorité, gestion du stress, sens de l'équipe et valeurs éthiques.</li>
+              <li>Durée réelle : environ 1h.</li>
+              <li>Les résultats sont transmis au jury d'entretien.</li>
+            </ul>
+          </article>
+
+          <article class="advice-card">
+            <h3>⚠️ Les pièges à éviter</h3>
+            <ul>
+              <li>Ne pas se forcer à paraître "parfait" : l'incohérence peut être détectée.</li>
+              <li>Rester cohérent : des questions similaires reviennent sous des formes différentes pour vérifier la constance.</li>
+              <li>Ne pas répondre trop vite sans réfléchir.</li>
+              <li>Ne pas cocher systématiquement les extrêmes : toujours d'accord ou jamais d'accord.</li>
+            </ul>
+          </article>
+
+          <article class="advice-card">
+            <h3>✅ Les bonnes attitudes à montrer</h3>
+            <ul>
+              <li>Respect de l'autorité et de la hiérarchie.</li>
+              <li>Sang-froid face aux situations de stress.</li>
+              <li>Sens du service public et de l'aide aux autres.</li>
+              <li>Honnêteté et intégrité.</li>
+              <li>Capacité à travailler en équipe.</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="actions">
+          <button id="start-button" class="primary-button" type="button">Commencer le test simulé</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="test-section" class="quiz-panel hidden" aria-labelledby="test-title">
+      <div class="panel-header">
+        <div class="quiz-meta">
+          <div>
+            <p class="hero__label">60 affirmations - échelle de 1 à 5</p>
+            <h2 id="test-title">Test simulé de personnalité</h2>
+          </div>
+          <strong id="answered-count">0/60 réponses</strong>
+        </div>
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <form id="personality-form" class="quiz-panel__body" novalidate>
+        <p>
+          Pour chaque affirmation, sélectionnez votre niveau d'accord :
+          <strong>1 = Pas du tout d'accord</strong>,
+          <strong>2 = Plutôt pas d'accord</strong>,
+          <strong>3 = Neutre</strong>,
+          <strong>4 = Plutôt d'accord</strong>,
+          <strong>5 = Tout à fait d'accord</strong>.
+        </p>
+
+        <div id="question-list" class="question-list"></div>
+        <p id="form-warning" class="form-warning" role="alert"></p>
+
+        <div class="actions">
+          <button class="primary-button" type="submit">Voir mon analyse</button>
+          <button id="clear-button" class="secondary-button" type="button">Effacer mes réponses</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </form>
+    </section>
+
+    <section id="results-section" class="results-panel hidden" aria-labelledby="results-title">
+      <div class="panel-header">
+        <p class="hero__label">Analyse du profil</p>
+        <h2 id="results-title">Résultats de votre simulation</h2>
+        <p>Les scores sont calculés sur 10 pour chaque dimension évaluée.</p>
+      </div>
+
+      <div class="results-panel__body">
+        <div id="scores-grid" class="scores-grid"></div>
+
+        <div class="results-layout">
+          <article class="radar-card" aria-labelledby="radar-title">
+            <h3 id="radar-title">Graphique radar</h3>
+            <svg id="radar-chart" class="radar-chart" viewBox="0 0 420 420" role="img" aria-label="Radar des six dimensions du profil"></svg>
+          </article>
+
+          <div id="analysis-summary" class="analysis-card"></div>
+        </div>
+
+        <div class="analysis-grid">
+          <article class="analysis-card">
+            <h3>Points forts du candidat</h3>
+            <ul id="strengths-list"></ul>
+          </article>
+
+          <article class="analysis-card">
+            <h3>Axes de progrès à travailler</h3>
+            <ul id="progress-list"></ul>
+          </article>
+
+          <article id="coherence-card" class="analysis-card coherence-card"></article>
+        </div>
+
+        <p class="important-note">
+          Ce test est une simulation d'entraînement. Le vrai test de personnalité du concours GPX est interprété par un psychologue agréé.
+          Soyez toujours authentique dans vos réponses.
+        </p>
+
+        <div class="actions">
+          <button id="restart-button" class="primary-button" type="button">Refaire le test</button>
+          <a class="secondary-button" href="index.html">Retour vers index.html</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script src="progression-storage.js"></script>
+  <script>
+    const dimensions = {
+      emotional: {
+        label: "Stabilité émotionnelle",
+        shortLabel: "Émotion",
+        advice: "Travaillez la prise de recul, la respiration et la maîtrise du ton dans les situations tendues."
+      },
+      authority: {
+        label: "Rapport à l'autorité",
+        shortLabel: "Autorité",
+        advice: "Renforcez votre compréhension de la hiérarchie, des consignes et du compte rendu professionnel."
+      },
+      service: {
+        label: "Sens du service et empathie",
+        shortLabel: "Service",
+        advice: "Développez l'écoute active, la distance professionnelle et l'attention portée aux personnes vulnérables."
+      },
+      integrity: {
+        label: "Intégrité et éthique",
+        shortLabel: "Éthique",
+        advice: "Gardez comme repères la probité, la confidentialité, l'exemplarité et le refus des arrangements."
+      },
+      teamwork: {
+        label: "Travail en équipe",
+        shortLabel: "Équipe",
+        advice: "Entraînez-vous à partager l'information, accepter les avis différents et soutenir le collectif."
+      },
+      stress: {
+        label: "Gestion du stress et des situations difficiles",
+        shortLabel: "Stress",
+        advice: "Travaillez la priorisation, la sécurité, la décision sous pression et l'adaptation aux imprévus."
+      }
+    };
+
+    const questions = [
+      { id: "emo1", dimension: "emotional", text: "Je garde mon calme dans les situations de tension." },
+      { id: "emo2", dimension: "emotional", text: "Je supporte bien la pression et le stress." },
+      { id: "emo3", dimension: "emotional", text: "Je ne me laisse pas déborder par mes émotions." },
+      { id: "emo4", dimension: "emotional", text: "Je prends du recul avant de réagir à une provocation." },
+      { id: "emo5", dimension: "emotional", text: "Je reste maître de mon ton même face à une personne agressive." },
+      { id: "emo6", dimension: "emotional", text: "Je perds facilement patience lorsque la situation se complique.", reverse: true },
+      { id: "emo7", dimension: "emotional", text: "Le stress me fait rapidement perdre mes moyens.", reverse: true },
+      { id: "emo8", dimension: "emotional", text: "Je retrouve rapidement mon équilibre après un moment difficile." },
+      { id: "emo9", dimension: "emotional", text: "Je sais reconnaître mes émotions sans les laisser guider toutes mes décisions." },
+      { id: "emo10", dimension: "emotional", text: "Je conserve une attitude posée lorsque plusieurs demandes arrivent en même temps." },
+
+      { id: "auth1", dimension: "authority", text: "Je respecte les décisions de ma hiérarchie même si je ne les partage pas toujours." },
+      { id: "auth2", dimension: "authority", text: "Je suis à l'aise pour travailler dans un cadre avec des règles strictes." },
+      { id: "auth3", dimension: "authority", text: "J'applique les consignes sans les remettre constamment en question." },
+      { id: "auth4", dimension: "authority", text: "Je demande une clarification avant d'agir lorsqu'une consigne me semble ambiguë." },
+      { id: "auth5", dimension: "authority", text: "Je comprends l'importance de la chaîne de commandement dans une intervention." },
+      { id: "auth6", dimension: "authority", text: "J'ai du mal à appliquer une décision hiérarchique qui ne correspond pas à mon avis.", reverse: true },
+      { id: "auth7", dimension: "authority", text: "Les règles strictes me donnent souvent envie de les contourner.", reverse: true },
+      { id: "auth8", dimension: "authority", text: "Je peux faire preuve d'initiative tout en respectant le cadre fixé." },
+      { id: "auth9", dimension: "authority", text: "Je rends compte loyalement à ma hiérarchie après une action." },
+      { id: "auth10", dimension: "authority", text: "Je distingue une remarque professionnelle d'une attaque personnelle." },
+
+      { id: "serv1", dimension: "service", text: "Aider les personnes en difficulté me tient profondément à cœur." },
+      { id: "serv2", dimension: "service", text: "Je suis sensible aux situations de vulnérabilité." },
+      { id: "serv3", dimension: "service", text: "Je m'investis naturellement pour les autres." },
+      { id: "serv4", dimension: "service", text: "J'écoute attentivement avant de proposer une aide." },
+      { id: "serv5", dimension: "service", text: "Je traite chaque personne avec considération, même dans une situation tendue." },
+      { id: "serv6", dimension: "service", text: "Je fais preuve de patience avec des personnes désorientées ou inquiètes." },
+      { id: "serv7", dimension: "service", text: "Les difficultés des autres me touchent rarement.", reverse: true },
+      { id: "serv8", dimension: "service", text: "Je cherche à comprendre le contexte avant de juger une réaction." },
+      { id: "serv9", dimension: "service", text: "Le sens du service public est une motivation importante pour moi." },
+      { id: "serv10", dimension: "service", text: "Je sais rester humain tout en gardant une distance professionnelle." },
+
+      { id: "int1", dimension: "integrity", text: "Je ne transige jamais avec les règles d'honnêteté." },
+      { id: "int2", dimension: "integrity", text: "Je signale toujours une irrégularité même si cela peut être inconfortable." },
+      { id: "int3", dimension: "integrity", text: "L'exemplarité dans le comportement est essentielle." },
+      { id: "int4", dimension: "integrity", text: "Je reconnais mes erreurs lorsqu'elles peuvent avoir une conséquence professionnelle." },
+      { id: "int5", dimension: "integrity", text: "Je protège les informations confidentielles auxquelles je peux avoir accès." },
+      { id: "int6", dimension: "integrity", text: "Il m'arrive de considérer qu'un petit arrangement avec les règles n'est pas grave.", reverse: true },
+      { id: "int7", dimension: "integrity", text: "Je préfère fermer les yeux sur une irrégularité pour éviter les tensions.", reverse: true },
+      { id: "int8", dimension: "integrity", text: "Je prends une décision juste même lorsqu'elle est impopulaire." },
+      { id: "int9", dimension: "integrity", text: "Je refuse les avantages ou faveurs qui pourraient influencer mon jugement." },
+      { id: "int10", dimension: "integrity", text: "Je considère la probité comme indispensable dans une mission de police." },
+
+      { id: "team1", dimension: "teamwork", text: "Je m'adapte facilement à différents collègues." },
+      { id: "team2", dimension: "teamwork", text: "Je place l'intérêt collectif avant mon intérêt personnel." },
+      { id: "team3", dimension: "teamwork", text: "Je communique facilement en situation difficile." },
+      { id: "team4", dimension: "teamwork", text: "Je partage les informations utiles avec mon équipe." },
+      { id: "team5", dimension: "teamwork", text: "J'accepte les avis différents lorsqu'ils améliorent l'action collective." },
+      { id: "team6", dimension: "teamwork", text: "Je soutiens un collègue en difficulté tout en respectant les consignes." },
+      { id: "team7", dimension: "teamwork", text: "Je préfère travailler seul plutôt que de coordonner mes actions avec un groupe.", reverse: true },
+      { id: "team8", dimension: "teamwork", text: "Je sais demander de l'aide lorsque la situation l'exige." },
+      { id: "team9", dimension: "teamwork", text: "Je contribue à maintenir une ambiance professionnelle dans un groupe." },
+      { id: "team10", dimension: "teamwork", text: "Je respecte le rôle de chacun au sein d'une équipe." },
+
+      { id: "stress1", dimension: "stress", text: "Je peux prendre des décisions rapides sous pression." },
+      { id: "stress2", dimension: "stress", text: "Les imprévus ne me déstabilisent pas." },
+      { id: "stress3", dimension: "stress", text: "Je suis capable d'intervenir dans des situations potentiellement dangereuses." },
+      { id: "stress4", dimension: "stress", text: "Je priorise les actions à mener lorsqu'une situation devient confuse." },
+      { id: "stress5", dimension: "stress", text: "Je garde une vision claire des risques avant d'agir." },
+      { id: "stress6", dimension: "stress", text: "Sous pression, j'ai tendance à éviter de prendre des décisions.", reverse: true },
+      { id: "stress7", dimension: "stress", text: "Un changement soudain de situation me paralyse facilement.", reverse: true },
+      { id: "stress8", dimension: "stress", text: "Je peux gérer plusieurs informations urgentes sans paniquer." },
+      { id: "stress9", dimension: "stress", text: "Je sais protéger ma sécurité et celle des autres avant d'intervenir." },
+      { id: "stress10", dimension: "stress", text: "Je reste concentré même lorsque l'environnement est bruyant ou conflictuel." }
+    ];
+
+    const mirrorPairs = [
+      { direct: "emo1", reverse: "emo6" },
+      { direct: "emo2", reverse: "emo7" },
+      { direct: "auth1", reverse: "auth6" },
+      { direct: "auth2", reverse: "auth7" },
+      { direct: "serv2", reverse: "serv7" },
+      { direct: "int1", reverse: "int6" },
+      { direct: "int2", reverse: "int7" },
+      { direct: "team2", reverse: "team7" },
+      { direct: "stress1", reverse: "stress6" },
+      { direct: "stress2", reverse: "stress7" }
+    ];
+
+    const scaleLabels = [
+      "Pas du tout d'accord",
+      "Plutôt pas d'accord",
+      "Neutre",
+      "Plutôt d'accord",
+      "Tout à fait d'accord"
+    ];
+
+    const introSection = document.getElementById("intro-section");
+    const testSection = document.getElementById("test-section");
+    const resultsSection = document.getElementById("results-section");
+    const questionList = document.getElementById("question-list");
+    const form = document.getElementById("personality-form");
+    const formWarning = document.getElementById("form-warning");
+    const answeredCount = document.getElementById("answered-count");
+    const progressBar = document.getElementById("progress-bar");
+
+    function openPersonalityTest(bypassGuard) {
+      if (!bypassGuard && window.GPXAccess) {
+        window.GPXAccess.guard("personnalite.html", "full", null, () => openPersonalityTest(true));
+        return;
+      }
+      introSection.classList.add("hidden");
+      testSection.classList.remove("hidden");
+      resultsSection.classList.add("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("start-button").addEventListener("click", () => openPersonalityTest());
+
+    document.getElementById("clear-button").addEventListener("click", () => {
+      form.reset();
+      formWarning.textContent = "";
+      updateProgress();
+    });
+
+    let testStartedAt = new Date();
+
+    document.getElementById("restart-button").addEventListener("click", () => {
+      openPersonalityTest();
+      form.reset();
+      formWarning.textContent = "";
+      resultsSection.classList.add("hidden");
+      testStartedAt = new Date();
+      updateProgress();
+    });
+
+    form.addEventListener("input", updateProgress);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const answers = collectAnswers();
+      const missingQuestion = questions.find((question) => !answers[question.id]);
+
+      if (missingQuestion) {
+        formWarning.textContent = "Merci de répondre aux 60 affirmations avant de consulter l'analyse.";
+        document.querySelector(`[name="${missingQuestion.id}"]`).closest(".question-card").scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      formWarning.textContent = "";
+      showResults(answers);
+    });
+
+    function renderQuestions() {
+      questionList.innerHTML = questions.map((question, index) => `
+        <fieldset class="question-card">
+          <legend class="question-card__title">
+            <span class="question-number">${index + 1}</span>
+            <span>${question.text}</span>
+          </legend>
+          <div class="scale-options">
+            ${scaleLabels.map((label, valueIndex) => {
+              const value = valueIndex + 1;
+              return `
+                <label class="scale-option">
+                  <input type="radio" name="${question.id}" value="${value}">
+                  <span>
+                    <span class="scale-option__value">${value}</span>
+                    <span class="scale-option__label">${label}</span>
+                  </span>
+                </label>
+              `;
+            }).join("")}
+          </div>
+        </fieldset>
+      `).join("");
+    }
+
+    function collectAnswers() {
+      const data = new FormData(form);
+      return questions.reduce((answers, question) => {
+        const value = data.get(question.id);
+        answers[question.id] = value ? Number(value) : null;
+        return answers;
+      }, {});
+    }
+
+    function updateProgress() {
+      const answers = collectAnswers();
+      const answered = questions.filter((question) => answers[question.id]).length;
+      const percent = Math.round((answered / questions.length) * 100);
+      answeredCount.textContent = `${answered}/${questions.length} réponses`;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function showResults(answers) {
+      const scores = calculateScores(answers);
+      const coherence = analyzeCoherence(answers);
+
+      renderScores(scores);
+      renderRadar(scores);
+      renderAnalysis(scores, coherence);
+      saveProgressionResult(scores);
+
+      testSection.classList.add("hidden");
+      resultsSection.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function calculateScores(answers) {
+      const grouped = Object.keys(dimensions).reduce((accumulator, key) => {
+        accumulator[key] = [];
+        return accumulator;
+      }, {});
+
+      questions.forEach((question) => {
+        const rawAnswer = answers[question.id];
+        const adjustedAnswer = question.reverse ? 6 - rawAnswer : rawAnswer;
+        grouped[question.dimension].push(((adjustedAnswer - 1) / 4) * 10);
+      });
+
+      return Object.entries(grouped).map(([key, values]) => {
+        const average = values.reduce((sum, value) => sum + value, 0) / values.length;
+        return {
+          key,
+          label: dimensions[key].label,
+          shortLabel: dimensions[key].shortLabel,
+          advice: dimensions[key].advice,
+          score: Math.round(average * 10) / 10
+        };
+      });
+    }
+
+    function saveProgressionResult(scores) {
+      const total = 10;
+      const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const categories = scores.reduce((result, item) => {
+        result[item.label] = {
+          score: item.score,
+          total
+        };
+        return result;
+      }, {});
+
+      window.GpxProgression?.saveSession({
+        module: "psychotechnique",
+        date: new Date().toISOString(),
+        score: Math.round(scoreValue * 10) / 10,
+        total,
+        duree: testStartedAt ? Math.round((new Date() - testStartedAt) / 1000) : 0,
+        categories
+      });
+    }
+
+    function analyzeCoherence(answers) {
+      const issues = mirrorPairs.map((pair) => {
+        const directAnswer = answers[pair.direct];
+        const reverseAnswer = answers[pair.reverse];
+        const expectedDirect = 6 - reverseAnswer;
+        return {
+          ...pair,
+          gap: Math.abs(directAnswer - expectedDirect)
+        };
+      }).filter((issue) => issue.gap >= 3);
+
+      if (issues.length === 0) {
+        return {
+          level: "positive",
+          title: "Cohérence des réponses : satisfaisante",
+          message: "Vos réponses aux questions miroir restent globalement constantes. Continuez à privilégier des réponses spontanées et authentiques.",
+          issues
+        };
+      }
+
+      if (issues.length <= 3) {
+        return {
+          level: "moderate",
+          title: "Cohérence des réponses : quelques écarts",
+          message: "Certaines réponses à des affirmations inversées semblent contradictoires. Relisez calmement les consignes et évitez de répondre mécaniquement.",
+          issues
+        };
+      }
+
+      return {
+        level: "warning",
+        title: "Cohérence des réponses : avertissement",
+        message: "Plusieurs incohérences sont détectées entre des questions miroir. Dans un vrai test, ce type d'écart peut attirer l'attention du psychologue ou du jury.",
+        issues
+      };
+    }
+
+    function renderScores(scores) {
+      document.getElementById("scores-grid").innerHTML = scores.map((item) => `
+        <article class="score-card">
+          <h3>${item.label}</h3>
+          <div class="score-value">${formatScore(item.score)}<small>/10</small></div>
+          <div class="score-meter" aria-hidden="true"><span style="width: ${item.score * 10}%"></span></div>
+        </article>
+      `).join("");
+    }
+
+    function renderRadar(scores) {
+      const svg = document.getElementById("radar-chart");
+      const center = 210;
+      const radius = 126;
+      const namespace = "http://www.w3.org/2000/svg";
+      svg.innerHTML = "";
+
+      [2, 4, 6, 8, 10].forEach((level) => {
+        const points = scores.map((_, index) => pointFor(index, scores.length, center, radius * (level / 10))).join(" ");
+        const polygon = document.createElementNS(namespace, "polygon");
+        polygon.setAttribute("points", points);
+        polygon.setAttribute("fill", "none");
+        polygon.setAttribute("stroke", level === 10 ? "#9aa8bd" : "#d8deea");
+        polygon.setAttribute("stroke-width", level === 10 ? "1.5" : "1");
+        svg.appendChild(polygon);
+      });
+
+      scores.forEach((item, index) => {
+        const axis = document.createElementNS(namespace, "line");
+        const end = pointCoordinates(index, scores.length, center, radius);
+        axis.setAttribute("x1", center);
+        axis.setAttribute("y1", center);
+        axis.setAttribute("x2", end.x);
+        axis.setAttribute("y2", end.y);
+        axis.setAttribute("stroke", "#d8deea");
+        axis.setAttribute("stroke-width", "1");
+        svg.appendChild(axis);
+
+        const labelPoint = pointCoordinates(index, scores.length, center, radius + 42);
+        const label = document.createElementNS(namespace, "text");
+        label.setAttribute("x", labelPoint.x);
+        label.setAttribute("y", labelPoint.y);
+        label.setAttribute("fill", "#1a2744");
+        label.setAttribute("font-size", "13");
+        label.setAttribute("font-weight", "700");
+        label.setAttribute("text-anchor", labelPoint.x < center - 10 ? "end" : labelPoint.x > center + 10 ? "start" : "middle");
+        label.setAttribute("dominant-baseline", "middle");
+        label.textContent = item.shortLabel;
+        svg.appendChild(label);
+      });
+
+      const scorePoints = scores.map((item, index) => pointFor(index, scores.length, center, radius * (item.score / 10))).join(" ");
+      const scorePolygon = document.createElementNS(namespace, "polygon");
+      scorePolygon.setAttribute("points", scorePoints);
+      scorePolygon.setAttribute("fill", "rgba(26, 39, 68, 0.24)");
+      scorePolygon.setAttribute("stroke", "#1a2744");
+      scorePolygon.setAttribute("stroke-width", "3");
+      svg.appendChild(scorePolygon);
+
+      scores.forEach((item, index) => {
+        const point = pointCoordinates(index, scores.length, center, radius * (item.score / 10));
+        const marker = document.createElementNS(namespace, "circle");
+        marker.setAttribute("cx", point.x);
+        marker.setAttribute("cy", point.y);
+        marker.setAttribute("r", "4.5");
+        marker.setAttribute("fill", "#1a2744");
+        svg.appendChild(marker);
+      });
+    }
+
+    function pointFor(index, total, center, radius) {
+      const point = pointCoordinates(index, total, center, radius);
+      return `${point.x},${point.y}`;
+    }
+
+    function pointCoordinates(index, total, center, radius) {
+      const angle = -Math.PI / 2 + (index * 2 * Math.PI) / total;
+      return {
+        x: Math.round((center + Math.cos(angle) * radius) * 10) / 10,
+        y: Math.round((center + Math.sin(angle) * radius) * 10) / 10
+      };
+    }
+
+    function renderAnalysis(scores, coherence) {
+      const average = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const sortedScores = [...scores].sort((a, b) => b.score - a.score);
+      const lowScores = scores.filter((item) => item.score < 6);
+      const solidScores = scores.filter((item) => item.score >= 7.5);
+
+      document.getElementById("analysis-summary").innerHTML = `
+        <h3>Lecture personnalisée</h3>
+        <p>${overallMessage(average)}</p>
+        ${scores.map((item) => `<p><strong>${item.label} :</strong> ${dimensionMessage(item)}</p>`).join("")}
+      `;
+
+      document.getElementById("strengths-list").innerHTML = (solidScores.length ? solidScores : sortedScores.slice(0, 2)).map((item) => `
+        <li><strong>${item.label}</strong> : ${strengthMessage(item)}</li>
+      `).join("");
+
+      const progressItems = lowScores.length ? lowScores : sortedScores.slice(-2).reverse();
+      document.getElementById("progress-list").innerHTML = progressItems.map((item) => `
+        <li><strong>${item.label}</strong> : ${item.advice}</li>
+      `).join("");
+
+      const detail = coherence.issues.length
+        ? `<p>Nombre d'écarts marqués sur les questions miroir : <strong>${coherence.issues.length}/10</strong>.</p>`
+        : "<p>Aucun écart marqué n'a été relevé sur les 10 questions miroir.</p>";
+
+      document.getElementById("coherence-card").innerHTML = `
+        <h3>${coherence.title}</h3>
+        <p>${coherence.message}</p>
+        ${detail}
+      `;
+    }
+
+    function overallMessage(average) {
+      if (average >= 8) {
+        return "Votre profil simulé montre un équilibre solide sur les dimensions attendues pour le concours GPX. L'enjeu est de rester authentique et constant dans vos réponses.";
+      }
+
+      if (average >= 6.5) {
+        return "Votre profil simulé présente des bases cohérentes avec les attentes du concours. Certaines dimensions peuvent encore être renforcées par un travail de préparation ciblé.";
+      }
+
+      return "Votre profil simulé met en évidence plusieurs points à consolider. Utilisez ces résultats comme support d'entraînement et de réflexion personnelle avant l'entretien.";
+    }
+
+    function dimensionMessage(item) {
+      if (item.score >= 8) {
+        return `score élevé (${formatScore(item.score)}/10), indicateur positif à maintenir avec des réponses naturelles.`;
+      }
+
+      if (item.score >= 6) {
+        return `score intermédiaire (${formatScore(item.score)}/10), base correcte mais encore perfectible selon les situations.`;
+      }
+
+      return `score fragile (${formatScore(item.score)}/10), dimension à travailler pour gagner en crédibilité et en constance.`;
+    }
+
+    function strengthMessage(item) {
+      if (item.score >= 8) {
+        return `point d'appui net avec un score de ${formatScore(item.score)}/10.`;
+      }
+
+      return `dimension la plus favorable de cette simulation avec un score de ${formatScore(item.score)}/10.`;
+    }
+
+    function formatScore(score) {
+      return score.toFixed(1).replace(".", ",");
+    }
+
+    renderQuestions();
+    updateProgress();
+  </script>
+</body>
+</html>

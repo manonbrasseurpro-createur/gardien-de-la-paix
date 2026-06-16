@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Créer un compte | Entraînement concours gardien de la paix</title>
+  <meta name="description" content="Créez votre compte pour accéder à l'entraînement gardien de la paix en ligne : cas pratiques GPX, psychotechnique, culture générale et test personnalité.">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Créer un compte</h1>
+      <p class="hero__subtitle">Rejoignez l'entraînement au concours gardien de la paix</p>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <section class="auth-card auth-card--narrow">
+      <h2>Créer un compte</h2>
+      <p class="auth-card__intro">Prénom, e-mail et mot de passe. Sans abonnement : <strong>1 petit test gratuit</strong> (mini test ou question isolée).</p>
+      <form id="register-form" class="auth-form" novalidate>
+        <label>
+          Prénom
+          <input type="text" name="firstName" required autocomplete="given-name">
+        </label>
+        <label>
+          Adresse e-mail
+          <input type="email" name="email" required autocomplete="email">
+        </label>
+        <label>
+          Mot de passe (8 caractères minimum)
+          <input type="password" name="password" required minlength="8" autocomplete="new-password">
+        </label>
+        <p class="auth-legal-notice">En créant un compte, vous acceptez les <a href="cgv.html" target="_blank">CGV</a> et la <a href="politique-confidentialite.html" target="_blank">politique de confidentialité</a>.</p>
+        <button class="primary-button" type="submit">Créer mon compte</button>
+        <p id="register-success" class="auth-success" role="status"></p>
+        <p id="register-error" class="auth-error" role="alert"></p>
+      </form>
+      <p class="auth-switch">Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
+    </section>
+
+    <p class="auth-footer">
+      <a href="index.html">Retour à l'accueil</a> · <a href="tarifs.html">Tarifs et abonnement</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const redirectTarget = params.get("redirect") || "compte.html";
+
+    (async () => {
+      if (window.GPXAuth.isSupabaseConfigured()) {
+        const user = await window.GPXAuth.getCurrentUser();
+        if (user) {
+          window.location.href = "compte.html";
+          return;
+        }
+      }
+    })();
+
+    document.getElementById("register-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const errorEl = document.getElementById("register-error");
+      const successEl = document.getElementById("register-success");
+      errorEl.textContent = "";
+      successEl.textContent = "";
+      try {
+        const result = await window.GPXAuth.register({
+          firstName: form.firstName.value,
+          email: form.email.value,
+          password: form.password.value
+        });
+        if (result.emailConfirmationRequired) {
+          successEl.textContent =
+            "Compte créé. Vérifiez votre boîte e-mail et confirmez votre inscription, puis connectez-vous.";
+          form.reset();
+          return;
+        }
+        window.location.href = redirectTarget;
+      } catch (error) {
+        console.error("[GPX Auth] register failed:", error);
+        errorEl.textContent = error.message || "Inscription impossible.";
+      }
+    });
+  </script>
+</body>
+</html>

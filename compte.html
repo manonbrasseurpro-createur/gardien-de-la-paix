@@ -25,49 +25,6 @@
   </header>
 
   <main class="container auth-container">
-    <div id="auth-mode-banner" class="auth-banner" hidden></div>
-
-    <section id="logged-out-view" class="auth-grid" aria-label="Connexion et inscription">
-      <article class="auth-card">
-        <h2>Créer un compte</h2>
-        <p class="auth-card__intro">Prénom, e-mail et mot de passe. Sans abonnement : <strong>1 petit test gratuit</strong> (mini test ou question isolée).</p>
-        <form id="register-form" class="auth-form" novalidate>
-          <label>
-            Prénom
-            <input type="text" name="firstName" required autocomplete="given-name">
-          </label>
-          <label>
-            Adresse e-mail
-            <input type="email" name="email" required autocomplete="email">
-          </label>
-          <label>
-            Mot de passe (8 caractères minimum)
-            <input type="password" name="password" required minlength="8" autocomplete="new-password">
-          </label>
-          <p class="auth-legal-notice">En créant un compte, vous acceptez les <a href="cgv.html" target="_blank">CGV</a> et la <a href="politique-confidentialite.html" target="_blank">politique de confidentialité</a>.</p>
-          <button class="primary-button" type="submit">Créer mon compte</button>
-          <p id="register-success" class="auth-success" role="status"></p>
-          <p id="register-error" class="auth-error" role="alert"></p>
-        </form>
-      </article>
-
-      <article class="auth-card">
-        <h2>Se connecter</h2>
-        <form id="login-form" class="auth-form" novalidate>
-          <label>
-            Adresse e-mail
-            <input type="email" name="email" required autocomplete="email">
-          </label>
-          <label>
-            Mot de passe
-            <input type="password" name="password" required autocomplete="current-password">
-          </label>
-          <button class="primary-button" type="submit">Connexion</button>
-          <p id="login-error" class="auth-error" role="alert"></p>
-        </form>
-      </article>
-    </section>
-
     <section id="logged-in-view" class="auth-card auth-card--wide hidden" aria-label="Tableau de bord">
       <h2>Bonjour, <span id="user-display-name"></span></h2>
       <p id="subscription-status" class="auth-status"></p>
@@ -96,30 +53,17 @@
   <script>
     console.info("[GPX Auth] Diagnostic au chargement:", window.GPXAuth.getDiagnostics());
 
-    const params = new URLSearchParams(window.location.search);
-    const redirectTarget = params.get("redirect") || "index.html";
-
-    const loggedOutView = document.getElementById("logged-out-view");
     const loggedInView = document.getElementById("logged-in-view");
-    const authModeBanner = document.getElementById("auth-mode-banner");
     const demoButton = document.getElementById("demo-subscription-button");
     const demoHint = document.getElementById("demo-subscription-hint");
-
-    if (!window.GPXAuth.isSupabaseConfigured()) {
-      authModeBanner.hidden = false;
-      authModeBanner.textContent =
-        "Supabase n'est pas configuré. Renseignez supabase-config.js pour activer les comptes.";
-    }
 
     async function refreshDashboard() {
       const user = await window.GPXAuth.getCurrentUser();
       if (!user) {
-        loggedOutView.classList.remove("hidden");
-        loggedInView.classList.add("hidden");
+        window.location.href = "connexion.html";
         return;
       }
 
-      loggedOutView.classList.add("hidden");
       loggedInView.classList.remove("hidden");
       document.getElementById("user-display-name").textContent = [user.firstName, user.lastName].filter(Boolean).join(" ");
       document.getElementById("hero-subtitle").textContent = "Gérez votre compte et votre abonnement";
@@ -140,54 +84,7 @@
           ? `Essai gratuit utilisé (${user.freeTrialKey || "test enregistré"}).`
           : "Essai gratuit disponible : choisissez un mini test ou une question isolée (cas pratiques).";
       }
-
-      if (subscribed && window.location.search.includes("redirect=")) {
-        window.location.href = redirectTarget;
-      }
     }
-
-    document.getElementById("register-form").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const form = event.target;
-      const errorEl = document.getElementById("register-error");
-      const successEl = document.getElementById("register-success");
-      errorEl.textContent = "";
-      successEl.textContent = "";
-      try {
-        const result = await window.GPXAuth.register({
-          firstName: form.firstName.value,
-          email: form.email.value,
-          password: form.password.value
-        });
-        if (result.emailConfirmationRequired) {
-          successEl.textContent =
-            "Compte créé. Vérifiez votre boîte e-mail et confirmez votre inscription, puis connectez-vous.";
-          form.reset();
-          return;
-        }
-        window.location.href = redirectTarget;
-      } catch (error) {
-        console.error("[GPX Auth] register failed:", error);
-        errorEl.textContent = error.message || "Inscription impossible.";
-      }
-    });
-
-    document.getElementById("login-form").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const form = event.target;
-      const errorEl = document.getElementById("login-error");
-      errorEl.textContent = "";
-      try {
-        await window.GPXAuth.login({
-          email: form.email.value,
-          password: form.password.value
-        });
-        window.location.href = redirectTarget;
-      } catch (error) {
-        console.error("[GPX Auth] login failed:", error);
-        errorEl.textContent = error.message || "Connexion impossible.";
-      }
-    });
 
     document.getElementById("manage-subscription-button").addEventListener("click", async () => {
       const btn = document.getElementById("manage-subscription-button");

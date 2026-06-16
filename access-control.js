@@ -1,5 +1,5 @@
 (function () {
-  const PUBLIC_PAGES = new Set(["index.html", "compte.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "politique-confidentialite.html"]);
+  const PUBLIC_PAGES = new Set(["index.html", "compte.html", "connexion.html", "inscription.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "politique-confidentialite.html"]);
 
   /** Modes « petits tests » : un seul essai gratuit pour les comptes sans abonnement. */
   const SMALL_TEST_MODES = {
@@ -161,7 +161,7 @@
     if (!result.allowed) {
       if (result.reason === "login") {
         const redirect = encodeURIComponent(window.location.pathname.split("/").pop() || "index.html");
-        window.location.href = `compte.html?redirect=${redirect}`;
+        window.location.href = `connexion.html?redirect=${redirect}`;
         return;
       }
       showPaywall(result.message);
@@ -187,7 +187,7 @@
     const user = await window.GPXAuth.getCurrentUser();
     if (!user) {
       const redirect = encodeURIComponent(page);
-      window.location.href = `compte.html?redirect=${redirect}`;
+      window.location.href = `connexion.html?redirect=${redirect}`;
     }
   }
 
@@ -234,7 +234,7 @@
       if (!user) {
         links.innerHTML = `
           <a href="tarifs.html">Tarifs</a>
-          <a class="gpx-site-nav__cta" href="compte.html">Créer un compte</a>
+          <a class="gpx-site-nav__cta" href="inscription.html">Créer un compte</a>
         `;
         return;
       }
@@ -254,7 +254,7 @@
 
       document.getElementById("gpx-logout-button")?.addEventListener("click", async () => {
         await window.GPXAuth.logout();
-        window.location.href = "compte.html";
+        window.location.href = "connexion.html";
       });
     });
   }

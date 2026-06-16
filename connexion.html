@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Se connecter | Entraînement concours gardien de la paix</title>
+  <meta name="description" content="Connectez-vous à votre compte pour accéder à l'entraînement gardien de la paix en ligne.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Se connecter</h1>
+      <p class="hero__subtitle">Accédez à vos entraînements</p>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <section class="auth-card auth-card--narrow">
+      <h2>Connexion</h2>
+      <form id="login-form" class="auth-form" novalidate>
+        <label>
+          Adresse e-mail
+          <input type="email" name="email" required autocomplete="email">
+        </label>
+        <label>
+          Mot de passe
+          <input type="password" name="password" required autocomplete="current-password">
+        </label>
+        <button class="primary-button" type="submit">Connexion</button>
+        <p id="login-error" class="auth-error" role="alert"></p>
+      </form>
+      <p class="auth-switch">Pas encore de compte ? <a href="inscription.html">Créer un compte</a></p>
+    </section>
+
+    <p class="auth-footer">
+      <a href="index.html">Retour à l'accueil</a> · <a href="tarifs.html">Tarifs et abonnement</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const redirectTarget = params.get("redirect") || "compte.html";
+
+    (async () => {
+      if (window.GPXAuth.isSupabaseConfigured()) {
+        const user = await window.GPXAuth.getCurrentUser();
+        if (user) {
+          window.location.href = "compte.html";
+          return;
+        }
+      }
+    })();
+
+    document.getElementById("login-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const errorEl = document.getElementById("login-error");
+      errorEl.textContent = "";
+      try {
+        await window.GPXAuth.login({
+          email: form.email.value,
+          password: form.password.value
+        });
+        window.location.href = redirectTarget;
+      } catch (error) {
+        console.error("[GPX Auth] login failed:", error);
+        errorEl.textContent = error.message || "Connexion impossible.";
+      }
+    });
+  </script>
+</body>
+</html>

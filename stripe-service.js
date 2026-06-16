@@ -10,7 +10,7 @@
   async function startSubscriptionCheckout() {
     const user = await window.GPXAuth.getCurrentUser();
     if (!user) {
-      window.location.href = "compte.html?redirect=tarifs.html";
+      window.location.href = "connexion.html?redirect=tarifs.html";
       return;
     }
 

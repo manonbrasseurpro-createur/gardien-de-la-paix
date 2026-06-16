@@ -339,6 +339,23 @@ a {
   margin: 0 auto;
 }
 
+.auth-card--narrow {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.auth-switch {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted, #64748b);
+}
+
+.auth-switch a {
+  color: var(--navy);
+  text-decoration: underline;
+}
+
 .legal-content h2 {
   font-size: 1.1rem;
   font-weight: 700;

@@ -203,13 +203,19 @@
         .maybeSingle();
 
       if (error) {
-        console.warn("[GPX Auth] profiles.select:", error.message, error);
+        console.warn("[GPX Auth] profiles.select error:", error.message, error);
         return await profileFromAuthUser(client, userId, fallbackEmail);
       }
 
       if (!data) {
+        console.warn(
+          "[GPX Auth] profiles.select: aucune ligne trouvée pour id =", userId,
+          "— vérifiez que la table 'profiles' a une politique RLS autorisant SELECT pour auth.uid() = id"
+        );
         return await profileFromAuthUser(client, userId, fallbackEmail);
       }
+
+      console.info("[GPX Auth] profiles row:", { id: data.id, subscription_status: data.subscription_status });
 
       const { data: userData } = await client.auth.getUser();
       const meta = userData?.user?.user_metadata || {};
@@ -217,13 +223,13 @@
       return normalizeProfile(
         {
           ...data,
-          free_trial_used: meta.free_trial_used,
-          free_trial_key: meta.free_trial_key
+          free_trial_used: meta.free_trial_used ?? data.free_trial_used,
+          free_trial_key: meta.free_trial_key ?? data.free_trial_key
         },
         userData?.user?.email || fallbackEmail
       );
     } catch (error) {
-      console.warn("[GPX Auth] fetchProfile:", error);
+      console.warn("[GPX Auth] fetchProfile exception:", error);
       return await profileFromAuthUser(client, userId, fallbackEmail);
     }
   }

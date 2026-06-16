@@ -234,6 +234,7 @@
       if (!user) {
         links.innerHTML = `
           <a href="tarifs.html">Tarifs</a>
+          <a href="connexion.html">Se connecter</a>
           <a class="gpx-site-nav__cta" href="inscription.html">Créer un compte</a>
         `;
         return;

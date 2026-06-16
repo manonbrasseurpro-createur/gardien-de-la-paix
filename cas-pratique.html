@@ -1463,7 +1463,7 @@
 
         <div class="guide-unified__section">
           <div class="guide-unified__highlight">
-            <strong>Forme des réponses — copies 19,6 et 17,8 /20</strong>
+            <strong>Forme des réponses</strong>
             <p>Deux styles valables : <strong>concis</strong> (qualification + peine + action) ou <strong>développé</strong> (articles en chaîne, justification, CIC/TN). Toujours en « Je » ou « nous », sans plan en parties. Listes à puces si plusieurs éléments. Numéros utiles : 3919, plainte en ligne, service-public.fr.</p>
           </div>
         </div>
@@ -4712,11 +4712,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     };
 
     const EXCELLENT_COPY_FORM = {
-      title: "Forme attendue — calibrée sur des copies concours (19,6 et 17,8 /20)",
+      title: "Forme attendue",
       intro: "L'outil compare votre texte à deux copies réelles très bien notées : l'une concise et percutante (~19/20), l'autre plus développée et juridique (~18/20). Le fond doit toujours coller au sujet ; la forme peut être courte ou plus longue si chaque article sert une action.",
       profiles: {
         concise: {
-          label: "Style concis (~19/20)",
+          label: "Style concis",
           wordRange: "40–150 mots",
           tips: [
             "Aller à l'essentiel : qualification + peine + action immédiate.",
@@ -4725,7 +4725,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           ]
         },
         developed: {
-          label: "Style développé (~18/20)",
+          label: "Style développé",
           wordRange: "120–350 mots",
           tips: [
             "Enchaîner plusieurs articles du dossier en justifiant chaque geste (ex. 75, 73, 803 CPP en intervention).",
@@ -5082,7 +5082,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         });
         const formPct = formTotal ? Math.round((formEarned / formTotal) * 100) : 0;
         formAnalysisHtml = `
-          <h4>Forme — calibrée sur copies 19,6 et 17,8 /20</h4>
+          <h4>Forme</h4>
           <p class="ai-analysis-summary">L'outil a comparé la présentation de vos réponses : ${formEarned}/${formTotal} critères de forme (${formPct}%). Les copies de référence montrent deux niveaux possibles : <strong>concis</strong> (efficace, ~19/20) ou <strong>développé</strong> (articles enchaînés + justification, ~18/20). Choisissez selon la question : qualification courte, procédure sur les lieux plus détaillée.</p>
         `;
         if (formPct < 60) {

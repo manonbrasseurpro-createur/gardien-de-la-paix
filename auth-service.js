@@ -1,5 +1,6 @@
 (function () {
   const SUPABASE_JS_VERSION = "2.49.8";
+  const PROFILS_TABLE = "profiles";
 
   function getConfig() {
     const cfg = window.GPX_SUPABASE || {};
@@ -57,17 +58,38 @@
     return window.__gpxSupabaseClient;
   }
 
-  function normalizeProfile(profile, fallbackEmail) {
+  function mapStatutAbonnement(statut) {
+    const value = String(statut || "free").toLowerCase();
+    if (value === "active") {
+      return "active";
+    }
+    return "none";
+  }
+
+  function normalizeProfile(profil, fallbackEmail) {
+    const statutAbonnement = profil.subscription_status ?? "free";
+
     return {
-      id: profile.id,
-      email: profile.email || fallbackEmail || "",
-      firstName: profile.first_name || profile.firstName || "",
-      lastName: profile.last_name || profile.lastName || "",
-      phone: profile.phone || "",
-      subscriptionStatus: profile.subscription_status || profile.subscriptionStatus || "none",
-      subscriptionEndsAt: profile.subscription_ends_at || profile.subscriptionEndsAt || null,
-      freeTrialUsed: Boolean(profile.free_trial_used ?? profile.freeTrialUsed),
-      freeTrialKey: profile.free_trial_key || profile.freeTrialKey || null
+      id: profil.id,
+      email: fallbackEmail || "",
+      firstName:
+        profil.prénom ||
+        profil.prenom ||
+        profil.first_name ||
+        profil.firstName ||
+        "",
+      lastName:
+        profil["nom de famille"] ||
+        profil.nom_de_famille ||
+        profil.last_name ||
+        profil.lastName ||
+        "",
+      phone: profil.téléphone || profil.telephone || profil.phone || "",
+      subscriptionStatus: mapStatutAbonnement(statutAbonnement),
+      statutAbonnement: statutAbonnement,
+      subscriptionEndsAt: null,
+      freeTrialUsed: Boolean(profil.free_trial_used ?? profil.freeTrialUsed),
+      freeTrialKey: profil.free_trial_key || profil.freeTrialKey || null
     };
   }
 
@@ -75,13 +97,7 @@
     if (!profile) {
       return false;
     }
-    if (profile.subscriptionStatus === "active") {
-      if (!profile.subscriptionEndsAt) {
-        return true;
-      }
-      return new Date(profile.subscriptionEndsAt) > new Date();
-    }
-    return false;
+    return profile.subscriptionStatus === "active" || profile.statutAbonnement === "active";
   }
 
   function mapAuthError(error) {
@@ -140,11 +156,15 @@
     return trimmed;
   }
 
-  async function saveProfilePhone(userId, phone) {
+  async function saveProfilPhone(userId, phone) {
     const client = getSupabaseClient();
-    const { error } = await client.from("profiles").update({ phone }).eq("id", userId);
+    const { error } = await client
+      .from(PROFILS_TABLE)
+      .update({ téléphone: phone })
+      .eq("id", userId);
+
     if (error) {
-      console.warn("[GPX Auth] profiles.phone update:", error);
+      console.warn("[GPX Auth] profiles.téléphone update:", error);
       throw new Error(error.message);
     }
   }
@@ -154,17 +174,21 @@
     if (error) {
       console.warn("[GPX Auth] auth.getUser:", error);
     }
+
     const user = data?.user;
     const meta = user?.user_metadata || {};
+
     return normalizeProfile(
       {
         id: userId,
-        email: user?.email || fallbackEmail,
-        first_name: meta.first_name || "",
-        last_name: meta.last_name || "",
-        phone: meta.phone || ""
+        prénom: meta.first_name || meta.prénom || "",
+        "nom de famille": meta.last_name || meta.nom_de_famille || "",
+        téléphone: meta.phone || meta.téléphone || "",
+        subscription_status: "free",
+        free_trial_used: meta.free_trial_used,
+        free_trial_key: meta.free_trial_key
       },
-      fallbackEmail
+      user?.email || fallbackEmail
     );
   }
 
@@ -173,7 +197,7 @@
 
     try {
       const { data, error } = await client
-        .from("profiles")
+        .from(PROFILS_TABLE)
         .select("*")
         .eq("id", userId)
         .maybeSingle();
@@ -187,7 +211,17 @@
         return await profileFromAuthUser(client, userId, fallbackEmail);
       }
 
-      return normalizeProfile(data, fallbackEmail);
+      const { data: userData } = await client.auth.getUser();
+      const meta = userData?.user?.user_metadata || {};
+
+      return normalizeProfile(
+        {
+          ...data,
+          free_trial_used: meta.free_trial_used,
+          free_trial_key: meta.free_trial_key
+        },
+        userData?.user?.email || fallbackEmail
+      );
     } catch (error) {
       console.warn("[GPX Auth] fetchProfile:", error);
       return await profileFromAuthUser(client, userId, fallbackEmail);
@@ -234,7 +268,7 @@
     });
 
     if (data.session) {
-      await saveProfilePhone(data.user.id, normalizedPhone);
+      await saveProfilPhone(data.user.id, normalizedPhone);
     }
 
     const profile = data.session
@@ -242,10 +276,10 @@
       : normalizeProfile(
           {
             id: data.user.id,
-            email: data.user.email,
-            first_name: String(firstName).trim(),
-            last_name: String(lastName).trim(),
-            phone: normalizedPhone
+            prénom: String(firstName).trim(),
+            "nom de famille": String(lastName).trim(),
+            téléphone: normalizedPhone,
+            subscription_status: "free"
           },
           data.user.email
         );
@@ -351,39 +385,47 @@
 
   async function updateProfile(userId, patch) {
     const client = getSupabaseClient();
-    const dbPatch = {};
-    if (patch.freeTrialUsed !== undefined) {
-      dbPatch.free_trial_used = patch.freeTrialUsed;
-    }
-    if (patch.freeTrialKey !== undefined) {
-      dbPatch.free_trial_key = patch.freeTrialKey;
-    }
-    if (patch.subscriptionStatus !== undefined) {
-      dbPatch.subscription_status = patch.subscriptionStatus;
-    }
-    if (patch.subscriptionEndsAt !== undefined) {
-      dbPatch.subscription_ends_at = patch.subscriptionEndsAt;
+
+    if (patch.freeTrialUsed !== undefined || patch.freeTrialKey !== undefined) {
+      const metaPatch = {};
+      if (patch.freeTrialUsed !== undefined) {
+        metaPatch.free_trial_used = patch.freeTrialUsed;
+      }
+      if (patch.freeTrialKey !== undefined) {
+        metaPatch.free_trial_key = patch.freeTrialKey;
+      }
+
+      const { error: metaError } = await client.auth.updateUser({ data: metaPatch });
+      if (metaError) {
+        console.error("[GPX Auth] updateUser metadata:", metaError);
+        throw new Error(metaError.message);
+      }
     }
 
-    const { error } = await client.from("profiles").update(dbPatch).eq("id", userId);
-    if (error) {
-      console.error("[GPX Auth] updateProfile:", error);
-      throw new Error(error.message);
+    const dbPatch = {};
+    if (patch.subscriptionStatus !== undefined) {
+      dbPatch.subscription_status = patch.subscriptionStatus === "active" ? "active" : "free";
     }
+    if (patch.phone !== undefined) {
+      dbPatch.téléphone = patch.phone;
+    }
+
+    if (Object.keys(dbPatch).length > 0) {
+      const { error } = await client.from(PROFILS_TABLE).update(dbPatch).eq("id", userId);
+      if (error) {
+        console.error("[GPX Auth] updateProfile profiles:", error);
+        throw new Error(error.message);
+      }
+    }
+
     return await fetchProfile(userId);
   }
 
   async function activateDemoSubscription(userId) {
-    const endsAt = new Date();
-    endsAt.setMonth(endsAt.getMonth() + 1);
-
     const client = getSupabaseClient();
     const { error } = await client
-      .from("profiles")
-      .update({
-        subscription_status: "active",
-        subscription_ends_at: endsAt.toISOString()
-      })
+      .from(PROFILS_TABLE)
+      .update({ subscription_status: "active" })
       .eq("id", userId);
 
     if (error) {

@@ -21,12 +21,14 @@
     <section class="auth-card auth-card--wide" aria-live="polite">
       <h2>✅ Votre paiement a été accepté</h2>
       <p id="confirmation-message">
-        Votre abonnement est en cours d'activation. Cela peut prendre quelques secondes.
+        Vérification de votre abonnement…
       </p>
       <p id="subscription-detail" class="auth-status"></p>
+      <p id="confirmation-error" class="auth-error" role="alert" hidden></p>
       <div class="auth-actions">
         <a class="primary-button" href="index.html">Commencer l'entraînement</a>
         <a class="secondary-button" href="compte.html">Mon compte</a>
+        <button id="retry-check" class="secondary-button hidden" type="button">Vérifier à nouveau</button>
       </div>
     </section>
   </main>
@@ -34,34 +36,86 @@
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
   <script src="auth-service.js"></script>
-  <script src="access-control.js"></script>
   <script>
-    async function refreshStatus() {
+    (function () {
       const messageEl = document.getElementById("confirmation-message");
       const detailEl = document.getElementById("subscription-detail");
-      const user = await window.GPXAuth.getCurrentUser();
+      const errorEl = document.getElementById("confirmation-error");
+      const retryBtn = document.getElementById("retry-check");
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get("session_id");
 
-      if (!user) {
-        messageEl.textContent = "Connectez-vous pour vérifier l'activation de votre abonnement.";
-        detailEl.textContent = "";
-        return;
+      function showError(text) {
+        errorEl.hidden = false;
+        errorEl.textContent = text;
       }
 
-      const active = window.GPXAuth.hasActiveSubscription(user);
-      if (active) {
-        messageEl.textContent = "Votre abonnement est actif. Tous les tests et simulations sont débloqués.";
-        detailEl.textContent = user.subscriptionEndsAt
-          ? `Valide jusqu'au ${new Date(user.subscriptionEndsAt).toLocaleDateString("fr-FR")}.`
-          : "Abonnement actif.";
+      async function refreshStatus() {
+        errorEl.hidden = true;
+        errorEl.textContent = "";
+
+        if (!window.GPXAuth) {
+          showError("Erreur de chargement (auth-service.js). Rechargez la page.");
+          return false;
+        }
+
+        try {
+          const user = await window.GPXAuth.getCurrentUser();
+
+          if (!user) {
+            messageEl.textContent =
+              "Paiement reçu. Connectez-vous avec le même compte utilisé pour payer afin de vérifier l'activation.";
+            detailEl.textContent = sessionId
+              ? "Référence paiement Stripe enregistrée."
+              : "";
+            retryBtn.classList.remove("hidden");
+            return false;
+          }
+
+          const active = window.GPXAuth.hasActiveSubscription(user);
+
+          if (active) {
+            messageEl.textContent =
+              "Votre abonnement est actif. Tous les tests et simulations sont débloqués.";
+            detailEl.textContent = "Statut : abonnement actif.";
+            retryBtn.classList.add("hidden");
+            return true;
+          }
+
+          messageEl.textContent =
+            "Paiement reçu. L'activation peut prendre quelques secondes (webhook Stripe → Supabase).";
+          detailEl.textContent = "Si le statut ne change pas, patientez 1 minute puis cliquez sur « Vérifier à nouveau ».";
+          retryBtn.classList.remove("hidden");
+          return false;
+        } catch (error) {
+          console.error("[confirmation]", error);
+          showError(error.message || "Impossible de vérifier l'abonnement.");
+          retryBtn.classList.remove("hidden");
+          return false;
+        }
+      }
+
+      async function pollActivation(maxAttempts) {
+        for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+          const active = await refreshStatus();
+          if (active) {
+            return;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+      }
+
+      retryBtn.addEventListener("click", () => {
+        messageEl.textContent = "Vérification de votre abonnement…";
+        pollActivation(5);
+      });
+
+      if (!window.GPXAuth?.isSupabaseConfigured?.()) {
+        showError("Supabase n'est pas configuré (supabase-config.js).");
       } else {
-        messageEl.textContent =
-          "Paiement reçu. Si l'abonnement n'apparaît pas encore, patientez quelques instants puis rechargez cette page.";
-        detailEl.textContent = "L'activation est automatique via Stripe.";
+        pollActivation(8);
       }
-    }
-
-    refreshStatus();
-    setTimeout(refreshStatus, 4000);
+    })();
   </script>
 </body>
 </html>

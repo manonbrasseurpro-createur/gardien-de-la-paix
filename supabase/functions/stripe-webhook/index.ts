@@ -1,59 +1,70 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
-import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
+import { Stripe } from "https://esm.sh/stripe@14?target=deno";
 
-function mapStripeStatus(status: string): string {
-  if (status === "active" || status === "trialing") {
-    return "active";
-  }
-  if (status === "past_due") {
-    return "past_due";
-  }
-  return "cancelled";
-}
-
-async function updateProfileFromSubscription(
+async function findUserIdByEmail(
   supabaseAdmin: ReturnType<typeof createClient>,
-  stripe: Stripe,
-  subscription: Stripe.Subscription,
-  userIdHint?: string | null
-) {
-  const userId =
-    userIdHint ||
-    subscription.metadata?.user_id ||
-    null;
-
-  const customerId =
-    typeof subscription.customer === "string"
-      ? subscription.customer
-      : subscription.customer?.id ?? null;
-
-  const endsAt = new Date(subscription.current_period_end * 1000).toISOString();
-  const status = mapStripeStatus(subscription.status);
-
-  const patch = {
-    subscription_status: status,
-    subscription_ends_at: endsAt,
-    stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
-    updated_at: new Date().toISOString()
-  };
-
-  if (userId) {
-    const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", userId);
-    if (error) {
-      throw error;
-    }
-    return;
+  email: string
+): Promise<string | null> {
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!normalizedEmail) {
+    return null;
   }
 
-  const { error } = await supabaseAdmin
-    .from("profiles")
-    .update(patch)
-    .eq("stripe_subscription_id", subscription.id);
+  const { data, error } = await supabaseAdmin.auth.admin.listUsers({
+    page: 1,
+    perPage: 1000
+  });
 
   if (error) {
     throw error;
   }
+
+  const user = data.users.find(
+    (entry) => entry.email?.trim().toLowerCase() === normalizedEmail
+  );
+
+  return user?.id ?? null;
+}
+
+async function updateProfilStatut(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  identifiant: string,
+  statutAbonnement: string
+) {
+  const { error } = await supabaseAdmin
+    .from("profiles")
+    .update({ subscription_status: statutAbonnement })
+    .eq("id", identifiant);
+
+  if (error) {
+    throw error;
+  }
+}
+
+async function resolveUserIdFromSubscription(
+  supabaseAdmin: ReturnType<typeof createClient>,
+  stripe: Stripe,
+  subscription: Stripe.Subscription
+): Promise<string | null> {
+  if (subscription.metadata?.user_id) {
+    return subscription.metadata.user_id;
+  }
+
+  const customerId =
+    typeof subscription.customer === "string"
+      ? subscription.customer
+      : subscription.customer?.id;
+
+  if (!customerId) {
+    return null;
+  }
+
+  const customer = await stripe.customers.retrieve(customerId);
+  if (customer.deleted || !("email" in customer) || !customer.email) {
+    return null;
+  }
+
+  return await findUserIdByEmail(supabaseAdmin, customer.email);
 }
 
 Deno.serve(async (req) => {
@@ -69,8 +80,10 @@ Deno.serve(async (req) => {
   }
 
   const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: "2023-10-16",
     httpClient: Stripe.createFetchHttpClient()
   });
+
   const signature = req.headers.get("stripe-signature");
   const body = await req.text();
 
@@ -96,48 +109,42 @@ Deno.serve(async (req) => {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        if (session.mode !== "subscription" || !session.subscription) {
+
+        const email =
+          session.customer_email ||
+          session.customer_details?.email ||
+          null;
+
+        if (!email) {
+          console.error("checkout.session.completed: e-mail client introuvable");
           break;
         }
 
-        const userId = session.client_reference_id || session.metadata?.user_id;
-        const subscription = await stripe.subscriptions.retrieve(
-          session.subscription as string
-        );
+        const userId =
+          (await findUserIdByEmail(supabaseAdmin, email)) ||
+          session.client_reference_id ||
+          session.metadata?.user_id ||
+          null;
 
-        await updateProfileFromSubscription(supabaseAdmin, stripe, subscription, userId);
-        break;
-      }
+        if (!userId) {
+          console.error("checkout.session.completed: utilisateur introuvable pour", email);
+          break;
+        }
 
-      case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-        await updateProfileFromSubscription(
-          supabaseAdmin,
-          stripe,
-          subscription,
-          subscription.metadata?.user_id
-        );
+        await updateProfilStatut(supabaseAdmin, userId, "active");
         break;
       }
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
-        const userId = subscription.metadata?.user_id;
+        const userId = await resolveUserIdFromSubscription(supabaseAdmin, stripe, subscription);
 
-        const patch = {
-          subscription_status: "cancelled",
-          subscription_ends_at: new Date(subscription.current_period_end * 1000).toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        if (userId) {
-          await supabaseAdmin.from("profiles").update(patch).eq("id", userId);
-        } else {
-          await supabaseAdmin
-            .from("profiles")
-            .update(patch)
-            .eq("stripe_subscription_id", subscription.id);
+        if (!userId) {
+          console.error("customer.subscription.deleted: utilisateur introuvable");
+          break;
         }
+
+        await updateProfilStatut(supabaseAdmin, userId, "free");
         break;
       }
 

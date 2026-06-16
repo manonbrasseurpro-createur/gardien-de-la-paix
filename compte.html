@@ -139,9 +139,14 @@
       const manageBtn = document.getElementById("manage-subscription-button");
       manageBtn.classList.toggle("hidden", !subscribed);
 
-      document.getElementById("trial-status").textContent = user.freeTrialUsed
-        ? `Essai gratuit utilisé (${user.freeTrialKey || "test enregistré"}).`
-        : "Essai gratuit disponible : choisissez un mini test ou une question isolée (cas pratiques).";
+      const trialEl = document.getElementById("trial-status");
+      if (subscribed) {
+        trialEl.textContent = "";
+      } else {
+        trialEl.textContent = user.freeTrialUsed
+          ? `Essai gratuit utilisé (${user.freeTrialKey || "test enregistré"}).`
+          : "Essai gratuit disponible : choisissez un mini test ou une question isolée (cas pratiques).";
+      }
 
       if (subscribed && window.location.search.includes("redirect=")) {
         window.location.href = redirectTarget;

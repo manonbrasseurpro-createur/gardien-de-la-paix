@@ -223,6 +223,8 @@
       return normalizeProfile(
         {
           ...data,
+          first_name: data.first_name || meta.first_name || "",
+          last_name: data.last_name || meta.last_name || "",
           free_trial_used: meta.free_trial_used ?? data.free_trial_used,
           free_trial_key: meta.free_trial_key ?? data.free_trial_key
         },

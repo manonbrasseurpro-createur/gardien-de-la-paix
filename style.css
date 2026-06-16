@@ -430,6 +430,22 @@ a {
   font-size: 0.92rem;
 }
 
+.auth-legal-notice {
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.auth-legal-notice a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.auth-legal-notice a:hover {
+  color: var(--navy, #1e3a5f);
+}
+
 .auth-banner {
   padding: 14px 18px;
   border-radius: 14px;

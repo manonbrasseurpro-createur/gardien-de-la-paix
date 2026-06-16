@@ -339,6 +339,42 @@ a {
   margin: 0 auto;
 }
 
+.legal-content h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 28px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.legal-content h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 20px 0 8px;
+}
+
+.legal-content p {
+  margin: 0 0 12px;
+  line-height: 1.7;
+}
+
+.legal-content ul {
+  margin: 0 0 14px 0;
+  padding-left: 20px;
+}
+
+.legal-content ul li {
+  margin-bottom: 6px;
+  line-height: 1.65;
+}
+
+.legal-content a {
+  color: var(--accent, #1d4ed8);
+  text-decoration: underline;
+}
+
 .auth-card__intro {
   color: var(--muted);
   margin-bottom: 20px;

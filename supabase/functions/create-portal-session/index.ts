@@ -1,18 +1,23 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 import { Stripe } from "https://esm.sh/stripe@14?target=deno";
+import { corsHeaders } from "../_shared/cors.ts";
 
 const RETURN_URL = "https://gardien-de-la-paix.vercel.app/compte.html";
 
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 200, headers: corsHeaders });
+  }
+
   if (req.method !== "POST") {
-    return new Response("Méthode non autorisée", { status: 405 });
+    return new Response("Méthode non autorisée", { status: 405, headers: corsHeaders });
   }
 
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Token manquant." }), {
       status: 401,
-      headers: { "Content-Type": "application/json" }
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 
@@ -20,7 +25,7 @@ Deno.serve(async (req) => {
   if (!stripeSecretKey) {
     return new Response(JSON.stringify({ error: "Configuration Stripe incomplète." }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 
@@ -34,7 +39,7 @@ Deno.serve(async (req) => {
   if (authError || !user?.email) {
     return new Response(JSON.stringify({ error: "Utilisateur non authentifié." }), {
       status: 401,
-      headers: { "Content-Type": "application/json" }
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 
@@ -47,7 +52,7 @@ Deno.serve(async (req) => {
   if (customers.data.length === 0) {
     return new Response(JSON.stringify({ error: "Aucun compte Stripe associé à cet e-mail." }), {
       status: 404,
-      headers: { "Content-Type": "application/json" }
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 
@@ -61,13 +66,13 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({ url: session.url }), {
       status: 200,
-      headers: { "Content-Type": "application/json" }
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   } catch (error) {
     console.error("create-portal-session:", error);
     return new Response(JSON.stringify({ error: "Impossible de créer la session portail Stripe." }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
   }
 });

@@ -51,7 +51,11 @@
           <li>Nouveaux contenus inclus</li>
           <li>Paiement sécurisé par Stripe</li>
         </ul>
-        <button id="subscribe-button" class="primary-button" type="button">S'abonner</button>
+        <label class="retractation-label">
+          <input type="checkbox" id="retractation-checkbox">
+          <span>Je demande l'accès immédiat au service et reconnais perdre mon droit de rétractation. J'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV</a>.</span>
+        </label>
+        <button id="subscribe-button" class="primary-button" type="button" disabled>S'abonner</button>
         <p id="subscribe-hint" class="auth-hint">Connexion requise avant le paiement.</p>
       </article>
     </section>
@@ -84,22 +88,28 @@
       document.getElementById("checkout-cancelled").hidden = false;
     }
 
-    document.getElementById("subscribe-button").addEventListener("click", async () => {
+    const subscribeButton = document.getElementById("subscribe-button");
+    const retractationCheckbox = document.getElementById("retractation-checkbox");
+
+    retractationCheckbox.addEventListener("change", () => {
+      subscribeButton.disabled = !retractationCheckbox.checked;
+    });
+
+    subscribeButton.addEventListener("click", async () => {
       const errorEl = document.getElementById("checkout-error");
       errorEl.hidden = true;
       errorEl.textContent = "";
 
-      const button = document.getElementById("subscribe-button");
-      button.disabled = true;
-      button.textContent = "Redirection vers Stripe…";
+      subscribeButton.disabled = true;
+      subscribeButton.textContent = "Redirection vers Stripe…";
 
       try {
         await window.GPXStripe.startSubscriptionCheckout();
       } catch (error) {
         errorEl.hidden = false;
         errorEl.textContent = error.message || "Impossible de lancer le paiement.";
-        button.disabled = false;
-        button.textContent = "S'abonner";
+        subscribeButton.disabled = !retractationCheckbox.checked;
+        subscribeButton.textContent = "S'abonner";
       }
     });
   </script>

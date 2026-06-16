@@ -1464,7 +1464,7 @@
         <div class="guide-unified__section">
           <div class="guide-unified__highlight">
             <strong>Forme des réponses</strong>
-            <p>Deux styles valables : <strong>concis</strong> (qualification + peine + action) ou <strong>développé</strong> (articles en chaîne, justification, CIC/TN). Toujours en « Je » ou « nous », sans plan en parties. Listes à puces si plusieurs éléments. Numéros utiles : 3919, plainte en ligne, service-public.fr.</p>
+            <p>Deux exemples de styles valables parmi d'autres approches possibles : <strong>concis</strong> (qualification + peine + action) ou <strong>développé</strong> (articles en chaîne, justification, CIC/TN). Toujours en « Je » ou « nous », sans plan en parties. Listes à puces si plusieurs éléments. Numéros utiles : 3919, plainte en ligne, service-public.fr.</p>
           </div>
         </div>
       </section>
@@ -4713,7 +4713,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     const EXCELLENT_COPY_FORM = {
       title: "Forme attendue",
-      intro: "L'outil compare votre texte à deux copies réelles très bien notées : l'une concise et percutante (~19/20), l'autre plus développée et juridique (~18/20). Le fond doit toujours coller au sujet ; la forme peut être courte ou plus longue si chaque article sert une action.",
+      intro: "À titre d'exemple, l'outil compare votre texte à deux copies réelles très bien notées — l'une concise et percutante, l'autre plus développée et juridique. Ce ne sont que deux illustrations parmi d'autres styles possibles.",
       profiles: {
         concise: {
           label: "Style concis",
@@ -5083,7 +5083,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         const formPct = formTotal ? Math.round((formEarned / formTotal) * 100) : 0;
         formAnalysisHtml = `
           <h4>Forme</h4>
-          <p class="ai-analysis-summary">L'outil a comparé la présentation de vos réponses : ${formEarned}/${formTotal} critères de forme (${formPct}%). Les copies de référence montrent deux niveaux possibles : <strong>concis</strong> (efficace, ~19/20) ou <strong>développé</strong> (articles enchaînés + justification, ~18/20). Choisissez selon la question : qualification courte, procédure sur les lieux plus détaillée.</p>
+          <p class="ai-analysis-summary">L'outil a comparé la présentation de vos réponses : ${formEarned}/${formTotal} critères de forme (${formPct}%). Les copies de référence illustrent deux approches possibles parmi d'autres : <strong>concise</strong> ou <strong>développée</strong>. Choisissez selon la question : qualification courte, procédure sur les lieux plus détaillée.</p>
         `;
         if (formPct < 60) {
           revisionPriorities.unshift("Forme copie concours : article + peine, chronologie, CIC/OPJ ou TN, justification « car / étant donné », puces si plusieurs éléments.");

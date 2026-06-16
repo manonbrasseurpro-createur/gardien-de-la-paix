@@ -20,7 +20,7 @@
     <div class="hero__content">
       <p class="hero__label">Concours Gardien de la Paix</p>
       <h1>Mon compte</h1>
-      <p class="hero__subtitle">Créez un compte pour accéder aux entraînements</p>
+      <p class="hero__subtitle" id="hero-subtitle">Créez un compte pour accéder aux entraînements</p>
     </div>
   </header>
 
@@ -130,6 +130,7 @@
       loggedOutView.classList.add("hidden");
       loggedInView.classList.remove("hidden");
       document.getElementById("user-display-name").textContent = `${user.firstName} ${user.lastName}`;
+      document.getElementById("hero-subtitle").textContent = "Gérez votre compte et votre abonnement";
 
       const subscribed = window.GPXAuth.hasActiveSubscription(user);
       document.getElementById("subscription-status").textContent = subscribed

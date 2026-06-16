@@ -513,6 +513,57 @@ a {
   margin: -4px 0 14px;
 }
 
+.pricing-why h2 {
+  color: var(--navy);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.pricing-why p {
+  line-height: 1.75;
+  color: var(--text, #1e293b);
+}
+
+.pricing-contact-hint {
+  font-size: 0.8rem;
+  color: var(--muted, #64748b);
+  margin: 10px 0 0;
+  text-align: center;
+}
+
+.pricing-contact-hint a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.faq {
+  margin: 0;
+}
+
+.faq__item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.faq__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.faq__item dt {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.faq__item dd {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text, #1e293b);
+}
+
 .retractation-label {
   display: flex;
   align-items: flex-start;
@@ -783,6 +834,10 @@ html:has(.page-home) {
   color: var(--muted);
   font-size: 0.94rem;
   line-height: 1.5;
+}
+
+.page-home .positioning-note {
+  border-left-color: var(--accent, #1d4ed8);
 }
 
 .page-home .reform-notice {

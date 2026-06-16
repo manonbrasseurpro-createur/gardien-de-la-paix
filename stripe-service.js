@@ -46,7 +46,41 @@
     window.location.href = payload.url;
   }
 
+  async function startPortalSession() {
+    const token = await window.GPXAuth.getAccessToken();
+    if (!token) {
+      throw new Error("Session expirée. Reconnectez-vous.");
+    }
+
+    const { url, anonKey } = getSupabaseConfig();
+    if (!url || !anonKey) {
+      throw new Error("Supabase n'est pas configuré.");
+    }
+
+    const response = await fetch(`${url}/functions/v1/create-portal-session`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        apikey: anonKey,
+        "Content-Type": "application/json"
+      }
+    });
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload.error || "Impossible d'accéder au portail Stripe.");
+    }
+
+    if (!payload.url) {
+      throw new Error("URL du portail Stripe manquante.");
+    }
+
+    window.location.href = payload.url;
+  }
+
   window.GPXStripe = {
-    startSubscriptionCheckout
+    startSubscriptionCheckout,
+    startPortalSession
   };
 })();

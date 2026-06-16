@@ -455,6 +455,12 @@ a {
   margin: 12px 0;
 }
 
+.pricing-reassurance {
+  font-size: 0.9rem;
+  color: #2e7d32;
+  margin: -4px 0 14px;
+}
+
 .pricing-card ul {
   margin: 0 0 20px;
   padding-left: 1.2rem;

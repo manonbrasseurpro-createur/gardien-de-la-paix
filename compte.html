@@ -81,9 +81,11 @@
       <p id="trial-status" class="auth-status"></p>
       <div class="auth-actions">
         <a class="primary-button" href="index.html">Accéder aux modules</a>
+        <button id="manage-subscription-button" class="primary-button hidden" type="button">Gérer mon abonnement</button>
         <a class="secondary-button" href="tarifs.html">Voir les tarifs</a>
         <button id="logout-button" class="secondary-button" type="button">Déconnexion</button>
       </div>
+      <p id="manage-subscription-error" class="auth-error" role="alert"></p>
       <p id="demo-subscription-hint" class="auth-hint hidden"></p>
       <button id="demo-subscription-button" class="secondary-button hidden" type="button">Activer l'abonnement démo (mode local)</button>
     </section>
@@ -96,6 +98,7 @@
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
   <script src="auth-service.js"></script>
+  <script src="stripe-service.js"></script>
   <script src="access-control.js"></script>
   <script>
     console.info("[GPX Auth] Diagnostic au chargement:", window.GPXAuth.getDiagnostics());
@@ -131,6 +134,9 @@
       document.getElementById("subscription-status").textContent = subscribed
         ? "Abonnement actif — accès illimité à tous les tests et simulations."
         : "Pas d'abonnement actif — accès limité à un petit test gratuit.";
+
+      const manageBtn = document.getElementById("manage-subscription-button");
+      manageBtn.classList.toggle("hidden", !subscribed);
 
       document.getElementById("trial-status").textContent = user.freeTrialUsed
         ? `Essai gratuit utilisé (${user.freeTrialKey || "test enregistré"}).`
@@ -183,6 +189,21 @@
       } catch (error) {
         console.error("[GPX Auth] login failed:", error);
         errorEl.textContent = error.message || "Connexion impossible.";
+      }
+    });
+
+    document.getElementById("manage-subscription-button").addEventListener("click", async () => {
+      const btn = document.getElementById("manage-subscription-button");
+      const errorEl = document.getElementById("manage-subscription-error");
+      errorEl.textContent = "";
+      btn.disabled = true;
+      btn.textContent = "Redirection…";
+      try {
+        await window.GPXStripe.startPortalSession();
+      } catch (error) {
+        errorEl.textContent = error.message || "Impossible d'accéder au portail Stripe.";
+        btn.disabled = false;
+        btn.textContent = "Gérer mon abonnement";
       }
     });
 

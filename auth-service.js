@@ -130,10 +130,10 @@
     return new Error(message || "Une erreur d'authentification s'est produite.");
   }
 
-  function validateCredentials({ firstName, lastName, email, password, requireName }) {
+  function validateCredentials({ firstName, email, password, requireName }) {
     const normalizedEmail = String(email || "").trim().toLowerCase();
-    if (requireName && (!firstName || !lastName)) {
-      throw new Error("Le nom et le prénom sont obligatoires.");
+    if (requireName && !firstName) {
+      throw new Error("Le prénom est obligatoire.");
     }
     if (!normalizedEmail || !password) {
       throw new Error("L'e-mail et le mot de passe sont obligatoires.");
@@ -236,15 +236,13 @@
     }
   }
 
-  async function register({ firstName, lastName, email, phone, password }) {
+  async function register({ firstName, email, password }) {
     const normalizedEmail = validateCredentials({
       firstName,
-      lastName,
       email,
       password,
       requireName: true
     });
-    const normalizedPhone = normalizePhone(phone);
 
     const client = getSupabaseClient();
     console.info("[GPX Auth] signUp…", { email: normalizedEmail });
@@ -254,9 +252,7 @@
       password,
       options: {
         data: {
-          first_name: String(firstName).trim(),
-          last_name: String(lastName).trim(),
-          phone: normalizedPhone
+          first_name: String(firstName).trim()
         }
       }
     });
@@ -275,18 +271,12 @@
       session: Boolean(data.session)
     });
 
-    if (data.session) {
-      await saveProfilPhone(data.user.id, normalizedPhone);
-    }
-
     const profile = data.session
       ? await fetchProfile(data.user.id, data.user.email)
       : normalizeProfile(
           {
             id: data.user.id,
-            prénom: String(firstName).trim(),
-            "nom de famille": String(lastName).trim(),
-            téléphone: normalizedPhone,
+            first_name: String(firstName).trim(),
             subscription_status: "free"
           },
           data.user.email

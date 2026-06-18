@@ -8,6 +8,19 @@
 <meta name="robots" content="noindex, follow">
 <link rel="stylesheet" href="style.css">
 <script src="site-seo.js"></script>
+<style>
+.survey-checkbox-label, .survey-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: normal;
+}
+.survey-checkbox-label input, .survey-radio-label input {
+  width: auto;
+  margin: 0;
+}
+</style>
 </head>
 <body class="auth-page">
 <header class="hero hero--compact">
@@ -36,11 +49,11 @@
 
 <fieldset>
   <legend>Quels modules avez-vous utilisés ?</legend>
-  <label><input type="checkbox" name="modules" value="psychotechnique"> Psychotechnique</label>
-  <label><input type="checkbox" name="modules" value="culture-generale"> Culture générale</label>
-  <label><input type="checkbox" name="modules" value="langues"> Langues étrangères</label>
-  <label><input type="checkbox" name="modules" value="cas-pratique"> Cas pratique</label>
-  <label><input type="checkbox" name="modules" value="personnalite"> Test de personnalité</label>
+  <label class="survey-checkbox-label"><input type="checkbox" name="modules" value="psychotechnique"> Psychotechnique</label>
+  <label class="survey-checkbox-label"><input type="checkbox" name="modules" value="culture-generale"> Culture générale</label>
+  <label class="survey-checkbox-label"><input type="checkbox" name="modules" value="langues"> Langues étrangères</label>
+  <label class="survey-checkbox-label"><input type="checkbox" name="modules" value="cas-pratique"> Cas pratique</label>
+  <label class="survey-checkbox-label"><input type="checkbox" name="modules" value="personnalite"> Test de personnalité</label>
 </fieldset>
 
 <label>
@@ -66,8 +79,8 @@
 
 <fieldset>
   <legend>Recommanderiez-vous Prepa GPX à un autre candidat ?</legend>
-  <label><input type="radio" name="recommande" value="oui" required> Oui</label>
-  <label><input type="radio" name="recommande" value="non"> Non</label>
+  <label class="survey-radio-label"><input type="radio" name="recommande" value="oui" required> Oui</label>
+  <label class="survey-radio-label"><input type="radio" name="recommande" value="non"> Non</label>
 </fieldset>
 
 <label>

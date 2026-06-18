@@ -211,13 +211,21 @@
       return;
     }
 
+    if (!document.getElementById("gpx-fonts-link")) {
+      const fontLink = document.createElement("link");
+      fontLink.id = "gpx-fonts-link";
+      fontLink.rel = "stylesheet";
+      fontLink.href = "https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap";
+      document.head.appendChild(fontLink);
+    }
+
     const nav = document.createElement("nav");
     nav.id = "gpx-site-nav";
     nav.className = "gpx-site-nav";
     nav.setAttribute("aria-label", "Compte et abonnement");
     nav.innerHTML = `
       <div class="gpx-site-nav__inner">
-        <a class="gpx-site-nav__brand" href="index.html">GPX Entraînement</a>
+        <a class="gpx-site-nav__brand" href="index.html">Prepa GPX</a>
         <div class="gpx-site-nav__links" id="gpx-site-nav-links">
           <span class="gpx-site-nav__status">Chargement…</span>
         </div>

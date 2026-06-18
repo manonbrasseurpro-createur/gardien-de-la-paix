@@ -53,6 +53,8 @@ a {
   margin: 0;
   font-size: clamp(2rem, 5vw, 3.8rem);
   line-height: 1.1;
+  font-family: 'Spectral', serif;
+  font-weight: 500;
 }
 
 .hero__subtitle {
@@ -766,7 +768,7 @@ html:has(.page-home) {
   justify-content: center;
   min-height: 48px;
   padding: 12px 26px;
-  border-radius: 999px;
+  border-radius: 8px;
   font-weight: 800;
   font-size: 1rem;
   text-decoration: none;
@@ -774,11 +776,10 @@ html:has(.page-home) {
 }
 
 .page-home .hero__cta--primary {
-  color: var(--navy);
-  background: var(--white);
+  color: var(--white);
+  background: var(--seal);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
-
 .page-home .hero__cta--primary:hover,
 .page-home .hero__cta--primary:focus {
   transform: translateY(-2px);

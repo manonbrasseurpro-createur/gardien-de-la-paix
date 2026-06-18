@@ -2,7 +2,7 @@
  * Configuration SEO — renseignez l'URL publique de votre site (sans slash final).
  * Exemple : "https://www.votre-domaine.fr"
  */
-window.GPX_SITE_URL = "";
+window.GPX_SITE_URL = "https://gardien-de-la-paix.vercel.app";
 
 (function applySeoUrls() {
   if (typeof document === "undefined") return;

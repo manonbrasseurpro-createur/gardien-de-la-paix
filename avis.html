@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Donnez votre avis | Entraînement concours gardien de la paix</title>
+<meta name="description" content="Partagez votre avis sur votre entraînement au concours gardien de la paix.">
+<meta name="robots" content="noindex, follow">
+<link rel="stylesheet" href="style.css">
+<script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+<header class="hero hero--compact">
+<div class="hero__content">
+<p class="hero__label">Concours Gardien de la Paix</p>
+<h1>Votre avis compte</h1>
+<p class="hero__subtitle">Aidez-nous à améliorer votre entraînement</p>
+</div>
+</header>
+<main class="container auth-container">
+<section class="auth-card auth-card--wide">
+<h2>Questionnaire de satisfaction</h2>
+<form id="survey-form" class="auth-form" novalidate>
+
+<label>
+  Note globale de satisfaction (1 à 5 étoiles)
+  <select name="note" required>
+    <option value="">Choisissez une note</option>
+    <option value="1">1 - Très insatisfait(e)</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5 - Très satisfait(e)</option>
+  </select>
+</label>
+
+<fieldset>
+  <legend>Quels modules avez-vous utilisés ?</legend>
+  <label><input type="checkbox" name="modules" value="psychotechnique"> Psychotechnique</label>
+  <label><input type="checkbox" name="modules" value="culture-generale"> Culture générale</label>
+  <label><input type="checkbox" name="modules" value="langues"> Langues étrangères</label>
+  <label><input type="checkbox" name="modules" value="cas-pratique"> Cas pratique</label>
+  <label><input type="checkbox" name="modules" value="personnalite"> Test de personnalité</label>
+</fieldset>
+
+<label>
+  Le contenu correspond-il à la réalité du concours ?
+  <select name="contenuRealiste" required>
+    <option value="">Choisissez une réponse</option>
+    <option value="oui">Oui</option>
+    <option value="plutot-oui">Plutôt oui</option>
+    <option value="plutot-non">Plutôt non</option>
+    <option value="non">Non</option>
+  </select>
+</label>
+
+<label>
+  Qu'est-ce qui vous a le plus aidé dans votre préparation ?
+  <textarea name="aidePrincipale" rows="3"></textarea>
+</label>
+
+<label>
+  Qu'est-ce qui pourrait être amélioré ?
+  <textarea name="amelioration" rows="3"></textarea>
+</label>
+
+<fieldset>
+  <legend>Recommanderiez-vous Prepa GPX à un autre candidat ?</legend>
+  <label><input type="radio" name="recommande" value="oui" required> Oui</label>
+  <label><input type="radio" name="recommande" value="non"> Non</label>
+</fieldset>
+
+<label>
+  Commentaire libre (facultatif)
+  <textarea name="commentaire" rows="3"></textarea>
+</label>
+
+<button class="primary-button" type="submit">Envoyer mon avis</button>
+<p id="survey-error" class="auth-error" role="alert"></p>
+<p id="survey-success" class="auth-status" role="status"></p>
+</form>
+</section>
+<p class="auth-footer">
+<a href="compte.html">Retour à mon compte</a>
+</p>
+</main>
+
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+<script src="auth-service.js"></script>
+<script src="access-control.js"></script>
+<script>
+(async () => {
+  if (window.GPXAuth.isSupabaseConfigured()) {
+    const user = await window.GPXAuth.getCurrentUser();
+    if (!user) {
+      window.location.href = "connexion.html?redirect=avis.html";
+      return;
+    }
+  }
+})();
+
+document.getElementById("survey-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const form = event.target;
+  const errorEl = document.getElementById("survey-error");
+  const successEl = document.getElementById("survey-success");
+  errorEl.textContent = "";
+  successEl.textContent = "";
+
+  const modulesUtilises = Array.from(form.querySelectorAll('input[name="modules"]:checked')).map(el => el.value);
+  const note = parseInt(form.note.value, 10);
+  const contenuRealiste = form.contenuRealiste.value;
+  const aidePrincipale = form.aidePrincipale.value;
+  const amelioration = form.amelioration.value;
+  const recommande = form.recommande.value === "oui";
+  const commentaire = form.commentaire.value;
+
+  try {
+    await window.GPXAuth.submitSatisfactionSurvey({
+      note,
+      modulesUtilises,
+      contenuRealiste,
+      aidePrincipale,
+      amelioration,
+      recommande,
+      commentaire
+    });
+    successEl.textContent = "Merci pour votre avis !";
+    form.reset();
+  } catch (error) {
+    console.error("[GPX Survey] submit failed:", error);
+    errorEl.textContent = error.message || "Envoi impossible, réessayez.";
+  }
+});
+</script>
+</body>
+</html>

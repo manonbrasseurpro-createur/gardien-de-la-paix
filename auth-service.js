@@ -327,6 +327,31 @@
     }
   }
 
+  async function submitSatisfactionSurvey({ note, modulesUtilises, contenuRealiste, aidePrincipale, amelioration, recommande, commentaire }) {
+    const client = getSupabaseClient();
+    const { data: userData } = await client.auth.getUser();
+    const userId = userData?.user?.id;
+    if (!userId) {
+      throw new Error("Vous devez être connectée pour envoyer ce formulaire.");
+    }
+    const { error } = await client
+      .from("satisfaction_surveys")
+      .insert({
+        user_id: userId,
+        note,
+        modules_utilises: modulesUtilises,
+        contenu_realiste: contenuRealiste,
+        aide_principale: aidePrincipale,
+        amelioration,
+        recommande,
+        commentaire
+      });
+    if (error) {
+      console.error("[GPX Auth] submitSatisfactionSurvey error:", error);
+      throw mapAuthError(error);
+    }
+  }
+
   async function logout() {
     if (!isSupabaseConfigured() || !resolveCreateClient()) {
       return;
@@ -488,6 +513,7 @@
     register,
     login,
     loginWithGoogle,
+    submitSatisfactionSurvey,
     logout,
     updateProfile,
     activateDemoSubscription,

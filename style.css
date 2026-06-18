@@ -138,7 +138,7 @@ a {
   color: var(--text);
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 8px;
   box-shadow: 0 10px 24px rgba(26, 39, 68, 0.08);
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
@@ -176,12 +176,26 @@ a {
   align-items: center;
   justify-content: center;
   background: var(--off-white);
-  border-radius: 16px;
-  font-size: 2rem;
+  border-radius: 8px;
+  color: var(--seal);
 }
 
 .card--culture .card__icon {
   background: rgba(255, 255, 255, 0.14);
+}
+
+.card__icon-svg {
+  display: inline-flex;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  padding: 14px;
+  align-items: center;
+  justify-content: center;
+  background: var(--off-white);
+  border-radius: 8px;
+  color: var(--seal);
+  flex-shrink: 0;
 }
 
 .card h3 {
@@ -1018,15 +1032,15 @@ html:has(.page-home) {
 }
 
 .page-home .card--theme-psycho {
-  border-top-color: #2563eb;
+  border-top-color: var(--seal);
 }
 
 .page-home .card--theme-culture {
-  border-top-color: #16a34a;
+  border-top-color: var(--seal);
 }
 
 .page-home .card--theme-cas {
-  border-top-color: #ea580c;
+  border-top-color: var(--seal);
 }
 
 .page-home .card__badge {

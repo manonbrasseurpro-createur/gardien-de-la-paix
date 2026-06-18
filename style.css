@@ -275,6 +275,14 @@ a {
   letter-spacing: 0.01em;
 }
 
+.gpx-site-nav__flag {
+  display: block;
+  height: 2px;
+  width: 100%;
+  margin-top: 3px;
+  background: linear-gradient(to right, #E1000F 0%, #E1000F 33%, #FFFFFF 33%, #FFFFFF 66%, #000091 66%, #000091 100%);
+}
+
 .gpx-site-nav__links {
   display: flex;
   align-items: center;

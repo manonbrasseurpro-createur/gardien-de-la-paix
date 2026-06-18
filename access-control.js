@@ -225,7 +225,7 @@
     nav.setAttribute("aria-label", "Compte et abonnement");
     nav.innerHTML = `
       <div class="gpx-site-nav__inner">
-        <a class="gpx-site-nav__brand" href="index.html">Prepa GPX</a>
+        <a class="gpx-site-nav__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
         <div class="gpx-site-nav__links" id="gpx-site-nav-links">
           <span class="gpx-site-nav__status">Chargement…</span>
         </div>

@@ -175,6 +175,7 @@ a {
   margin-bottom: 18px;
   align-items: center;
   justify-content: center;
+  align-self: center;
   background: var(--off-white);
   border-radius: 8px;
   color: var(--seal);
@@ -192,6 +193,7 @@ a {
   padding: 14px;
   align-items: center;
   justify-content: center;
+  align-self: center;
   background: var(--off-white);
   border-radius: 8px;
   color: var(--seal);

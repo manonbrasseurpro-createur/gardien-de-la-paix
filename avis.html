@@ -10,15 +10,17 @@
 <script src="site-seo.js"></script>
 <style>
 .survey-checkbox-label, .survey-radio-label {
-  display: flex;
+  display: flex !important;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   font-weight: normal;
 }
-.survey-checkbox-label input, .survey-radio-label input {
-  width: auto;
+.survey-checkbox-label input[type="checkbox"], .survey-radio-label input[type="radio"] {
+  width: auto !important;
+  display: inline-block !important;
   margin: 0;
+  flex-shrink: 0;
 }
 </style>
 </head>

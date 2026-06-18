@@ -1,14 +1,16 @@
 :root {
-  --navy: #1a2332;
-  --navy-dark: #111827;
+  --navy: #0B1F3A;
+  --navy-dark: #071527;
   --white: #ffffff;
-  --off-white: #f5f7fb;
-  --border: #d8deea;
-  --text: #243044;
-  --muted: #5d687a;
+  --off-white: #F6F4EE;
+  --border: #E5E2D8;
+  --text: #2B2D33;
+  --muted: #5A5C63;
   --warning-bg: #fff4d6;
   --warning-text: #5e4300;
-  --shadow: 0 16px 36px rgba(26, 39, 68, 0.12);
+  --shadow: 0 16px 36px rgba(11, 31, 58, 0.12);
+  --seal: #8B1E2F;
+  --brass: #B8935E;
 }
 
 * {
@@ -19,7 +21,7 @@ body {
   margin: 0;
   color: var(--text);
   background: var(--off-white);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'IBM Plex Sans', Arial, sans-serif;
   line-height: 1.6;
 }
 

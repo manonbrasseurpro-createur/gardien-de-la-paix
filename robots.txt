@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Remplacez l'URL ci-dessous par votre domaine de production (voir site-seo.js)
-Sitemap: https://gardien-de-la-paix.vercel.app/sitemap.xml
+Sitemap: https://prepagpx.fr/sitemap.xml

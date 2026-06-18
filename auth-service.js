@@ -312,6 +312,21 @@
     return await fetchProfile(data.user.id, data.user.email);
   }
 
+  async function loginWithGoogle() {
+    const client = getSupabaseClient();
+    console.info("[GPX Auth] signInWithOAuth (Google)...");
+    const { error } = await client.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/compte.html"
+      }
+    });
+    if (error) {
+      console.error("[GPX Auth] Google signIn error:", error);
+      throw mapAuthError(error);
+    }
+  }
+
   async function logout() {
     if (!isSupabaseConfigured() || !resolveCreateClient()) {
       return;
@@ -472,6 +487,7 @@
     getAccessToken,
     register,
     login,
+    loginWithGoogle,
     logout,
     updateProfile,
     activateDemoSubscription,

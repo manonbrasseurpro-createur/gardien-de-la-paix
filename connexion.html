@@ -33,6 +33,7 @@
         <button class="primary-button" type="submit">Connexion</button>
         <p id="login-error" class="auth-error" role="alert"></p>
       </form>
+      <button id="google-signin-btn" type="button" class="secondary-button">Continuer avec Google</button>
       <p class="auth-switch">Pas encore de compte ? <a href="inscription.html">Créer un compte</a></p>
     </section>
 
@@ -73,6 +74,16 @@
       } catch (error) {
         console.error("[GPX Auth] login failed:", error);
         errorEl.textContent = error.message || "Connexion impossible.";
+      }
+    });
+    document.getElementById("google-signin-btn").addEventListener("click", async () => {
+      const errorEl = document.getElementById("login-error");
+      errorEl.textContent = "";
+      try {
+        await window.GPXAuth.loginWithGoogle();
+      } catch (error) {
+        console.error("[GPX Auth] Google login failed:", error);
+        errorEl.textContent = error.message || "Connexion Google impossible.";
       }
     });
   </script>

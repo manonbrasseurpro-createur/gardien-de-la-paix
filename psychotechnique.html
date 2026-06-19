@@ -137,8 +137,11 @@
     }
 
     .mode-card__icon {
-      font-size: 1.9rem;
-      line-height: 1;
+      display: inline-flex;
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      color: var(--seal);
     }
 
     .mode-card__duration {
@@ -188,7 +191,6 @@
       margin-top: 0;
     }
 
-    .category-card__number,
     .timer-badge {
       display: inline-flex;
       width: fit-content;
@@ -201,9 +203,15 @@
     }
 
     .category-card__number {
-      width: 46px;
-      height: 46px;
-      font-size: 1.15rem;
+      display: inline-flex;
+      width: 56px;
+      height: 56px;
+      padding: 14px;
+      align-items: center;
+      justify-content: center;
+      background: var(--off-white);
+      border-radius: 8px;
+      color: var(--seal);
     }
 
     .category-card h3 {
@@ -791,7 +799,7 @@
 
       <div class="mode-grid" aria-label="Modes de test disponibles">
         <button class="mode-card" type="button" data-mode="complete">
-          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🚀</span> Test Complet</span>
+          <span class="mode-card__title"><svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19L19 5"></path><path d="M9 5h10v10"></path></svg> Test Complet</span>
           <span class="mode-card__duration">⏱ ~2 heures</span>
           <p class="mode-card__description">
             Simulation d'entraînement sur ~2 h : test de personnalité (60 questions) puis 4 tests cognitifs
@@ -801,7 +809,7 @@
         </button>
 
         <button class="mode-card" type="button" data-mode="personality">
-          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🧬</span> Test de Personnalité uniquement</span>
+          <span class="mode-card__title"><svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"></path></svg> Test de Personnalité uniquement</span>
           <span class="mode-card__duration">⏱ ~20-30 min</span>
           <p class="mode-card__description">
             60 affirmations pour évaluer votre profil psychologique. Non chronométré.
@@ -810,7 +818,7 @@
         </button>
 
         <button class="mode-card" type="button" data-mode="cognitive">
-          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">🧠</span> Tests Cognitifs uniquement (40 questions)</span>
+          <span class="mode-card__title"><svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 21h4"></path><path d="M12 3a6 6 0 0 0-3 11c.6.5 1 1.2 1 2h4c0-.8.4-1.5 1-2a6 6 0 0 0-3-11z"></path></svg> Tests Cognitifs uniquement (40 questions)</span>
           <span class="mode-card__duration">⏱ ~15-20 min</span>
           <p class="mode-card__description">
             40 questions mélangées : logique, spatial, numérique et verbal. Chronométré.
@@ -819,7 +827,7 @@
         </button>
 
         <button class="mode-card" type="button" data-mode="mini">
-          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">⚡</span> Mini test cognitif</span>
+          <span class="mode-card__title"><svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg> Mini test cognitif</span>
           <span class="mode-card__duration">⏱ ~5 min</span>
           <p class="mode-card__description">
             10 questions rapides pour s'entraîner en quelques minutes. Idéal quand on manque de temps.
@@ -828,7 +836,7 @@
         </button>
 
         <button class="mode-card" type="button" data-mode="category" aria-controls="category-training-panel" aria-expanded="false">
-          <span class="mode-card__title"><span class="mode-card__icon" aria-hidden="true">📚</span> Entraînement par catégorie</span>
+          <span class="mode-card__title"><svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l9 2 9-2v13l-9 2-9-2z"></path><path d="M12 7v13"></path></svg> Entraînement par catégorie</span>
           <span class="mode-card__duration">⏱ ~10 min</span>
           <p class="mode-card__description">
             Choisissez une catégorie spécifique pour vous concentrer sur vos points faibles.
@@ -843,22 +851,22 @@
 
         <div class="category-grid" aria-label="Catégories de tests cognitifs">
           <button class="category-card" type="button" data-category="logic">
-            <span class="category-card__number" aria-hidden="true">🧠</span>
+            <svg class="category-card__number" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
             <h3>Raisonnement logique</h3>
           </button>
 
           <button class="category-card" type="button" data-category="spatial">
-            <span class="category-card__number" aria-hidden="true">📐</span>
+            <svg class="category-card__number" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20L14 4h6L10 20z"></path><line x1="9" y1="14" x2="16" y2="14"></line></svg>
             <h3>Raisonnement spatial</h3>
           </button>
 
           <button class="category-card" type="button" data-category="numeric">
-            <span class="category-card__number" aria-hidden="true">🔢</span>
+            <svg class="category-card__number" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><line x1="8" y1="8" x2="16" y2="8"></line><line x1="8" y1="13" x2="10" y2="13"></line><line x1="13" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="10" y2="17"></line><line x1="13" y1="17" x2="16" y2="17"></line></svg>
             <h3>Tests numériques</h3>
           </button>
 
           <button class="category-card" type="button" data-category="verbal">
-            <span class="category-card__number" aria-hidden="true">📖</span>
+            <svg class="category-card__number" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l9 2 9-2v13l-9 2-9-2z"></path><path d="M12 7v13"></path></svg>
             <h3>Logique verbale</h3>
           </button>
         </div>

@@ -262,7 +262,6 @@
       opacity: 0.55;
     }
 
-    .mode-card__icon,
     .timer-badge {
       display: inline-flex;
       width: fit-content;
@@ -275,9 +274,15 @@
     }
 
     .mode-card__icon {
-      width: 48px;
-      height: 48px;
-      font-size: 1.35rem;
+      display: inline-flex;
+      width: 56px;
+      height: 56px;
+      padding: 14px;
+      align-items: center;
+      justify-content: center;
+      background: var(--off-white);
+      border-radius: 8px;
+      color: var(--seal);
     }
 
     .mode-card h3 {
@@ -702,35 +707,35 @@
 
         <div class="mode-grid" aria-label="Modes de test culture générale et langue étrangère">
           <button class="mode-card" type="button" data-mode="complete" disabled>
-            <span class="mode-card__icon" aria-hidden="true">🚀</span>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19L19 5"></path><path d="M9 5h10v10"></path></svg>
             <h3>Simulation complète</h3>
             <p>80 questions : 40 culture générale + 40 langue étrangère. Conditions réelles du concours.</p>
             <span class="mode-card__duration">⏱ ~1 heure</span>
           </button>
 
           <button class="mode-card" type="button" data-mode="culture" disabled>
-            <span class="mode-card__icon" aria-hidden="true">🇫🇷</span>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21h16"></path><path d="M5 21V10l7-6 7 6v11"></path><line x1="9" y1="21" x2="9" y2="13"></line><line x1="15" y1="21" x2="15" y2="13"></line></svg>
             <h3>Culture Générale uniquement</h3>
             <p>40 questions ciblées sur institutions, symboles, histoire de France et actualité 2025-2026.</p>
             <span class="mode-card__duration">⏱ ~25 min</span>
           </button>
 
           <button class="mode-card" type="button" data-mode="language" disabled>
-            <span class="mode-card__icon" aria-hidden="true">🌍</span>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"></path></svg>
             <h3>Langue Étrangère uniquement</h3>
             <p>40 questions tirées parmi 600 par langue : 16 grammaire, 12 vocabulaire, 6 compréhension et 6 remise en ordre.</p>
             <span class="mode-card__duration">⏱ ~25 min</span>
           </button>
 
           <button class="mode-card" type="button" data-mode="mini-culture" disabled>
-            <span class="mode-card__icon" aria-hidden="true">⚡</span>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
             <h3>Mini test Culture Générale</h3>
             <p>10 questions rapides pour vérifier les repères les plus rentables.</p>
             <span class="mode-card__duration">⏱ ~5 min</span>
           </button>
 
           <button class="mode-card" type="button" data-mode="mini-language" disabled>
-            <span class="mode-card__icon" aria-hidden="true">⚡</span>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
             <h3>Mini test Langue Étrangère</h3>
             <p>10 questions rapides dans la langue choisie.</p>
             <span class="mode-card__duration">⏱ ~5 min</span>

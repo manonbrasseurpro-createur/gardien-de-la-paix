@@ -154,14 +154,14 @@
 
     .methodology-step__icon {
       display: inline-flex;
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
+      padding: 14px;
       align-items: center;
       justify-content: center;
-      color: var(--white);
-      background: var(--navy);
-      border-radius: 18px;
-      font-size: 1.7rem;
+      background: var(--off-white);
+      border-radius: 8px;
+      color: var(--seal);
     }
 
     .methodology-step h3,
@@ -375,7 +375,6 @@
       transform: translateY(-4px);
     }
 
-    .mode-card__icon,
     .timer-badge,
     .progress-pill,
     .score-pill {
@@ -390,9 +389,15 @@
     }
 
     .mode-card__icon {
-      width: 48px;
-      height: 48px;
-      font-size: 1.35rem;
+      display: inline-flex;
+      width: 56px;
+      height: 56px;
+      padding: 14px;
+      align-items: center;
+      justify-content: center;
+      background: var(--off-white);
+      border-radius: 8px;
+      color: var(--seal);
     }
 
     .mode-card h3,
@@ -1472,35 +1477,35 @@
       <h2>Menu des modes</h2>
       <div class="mode-grid" aria-label="Modes d'entraînement">
         <button class="mode-card" type="button" data-mode="simulation">
-          <span class="mode-card__icon" aria-hidden="true">🎯</span>
+          <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
           <h3>Simulation d'entraînement</h3>
           <p>3 cas fictifs en 2 h (format pédagogique). Au concours officiel : un dossier ≤ 15 pages, un ou plusieurs cas sur 2 h.</p>
           <span class="mode-card__duration">⏱ 2 heures chronomètre dégressif</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="single">
-          <span class="mode-card__icon" aria-hidden="true">📝</span>
+          <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"></path><path d="M14 3v4h4"></path><path d="M9 12h6M9 16h6"></path></svg>
           <h3>Cas pratique unique</h3>
           <p>Un seul cas pratique avec 4 questions et son dossier documentaire.</p>
           <span class="mode-card__duration">⏱ ~40 min</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="question">
-          <span class="mode-card__icon" aria-hidden="true">❓</span>
+          <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7v.5"></path><line x1="12" y1="17" x2="12" y2="17.01"></line></svg>
           <h3>Question isolée</h3>
           <p>Entraînez-vous sur une seule question.</p>
           <span class="mode-card__duration">⏱ ~10 min</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="examples">
-          <span class="mode-card__icon" aria-hidden="true">📚</span>
+          <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l9 2 9-2v13l-9 2-9-2z"></path><path d="M12 7v13"></path></svg>
           <h3>Exemples de bonnes réponses</h3>
           <p>Consultez des réponses modèles commentées pour comprendre ce qu'attend le jury.</p>
           <span class="mode-card__duration">Corrigés commentés</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="vocabulary">
-          <span class="mode-card__icon" aria-hidden="true">✍️</span>
+          <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 11-11-3-3L5 16l-1 4z"></path><path d="M14 5l3 3"></path></svg>
           <h3>Fiches de Vocabulaire Professionnel</h3>
           <p>Maîtrisez le langage juridique et policier pour rédiger vos réponses avec le bon vocabulaire.</p>
           <span class="mode-card__duration">8 fiches thématiques</span>
@@ -1531,7 +1536,7 @@
 
       <div class="methodology-steps" aria-label="Méthode officielle en 4 étapes">
         <article class="methodology-step">
-          <span class="methodology-step__icon" aria-hidden="true">🔍</span>
+          <svg class="methodology-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6"></circle><line x1="15" y1="15" x2="20" y2="20"></line></svg>
           <h3>ÉTAPE 1 — Analysez la situation</h3>
           <p>Lisez attentivement la mise en situation.
 Identifiez : Qui ? Quoi ? Où ? Quand ?
@@ -1539,7 +1544,7 @@ Ne négligez aucun détail, même anodin.</p>
         </article>
 
         <article class="methodology-step">
-          <span class="methodology-step__icon" aria-hidden="true">⚡</span>
+          <svg class="methodology-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"></path></svg>
           <h3>ÉTAPE 2 — Identifiez l'urgence</h3>
           <p>Qu'est-ce qui doit être traité EN PRIORITÉ ?
 Y a-t-il une personne en danger ?
@@ -1548,7 +1553,7 @@ Une infraction en cours ?</p>
         </article>
 
         <article class="methodology-step">
-          <span class="methodology-step__icon" aria-hidden="true">✅</span>
+          <svg class="methodology-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12.5l2.5 2.5L16 9"></path></svg>
           <h3>ÉTAPE 3 — Proposez des actions concrètes</h3>
           <p>Que feriez-vous concrètement sur le terrain ?
 Restez dans votre rôle de gardien de la paix.
@@ -1556,7 +1561,7 @@ Argumentez chaque décision.</p>
         </article>
 
         <article class="methodology-step">
-          <span class="methodology-step__icon" aria-hidden="true">📄</span>
+          <svg class="methodology-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"></path><path d="M14 3v4h4"></path><path d="M9 12h6M9 16h6"></path></svg>
           <h3>ÉTAPE 4 — Exploitez le dossier documentaire</h3>
           <p>Appuyez TOUJOURS vos réponses sur les documents fournis.
 Citez les articles de loi pertinents.

@@ -200,7 +200,8 @@
     footer.id = "gpx-legal-footer";
     footer.className = "gpx-legal-footer";
     footer.innerHTML =
-      '<a href="mentions-legales.html">Mentions légales</a>' +
+      '<a href="concours-gpx.html">Concours GPX</a>' +
+      ' · <a href="mentions-legales.html">Mentions légales</a>' +
       ' · <a href="cgv.html">CGV</a>' +
       ' · <a href="politique-confidentialite.html">Politique de confidentialité</a>';
     document.body.appendChild(footer);

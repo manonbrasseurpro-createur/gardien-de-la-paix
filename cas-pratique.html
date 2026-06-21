@@ -5855,11 +5855,16 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       document.getElementById("global-ai-analysis").innerHTML = buildGlobalSessionAnalysisHtml(finalScore);
       renderFinalDetailedReview();
 
-      // Afficher le bouton IA
+      // Afficher le bouton IA uniquement pour les abonnés
       const aiBtn = document.getElementById("ai-correction-btn");
       const aiResult = document.getElementById("ai-correction-result");
       if (aiBtn) {
-        aiBtn.style.display = "inline-flex";
+        aiBtn.style.display = "none";
+        window.GPXAuth?.getCurrentUser?.().then((user) => {
+          if (user && window.GPXAuth?.hasActiveSubscription?.(user)) {
+            aiBtn.style.display = "inline-flex";
+          }
+        });
       }
       if (aiResult) {
         aiResult.style.display = "none";

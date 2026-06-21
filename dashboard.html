@@ -25,6 +25,12 @@
     .dash-domain-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
     .dash-domain-card h3 { margin: 0 0 8px; color: var(--navy); font-size: 1rem; }
     .dash-domain-card ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.9rem; }
+    .dash-widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .dash-widget { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+    .dash-widget__label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 8px; }
+    .dash-widget__value { font-size: 1.5rem; font-weight: 800; color: var(--navy); margin: 0; }
+    .dash-widget__detail { font-size: 0.85rem; color: var(--muted); margin: 4px 0 0; }
+    .dash-widget__link { display: inline-block; margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: var(--seal); text-decoration: none; }
     @media (max-width: 820px) {
       .dash-layout { flex-direction: column; }
       .dash-sidebar { width: 100%; }
@@ -54,6 +60,7 @@
       <section class="dash-panel is-active" id="panel-accueil">
         <h1 id="dash-greeting">Bonjour 👋</h1>
         <p class="dash-panel__subtitle">Choisissez un module pour commencer votre entraînement.</p>
+        <div class="dash-widgets" id="dash-widgets"></div>
         <section class="cards cards--epreuves">
           <a class="card card--theme-psycho" href="psychotechnique.html">
             <h3>Psychotechnique &amp; personnalité</h3>
@@ -132,6 +139,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
   <script src="auth-service.js"></script>
   <script src="access-control.js"></script>
+  <script src="progression-storage.js"></script>
   <script>
     document.querySelectorAll('.dash-nav__item[data-panel]').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -155,6 +163,86 @@
           document.getElementById('admin-nav-item').style.display = 'flex';
         }
       }
+
+      function renderDashboardWidgets() {
+        const widgetsEl = document.getElementById('dash-widgets');
+        if (!widgetsEl || !window.GpxProgression) return;
+
+        const sessions = window.GpxProgression.readSessions() || [];
+        const widgets = [];
+
+        const examDate = new Date('2026-09-22');
+        const today = new Date();
+        const daysLeft = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+        widgets.push(`
+          <div class="dash-widget">
+            <p class="dash-widget__label">Avant les épreuves écrites</p>
+            <p class="dash-widget__value">${daysLeft > 0 ? daysLeft + ' jours' : 'Épreuves passées'}</p>
+            <p class="dash-widget__detail">22 septembre 2026</p>
+          </div>
+        `);
+
+        if (sessions.length > 0) {
+          const avgPct = Math.round(sessions.reduce((sum, s) => sum + (s.score / s.total * 100), 0) / sessions.length);
+          widgets.push(`
+            <div class="dash-widget">
+              <p class="dash-widget__label">Score moyen</p>
+              <p class="dash-widget__value">${avgPct}%</p>
+              <p class="dash-widget__detail">${sessions.length} test${sessions.length > 1 ? 's' : ''} réalisé${sessions.length > 1 ? 's' : ''}</p>
+            </div>
+          `);
+
+          const moduleLinks = {
+            'cas-pratique': { label: 'Cas pratiques', href: 'cas-pratique.html' },
+            'culture-generale': { label: 'Culture générale', href: 'culture-langue.html' },
+            'langue-etrangere': { label: 'Langue étrangère', href: 'culture-langue.html' },
+            'psychotechnique': { label: 'Psychotechnique', href: 'psychotechnique.html' },
+            'personnalite': { label: 'Personnalité', href: 'psychotechnique.html' },
+            'verbal': { label: 'Logique verbale', href: 'psychotechnique.html' },
+            'spatial': { label: 'Raisonnement spatial', href: 'psychotechnique.html' },
+            'numerique': { label: 'Tests numériques', href: 'psychotechnique.html' }
+          };
+          const lastSession = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+          const lastModule = moduleLinks[lastSession.module] || { label: lastSession.module, href: 'index.html' };
+          widgets.push(`
+            <div class="dash-widget">
+              <p class="dash-widget__label">Reprendre l'entraînement</p>
+              <p class="dash-widget__value" style="font-size: 1.15rem;">${lastModule.label}</p>
+              <a class="dash-widget__link" href="${lastModule.href}">Continuer →</a>
+            </div>
+          `);
+
+          const moduleScores = {};
+          sessions.forEach((s) => {
+            if (!moduleScores[s.module]) moduleScores[s.module] = [];
+            moduleScores[s.module].push(s.score / s.total * 100);
+          });
+          let weakestModule = null;
+          let weakestAvg = 100;
+          Object.keys(moduleScores).forEach((mod) => {
+            const avg = moduleScores[mod].reduce((a, b) => a + b, 0) / moduleScores[mod].length;
+            if (avg < weakestAvg) {
+              weakestAvg = avg;
+              weakestModule = mod;
+            }
+          });
+          if (weakestModule) {
+            const weakInfo = moduleLinks[weakestModule] || { label: weakestModule, href: 'index.html' };
+            widgets.push(`
+              <div class="dash-widget">
+                <p class="dash-widget__label">Point à travailler</p>
+                <p class="dash-widget__value" style="font-size: 1.15rem;">${weakInfo.label}</p>
+                <p class="dash-widget__detail">${Math.round(weakestAvg)}% de moyenne</p>
+                <a class="dash-widget__link" href="${weakInfo.href}">S'entraîner →</a>
+              </div>
+            `);
+          }
+        }
+
+        widgetsEl.innerHTML = widgets.join('');
+      }
+
+      renderDashboardWidgets();
     });
   </script>
 </body>

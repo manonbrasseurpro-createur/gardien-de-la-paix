@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de bord | Prepa GPX</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .dash-layout { display: flex; min-height: 100vh; }
+    .dash-sidebar { width: 240px; flex-shrink: 0; background: var(--navy-dark); color: white; padding: 24px 16px; }
+    .dash-sidebar__brand { font-family: 'Cormorant', serif; font-style: italic; font-size: 1.3rem; margin-bottom: 28px; padding-left: 8px; }
+    .dash-nav { display: grid; gap: 4px; }
+    .dash-nav__item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.92rem; font-weight: 600; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+    .dash-nav__item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .dash-nav__item.is-active { background: var(--seal); color: white; }
+    .dash-nav__sep { height: 1px; background: rgba(255,255,255,0.12); margin: 12px 0; }
+    .dash-main { flex: 1; padding: 32px 40px; background: var(--off-white); }
+    .dash-panel { display: none; }
+    .dash-panel.is-active { display: block; }
+    .dash-panel h1 { color: var(--navy); font-family: 'Spectral', serif; font-size: 1.8rem; margin: 0 0 8px; }
+    .dash-panel__subtitle { color: var(--muted); margin: 0 0 28px; }
+    .dash-placeholder { padding: 48px 24px; text-align: center; background: white; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); }
+    .dash-domains-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+    .dash-domain-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+    .dash-domain-card h3 { margin: 0 0 8px; color: var(--navy); font-size: 1rem; }
+    .dash-domain-card ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 0.9rem; }
+    @media (max-width: 820px) {
+      .dash-layout { flex-direction: column; }
+      .dash-sidebar { width: 100%; }
+      .dash-nav { display: flex; overflow-x: auto; gap: 6px; }
+      .dash-main { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dash-layout">
+    <aside class="dash-sidebar">
+      <div class="dash-sidebar__brand">Prepa GPX</div>
+      <nav class="dash-nav" id="dash-nav">
+        <button class="dash-nav__item is-active" data-panel="accueil">Tableau de bord</button>
+        <button class="dash-nav__item" data-panel="examen">Nouvel examen</button>
+        <a class="dash-nav__item" href="progression.html#history-title">Historique</a>
+        <button class="dash-nav__item" data-panel="flashcards">Flashcards</button>
+        <button class="dash-nav__item" data-panel="domaines">Domaines</button>
+        <a class="dash-nav__item" href="progression.html">Progression</a>
+        <button class="dash-nav__item" data-panel="communaute">Communauté</button>
+        <div class="dash-nav__sep" id="admin-sep" style="display:none;"></div>
+        <button class="dash-nav__item" data-panel="admin" id="admin-nav-item" style="display:none;">Administrateur</button>
+      </nav>
+    </aside>
+
+    <main class="dash-main">
+      <section class="dash-panel is-active" id="panel-accueil">
+        <h1 id="dash-greeting">Bonjour 👋</h1>
+        <p class="dash-panel__subtitle">Choisissez un module pour commencer votre entraînement.</p>
+        <section class="cards cards--epreuves">
+          <a class="card card--theme-psycho" href="psychotechnique.html">
+            <h3>Psychotechnique &amp; personnalité</h3>
+            <p>Tests de 2 h, obligatoires et non notés.</p>
+          </a>
+          <a class="card card--theme-culture" href="culture-langue.html">
+            <h3>Culture générale &amp; langue</h3>
+            <p>1 h pour les deux QCM simultanés.</p>
+          </a>
+          <a class="card card--theme-cas" href="cas-pratique.html">
+            <h3>Cas pratiques</h3>
+            <p>Dossier documentaire, 2 h, coefficient 4.</p>
+          </a>
+        </section>
+      </section>
+
+      <section class="dash-panel" id="panel-examen">
+        <h1>Nouvel examen</h1>
+        <p class="dash-panel__subtitle">Lancez une simulation complète ou ciblée.</p>
+        <section class="cards cards--epreuves">
+          <a class="card card--theme-psycho" href="psychotechnique.html">
+            <h3>Psychotechnique</h3>
+            <p>Test complet ou ciblé par catégorie.</p>
+          </a>
+          <a class="card card--theme-culture" href="culture-langue.html">
+            <h3>Culture générale &amp; langue</h3>
+            <p>Simulation ou mini-test.</p>
+          </a>
+          <a class="card card--theme-cas" href="cas-pratique.html">
+            <h3>Cas pratiques</h3>
+            <p>Simulation chronométrée ou cas unique.</p>
+          </a>
+        </section>
+      </section>
+
+      <section class="dash-panel" id="panel-flashcards">
+        <h1>Flashcards</h1>
+        <p class="dash-panel__subtitle">Révisez le vocabulaire et les articles de loi clés.</p>
+        <div class="dash-placeholder">Bientôt disponible — en cours de construction.</div>
+      </section>
+
+      <section class="dash-panel" id="panel-domaines">
+        <h1>Domaines</h1>
+        <p class="dash-panel__subtitle">Entraînez-vous sur une catégorie précise.</p>
+        <div class="dash-domains-grid">
+          <div class="dash-domain-card">
+            <h3>Psychotechnique</h3>
+            <ul><li>Raisonnement logique</li><li>Raisonnement spatial</li><li>Tests numériques</li><li>Logique verbale</li></ul>
+          </div>
+          <div class="dash-domain-card">
+            <h3>Culture générale</h3>
+            <ul><li>Institutions françaises</li><li>Institutions européennes</li><li>Symboles républicains</li><li>Histoire et actualité</li></ul>
+          </div>
+          <div class="dash-domain-card">
+            <h3>Cas pratiques</h3>
+            <ul><li>Violences et atteintes aux personnes</li><li>Sécurité routière</li><li>Troubles à l'ordre public</li><li>Vols et atteintes aux biens</li></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="dash-panel" id="panel-communaute">
+        <h1>Communauté</h1>
+        <p class="dash-panel__subtitle">Échangez avec d'autres candidats au concours.</p>
+        <div class="dash-placeholder">Bientôt disponible — en cours de réflexion.</div>
+      </section>
+
+      <section class="dash-panel" id="panel-admin">
+        <h1>Administrateur</h1>
+        <p class="dash-panel__subtitle">Espace réservé.</p>
+        <div class="dash-placeholder">Bientôt disponible — en cours de construction.</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    document.querySelectorAll('.dash-nav__item[data-panel]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.dash-nav__item[data-panel]').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        document.querySelectorAll('.dash-panel').forEach((p) => p.classList.remove('is-active'));
+        document.getElementById('panel-' + btn.dataset.panel).classList.add('is-active');
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.GPXAccess) {
+        window.GPXAccess.guard('dashboard.html', 'free', null, () => {});
+      }
+      const user = window.GPXAuth?.getUser?.() || (await window.GPXAuth?.getCurrentUser?.());
+      if (user) {
+        const firstName = user.firstName || '';
+        document.getElementById('dash-greeting').textContent = `Bonjour, ${firstName} 👋`;
+        if (user.email === 'manonbrasseurpro@gmail.com') {
+          document.getElementById('admin-sep').style.display = 'block';
+          document.getElementById('admin-nav-item').style.display = 'flex';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

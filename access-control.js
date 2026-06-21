@@ -191,6 +191,22 @@
     }
   }
 
+  function isHomePage() {
+    const path = window.location.pathname;
+    return path === "/" || path.endsWith("/index.html");
+  }
+
+  async function redirectLoggedInFromHome() {
+    if (!isHomePage()) {
+      return;
+    }
+
+    const user = await window.GPXAuth?.getCurrentUser?.();
+    if (user) {
+      window.location.href = "dashboard.html";
+    }
+  }
+
   function injectLegalFooter() {
     if (document.getElementById("gpx-legal-footer") || document.querySelector(".site-footer")) {
       return;
@@ -443,6 +459,7 @@
     injectSiteNav();
     injectLegalFooter();
     injectProblemReportButton();
+    redirectLoggedInFromHome();
     requireAuthForPage();
   });
 })();

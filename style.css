@@ -185,6 +185,11 @@ a {
   background: rgba(255, 255, 255, 0.14);
 }
 
+.card--culture .card__icon-svg {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+}
+
 .card__icon-svg {
   display: inline-flex;
   width: 56px;

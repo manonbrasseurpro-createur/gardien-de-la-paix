@@ -25,10 +25,12 @@ QUESTIONS ET RÉPONSES DU CANDIDAT :
 ${questions.map((q: string, i: number) => `Question ${i + 1} : ${q}\nRéponse du candidat : ${reponses[i] || "(pas de réponse)"}`).join("\n\n")}
 
 Donne une correction structurée en JSON avec exactement ce format :
+
+Important : si la copie ne contient réellement aucun élément positif à souligner (réponse vide, hors-sujet, ou un seul mot sans rapport), renvoie un tableau "points_forts" VIDE []. N'invente jamais de points forts artificiels. Sois honnête et factuel.
 {
   "note": <nombre entre 0 et 20>,
   "appreciation": "<appréciation générale en 2-3 phrases>",
-  "points_forts": ["<point fort 1>", "<point fort 2>", "<point fort 3>"],
+  "points_forts": ["<point fort 1>", "<point fort 2 si pertinent>"],
   "points_ameliorer": ["<point à améliorer 1>", "<point à améliorer 2>", "<point à améliorer 3>"],
   "retour_questions": [
     {"question": 1, "note": <note sur les points de la question>, "commentaire": "<commentaire>"},

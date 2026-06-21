@@ -4107,13 +4107,15 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         resultDiv.innerHTML = `
           <h3 style="color: var(--navy); margin: 0 0 16px; font-family: 'Spectral', serif;">Correction IA — ${correction.note}/20</h3>
           <p style="color: var(--text); margin-bottom: 16px;">${correction.appreciation}</p>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+          <div style="display: grid; grid-template-columns: ${correction.points_forts.length > 0 ? '1fr 1fr' : '1fr'}; gap: 16px; margin-bottom: 20px;">
+            ${correction.points_forts.length > 0 ? `
             <div style="padding: 16px; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
               <strong style="color: #166534;">Points forts</strong>
               <ul style="margin: 8px 0 0; padding-left: 16px; color: #166534;">
                 ${correction.points_forts.map((p) => `<li>${p}</li>`).join("")}
               </ul>
             </div>
+            ` : ''}
             <div style="padding: 16px; background: #fff7ed; border-radius: 8px; border: 1px solid #fdba74;">
               <strong style="color: #9a3412;">Points à améliorer</strong>
               <ul style="margin: 8px 0 0; padding-left: 16px; color: #9a3412;">

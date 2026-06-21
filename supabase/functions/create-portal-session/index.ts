@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 import { Stripe } from "https://esm.sh/stripe@14?target=deno";
 import { corsHeaders } from "../_shared/cors.ts";
 
-const RETURN_URL = "https://gardien-de-la-paix.vercel.app/compte.html";
+const RETURN_URL = "https://prepagpx.fr/compte.html";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {

@@ -3,8 +3,8 @@ import { Stripe } from "https://esm.sh/stripe@14?target=deno";
 import { corsHeaders } from "../_shared/cors.ts";
 
 const SUCCESS_URL =
-  "https://gardien-de-la-paix.vercel.app/confirmation.html?session_id={CHECKOUT_SESSION_ID}";
-const CANCEL_URL = "https://gardien-de-la-paix.vercel.app/tarifs.html?cancelled=1";
+  "https://prepagpx.fr/confirmation.html?session_id={CHECKOUT_SESSION_ID}";
+const CANCEL_URL = "https://prepagpx.fr/tarifs.html?cancelled=1";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {

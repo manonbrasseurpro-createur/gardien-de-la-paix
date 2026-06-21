@@ -444,6 +444,78 @@
     });
   }
 
+  function injectGlobalDashboardSidebar() {
+    if (getPageName() === "dashboard.html") {
+      return;
+    }
+    if (document.getElementById("global-dash-sidebar") || !window.GPXAuth?.getCurrentUser) {
+      return;
+    }
+
+    window.GPXAuth.getCurrentUser().then((user) => {
+      if (!user || document.getElementById("global-dash-sidebar")) {
+        return;
+      }
+
+      document.body.insertAdjacentHTML(
+        "afterbegin",
+        `
+        <button class="dash-sidebar-toggle" id="dash-sidebar-toggle" aria-label="Afficher/masquer le menu">☰</button>
+        <aside class="global-dash-sidebar" id="global-dash-sidebar">
+          <div class="global-dash-sidebar__brand">Prepa GPX</div>
+          <nav class="global-dash-sidebar__nav">
+            <a class="global-dash-sidebar__item" href="dashboard.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+              Tableau de bord
+            </a>
+            <a class="global-dash-sidebar__item" href="dashboard.html#examen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
+              Nouvel examen
+            </a>
+            <a class="global-dash-sidebar__item" href="progression.html#history-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+              Historique
+            </a>
+            <a class="global-dash-sidebar__item" href="dashboard.html#flashcards">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2" fill="var(--navy-dark)"></rect></svg>
+              Flashcards
+            </a>
+            <a class="global-dash-sidebar__item" href="dashboard.html#domaines">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15 9l-2 6-6 2 2-6z"></path></svg>
+              Domaines
+            </a>
+            <a class="global-dash-sidebar__item" href="progression.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M4 16l5-5 4 4 7-7"></path></svg>
+              Progression
+            </a>
+            <a class="global-dash-sidebar__item" href="dashboard.html#communaute">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
+              Communauté
+            </a>
+          </nav>
+        </aside>
+        `
+      );
+
+      document.body.classList.add("has-dash-sidebar");
+
+      const sidebar = document.getElementById("global-dash-sidebar");
+      const toggle = document.getElementById("dash-sidebar-toggle");
+      const collapsed = localStorage.getItem("gpxSidebarCollapsed") === "true";
+
+      if (collapsed) {
+        document.body.classList.add("dash-sidebar-collapsed");
+        sidebar.classList.add("is-collapsed");
+      }
+
+      toggle.addEventListener("click", () => {
+        const isCollapsed = document.body.classList.toggle("dash-sidebar-collapsed");
+        sidebar.classList.toggle("is-collapsed", isCollapsed);
+        localStorage.setItem("gpxSidebarCollapsed", isCollapsed ? "true" : "false");
+      });
+    });
+  }
+
   window.GPXAccess = {
     guard,
     evaluateAccess,
@@ -457,6 +529,7 @@
   document.addEventListener("DOMContentLoaded", () => {
     injectPostHog();
     injectSiteNav();
+    injectGlobalDashboardSidebar();
     injectLegalFooter();
     injectProblemReportButton();
     redirectLoggedInFromHome();

@@ -287,6 +287,147 @@
     });
   }
 
+  async function submitProblemReport({ userId, email, pageUrl, message }) {
+    if (!window.GPXAuth?.isSupabaseConfigured?.()) {
+      throw new Error("Supabase n'est pas configuré.");
+    }
+    const client = window.__gpxSupabaseClient;
+    if (!client) {
+      throw new Error("Session indisponible. Reconnectez-vous.");
+    }
+    const { error } = await client.from("problem_reports").insert({
+      user_id: userId,
+      email,
+      page_url: pageUrl,
+      message
+    });
+    if (error) {
+      throw new Error(error.message || "Impossible d'envoyer le signalement.");
+    }
+  }
+
+  function injectProblemReportButton() {
+    if (document.getElementById("gpx-problem-report-btn") || !window.GPXAuth?.getCurrentUser) {
+      return;
+    }
+
+    window.GPXAuth.getCurrentUser().then((user) => {
+      if (!user || document.getElementById("gpx-problem-report-btn")) {
+        return;
+      }
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.id = "gpx-problem-report-btn";
+      button.textContent = "🛟 Un problème ?";
+      button.setAttribute("aria-haspopup", "dialog");
+      button.setAttribute("aria-controls", "gpx-problem-report-modal");
+      button.style.cssText =
+        "position: fixed; bottom: 20px; left: 20px; z-index: 9998;" +
+        "background: var(--navy); color: white; border: none;" +
+        "padding: 10px 16px; border-radius: 999px; font-size: 0.85rem; font-weight: 700;" +
+        "cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
+
+      const modal = document.createElement("div");
+      modal.id = "gpx-problem-report-modal";
+      modal.className = "gpx-paywall hidden";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute("aria-labelledby", "gpx-problem-report-title");
+      modal.innerHTML = `
+        <div class="gpx-paywall__backdrop" data-close-problem-report></div>
+        <div class="gpx-paywall__card">
+          <h2 id="gpx-problem-report-title">Vous rencontrez un problème ?</h2>
+          <p id="gpx-problem-report-intro">Décrivez ce qui ne fonctionne pas, on s'en occupe rapidement.</p>
+          <label class="hidden" for="gpx-problem-report-message">Description du problème</label>
+          <textarea
+            id="gpx-problem-report-message"
+            rows="5"
+            required
+            placeholder="Exemple : le bouton de correction ne répond pas, le score affiché semble incorrect…"
+            style="width: 100%; margin-top: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; font: inherit; resize: vertical;"
+          ></textarea>
+          <p id="gpx-problem-report-feedback" class="hidden" style="margin-top: 12px; font-weight: 600;"></p>
+          <div class="gpx-paywall__actions" id="gpx-problem-report-actions">
+            <button type="button" class="primary-button" id="gpx-problem-report-submit">Envoyer</button>
+            <button type="button" class="secondary-button" data-close-problem-report>Annuler</button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(button);
+      document.body.appendChild(modal);
+
+      const messageField = document.getElementById("gpx-problem-report-message");
+      const feedbackEl = document.getElementById("gpx-problem-report-feedback");
+      const introEl = document.getElementById("gpx-problem-report-intro");
+      const actionsEl = document.getElementById("gpx-problem-report-actions");
+      const submitButton = document.getElementById("gpx-problem-report-submit");
+
+      function closeProblemReportModal() {
+        modal.classList.add("hidden");
+        feedbackEl.classList.add("hidden");
+        feedbackEl.textContent = "";
+        feedbackEl.style.color = "";
+        introEl.classList.remove("hidden");
+        messageField.classList.remove("hidden");
+        actionsEl.classList.remove("hidden");
+        messageField.value = "";
+        submitButton.disabled = false;
+        submitButton.textContent = "Envoyer";
+      }
+
+      function openProblemReportModal() {
+        modal.classList.remove("hidden");
+        messageField.focus();
+      }
+
+      button.addEventListener("click", openProblemReportModal);
+      modal.querySelectorAll("[data-close-problem-report]").forEach((el) => {
+        el.addEventListener("click", closeProblemReportModal);
+      });
+
+      submitButton.addEventListener("click", async () => {
+        const message = messageField.value.trim();
+        if (!message) {
+          feedbackEl.textContent = "Merci de décrire le problème avant d'envoyer.";
+          feedbackEl.style.color = "#b42318";
+          feedbackEl.classList.remove("hidden");
+          messageField.focus();
+          return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Envoi…";
+        feedbackEl.classList.add("hidden");
+
+        try {
+          await submitProblemReport({
+            userId: user.id,
+            email: user.email,
+            pageUrl: window.location.href,
+            message
+          });
+
+          introEl.classList.add("hidden");
+          messageField.classList.add("hidden");
+          actionsEl.classList.add("hidden");
+          feedbackEl.textContent = "Merci, votre signalement a bien été envoyé !";
+          feedbackEl.style.color = "#166534";
+          feedbackEl.classList.remove("hidden");
+
+          window.setTimeout(closeProblemReportModal, 2000);
+        } catch (error) {
+          feedbackEl.textContent = error.message || "Une erreur s'est produite. Réessayez.";
+          feedbackEl.style.color = "#b42318";
+          feedbackEl.classList.remove("hidden");
+          submitButton.disabled = false;
+          submitButton.textContent = "Envoyer";
+        }
+      });
+    });
+  }
+
   window.GPXAccess = {
     guard,
     evaluateAccess,
@@ -301,6 +442,7 @@
     injectPostHog();
     injectSiteNav();
     injectLegalFooter();
+    injectProblemReportButton();
     requireAuthForPage();
   });
 })();

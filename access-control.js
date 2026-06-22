@@ -298,8 +298,13 @@
 
     if (!user) {
       if (GUEST_SIDEBAR_PAGES.has(getPageName())) {
-        nav?.classList.add("gpx-site-nav--app", "gpx-site-nav--show-logo");
-        links.innerHTML = `<a href="tarifs.html">Tarifs</a>`;
+        nav?.classList.add("gpx-site-nav--app");
+        nav?.classList.remove("gpx-site-nav--show-logo");
+        links.innerHTML = `
+          <a href="tarifs.html">Tarifs</a>
+          <a href="connexion.html">Se connecter</a>
+          <a class="gpx-site-nav__cta" href="tarifs.html">S'inscrire</a>
+        `;
       } else {
         nav?.classList.remove("gpx-site-nav--app", "gpx-site-nav--show-logo");
         links.innerHTML = `

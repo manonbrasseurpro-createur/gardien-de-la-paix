@@ -1509,11 +1509,31 @@ html:has(.page-home) {
   border-color: var(--navy);
 }
 
-.page-home .home-epreuve-card .card__icon-svg {
-  width: 32px;
-  height: 32px;
+.page-home .home-epreuve-card .home-epreuve-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
   margin-bottom: 16px;
+  border-radius: 12px;
+  background: var(--off-white);
+  border: 1px solid var(--border);
+}
+
+.page-home .home-epreuve-card__icon--seal {
   color: var(--seal);
+}
+
+.page-home .home-epreuve-card__icon--brass {
+  color: var(--brass);
+}
+
+.page-home .home-epreuve-card .card__icon-svg {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 0;
+  color: inherit;
 }
 
 .page-home .home-epreuve-card h3 {

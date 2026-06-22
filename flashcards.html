@@ -835,9 +835,9 @@
 
       if (!isLoggedIn) {
         paywallTitle.textContent = 'Continue ta révision';
-        paywallMsg.textContent = 'Inscris-toi pour accéder à toutes les flashcards';
+        paywallMsg.textContent = 'Choisis ton accès gratuit ou abonné pour débloquer toutes les flashcards.';
         paywallActions.innerHTML = `
-          <a href="inscription.html" class="primary-button">S'inscrire</a>
+          <a href="tarifs.html" class="primary-button">Voir les tarifs</a>
           <button type="button" class="secondary-button" id="btn-back-free">Revoir les cartes gratuites</button>
         `;
       } else if (!isSubscribed) {

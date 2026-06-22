@@ -109,57 +109,6 @@
     modal.classList.remove("hidden");
   }
 
-  const SIGNUP_GATE_MESSAGES = {
-    dashboard: "Inscris-toi pour accéder à ton tableau de bord",
-    default: "Cette fonctionnalité est réservée aux membres PrepaGPX. Inscris-toi gratuitement pour commencer."
-  };
-
-  function ensureSignupGateModal() {
-    if (document.getElementById("gpx-signup-gate-modal")) {
-      return;
-    }
-
-    const modal = document.createElement("div");
-    modal.id = "gpx-signup-gate-modal";
-    modal.className = "gpx-paywall hidden";
-    modal.setAttribute("role", "dialog");
-    modal.setAttribute("aria-modal", "true");
-    modal.setAttribute("aria-labelledby", "gpx-signup-gate-title");
-    modal.innerHTML = `
-      <div class="gpx-paywall__backdrop" data-close-signup-gate></div>
-      <div class="gpx-paywall__card">
-        <h2 id="gpx-signup-gate-title">Espace membres Prepa GPX</h2>
-        <p id="gpx-signup-gate-message"></p>
-        <div class="gpx-paywall__actions">
-          <a class="primary-button" href="inscription.html">S'inscrire gratuitement</a>
-          <button type="button" class="secondary-button" data-close-signup-gate>Fermer</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-
-    modal.querySelectorAll("[data-close-signup-gate]").forEach((el) => {
-      el.addEventListener("click", () => modal.classList.add("hidden"));
-    });
-  }
-
-  function showSignupGate(variant) {
-    ensureSignupGateModal();
-    const modal = document.getElementById("gpx-signup-gate-modal");
-    const messageEl = document.getElementById("gpx-signup-gate-message");
-    messageEl.textContent = SIGNUP_GATE_MESSAGES[variant] || SIGNUP_GATE_MESSAGES.default;
-    modal.classList.remove("hidden");
-  }
-
-  function bindGuestSidebarGates() {
-    document.querySelectorAll("[data-guest-gate]").forEach((el) => {
-      el.addEventListener("click", (event) => {
-        event.preventDefault();
-        showSignupGate(el.dataset.guestGate || "default");
-      });
-    });
-  }
-
   function bindSidebarToggle(sidebar, toggle) {
     const collapsed = localStorage.getItem("gpxSidebarCollapsed") === "true";
     const mobileQuery = window.matchMedia("(max-width: 820px)");
@@ -575,35 +524,34 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>
               Actualités
             </a>
-            <button type="button" class="global-dash-sidebar__item" data-guest-gate="dashboard">
+            <a class="global-dash-sidebar__item" href="tarifs.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
               Tableau de bord
-            </button>
-            <button type="button" class="global-dash-sidebar__item" data-guest-gate="default">
+            </a>
+            <a class="global-dash-sidebar__item" href="tarifs.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
               Nouvel examen
-            </button>
-            <button type="button" class="global-dash-sidebar__item" data-guest-gate="default">
+            </a>
+            <a class="global-dash-sidebar__item" href="tarifs.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2"></rect></svg>
               Flashcards
-            </button>
-            <button type="button" class="global-dash-sidebar__item" data-guest-gate="default">
+            </a>
+            <a class="global-dash-sidebar__item" href="tarifs.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M4 16l5-5 4 4 7-7"></path></svg>
               Ma progression
-            </button>
-            <button type="button" class="global-dash-sidebar__item" data-guest-gate="default">
+            </a>
+            <a class="global-dash-sidebar__item" href="tarifs.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
               Communauté
-            </button>
+            </a>
             <div class="global-dash-sidebar__sep"></div>
             <a class="global-dash-sidebar__item" href="connexion.html">Se connecter</a>
-            <a class="global-dash-sidebar__item global-dash-sidebar__item--signup" href="inscription.html">S'inscrire</a>
+            <a class="global-dash-sidebar__item global-dash-sidebar__item--signup" href="tarifs.html">S'inscrire</a>
           </nav>
         </aside>
     `;
 
     insertGlobalSidebarMarkup(sidebarMarkup);
-    bindGuestSidebarGates();
 
     const sidebar = document.getElementById("global-dash-sidebar");
     const toggle = document.getElementById("dash-sidebar-toggle");

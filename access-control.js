@@ -19,8 +19,7 @@
     "numerique.html": ["complete", "type"],
     "personnalite.html": ["full"],
     "cas-pratique.html": ["simulation", "single", "examples", "vocabulary"],
-    "progression.html": ["full"],
-    "flashcards.html": ["full"]
+    "progression.html": ["full"]
   };
 
   function getPageName() {

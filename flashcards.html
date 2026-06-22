@@ -198,6 +198,36 @@
       display: block;
     }
 
+    .flashcards-paywall {
+      display: none;
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .flashcards-paywall.is-visible {
+      display: block;
+    }
+
+    .flashcards-paywall h2 {
+      color: var(--navy);
+      font-family: 'Spectral', serif;
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+    }
+
+    .flashcards-paywall p {
+      color: var(--muted);
+      margin: 0 0 22px;
+      font-size: 1rem;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .flashcards-paywall .auth-actions {
+      justify-content: center;
+    }
+
     .flashcards-done h2 {
       color: var(--navy);
       font-family: 'Spectral', serif;
@@ -238,7 +268,7 @@
 
     <section class="auth-card auth-card--wide pricing-why">
       <h2>Choisissez une catégorie</h2>
-      <p>Révisez une carte à la fois. Cliquez sur la carte pour retourner et révéler la réponse, puis indiquez si vous la connaissiez.</p>
+      <p>Révisez une carte à la fois. Les <strong>5 premières cartes</strong> de chaque catégorie sont gratuites — l'abonnement débloque les 20 cartes.</p>
       <div class="flashcards-toolbar" id="category-toolbar">
         <button type="button" data-category="juridique">Vocabulaire juridique</button>
         <button type="button" data-category="articles">Articles de loi clés</button>
@@ -281,6 +311,15 @@
         <h2>Série terminée !</h2>
         <p id="flashcards-done-msg">Vous avez parcouru toutes les cartes de cette catégorie.</p>
         <button type="button" class="primary-button" id="btn-restart">Recommencer</button>
+      </div>
+
+      <div class="flashcards-paywall" id="flashcards-paywall">
+        <h2>Continuez votre révision</h2>
+        <p>Accède à toutes les flashcards avec l'abonnement PrepaGPX — 19,90€/mois</p>
+        <div class="auth-actions">
+          <a href="tarifs.html" class="primary-button">Voir les tarifs</a>
+          <button type="button" class="secondary-button" id="btn-back-free">Revoir les cartes gratuites</button>
+        </div>
       </div>
     </section>
 
@@ -372,13 +411,17 @@
       }
     };
 
+    const FREE_CARD_LIMIT = 5;
+
     let currentCategory = null;
     let currentIndex = 0;
     let isFlipped = false;
+    let isSubscribed = false;
 
     const shell = document.getElementById('flashcards-shell');
     const play = document.getElementById('flashcards-play');
     const done = document.getElementById('flashcards-done');
+    const paywall = document.getElementById('flashcards-paywall');
     const counter = document.getElementById('flashcards-counter');
     const categoryLabel = document.getElementById('flashcards-category-label');
     const progressBar = document.getElementById('flashcards-progress-bar');
@@ -388,10 +431,25 @@
     const btnKnow = document.getElementById('btn-know');
     const btnReview = document.getElementById('btn-review');
     const btnRestart = document.getElementById('btn-restart');
+    const btnBackFree = document.getElementById('btn-back-free');
     const toolbar = document.getElementById('category-toolbar');
 
     function getDeck() {
       return FLASHCARD_DECKS[currentCategory]?.cards || [];
+    }
+
+    function isCardLocked(index) {
+      return index >= FREE_CARD_LIMIT && !isSubscribed;
+    }
+
+    function hidePaywall() {
+      paywall.classList.remove('is-visible');
+    }
+
+    function showPaywall() {
+      play.classList.add('is-hidden');
+      done.classList.remove('is-visible');
+      paywall.classList.add('is-visible');
     }
 
     function updateToolbar() {
@@ -417,11 +475,15 @@
     }
 
     function showDone() {
+      hidePaywall();
       play.classList.add('is-hidden');
       done.classList.add('is-visible');
       const deck = getDeck();
+      const total = isSubscribed ? deck.length : FREE_CARD_LIMIT;
       document.getElementById('flashcards-done-msg').textContent =
-        `Vous avez parcouru les ${deck.length} cartes — ${FLASHCARD_DECKS[currentCategory].label}.`;
+        isSubscribed
+          ? `Vous avez parcouru les ${deck.length} cartes — ${FLASHCARD_DECKS[currentCategory].label}.`
+          : `Vous avez parcouru les ${FREE_CARD_LIMIT} cartes gratuites — ${FLASHCARD_DECKS[currentCategory].label}.`;
       progressBar.style.width = '100%';
     }
 
@@ -432,17 +494,26 @@
       shell.hidden = false;
       play.classList.remove('is-hidden');
       done.classList.remove('is-visible');
+      hidePaywall();
       renderCard();
       shell.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function nextCard() {
       const deck = getDeck();
-      if (currentIndex + 1 >= deck.length) {
+      const nextIndex = currentIndex + 1;
+
+      if (nextIndex >= deck.length) {
         showDone();
         return;
       }
-      currentIndex += 1;
+
+      if (isCardLocked(nextIndex)) {
+        showPaywall();
+        return;
+      }
+
+      currentIndex = nextIndex;
       renderCard();
     }
 
@@ -465,21 +536,26 @@
     btnKnow.addEventListener('click', nextCard);
     btnReview.addEventListener('click', nextCard);
     btnRestart.addEventListener('click', () => startCategory(currentCategory));
+    btnBackFree.addEventListener('click', () => startCategory(currentCategory));
 
     toolbar.querySelectorAll('button').forEach((btn) => {
       btn.addEventListener('click', () => startCategory(btn.dataset.category));
     });
 
-    function initFlashcards() {
+    async function initFlashcards() {
+      try {
+        const user = await window.GPXAuth?.getCurrentUser?.();
+        isSubscribed = Boolean(user && window.GPXAuth?.hasActiveSubscription?.(user));
+      } catch {
+        isSubscribed = false;
+      }
       toolbar.querySelector('button')?.focus();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      if (window.GPXAccess) {
-        window.GPXAccess.guard('flashcards.html', 'full', null, initFlashcards);
-      } else {
-        initFlashcards();
-      }
+    document.addEventListener('DOMContentLoaded', async () => {
+      toolbar.querySelectorAll('button').forEach((btn) => { btn.disabled = true; });
+      await initFlashcards();
+      toolbar.querySelectorAll('button').forEach((btn) => { btn.disabled = false; });
     });
   </script>
 </body>

@@ -473,10 +473,10 @@
       </div>
 
       <div class="flashcards-paywall" id="flashcards-paywall">
-        <h2>Continuez votre révision</h2>
-        <p>Accède à toutes les flashcards avec l'abonnement PrepaGPX — 19,90€/mois</p>
-        <div class="auth-actions">
-          <a href="tarifs.html" class="primary-button">Voir les tarifs</a>
+        <h2 id="flashcards-paywall-title">Continuez votre révision</h2>
+        <p id="flashcards-paywall-msg">Accède à toutes les flashcards avec l'abonnement PrepaGPX — 19,90€/mois</p>
+        <div class="auth-actions" id="flashcards-paywall-actions">
+          <a href="tarifs.html" class="primary-button" id="flashcards-paywall-primary">Voir les tarifs</a>
           <button type="button" class="secondary-button" id="btn-back-free">Revoir les cartes gratuites</button>
         </div>
       </div>
@@ -623,6 +623,7 @@
     let sessionPosition = 0;
     let isFlipped = false;
     let isSubscribed = false;
+    let isLoggedIn = false;
     let currentUserId = null;
     let reviewIndices = new Set();
     let retestMasteredCount = 0;
@@ -636,6 +637,9 @@
     const done = document.getElementById('flashcards-done');
     const retestDone = document.getElementById('flashcards-retest-done');
     const paywall = document.getElementById('flashcards-paywall');
+    const paywallTitle = document.getElementById('flashcards-paywall-title');
+    const paywallMsg = document.getElementById('flashcards-paywall-msg');
+    const paywallActions = document.getElementById('flashcards-paywall-actions');
     const counter = document.getElementById('flashcards-counter');
     const saveIndicator = document.getElementById('flashcards-save-indicator');
     const categoryLabel = document.getElementById('flashcards-category-label');
@@ -646,7 +650,6 @@
     const btnKnow = document.getElementById('btn-know');
     const btnReview = document.getElementById('btn-review');
     const btnRestart = document.getElementById('btn-restart');
-    const btnBackFree = document.getElementById('btn-back-free');
     const btnRetestReview = document.getElementById('btn-retest-review');
     const btnRetestAgain = document.getElementById('btn-retest-again');
     const btnBackFull = document.getElementById('btn-back-full');
@@ -827,6 +830,28 @@
       return index >= FREE_CARD_LIMIT && !isSubscribed;
     }
 
+    function configurePaywall() {
+      if (!paywallTitle || !paywallMsg || !paywallActions) return;
+
+      if (!isLoggedIn) {
+        paywallTitle.textContent = 'Continue ta révision';
+        paywallMsg.textContent = 'Inscris-toi pour accéder à toutes les flashcards';
+        paywallActions.innerHTML = `
+          <a href="inscription.html" class="primary-button">S'inscrire</a>
+          <button type="button" class="secondary-button" id="btn-back-free">Revoir les cartes gratuites</button>
+        `;
+      } else if (!isSubscribed) {
+        paywallTitle.textContent = 'Continuez votre révision';
+        paywallMsg.textContent = 'Accède à toutes les flashcards avec l\'abonnement PrepaGPX — 19,90€/mois';
+        paywallActions.innerHTML = `
+          <a href="tarifs.html" class="primary-button" id="flashcards-paywall-primary">Voir les tarifs</a>
+          <button type="button" class="secondary-button" id="btn-back-free">Revoir les cartes gratuites</button>
+        `;
+      }
+
+      document.getElementById('btn-back-free')?.addEventListener('click', () => startCategory(currentCategory));
+    }
+
     function hidePaywall() {
       paywall.classList.remove('is-visible');
     }
@@ -983,7 +1008,6 @@
     btnKnow.addEventListener('click', markAsKnown);
     btnReview.addEventListener('click', markForReview);
     btnRestart.addEventListener('click', () => startCategory(currentCategory));
-    btnBackFree.addEventListener('click', () => startCategory(currentCategory));
     btnRetestReview.addEventListener('click', startRetest);
     btnRetestAgain.addEventListener('click', startRetest);
     btnBackFull.addEventListener('click', resumeFullSession);
@@ -995,15 +1019,18 @@
     async function initFlashcards() {
       try {
         const user = await window.GPXAuth?.getCurrentUser?.();
+        isLoggedIn = Boolean(user);
         isSubscribed = Boolean(user && window.GPXAuth?.hasActiveSubscription?.(user));
         currentUserId = user?.id || null;
         if (isSubscribed && currentUserId) {
           await loadPersistedProgress();
         }
       } catch {
+        isLoggedIn = false;
         isSubscribed = false;
         currentUserId = null;
       }
+      configurePaywall();
       toolbar.querySelector('button')?.focus();
     }
 

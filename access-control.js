@@ -1,5 +1,5 @@
 (function () {
-  const PUBLIC_PAGES = new Set(["index.html", "compte.html", "connexion.html", "inscription.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "politique-confidentialite.html"]);
+  const PUBLIC_PAGES = new Set(["index.html", "actualites.html", "flashcards.html", "compte.html", "connexion.html", "inscription.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "politique-confidentialite.html"]);
 
   /** Modes « petits tests » : un seul essai gratuit pour les comptes sans abonnement. */
   const SMALL_TEST_MODES = {
@@ -228,6 +228,22 @@
     document.head.appendChild(script);
   }
 
+  function getSubscriptionBadge(user) {
+    if (window.GPXAuth.hasActiveSubscription(user)) {
+      return { text: "Abonné", className: "is-active" };
+    }
+    if (user.freeTrialUsed) {
+      return { text: "Gratuit", className: "" };
+    }
+    return { text: "Essai", className: "is-trial" };
+  }
+
+  function removeGlobalDashboardSidebar() {
+    document.getElementById("global-dash-sidebar")?.remove();
+    document.getElementById("dash-sidebar-toggle")?.remove();
+    document.body.classList.remove("has-dash-sidebar", "dash-sidebar-collapsed");
+  }
+
   async function populateSiteNavLinks() {
     if (!window.GPXAuth?.getCurrentUser) {
       return;
@@ -248,26 +264,29 @@
     `;
 
     if (!user) {
-      nav?.classList.remove("gpx-site-nav--app");
+      nav?.classList.remove("gpx-site-nav--app", "gpx-site-nav--show-logo");
       links.innerHTML = `
         ${commonLinks}
         <a href="connexion.html">Se connecter</a>
-        <a class="gpx-site-nav__cta" href="inscription.html">Créer un compte</a>
+        <a class="gpx-site-nav__cta" href="inscription.html">S'inscrire</a>
       `;
       return;
     }
 
-    nav?.classList.add("gpx-site-nav--app");
-
     const subscribed = window.GPXAuth.hasActiveSubscription(user);
-    const trialLabel = user.freeTrialUsed
-      ? "Essai gratuit utilisé"
-      : "1 petit test gratuit disponible";
+    const badge = getSubscriptionBadge(user);
+
+    nav?.classList.add("gpx-site-nav--app");
+    if (subscribed) {
+      nav?.classList.remove("gpx-site-nav--show-logo");
+    } else {
+      nav?.classList.add("gpx-site-nav--show-logo");
+    }
 
     links.innerHTML = `
       <a href="tarifs.html">Tarifs</a>
       <span class="gpx-site-nav__user">${escapeHtml(user.firstName)} ${escapeHtml(user.lastName)}</span>
-      <span class="gpx-site-nav__badge ${subscribed ? "is-active" : ""}">${subscribed ? "Abonné" : trialLabel}</span>
+      <span class="gpx-site-nav__badge ${badge.className}">${badge.text}</span>
     `;
   }
 
@@ -556,7 +575,12 @@
   document.addEventListener("DOMContentLoaded", async () => {
     injectPostHog();
     await injectSiteNav();
-    await injectGlobalDashboardSidebar();
+    const user = await window.GPXAuth?.getCurrentUser?.();
+    if (user) {
+      await injectGlobalDashboardSidebar();
+    } else {
+      removeGlobalDashboardSidebar();
+    }
     injectLegalFooter();
     injectProblemReportButton();
     await requireAuthForPage();

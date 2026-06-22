@@ -418,6 +418,19 @@ a {
   display: none;
 }
 
+.gpx-site-nav--app.gpx-site-nav--show-logo .gpx-site-nav__brand {
+  display: block;
+}
+
+.gpx-site-nav--app.gpx-site-nav--show-logo .gpx-site-nav__inner {
+  justify-content: space-between;
+}
+
+.gpx-site-nav__badge.is-trial {
+  background: rgba(184, 147, 94, 0.35);
+  color: var(--white);
+}
+
 .auth-container {
   display: grid;
   gap: 24px;

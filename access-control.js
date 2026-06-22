@@ -191,28 +191,6 @@
     }
   }
 
-  function isHomePage() {
-    const path = window.location.pathname;
-    return path === "/" || path.endsWith("/index.html");
-  }
-
-  async function updateHomeCtaForLoggedInUser() {
-    if (!isHomePage()) {
-      return;
-    }
-
-    const user = await window.GPXAuth?.getCurrentUser?.();
-    if (!user) {
-      return;
-    }
-
-    const cta = document.getElementById("home-cta-primary");
-    if (cta) {
-      cta.href = "dashboard.html";
-      cta.textContent = "Accéder à mon tableau de bord";
-    }
-  }
-
   function injectLegalFooter() {
     if (document.getElementById("gpx-legal-footer") || document.querySelector(".site-footer")) {
       return;
@@ -508,21 +486,13 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
               Nouvel examen
             </a>
-            <a class="global-dash-sidebar__item" href="progression.html#history-title">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
-              Historique
-            </a>
             <a class="global-dash-sidebar__item" href="flashcards.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2" fill="var(--navy-dark)"></rect></svg>
               Flashcards
             </a>
-            <a class="global-dash-sidebar__item" href="dashboard.html#domaines">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15 9l-2 6-6 2 2-6z"></path></svg>
-              Domaines
-            </a>
-            <a class="global-dash-sidebar__item" href="progression.html">
+            <a class="global-dash-sidebar__item" href="dashboard.html#progression">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M4 16l5-5 4 4 7-7"></path></svg>
-              Progression
+              Ma progression
             </a>
             <a class="global-dash-sidebar__item" href="dashboard.html#communaute">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
@@ -580,7 +550,6 @@
     await injectGlobalDashboardSidebar();
     injectLegalFooter();
     injectProblemReportButton();
-    await updateHomeCtaForLoggedInUser();
     await requireAuthForPage();
   });
 })();

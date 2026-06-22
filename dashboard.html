@@ -40,6 +40,19 @@
     .dash-widget__value { font-size: 1.5rem; font-weight: 800; color: var(--navy); margin: 0; }
     .dash-widget__detail { font-size: 0.85rem; color: var(--muted); margin: 4px 0 0; }
     .dash-widget__link { display: inline-block; margin-top: 10px; font-size: 0.85rem; font-weight: 700; color: var(--seal); text-decoration: none; }
+    .dash-progress-block { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 24px; }
+    .dash-progress-block h2 { margin: 0 0 8px; color: var(--navy); font-family: 'Spectral', serif; font-size: 1.2rem; font-weight: 600; }
+    .dash-progress-block > p { margin: 0 0 20px; color: var(--muted); font-size: 0.92rem; }
+    .dash-evolution-wrap { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--off-white); }
+    .dash-evolution-chart { width: 100%; height: auto; display: block; }
+    .dash-history-header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .dash-history-header p { margin: 4px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .dash-history-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+    .dash-history-table-wrap table { width: 100%; min-width: 640px; border-collapse: collapse; background: white; }
+    .dash-history-table-wrap th, .dash-history-table-wrap td { padding: 12px 14px; border-bottom: 1px solid var(--border); text-align: left; }
+    .dash-history-table-wrap th { color: white; background: var(--navy); font-size: 0.82rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .dash-history-table-wrap tr:last-child td { border-bottom: 0; }
+    .dash-score-pill { display: inline-flex; padding: 4px 10px; color: var(--navy); background: var(--off-white); border: 1px solid var(--border); border-radius: 999px; font-weight: 700; white-space: nowrap; }
     @media (max-width: 820px) {
       .dash-layout { flex-direction: column; }
       .dash-sidebar { width: 100%; }
@@ -69,22 +82,14 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
           Nouvel examen
         </button>
-        <a class="dash-nav__item" href="progression.html#history-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
-          Historique
-        </a>
         <a class="dash-nav__item" href="flashcards.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2"></rect></svg>
           Flashcards
         </a>
-        <button class="dash-nav__item" data-panel="domaines">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15 9l-2 6-6 2 2-6z"></path></svg>
-          Domaines
-        </button>
-        <a class="dash-nav__item" href="progression.html">
+        <button class="dash-nav__item" data-panel="progression">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M4 16l5-5 4 4 7-7"></path></svg>
-          Progression
-        </a>
+          Ma progression
+        </button>
         <button class="dash-nav__item" data-panel="communaute">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
           Communauté
@@ -160,21 +165,38 @@
         </div>
       </section>
 
-      <section class="dash-panel" id="panel-domaines">
-        <h1>Domaines</h1>
-        <p class="dash-panel__subtitle">Entraînez-vous sur une catégorie précise.</p>
-        <div class="dash-domains-grid">
-          <div class="dash-domain-card">
-            <h3>Psychotechnique</h3>
-            <ul><li>Raisonnement logique</li><li>Raisonnement spatial</li><li>Tests numériques</li><li>Logique verbale</li></ul>
+      <section class="dash-panel" id="panel-progression">
+        <h1>Ma progression</h1>
+        <p class="dash-panel__subtitle">Suivez votre courbe d'évolution et consultez l'historique de vos sessions.</p>
+
+        <div class="dash-progress-block">
+          <h2>Graphique d'évolution</h2>
+          <p>Courbe des 10 derniers tests, toutes épreuves confondues.</p>
+          <div class="dash-evolution-wrap">
+            <svg class="dash-evolution-chart" id="dash-evolution-chart" viewBox="0 0 760 300" role="img" aria-label="Évolution des derniers tests"></svg>
           </div>
-          <div class="dash-domain-card">
-            <h3>Culture générale</h3>
-            <ul><li>Institutions françaises</li><li>Institutions européennes</li><li>Symboles républicains</li><li>Histoire et actualité</li></ul>
+        </div>
+
+        <div class="dash-progress-block">
+          <div class="dash-history-header">
+            <div>
+              <h2 id="dash-history-title">Historique des sessions</h2>
+              <p id="dash-history-count">Aucune session enregistrée.</p>
+            </div>
+            <button class="secondary-button" id="dash-clear-history" type="button">Effacer l'historique</button>
           </div>
-          <div class="dash-domain-card">
-            <h3>Cas pratiques</h3>
-            <ul><li>Violences et atteintes aux personnes</li><li>Sécurité routière</li><li>Troubles à l'ordre public</li><li>Vols et atteintes aux biens</li></ul>
+          <div class="dash-history-table-wrap" aria-live="polite">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date et heure</th>
+                  <th>Module testé</th>
+                  <th>Score obtenu</th>
+                  <th>Durée de la session</th>
+                </tr>
+              </thead>
+              <tbody id="dash-history-body"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -238,7 +260,7 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
       const hash = window.location.hash.replace('#', '');
-      const validPanels = ['accueil', 'examen', 'flashcards', 'domaines', 'communaute', 'admin'];
+      const validPanels = ['accueil', 'examen', 'flashcards', 'progression', 'communaute', 'admin'];
       if (hash && validPanels.includes(hash)) {
         document.querySelectorAll('.dash-nav__item[data-panel]').forEach((b) => b.classList.remove('is-active'));
         document.querySelectorAll('.dash-panel').forEach((p) => p.classList.remove('is-active'));
@@ -498,6 +520,158 @@
       }
 
       renderDashboardWidgets();
+
+      const progressionModules = {
+        psychotechnique: { shortLabel: 'Psychotechniques' },
+        'culture-generale': { shortLabel: 'Culture générale' },
+        'langue-etrangere': { shortLabel: 'Langue étrangère' },
+        'cas-pratique': { shortLabel: 'Cas pratique' }
+      };
+
+      const progressionModuleAliases = {
+        psychotechniques: 'psychotechnique',
+        personnalite: 'psychotechnique',
+        culture: 'culture-generale',
+        langue: 'langue-etrangere'
+      };
+
+      function readProgressionSessions() {
+        return (window.GpxProgression?.readSessions() || [])
+          .map((session) => ({
+            ...session,
+            module: progressionModuleAliases[session.module] || session.module,
+            score: Number(session.score) || 0,
+            total: Number(session.total) || 0,
+            duree: Number(session.duree) || 0,
+            date: session.date || new Date().toISOString()
+          }))
+          .filter((session) => progressionModules[session.module] && session.total > 0);
+      }
+
+      function progressionPercent(session) {
+        return session.total > 0 ? (session.score / session.total) * 100 : 0;
+      }
+
+      function progressionRoundedPercent(value) {
+        return `${Math.round(value)}%`;
+      }
+
+      function formatProgressionScore(value) {
+        const number = Number(value) || 0;
+        return Number.isInteger(number) ? String(number) : number.toFixed(1).replace('.', ',');
+      }
+
+      function formatProgressionDuration(seconds) {
+        const safeSeconds = Math.max(0, Math.round(seconds || 0));
+        const hours = Math.floor(safeSeconds / 3600);
+        const minutes = Math.floor((safeSeconds % 3600) / 60);
+        const remainingSeconds = safeSeconds % 60;
+        if (hours > 0) return `${hours} h ${String(minutes).padStart(2, '0')} min`;
+        if (minutes > 0) return `${minutes} min`;
+        return `${remainingSeconds} s`;
+      }
+
+      function formatProgressionDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' }).format(date);
+      }
+
+      function progressionScoreText(session) {
+        return `${formatProgressionScore(session.score)}/${formatProgressionScore(session.total)} (${progressionRoundedPercent(progressionPercent(session))})`;
+      }
+
+      function renderDashEvolution(sessions) {
+        const svg = document.getElementById('dash-evolution-chart');
+        if (!svg) return;
+
+        const latest = [...sessions].sort((a, b) => new Date(a.date) - new Date(b.date)).slice(-10);
+        const width = 760;
+        const height = 300;
+        const padding = 42;
+        svg.innerHTML = '';
+
+        function add(tag, attributes, text) {
+          const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+          Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, value));
+          if (text) node.textContent = text;
+          svg.appendChild(node);
+        }
+
+        [0, 25, 50, 75, 100].forEach((value) => {
+          const y = height - padding - ((height - padding * 2) * value / 100);
+          add('line', { x1: padding, y1: y, x2: width - padding, y2: y, stroke: '#d8deea', 'stroke-width': '1' });
+          add('text', { x: 12, y: y + 4, fill: '#5d687a', 'font-size': '12' }, `${value}%`);
+        });
+
+        if (latest.length === 0) {
+          add('text', { x: width / 2, y: height / 2, fill: '#5d687a', 'font-size': '18', 'font-weight': '700', 'text-anchor': 'middle' }, 'Aucun test enregistré pour le moment');
+          return;
+        }
+
+        const points = latest.map((session, index) => {
+          const x = latest.length === 1
+            ? width / 2
+            : padding + (index * (width - padding * 2) / (latest.length - 1));
+          const y = height - padding - ((height - padding * 2) * progressionPercent(session) / 100);
+          return { x, y, session };
+        });
+
+        add('polyline', {
+          points: points.map((point) => `${point.x},${point.y}`).join(' '),
+          fill: 'none',
+          stroke: '#0B1F3A',
+          'stroke-width': '4',
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round'
+        });
+
+        points.forEach((point, index) => {
+          add('circle', { cx: point.x, cy: point.y, r: '6', fill: '#0B1F3A' });
+          add('text', { x: point.x, y: point.y - 12, fill: '#0B1F3A', 'font-size': '12', 'font-weight': '800', 'text-anchor': 'middle' }, progressionRoundedPercent(progressionPercent(point.session)));
+          add('text', { x: point.x, y: height - 12, fill: '#5d687a', 'font-size': '11', 'text-anchor': 'middle' }, String(index + 1));
+        });
+      }
+
+      function renderDashHistory(sessions) {
+        const sorted = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const countEl = document.getElementById('dash-history-count');
+        const bodyEl = document.getElementById('dash-history-body');
+        if (!countEl || !bodyEl) return;
+
+        countEl.textContent = sorted.length
+          ? `${sorted.length} session${sorted.length > 1 ? 's' : ''} enregistrée${sorted.length > 1 ? 's' : ''}.`
+          : 'Aucune session enregistrée.';
+
+        bodyEl.innerHTML = sorted.length
+          ? sorted.map((session) => `
+            <tr>
+              <td>${formatProgressionDate(session.date)}</td>
+              <td>${progressionModules[session.module].shortLabel}</td>
+              <td><span class="dash-score-pill">${progressionScoreText(session)}</span></td>
+              <td>${formatProgressionDuration(session.duree)}</td>
+            </tr>
+          `).join('')
+          : '<tr><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
+      }
+
+      function renderProgressionPanel() {
+        const sessions = readProgressionSessions();
+        renderDashEvolution(sessions);
+        renderDashHistory(sessions);
+      }
+
+      document.querySelector('.dash-nav__item[data-panel="progression"]')?.addEventListener('click', renderProgressionPanel);
+      document.getElementById('dash-clear-history')?.addEventListener('click', () => {
+        if (!confirm('Effacer tout l\'historique de progression ?')) return;
+        window.GpxProgression?.clearSessions();
+        renderProgressionPanel();
+        renderDashboardWidgets();
+      });
+
+      if (window.location.hash === '#progression') {
+        renderProgressionPanel();
+      }
     });
   </script>
 </body>

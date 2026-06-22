@@ -280,7 +280,7 @@
 
     <section class="auth-card auth-card--wide pricing-why">
       <h2>Choisissez une catégorie</h2>
-      <p>Révisez une carte à la fois. Les <strong>5 premières cartes</strong> de chaque catégorie sont gratuites — l'abonnement débloque les 20 cartes.</p>
+      <p>Révisez une carte à la fois. Les <strong>5 premières cartes</strong> de chaque catégorie sont gratuites — l'abonnement débloque les ~100 cartes.</p>
       <div class="flashcards-toolbar" id="category-toolbar">
         <button type="button" data-category="juridique">Vocabulaire juridique</button>
         <button type="button" data-category="articles">Articles de loi clés</button>
@@ -368,7 +368,22 @@
           { front: 'Prescription', back: 'Extinction de l\'action publique par écoulement du temps' },
           { front: 'Médiation pénale', back: 'Alternative aux poursuites, résolution amiable' },
           { front: 'Comparution immédiate', back: 'Jugement rapide après garde à vue pour délits flagrants' },
-          { front: 'Ordonnance pénale', back: 'Procédure simplifiée sans audience pour contraventions/délits mineurs' }
+          { front: 'Ordonnance pénale', back: 'Procédure simplifiée sans audience pour contraventions/délits mineurs' },
+          { front: 'Circonstances aggravantes', back: 'Éléments qui alourdissent la peine (préméditation, guet-apens, vulnérabilité de la victime…)' },
+          { front: 'Concours d\'infractions', back: 'Plusieurs infractions commises par la même personne, traitées selon règles spécifiques' },
+          { front: 'Infraction continue', back: 'Infraction dont les effets se prolongent dans le temps' },
+          { front: 'Infraction instantanée', back: 'Infraction réalisée en un seul acte, achevée à un moment précis' },
+          { front: 'Auteur moral', back: 'Personne qui donne l\'ordre de commettre l\'infraction' },
+          { front: 'Coauteur', back: 'Personne qui commet l\'infraction avec d\'autres' },
+          { front: 'Dénonciation calomnieuse', back: 'Signalement d\'un fait faux à une autorité — art. 226-10 CP' },
+          { front: 'Violation du secret professionnel', back: 'Divulgation d\'informations protégées — art. 226-13 CP' },
+          { front: 'Outrage', back: 'Paroles ou gestes offensants envers un dépositaire de l\'autorité publique' },
+          { front: 'Rébellion', back: 'Résistance violente à un dépositaire de l\'autorité publique' },
+          { front: 'Usurpation de fonctions', back: 'Exercice illégal d\'une fonction publique' },
+          { front: 'Abus de confiance', back: 'Détournement d\'un bien remis volontairement au détenteur' },
+          { front: 'Escroquerie', back: 'Tromperie pour obtenir remise de fonds ou de biens' },
+          { front: 'Faux et usage de faux', back: 'Altération frauduleuse de la vérité sur un document, puis usage' },
+          { front: 'Corruption active', back: 'Fait de proposer un avantage indu à un agent public' }
         ]
       },
       articles: {
@@ -393,7 +408,22 @@
           { front: 'Art. 311-1 CP', back: 'Vol = soustraction frauduleuse de la chose d\'autrui' },
           { front: 'Art. 312-1 CP', back: 'Vol avec violence = crime ou délit selon circonstances' },
           { front: 'Art. 321-1 CP', back: 'Recel = détention de chose provenant d\'une infraction' },
-          { front: 'Art. 433-3 CP', back: 'Menaces contre dépositaire autorité publique' }
+          { front: 'Art. 433-3 CP', back: 'Menaces contre dépositaire autorité publique' },
+          { front: 'Art. 226-1 CP', back: 'Atteinte à la vie privée (captation images/sons sans consentement)' },
+          { front: 'Art. 226-10 CP', back: 'Dénonciation calomnieuse' },
+          { front: 'Art. 226-13 CP', back: 'Violation du secret professionnel — 1 an et 15 000 €' },
+          { front: 'Art. 433-5 CP', back: 'Outrage à dépositaire autorité publique' },
+          { front: 'Art. 433-6 CP', back: 'Rébellion contre dépositaire autorité publique' },
+          { front: 'Art. 222-22 CP', back: 'Définition du viol et des agressions sexuelles' },
+          { front: 'Art. 222-23 CP', back: 'Viol — 15 ans de réclusion criminelle' },
+          { front: 'Art. 222-33-2 CP', back: 'Harcèlement moral' },
+          { front: 'Art. 222-33 CP', back: 'Harcèlement sexuel' },
+          { front: 'Art. 227-1 CP', back: 'Délaissement d\'un mineur de 15 ans' },
+          { front: 'Art. 421-1 CP', back: 'Définition des actes terroristes' },
+          { front: 'Art. L214-1 CRPM', back: 'Mauvais traitements envers les animaux' },
+          { front: 'Art. 40 CPP', back: 'Obligation de signalement pour tout fonctionnaire' },
+          { front: 'Art. 11 CPP', back: 'Secret de l\'instruction' },
+          { front: 'Art. 100 CPP', back: 'Interceptions téléphoniques judiciaires' }
         ]
       },
       sigles: {
@@ -403,7 +433,7 @@
           { front: 'APJ', back: 'Agent de Police Judiciaire' },
           { front: 'APJA', back: 'Agent de Police Judiciaire Adjoint' },
           { front: 'GAV', back: 'Garde À Vue' },
-          { front: 'ITT', back: 'Incapacité Totale de Travail' },
+          { front: 'ITT', back: 'Incapacité Totale de Travail — arrêt temporaire constaté par certificat médical (durée en jours), base de qualification des violences' },
           { front: 'PPE', back: 'Personne Politiquement Exposée' },
           { front: 'BNRF', back: 'Brigade Nationale de Recherche des Fugitifs' },
           { front: 'IGPN', back: 'Inspection Générale de la Police Nationale' },
@@ -418,7 +448,21 @@
           { front: 'CRS', back: 'Compagnies Républicaines de Sécurité' },
           { front: 'BAC', back: 'Brigade Anti-Criminalité' },
           { front: 'BST', back: 'Brigade de Sûreté Territoriale' },
-          { front: 'PTS', back: 'Police Technique et Scientifique' }
+          { front: 'PTS', back: 'Police Technique et Scientifique' },
+          { front: 'SCRT', back: 'Service Central du Renseignement Territorial' },
+          { front: 'DNRED', back: 'Direction Nationale du Renseignement et des Enquêtes Douanières' },
+          { front: 'TRACFIN', back: 'Traitement du renseignement et action contre les circuits financiers clandestins' },
+          { front: 'OCLCO', back: 'Office Central de Lutte contre le Crime Organisé' },
+          { front: 'OCLAESP', back: 'Office Central de Lutte contre les Atteintes à l\'Environnement et à la Santé Publique' },
+          { front: 'OCRTEH', back: 'Office Central pour la Répression de la Traite des Êtres Humains' },
+          { front: 'SRPJ', back: 'Service Régional de Police Judiciaire' },
+          { front: 'DTSP', back: 'Direction Territoriale de la Sécurité Publique' },
+          { front: 'PPJ', back: 'Police de Protection Judiciaire (ex-PJJ côté police)' },
+          { front: 'UMJ', back: 'Unité Médico-Judiciaire' },
+          { front: 'IRCGN', back: 'Institut de Recherche Criminelle de la Gendarmerie Nationale' },
+          { front: 'INPS', back: 'Institut National de Police Scientifique' },
+          { front: 'BEFTI', back: 'Brigade d\'Enquêtes sur les Fraudes aux Technologies de l\'Information' },
+          { front: 'SAJ', back: 'Section des Affaires Judiciaires' }
         ]
       }
     };

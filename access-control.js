@@ -268,10 +268,6 @@
   }
 
   async function injectSiteNav() {
-    if (getPageName() === "dashboard.html") {
-      return;
-    }
-
     if (!document.getElementById("gpx-fonts-link")) {
       const fontLink = document.createElement("link");
       fontLink.id = "gpx-fonts-link";
@@ -281,6 +277,10 @@
     }
 
     if (!document.getElementById("gpx-site-nav")) {
+      if (getPageName() === "dashboard.html") {
+        return;
+      }
+
       const nav = document.createElement("nav");
       nav.id = "gpx-site-nav";
       nav.className = "gpx-site-nav";
@@ -296,7 +296,9 @@
       document.body.insertBefore(nav, document.body.firstChild);
     }
 
-    await populateSiteNavLinks();
+    if (document.getElementById("gpx-site-nav-links")) {
+      await populateSiteNavLinks();
+    }
   }
 
   async function submitProblemReport({ userId, email, pageUrl, message }) {

@@ -72,6 +72,18 @@
       color: var(--muted);
     }
 
+    .flashcards-save-indicator {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #166534;
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .flashcards-save-indicator.is-visible {
+      opacity: 1;
+    }
+
     .flashcards-progress {
       height: 8px;
       background: var(--off-white);
@@ -405,6 +417,7 @@
       <div class="flashcards-play" id="flashcards-play">
         <div class="flashcards-meta">
           <span class="flashcards-counter" id="flashcards-counter">1/20</span>
+          <span class="flashcards-save-indicator" id="flashcards-save-indicator" aria-live="polite">✓ Progression sauvegardée</span>
           <span class="flashcards-hint" id="flashcards-category-label"></span>
         </div>
         <div class="flashcards-progress" aria-hidden="true">
@@ -602,6 +615,7 @@
     };
 
     const FREE_CARD_LIMIT = 5;
+    const FLASHCARD_CATEGORIES = ['juridique', 'articles', 'sigles'];
 
     let currentCategory = null;
     let sessionMode = 'full';
@@ -609,8 +623,13 @@
     let sessionPosition = 0;
     let isFlipped = false;
     let isSubscribed = false;
+    let currentUserId = null;
     let reviewIndices = new Set();
     let retestMasteredCount = 0;
+    let saveIndicatorTimer = null;
+    const persistedReviewByCategory = Object.fromEntries(
+      FLASHCARD_CATEGORIES.map((category) => [category, new Set()])
+    );
 
     const shell = document.getElementById('flashcards-shell');
     const play = document.getElementById('flashcards-play');
@@ -618,6 +637,7 @@
     const retestDone = document.getElementById('flashcards-retest-done');
     const paywall = document.getElementById('flashcards-paywall');
     const counter = document.getElementById('flashcards-counter');
+    const saveIndicator = document.getElementById('flashcards-save-indicator');
     const categoryLabel = document.getElementById('flashcards-category-label');
     const progressBar = document.getElementById('flashcards-progress-bar');
     const flashcard = document.getElementById('flashcard');
@@ -644,6 +664,93 @@
 
     function getDeck() {
       return FLASHCARD_DECKS[currentCategory]?.cards || [];
+    }
+
+    function getSupabaseClient() {
+      if (window.__gpxSupabaseClient) {
+        return window.__gpxSupabaseClient;
+      }
+      const cfg = window.GPX_SUPABASE || {};
+      const url = cfg.url || cfg.SUPABASE_URL;
+      const anonKey = cfg.anonKey;
+      if (!url || !anonKey || !window.supabase?.createClient) {
+        return null;
+      }
+      window.__gpxSupabaseClient = window.supabase.createClient(url, anonKey);
+      return window.__gpxSupabaseClient;
+    }
+
+    function showSaveIndicator() {
+      if (!saveIndicator) return;
+      saveIndicator.classList.add('is-visible');
+      clearTimeout(saveIndicatorTimer);
+      saveIndicatorTimer = setTimeout(() => {
+        saveIndicator.classList.remove('is-visible');
+      }, 2200);
+    }
+
+    async function loadPersistedProgress() {
+      if (!isSubscribed || !currentUserId) return;
+
+      const client = getSupabaseClient();
+      if (!client) return;
+
+      const { data, error } = await client
+        .from('flashcard_progress')
+        .select('card_category, card_question, status')
+        .eq('user_id', currentUserId);
+
+      if (error) {
+        console.warn('[GPX Flashcards] loadPersistedProgress:', error);
+        return;
+      }
+
+      FLASHCARD_CATEGORIES.forEach((category) => persistedReviewByCategory[category].clear());
+      (data || []).forEach((row) => {
+        if (row.status === 'a_revoir' && persistedReviewByCategory[row.card_category]) {
+          persistedReviewByCategory[row.card_category].add(row.card_question);
+        }
+      });
+    }
+
+    function syncReviewIndicesFromPersisted() {
+      reviewIndices = new Set();
+      if (!currentCategory || !isSubscribed) return;
+
+      const deck = getDeck();
+      const questions = persistedReviewByCategory[currentCategory];
+      deck.forEach((card, index) => {
+        if (questions.has(card.front)) {
+          reviewIndices.add(index);
+        }
+      });
+    }
+
+    async function persistCardStatus(cardQuestion, status) {
+      if (!isSubscribed || !currentUserId || !currentCategory) return;
+
+      const client = getSupabaseClient();
+      if (!client) return;
+
+      const { error } = await client
+        .from('flashcard_progress')
+        .upsert(
+          {
+            user_id: currentUserId,
+            card_category: currentCategory,
+            card_question: cardQuestion,
+            status,
+            updated_at: new Date().toISOString()
+          },
+          { onConflict: 'user_id,card_category,card_question' }
+        );
+
+      if (error) {
+        console.warn('[GPX Flashcards] persistCardStatus:', error);
+        return;
+      }
+
+      showSaveIndicator();
     }
 
     function getCurrentDeckIndex() {
@@ -692,16 +799,26 @@
     }
 
     function markAsKnown() {
+      const card = getDeck()[getCurrentDeckIndex()];
       reviewIndices.delete(getCurrentDeckIndex());
       if (sessionMode === 'retest') {
         retestMasteredCount += 1;
+      }
+      if (isSubscribed && card && currentCategory) {
+        persistedReviewByCategory[currentCategory].delete(card.front);
+        persistCardStatus(card.front, 'su');
       }
       renderReviewSheet();
       nextCard();
     }
 
     function markForReview() {
+      const card = getDeck()[getCurrentDeckIndex()];
       reviewIndices.add(getCurrentDeckIndex());
+      if (isSubscribed && card && currentCategory) {
+        persistedReviewByCategory[currentCategory].add(card.front);
+        persistCardStatus(card.front, 'a_revoir');
+      }
       renderReviewSheet();
       nextCard();
     }
@@ -790,7 +907,11 @@
     function startCategory(category) {
       currentCategory = category;
       sessionMode = 'full';
-      reviewIndices = new Set();
+      if (isSubscribed) {
+        syncReviewIndicesFromPersisted();
+      } else {
+        reviewIndices = new Set();
+      }
       buildFullSessionQueue();
       sessionPosition = 0;
       retestMasteredCount = 0;
@@ -875,8 +996,13 @@
       try {
         const user = await window.GPXAuth?.getCurrentUser?.();
         isSubscribed = Boolean(user && window.GPXAuth?.hasActiveSubscription?.(user));
+        currentUserId = user?.id || null;
+        if (isSubscribed && currentUserId) {
+          await loadPersistedProgress();
+        }
       } catch {
         isSubscribed = false;
+        currentUserId = null;
       }
       toolbar.querySelector('button')?.focus();
     }

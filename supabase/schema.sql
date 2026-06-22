@@ -121,3 +121,36 @@ create policy "Admin update profiles complimentary"
 -- Note : pour l'instant la lecture admin fonctionne si RLS est désactivée sur problem_reports
 -- ou si une policy SELECT existe pour les utilisateurs authentifiés
 -- Les policies ci-dessus restreignent la lecture SELECT à l'email admin (JWT), pas à tous les utilisateurs authentifiés.
+
+-- Progression flashcards (abonnés)
+create table if not exists public.flashcard_progress (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  card_category text not null check (card_category in ('juridique', 'articles', 'sigles')),
+  card_question text not null,
+  status text not null check (status in ('a_revoir', 'su')),
+  updated_at timestamptz not null default now(),
+  unique (user_id, card_category, card_question)
+);
+
+create index if not exists flashcard_progress_user_id_idx
+  on public.flashcard_progress (user_id);
+
+alter table public.flashcard_progress enable row level security;
+
+create policy "Users read own flashcard_progress"
+  on public.flashcard_progress for select
+  using (auth.uid() = user_id);
+
+create policy "Users insert own flashcard_progress"
+  on public.flashcard_progress for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users update own flashcard_progress"
+  on public.flashcard_progress for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create policy "Users delete own flashcard_progress"
+  on public.flashcard_progress for delete
+  using (auth.uid() = user_id);

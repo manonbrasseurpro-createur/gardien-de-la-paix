@@ -71,13 +71,6 @@
   const NAV_ICON_COMPTE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>';
   const NAV_ICON_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>';
 
-  function bindSiteNavLogout() {
-    document.getElementById("gpx-logout-button")?.addEventListener("click", async () => {
-      await window.GPXAuth.logout();
-      window.location.href = "connexion.html";
-    });
-  }
-
   function ensurePaywallModal() {
     if (document.getElementById("gpx-paywall-modal")) {
       return;
@@ -268,16 +261,10 @@
       : "1 petit test gratuit disponible";
 
     links.innerHTML = `
-      ${commonLinks}
-      <a href="dashboard.html">Tableau de bord</a>
-      <span class="gpx-site-nav__sep" aria-hidden="true"></span>
-      <a class="gpx-site-nav__item-btn" href="compte.html">${NAV_ICON_COMPTE} Mon compte</a>
-      <button type="button" class="gpx-site-nav__item-btn" id="gpx-logout-button">${NAV_ICON_LOGOUT} Déconnexion</button>
-      <span class="gpx-site-nav__user">${escapeHtml(user.firstName)} ${escapeHtml(user.lastName)}</span>
+      <a href="tarifs.html">Tarifs</a>
+      <span class="gpx-site-nav__user">${escapeHtml(user.firstName)}</span>
       <span class="gpx-site-nav__badge ${subscribed ? "is-active" : ""}">${subscribed ? "Abonné" : trialLabel}</span>
     `;
-
-    bindSiteNavLogout();
   }
 
   async function injectSiteNav() {

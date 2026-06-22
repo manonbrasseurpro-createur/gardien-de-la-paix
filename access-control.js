@@ -512,7 +512,14 @@
     if (getPageName() === "dashboard.html" || !GUEST_SIDEBAR_PAGES.has(getPageName())) {
       return;
     }
-    if (document.getElementById("global-dash-sidebar")) {
+
+    const existingSidebar = document.getElementById("global-dash-sidebar");
+    const existingToggle = document.getElementById("dash-sidebar-toggle");
+    if (existingSidebar && existingToggle && !existingSidebar.dataset.toggleBound) {
+      bindSidebarToggle(existingSidebar, existingToggle);
+      existingSidebar.dataset.toggleBound = "true";
+    }
+    if (existingSidebar) {
       return;
     }
 
@@ -562,14 +569,23 @@
     const toggle = document.getElementById("dash-sidebar-toggle");
     if (sidebar && toggle) {
       bindSidebarToggle(sidebar, toggle);
+      sidebar.dataset.toggleBound = "true";
     }
+  }
+
+  function removeGuestSidebarMarkup() {
+    const sidebar = document.getElementById("global-dash-sidebar");
+    if (sidebar?.classList.contains("global-dash-sidebar--guest")) {
+      sidebar.remove();
+    }
+    document.getElementById("dash-sidebar-toggle")?.remove();
   }
 
   async function injectGlobalDashboardSidebar() {
     if (getPageName() === "dashboard.html") {
       return;
     }
-    if (document.getElementById("global-dash-sidebar") || !window.GPXAuth?.getCurrentUser) {
+    if (!window.GPXAuth?.getCurrentUser) {
       return;
     }
 
@@ -581,7 +597,18 @@
       return;
     }
 
-    if (!user || document.getElementById("global-dash-sidebar")) {
+    if (!user) {
+      return;
+    }
+
+    const existingSidebar = document.getElementById("global-dash-sidebar");
+    if (existingSidebar && !existingSidebar.classList.contains("global-dash-sidebar--guest")) {
+      return;
+    }
+
+    if (existingSidebar?.classList.contains("global-dash-sidebar--guest")) {
+      removeGuestSidebarMarkup();
+    } else if (existingSidebar) {
       return;
     }
 

@@ -349,6 +349,43 @@ a {
   background: #2f9e44;
 }
 
+.gpx-site-nav__sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+.gpx-site-nav__item-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.gpx-site-nav__item-btn:hover,
+.gpx-site-nav__item-btn:focus {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  text-decoration: none;
+}
+
+.gpx-site-nav__item-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
 .gpx-site-nav__logout {
   border: 1px solid rgba(255, 255, 255, 0.35);
   background: transparent;

@@ -16,6 +16,13 @@
       left: 0;
       right: 0;
       z-index: 10000;
+      background: var(--navy);
+    }
+    .gpx-site-nav--dashboard .gpx-site-nav__inner {
+      max-width: none;
+      margin: 0;
+      padding: 10px 24px;
+      justify-content: flex-end;
     }
     .dash-layout {
       display: flex;
@@ -26,15 +33,21 @@
     .dash-sidebar {
       width: 240px;
       flex-shrink: 0;
-      background: var(--navy-dark);
+      background: var(--navy);
       color: white;
       padding: 24px 16px;
     }
     .dash-sidebar__brand {
-      display: inline-block;
+      display: block;
+      width: 160px;
+      max-width: calc(100% - 8px);
       margin-bottom: 28px;
       padding-left: 8px;
-      font-size: 1.15rem;
+      font-size: 1.65rem;
+      line-height: 1.15;
+    }
+    .dash-sidebar__brand .gpx-site-nav__flag {
+      width: 100%;
     }
     .dash-nav { display: grid; gap: 4px; }
     .dash-nav__item {
@@ -218,7 +231,6 @@
 <body>
   <nav id="gpx-site-nav" class="gpx-site-nav gpx-site-nav--dashboard" aria-label="Navigation principale">
     <div class="gpx-site-nav__inner">
-      <a class="gpx-site-nav__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
       <div class="gpx-site-nav__links" id="gpx-site-nav-links">
         <span class="gpx-site-nav__status">Chargement…</span>
       </div>

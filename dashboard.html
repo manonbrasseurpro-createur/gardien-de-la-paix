@@ -210,20 +210,17 @@
       }
 
       async function loadAdminData() {
-        console.log('[Admin] loadAdminData appelée');
         const cfg = window.GPX_SUPABASE || {};
         const client = window.__gpxSupabaseClient || (window.supabase?.createClient
           ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
           : null);
-        console.log('[Admin] client Supabase:', client ? 'OK' : 'NULL');
         if (!client) return;
 
-        const { data: reports, error: reportsError } = await client
+        const { data: reports } = await client
           .from('problem_reports')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(20);
-        console.log('[Admin] reports:', reports, 'error:', reportsError);
         const reportsEl = document.getElementById('admin-reports-list');
         if (reports && reports.length > 0) {
           reportsEl.innerHTML = reports.map((r) => `
@@ -240,12 +237,11 @@
           reportsEl.innerHTML = '<p style="color: var(--muted);">Aucun signalement pour l\'instant.</p>';
         }
 
-        const { data: surveys, error: surveysError } = await client
+        const { data: surveys } = await client
           .from('satisfaction_surveys')
           .select('*')
           .order('created_at', { ascending: false })
           .limit(20);
-        console.log('[Admin] surveys:', surveys, 'error:', surveysError);
         const surveyUserIds = [...new Set((surveys || []).map((s) => s.user_id).filter(Boolean))];
         let emailByUserId = {};
         if (surveyUserIds.length > 0) {
@@ -278,12 +274,11 @@
           surveysEl.innerHTML = '<p style="color: var(--muted);">Aucun avis pour l\'instant.</p>';
         }
 
-        const { data: users, error: usersError } = await client
+        const { data: users } = await client
           .from('profiles')
           .select('id, email, first_name, last_name, subscription_status, is_complimentary, created_at')
           .order('created_at', { ascending: false })
           .limit(50);
-        console.log('[Admin] users:', users, 'error:', usersError);
         const usersEl = document.getElementById('admin-users-list');
         if (users && users.length > 0) {
           const total = users.length;

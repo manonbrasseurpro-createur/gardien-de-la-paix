@@ -1296,11 +1296,10 @@ html:has(.page-home) {
 }
 
 .global-dash-sidebar__brand {
-  font-family: 'Cormorant', serif;
-  font-style: italic;
-  font-size: 1.3rem;
+  display: inline-block;
   margin-bottom: 28px;
   padding-left: 8px;
+  font-size: 1.15rem;
 }
 
 .global-dash-sidebar__nav {

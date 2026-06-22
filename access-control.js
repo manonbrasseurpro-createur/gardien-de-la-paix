@@ -480,7 +480,7 @@
       `
         <button class="dash-sidebar-toggle" id="dash-sidebar-toggle" aria-label="Afficher/masquer le menu">☰</button>
         <aside class="global-dash-sidebar" id="global-dash-sidebar">
-          <div class="global-dash-sidebar__brand">Prepa GPX</div>
+          <a class="gpx-site-nav__brand global-dash-sidebar__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
           <nav class="global-dash-sidebar__nav">
             <a class="global-dash-sidebar__item" href="index.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"></path><path d="M5 9.5V20h14V9.5"></path><path d="M10 20v-6h4v6"></path></svg>

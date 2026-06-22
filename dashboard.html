@@ -157,6 +157,17 @@
     });
 
     document.addEventListener('DOMContentLoaded', async () => {
+      const hash = window.location.hash.replace('#', '');
+      const validPanels = ['accueil', 'examen', 'flashcards', 'domaines', 'communaute', 'admin'];
+      if (hash && validPanels.includes(hash)) {
+        document.querySelectorAll('.dash-nav__item[data-panel]').forEach((b) => b.classList.remove('is-active'));
+        document.querySelectorAll('.dash-panel').forEach((p) => p.classList.remove('is-active'));
+        const targetBtn = document.querySelector(`.dash-nav__item[data-panel="${hash}"]`);
+        const targetPanel = document.getElementById(`panel-${hash}`);
+        if (targetBtn) targetBtn.classList.add('is-active');
+        if (targetPanel) targetPanel.classList.add('is-active');
+      }
+
       if (window.GPXAccess) {
         window.GPXAccess.guard('dashboard.html', 'free', null, () => {});
       }

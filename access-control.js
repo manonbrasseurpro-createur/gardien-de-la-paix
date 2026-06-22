@@ -247,6 +247,10 @@
       return;
     }
 
+    if (getPageName() === "dashboard.html") {
+      return;
+    }
+
     if (!document.getElementById("gpx-fonts-link")) {
       const fontLink = document.createElement("link");
       fontLink.id = "gpx-fonts-link";
@@ -258,7 +262,7 @@
     const nav = document.createElement("nav");
     nav.id = "gpx-site-nav";
     nav.className = "gpx-site-nav";
-    nav.setAttribute("aria-label", "Compte et abonnement");
+    nav.setAttribute("aria-label", "Navigation principale");
     nav.innerHTML = `
       <div class="gpx-site-nav__inner">
         <a class="gpx-site-nav__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
@@ -275,9 +279,15 @@
         return;
       }
 
+      const commonLinks = `
+        <a href="index.html">Accueil</a>
+        <a href="actualites.html">Actualités</a>
+        <a href="tarifs.html">Tarifs</a>
+      `;
+
       if (!user) {
         links.innerHTML = `
-          <a href="tarifs.html">Tarifs</a>
+          ${commonLinks}
           <a href="connexion.html">Se connecter</a>
           <a class="gpx-site-nav__cta" href="inscription.html">Créer un compte</a>
         `;
@@ -290,9 +300,10 @@
         : "1 petit test gratuit disponible";
 
       links.innerHTML = `
+        ${commonLinks}
+        <a href="dashboard.html">Tableau de bord</a>
         <span class="gpx-site-nav__user">${escapeHtml(user.firstName)} ${escapeHtml(user.lastName)}</span>
         <span class="gpx-site-nav__badge ${subscribed ? "is-active" : ""}">${subscribed ? "Abonné" : trialLabel}</span>
-        <a href="tarifs.html">Tarifs</a>
         <a href="compte.html">Mon compte</a>
         <button type="button" class="gpx-site-nav__logout" id="gpx-logout-button">Déconnexion</button>
       `;
@@ -472,6 +483,14 @@
         <aside class="global-dash-sidebar" id="global-dash-sidebar">
           <div class="global-dash-sidebar__brand">Prepa GPX</div>
           <nav class="global-dash-sidebar__nav">
+            <a class="global-dash-sidebar__item" href="index.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5"></path><path d="M5 9.5V20h14V9.5"></path><path d="M10 20v-6h4v6"></path></svg>
+              Accueil
+            </a>
+            <a class="global-dash-sidebar__item" href="actualites.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>
+              Actualités
+            </a>
             <a class="global-dash-sidebar__item" href="dashboard.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
               Tableau de bord
@@ -542,8 +561,8 @@
 
   document.addEventListener("DOMContentLoaded", async () => {
     injectPostHog();
-    injectSiteNav();
     await injectGlobalDashboardSidebar();
+    injectSiteNav();
     injectLegalFooter();
     injectProblemReportButton();
     await redirectLoggedInFromHome();

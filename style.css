@@ -317,6 +317,13 @@ a {
   font-weight: 700;
 }
 
+.gpx-site-nav__links a:hover,
+.gpx-site-nav__links a:focus {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .gpx-site-nav__cta {
   padding: 6px 14px;
   border-radius: 999px;

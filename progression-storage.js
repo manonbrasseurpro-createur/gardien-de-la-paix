@@ -72,6 +72,49 @@
     const sessions = readSessions();
     sessions.push(normalized);
     writeSessions(sessions);
+    syncSessionToSupabase(normalized);
+  }
+
+  function getSupabaseClient() {
+    if (window.__gpxSupabaseClient) {
+      return window.__gpxSupabaseClient;
+    }
+    const cfg = window.GPX_SUPABASE || {};
+    const url = cfg.url || cfg.SUPABASE_URL;
+    const anonKey = cfg.anonKey;
+    if (!url || !anonKey || !window.supabase?.createClient) {
+      return null;
+    }
+    window.__gpxSupabaseClient = window.supabase.createClient(url, anonKey);
+    return window.__gpxSupabaseClient;
+  }
+
+  async function syncSessionToSupabase(session) {
+    const client = getSupabaseClient();
+    if (!client || !window.GPXAuth?.getCurrentUser) {
+      return;
+    }
+
+    try {
+      const user = await window.GPXAuth.getCurrentUser();
+      if (!user?.id) {
+        return;
+      }
+
+      const { error } = await client.from("exam_sessions").insert({
+        user_id: user.id,
+        module: session.module,
+        score: session.score,
+        total: session.total,
+        duree: session.duree
+      });
+
+      if (error) {
+        console.warn("[GPX Progression] syncSessionToSupabase:", error);
+      }
+    } catch (error) {
+      console.warn("[GPX Progression] syncSessionToSupabase:", error);
+    }
   }
 
   function clearSessions() {

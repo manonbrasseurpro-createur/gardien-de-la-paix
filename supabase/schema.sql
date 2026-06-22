@@ -154,3 +154,88 @@ create policy "Users update own flashcard_progress"
 create policy "Users delete own flashcard_progress"
   on public.flashcard_progress for delete
   using (auth.uid() = user_id);
+
+-- Fil de discussion (Communauté)
+create table if not exists public.community_posts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  prenom text not null,
+  message text not null check (char_length(message) between 1 and 500),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists community_posts_created_at_idx
+  on public.community_posts (created_at desc);
+
+alter table public.community_posts enable row level security;
+
+create policy "Authenticated read community_posts"
+  on public.community_posts for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated insert own community_posts"
+  on public.community_posts for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Authors delete own community_posts"
+  on public.community_posts for delete
+  to authenticated
+  using (auth.uid() = user_id);
+
+-- Sessions d'examen (progression + classement)
+create table if not exists public.exam_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  module text not null,
+  score numeric not null check (score >= 0),
+  total numeric not null check (total > 0),
+  duree integer not null default 0 check (duree >= 0),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists exam_sessions_user_module_idx
+  on public.exam_sessions (user_id, module);
+
+create index if not exists exam_sessions_module_created_at_idx
+  on public.exam_sessions (module, created_at desc);
+
+alter table public.exam_sessions enable row level security;
+
+create policy "Users insert own exam_sessions"
+  on public.exam_sessions for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+create policy "Users read own exam_sessions"
+  on public.exam_sessions for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+create or replace function public.get_cas_pratique_leaderboard()
+returns table (
+  user_id uuid,
+  prenom text,
+  avg_score numeric,
+  test_count bigint
+)
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    es.user_id,
+    p.first_name as prenom,
+    round(avg((es.score / es.total) * 100)::numeric, 1) as avg_score,
+    count(*)::bigint as test_count
+  from public.exam_sessions es
+  join public.profiles p on p.id = es.user_id
+  where es.module = 'cas-pratique'
+  group by es.user_id, p.first_name
+  having count(*) >= 1
+  order by avg_score desc, test_count desc, p.first_name asc
+  limit 10;
+$$;
+
+grant execute on function public.get_cas_pratique_leaderboard() to authenticated;

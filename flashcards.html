@@ -323,6 +323,41 @@
       line-height: 1.45;
     }
 
+    .flashcards-review-sheet__actions {
+      margin-top: 14px;
+    }
+
+    .flashcards-review-sheet__actions button {
+      width: 100%;
+    }
+
+    .flashcards-retest-done {
+      display: none;
+      text-align: center;
+      padding: 24px 12px;
+    }
+
+    .flashcards-retest-done.is-visible {
+      display: block;
+    }
+
+    .flashcards-retest-done h2 {
+      color: var(--navy);
+      font-family: 'Spectral', serif;
+      margin: 0 0 10px;
+    }
+
+    .flashcards-retest-done p {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .flashcards-retest-done .auth-actions {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .flashcards-locked {
       text-align: center;
       padding: 48px 24px;
@@ -403,6 +438,9 @@
         <ul class="flashcards-review-sheet__list" id="review-sheet-list" aria-live="polite">
           <li class="flashcards-review-sheet__empty">Marquez des cartes avec « À revoir » pendant votre session.</li>
         </ul>
+        <div class="flashcards-review-sheet__actions">
+          <button type="button" class="secondary-button" id="btn-retest-review" disabled>🔄 Retester uniquement les cartes à revoir</button>
+        </div>
       </aside>
       </div>
 
@@ -410,6 +448,15 @@
         <h2>Série terminée !</h2>
         <p id="flashcards-done-msg">Vous avez parcouru toutes les cartes de cette catégorie.</p>
         <button type="button" class="primary-button" id="btn-restart">Recommencer</button>
+      </div>
+
+      <div class="flashcards-retest-done" id="flashcards-retest-done">
+        <h2>Retest terminé</h2>
+        <p id="flashcards-retest-done-msg"></p>
+        <div class="auth-actions">
+          <button type="button" class="primary-button" id="btn-retest-again">Relancer un retest</button>
+          <button type="button" class="secondary-button" id="btn-back-full">Session complète</button>
+        </div>
       </div>
 
       <div class="flashcards-paywall" id="flashcards-paywall">
@@ -557,14 +604,18 @@
     const FREE_CARD_LIMIT = 5;
 
     let currentCategory = null;
-    let currentIndex = 0;
+    let sessionMode = 'full';
+    let sessionQueue = [];
+    let sessionPosition = 0;
     let isFlipped = false;
     let isSubscribed = false;
     let reviewIndices = new Set();
+    let retestMasteredCount = 0;
 
     const shell = document.getElementById('flashcards-shell');
     const play = document.getElementById('flashcards-play');
     const done = document.getElementById('flashcards-done');
+    const retestDone = document.getElementById('flashcards-retest-done');
     const paywall = document.getElementById('flashcards-paywall');
     const counter = document.getElementById('flashcards-counter');
     const categoryLabel = document.getElementById('flashcards-category-label');
@@ -576,6 +627,9 @@
     const btnReview = document.getElementById('btn-review');
     const btnRestart = document.getElementById('btn-restart');
     const btnBackFree = document.getElementById('btn-back-free');
+    const btnRetestReview = document.getElementById('btn-retest-review');
+    const btnRetestAgain = document.getElementById('btn-retest-again');
+    const btnBackFull = document.getElementById('btn-back-full');
     const toolbar = document.getElementById('category-toolbar');
     const reviewSheetCount = document.getElementById('review-sheet-count');
     const reviewSheetList = document.getElementById('review-sheet-list');
@@ -588,6 +642,28 @@
         .replace(/"/g, '&quot;');
     }
 
+    function getDeck() {
+      return FLASHCARD_DECKS[currentCategory]?.cards || [];
+    }
+
+    function getCurrentDeckIndex() {
+      return sessionQueue[sessionPosition];
+    }
+
+    function buildFullSessionQueue() {
+      sessionQueue = getDeck().map((_, index) => index);
+    }
+
+    function buildRetestSessionQueue() {
+      sessionQueue = [...reviewIndices].sort((a, b) => a - b);
+    }
+
+    function hideEndScreens() {
+      done.classList.remove('is-visible');
+      retestDone.classList.remove('is-visible');
+      hidePaywall();
+    }
+
     function renderReviewSheet() {
       const deck = getDeck();
       const sorted = [...reviewIndices].sort((a, b) => a - b);
@@ -595,6 +671,8 @@
       reviewSheetCount.textContent = sorted.length === 0
         ? 'Aucune carte à revoir'
         : `${sorted.length} carte${sorted.length > 1 ? 's' : ''} à revoir`;
+
+      btnRetestReview.disabled = sorted.length === 0;
 
       if (sorted.length === 0) {
         reviewSheetList.innerHTML = '<li class="flashcards-review-sheet__empty">Marquez des cartes avec « À revoir » pendant votre session.</li>';
@@ -614,19 +692,18 @@
     }
 
     function markAsKnown() {
-      reviewIndices.delete(currentIndex);
+      reviewIndices.delete(getCurrentDeckIndex());
+      if (sessionMode === 'retest') {
+        retestMasteredCount += 1;
+      }
       renderReviewSheet();
       nextCard();
     }
 
     function markForReview() {
-      reviewIndices.add(currentIndex);
+      reviewIndices.add(getCurrentDeckIndex());
       renderReviewSheet();
       nextCard();
-    }
-
-    function getDeck() {
-      return FLASHCARD_DECKS[currentCategory]?.cards || [];
     }
 
     function isCardLocked(index) {
@@ -640,6 +717,7 @@
     function showPaywall() {
       play.classList.add('is-hidden');
       done.classList.remove('is-visible');
+      retestDone.classList.remove('is-visible');
       paywall.classList.add('is-visible');
     }
 
@@ -651,16 +729,19 @@
 
     function renderCard() {
       const deck = getDeck();
-      const card = deck[currentIndex];
+      const card = deck[getCurrentDeckIndex()];
       if (!card) return;
 
       isFlipped = false;
       flashcard.classList.remove('is-flipped');
       frontEl.textContent = card.front;
       backEl.textContent = card.back;
-      counter.textContent = `${currentIndex + 1}/${deck.length}`;
-      categoryLabel.textContent = FLASHCARD_DECKS[currentCategory].label;
-      progressBar.style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
+      counter.textContent = `${sessionPosition + 1}/${sessionQueue.length}`;
+      const baseLabel = FLASHCARD_DECKS[currentCategory].label;
+      categoryLabel.textContent = sessionMode === 'retest'
+        ? `${baseLabel} — Retest`
+        : baseLabel;
+      progressBar.style.width = `${((sessionPosition + 1) / sessionQueue.length) * 100}%`;
       btnKnow.disabled = true;
       btnReview.disabled = true;
     }
@@ -668,9 +749,9 @@
     function showDone() {
       hidePaywall();
       play.classList.add('is-hidden');
+      retestDone.classList.remove('is-visible');
       done.classList.add('is-visible');
       const deck = getDeck();
-      const total = isSubscribed ? deck.length : FREE_CARD_LIMIT;
       document.getElementById('flashcards-done-msg').textContent =
         isSubscribed
           ? `Vous avez parcouru les ${deck.length} cartes — ${FLASHCARD_DECKS[currentCategory].label}.`
@@ -678,35 +759,87 @@
       progressBar.style.width = '100%';
     }
 
-    function startCategory(category) {
-      currentCategory = category;
-      currentIndex = 0;
-      reviewIndices = new Set();
-      updateToolbar();
-      shell.hidden = false;
-      play.classList.remove('is-hidden');
-      done.classList.remove('is-visible');
+    function showRetestDone() {
       hidePaywall();
+      play.classList.add('is-hidden');
+      done.classList.remove('is-visible');
+      retestDone.classList.add('is-visible');
+
+      const stillReview = reviewIndices.size;
+      const msgEl = document.getElementById('flashcards-retest-done-msg');
+
+      if (stillReview === 0) {
+        msgEl.textContent = 'Bravo, vous avez tout maîtrisé !';
+        btnRetestAgain.disabled = true;
+      } else {
+        msgEl.textContent = `${retestMasteredCount} carte${retestMasteredCount > 1 ? 's' : ''} maîtrisée${retestMasteredCount > 1 ? 's' : ''}, ${stillReview} encore à revoir.`;
+        btnRetestAgain.disabled = false;
+      }
+
+      progressBar.style.width = '100%';
+      renderReviewSheet();
+    }
+
+    function beginPlaySession() {
+      hideEndScreens();
+      play.classList.remove('is-hidden');
       renderReviewSheet();
       renderCard();
+    }
+
+    function startCategory(category) {
+      currentCategory = category;
+      sessionMode = 'full';
+      reviewIndices = new Set();
+      buildFullSessionQueue();
+      sessionPosition = 0;
+      retestMasteredCount = 0;
+      updateToolbar();
+      shell.hidden = false;
+      beginPlaySession();
       shell.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    function nextCard() {
-      const deck = getDeck();
-      const nextIndex = currentIndex + 1;
+    function resumeFullSession() {
+      sessionMode = 'full';
+      buildFullSessionQueue();
+      sessionPosition = 0;
+      retestMasteredCount = 0;
+      beginPlaySession();
+    }
 
-      if (nextIndex >= deck.length) {
-        showDone();
+    function startRetest() {
+      if (reviewIndices.size === 0) {
+        reviewSheetCount.textContent = 'Bravo, vous avez tout maîtrisé !';
         return;
       }
 
-      if (isCardLocked(nextIndex)) {
+      sessionMode = 'retest';
+      retestMasteredCount = 0;
+      btnRetestAgain.disabled = false;
+      buildRetestSessionQueue();
+      sessionPosition = 0;
+      beginPlaySession();
+    }
+
+    function nextCard() {
+      const nextPosition = sessionPosition + 1;
+
+      if (nextPosition >= sessionQueue.length) {
+        if (sessionMode === 'retest') {
+          showRetestDone();
+        } else {
+          showDone();
+        }
+        return;
+      }
+
+      if (sessionMode === 'full' && isCardLocked(sessionQueue[nextPosition])) {
         showPaywall();
         return;
       }
 
-      currentIndex = nextIndex;
+      sessionPosition = nextPosition;
       renderCard();
     }
 
@@ -730,6 +863,9 @@
     btnReview.addEventListener('click', markForReview);
     btnRestart.addEventListener('click', () => startCategory(currentCategory));
     btnBackFree.addEventListener('click', () => startCategory(currentCategory));
+    btnRetestReview.addEventListener('click', startRetest);
+    btnRetestAgain.addEventListener('click', startRetest);
+    btnBackFull.addEventListener('click', resumeFullSession);
 
     toolbar.querySelectorAll('button').forEach((btn) => {
       btn.addEventListener('click', () => startCategory(btn.dataset.category));

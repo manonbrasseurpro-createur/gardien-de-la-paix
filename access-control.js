@@ -196,14 +196,20 @@
     return path === "/" || path.endsWith("/index.html");
   }
 
-  async function redirectLoggedInFromHome() {
+  async function updateHomeCtaForLoggedInUser() {
     if (!isHomePage()) {
       return;
     }
 
     const user = await window.GPXAuth?.getCurrentUser?.();
-    if (user) {
-      window.location.href = "dashboard.html";
+    if (!user) {
+      return;
+    }
+
+    const cta = document.getElementById("home-cta-primary");
+    if (cta) {
+      cta.href = "dashboard.html";
+      cta.textContent = "Accéder à mon tableau de bord";
     }
   }
 
@@ -574,7 +580,7 @@
     await injectGlobalDashboardSidebar();
     injectLegalFooter();
     injectProblemReportButton();
-    await redirectLoggedInFromHome();
+    await updateHomeCtaForLoggedInUser();
     await requireAuthForPage();
   });
 })();

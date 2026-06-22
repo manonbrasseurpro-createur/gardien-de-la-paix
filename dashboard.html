@@ -94,6 +94,15 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 20 7v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V7l8-4z"></path></svg>
           Administrateur
         </button>
+        <div class="dash-nav__sep"></div>
+        <a class="dash-nav__item" href="compte.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>
+          Mon compte
+        </a>
+        <button class="dash-nav__item" type="button" id="dash-logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
+          Déconnexion
+        </button>
       </nav>
     </aside>
 
@@ -242,15 +251,40 @@
       if (window.GPXAccess) {
         window.GPXAccess.guard('dashboard.html', 'free', null, () => {});
       }
-      const user = window.GPXAuth?.getUser?.() || (await window.GPXAuth?.getCurrentUser?.());
+      const user = await window.GPXAuth?.getCurrentUser?.();
       if (user) {
         const firstName = user.firstName || '';
         document.getElementById('dash-greeting').textContent = `Bonjour, ${firstName} 👋`;
-        if (user.email === 'manonbrasseurpro@gmail.com') {
-          document.getElementById('admin-sep').style.display = 'block';
-          document.getElementById('admin-nav-item').style.display = 'flex';
-        }
       }
+
+      const ADMIN_EMAIL = 'manonbrasseurpro@gmail.com';
+      async function getAuthEmail() {
+        const cfg = window.GPX_SUPABASE || {};
+        const client = window.__gpxSupabaseClient || (window.supabase?.createClient
+          ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
+          : null);
+        if (!client) return null;
+        const { data, error } = await client.auth.getUser();
+        if (error || !data?.user?.email) return null;
+        return data.user.email.trim().toLowerCase();
+      }
+
+      const authEmail = await getAuthEmail();
+      const isAdmin = authEmail === ADMIN_EMAIL;
+      const adminSep = document.getElementById('admin-sep');
+      const adminNavItem = document.getElementById('admin-nav-item');
+      if (isAdmin) {
+        adminSep.style.display = 'block';
+        adminNavItem.style.display = 'flex';
+      } else {
+        adminSep.style.display = 'none';
+        adminNavItem.style.display = 'none';
+      }
+
+      document.getElementById('dash-logout-btn')?.addEventListener('click', async () => {
+        await window.GPXAuth?.logout?.();
+        window.location.href = 'connexion.html';
+      });
 
       async function loadAdminData() {
         const cfg = window.GPX_SUPABASE || {};
@@ -348,7 +382,7 @@
         }
       }
 
-      if (user?.email === 'manonbrasseurpro@gmail.com') {
+      if (isAdmin) {
         document.querySelector('.dash-nav__item[data-panel="admin"]')?.addEventListener('click', () => {
           loadAdminData();
         });

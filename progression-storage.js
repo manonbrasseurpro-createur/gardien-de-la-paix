@@ -105,8 +105,8 @@
         user_id: user.id,
         module: session.module,
         score: session.score,
-        total: session.total,
-        duree: session.duree
+        score_max: session.total,
+        duree_secondes: session.duree
       });
 
       if (error) {

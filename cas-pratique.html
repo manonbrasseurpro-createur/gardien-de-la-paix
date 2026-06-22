@@ -4003,7 +4003,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       vocabularyReturnScreen: "home",
       activeVocabularySheet: vocabularySheets[0].id,
       correctionReturnTo: null,
-      reviewIndex: 0
+      reviewIndex: 0,
+      progressionSaved: false
     };
 
     const homeScreen = document.getElementById("home-screen");
@@ -4065,7 +4066,6 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     document.getElementById("finish-and-score").addEventListener("click", () => {
       const key = getCurrentKey();
       state.answers[key] = elements.answerInput.value.trim();
-      saveProgressionResult();
       showFinalScore();
     });
     document.getElementById("download-examples").addEventListener("click", downloadPdf);
@@ -4648,6 +4648,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       state.remainingSeconds = modeConfig[mode].duration;
       state.sessionKey = `cas-pratique-${mode}-${caseId || "simulation"}`;
       state.startedAt = new Date();
+      state.progressionSaved = false;
 
       const saved = loadSession();
       if (saved) {
@@ -5639,7 +5640,6 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       }
 
       if (state.currentIndex >= state.items.length - 1) {
-        saveProgressionResult();
         showFinalScore();
         return;
       }
@@ -5852,6 +5852,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         </li>
       `;
       document.getElementById("final-ai-disclaimer").innerHTML = renderAiDisclaimerHtml("full");
+      saveProgressionResult();
       document.getElementById("global-ai-analysis").innerHTML = buildGlobalSessionAnalysisHtml(finalScore);
       renderFinalDetailedReview();
 
@@ -5875,6 +5876,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     }
 
     function saveProgressionResult() {
+      if (state.progressionSaved) {
+        return;
+      }
+
       const convertedScore = calculateConvertedScore();
       if (convertedScore.totalPossible <= 0) {
         return;
@@ -5893,6 +5898,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         result[caseItem.theme].total += 5;
         return result;
       }, {});
+
+      state.progressionSaved = true;
 
       window.GpxProgression?.saveSession({
         module: "cas-pratique",

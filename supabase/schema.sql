@@ -190,10 +190,27 @@ create table if not exists public.exam_sessions (
   user_id uuid not null references auth.users (id) on delete cascade,
   module text not null,
   score numeric not null check (score >= 0),
-  total numeric not null check (total > 0),
-  duree integer not null default 0 check (duree >= 0),
+  score_max numeric not null check (score_max > 0),
+  duree_secondes integer not null default 0 check (duree_secondes >= 0),
   created_at timestamptz not null default now()
 );
+
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'exam_sessions' and column_name = 'total'
+  ) then
+    alter table public.exam_sessions rename column total to score_max;
+  end if;
+
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'exam_sessions' and column_name = 'duree'
+  ) then
+    alter table public.exam_sessions rename column duree to duree_secondes;
+  end if;
+end $$;
 
 create index if not exists exam_sessions_user_module_idx
   on public.exam_sessions (user_id, module);
@@ -227,7 +244,7 @@ as $$
   select
     es.user_id,
     p.first_name as prenom,
-    round(avg((es.score / es.total) * 100)::numeric, 1) as avg_score,
+    round(avg((es.score / es.score_max) * 100)::numeric, 1) as avg_score,
     count(*)::bigint as test_count
   from public.exam_sessions es
   join public.profiles p on p.id = es.user_id

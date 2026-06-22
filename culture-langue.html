@@ -2169,41 +2169,26 @@
     }
 
     function saveProgressionResult() {
+      if (currentQuestions.length <= 0) {
+        return;
+      }
+
       const duration = quizStartedAt ? Math.round((new Date() - quizStartedAt) / 1000) : 0;
-      const groups = [
-        {
-          module: "culture-generale",
-          entries: Object.entries(categoryScores).filter(([key]) => !key.startsWith("langue-"))
-        },
-        {
-          module: "langue-etrangere",
-          entries: Object.entries(categoryScores).filter(([key]) => key.startsWith("langue-"))
-        }
-      ];
+      const categories = Object.entries(categoryScores).reduce((result, [key, item]) => {
+        result[categoryInfo[key].label] = {
+          score: item.correct,
+          total: item.total
+        };
+        return result;
+      }, {});
 
-      groups.forEach((group) => {
-        const total = group.entries.reduce((sum, [, item]) => sum + item.total, 0);
-        if (total <= 0) {
-          return;
-        }
-
-        const moduleScore = group.entries.reduce((sum, [, item]) => sum + item.correct, 0);
-        const categories = group.entries.reduce((result, [key, item]) => {
-          result[categoryInfo[key].label] = {
-            score: item.correct,
-            total: item.total
-          };
-          return result;
-        }, {});
-
-        window.GpxProgression?.saveSession({
-          module: group.module,
-          date: new Date().toISOString(),
-          score: moduleScore,
-          total,
-          duree: Math.round(duration * (total / currentQuestions.length)),
-          categories
-        });
+      window.GpxProgression?.saveSession({
+        module: "culture-langue",
+        date: new Date().toISOString(),
+        score,
+        total: currentQuestions.length,
+        duree: duration,
+        categories
       });
     }
 

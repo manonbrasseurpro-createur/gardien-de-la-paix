@@ -1815,6 +1815,16 @@ button.global-dash-sidebar__item {
   margin: 12px 0;
 }
 
+.global-dash-sidebar__item--signup {
+  color: var(--white);
+  background: var(--seal);
+}
+
+.global-dash-sidebar__item--signup:hover {
+  background: #a01a2a;
+  color: var(--white);
+}
+
 body.has-dash-sidebar {
   padding-left: 240px;
   padding-top: 52px;

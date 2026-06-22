@@ -135,8 +135,36 @@
 
       <section class="dash-panel" id="panel-admin">
         <h1>Administrateur</h1>
-        <p class="dash-panel__subtitle">Espace réservé.</p>
-        <div class="dash-placeholder">Bientôt disponible — en cours de construction.</div>
+        <p class="dash-panel__subtitle">Gestion de la plateforme Prepa GPX.</p>
+
+        <div style="display: grid; gap: 28px;">
+
+          <div class="auth-card auth-card--wide">
+            <h2 style="color: var(--navy); margin: 0 0 16px;">Signalements utilisateurs</h2>
+            <div id="admin-reports-list"><p style="color: var(--muted);">Chargement…</p></div>
+          </div>
+
+          <div class="auth-card auth-card--wide">
+            <h2 style="color: var(--navy); margin: 0 0 16px;">Avis de satisfaction</h2>
+            <div id="admin-surveys-list"><p style="color: var(--muted);">Chargement…</p></div>
+          </div>
+
+          <div class="auth-card auth-card--wide">
+            <h2 style="color: var(--navy); margin: 0 0 16px;">Utilisateurs inscrits</h2>
+            <div id="admin-users-list"><p style="color: var(--muted);">Chargement…</p></div>
+          </div>
+
+          <div class="auth-card auth-card--wide">
+            <h2 style="color: var(--navy); margin: 0 0 12px;">Donner un accès gratuit</h2>
+            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 14px;">Entrez l'email exact de l'utilisateur inscrit pour lui activer l'accès complémentaire.</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <input type="email" id="admin-complimentary-email" placeholder="email@exemple.fr" style="flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font: inherit;">
+              <button class="primary-button" type="button" id="admin-complimentary-btn">Activer l'accès</button>
+            </div>
+            <p id="admin-complimentary-msg" style="margin: 10px 0 0; font-size: 0.9rem;"></p>
+          </div>
+
+        </div>
       </section>
     </main>
   </div>
@@ -179,6 +207,128 @@
           document.getElementById('admin-sep').style.display = 'block';
           document.getElementById('admin-nav-item').style.display = 'flex';
         }
+      }
+
+      async function loadAdminData() {
+        const client = window.__gpxSupabaseClient;
+        if (!client) return;
+
+        const { data: reports } = await client
+          .from('problem_reports')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(20);
+        const reportsEl = document.getElementById('admin-reports-list');
+        if (reports && reports.length > 0) {
+          reportsEl.innerHTML = reports.map((r) => `
+            <div style="padding: 12px 16px; margin-bottom: 8px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border);">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <strong style="color: var(--navy); font-size: 0.9rem;">${r.email || 'Anonyme'}</strong>
+                <span style="color: var(--muted); font-size: 0.8rem;">${new Date(r.created_at).toLocaleDateString('fr-FR')}</span>
+              </div>
+              <p style="margin: 0 0 4px; font-size: 0.85rem; color: var(--muted);">${r.page_url || ''}</p>
+              <p style="margin: 0; font-size: 0.92rem;">${r.message}</p>
+            </div>
+          `).join('');
+        } else {
+          reportsEl.innerHTML = '<p style="color: var(--muted);">Aucun signalement pour l\'instant.</p>';
+        }
+
+        const { data: surveys } = await client
+          .from('satisfaction_surveys')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(20);
+        const surveyUserIds = [...new Set((surveys || []).map((s) => s.user_id).filter(Boolean))];
+        let emailByUserId = {};
+        if (surveyUserIds.length > 0) {
+          const { data: surveyProfiles } = await client
+            .from('profiles')
+            .select('id, email')
+            .in('id', surveyUserIds);
+          emailByUserId = Object.fromEntries((surveyProfiles || []).map((p) => [p.id, p.email]));
+        }
+        const surveysEl = document.getElementById('admin-surveys-list');
+        if (surveys && surveys.length > 0) {
+          surveysEl.innerHTML = surveys.map((s) => {
+            const email = emailByUserId[s.user_id] || 'Anonyme';
+            const summary = [
+              s.note != null ? `Note : ${s.note}/5` : null,
+              s.modules_utilises ? `Modules : ${s.modules_utilises}` : null,
+              s.commentaire ? `Commentaire : ${s.commentaire}` : null
+            ].filter(Boolean).join(' · ');
+            return `
+              <div style="padding: 12px 16px; margin-bottom: 8px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                  <strong style="color: var(--navy); font-size: 0.9rem;">${email}</strong>
+                  <span style="color: var(--muted); font-size: 0.8rem;">${new Date(s.created_at).toLocaleDateString('fr-FR')}</span>
+                </div>
+                <p style="margin: 0; font-size: 0.85rem; color: var(--text);">${summary || '—'}</p>
+              </div>
+            `;
+          }).join('');
+        } else {
+          surveysEl.innerHTML = '<p style="color: var(--muted);">Aucun avis pour l\'instant.</p>';
+        }
+
+        const { data: users } = await client
+          .from('profiles')
+          .select('id, email, first_name, last_name, subscription_status, is_complimentary, created_at')
+          .order('created_at', { ascending: false })
+          .limit(50);
+        const usersEl = document.getElementById('admin-users-list');
+        if (users && users.length > 0) {
+          const total = users.length;
+          const active = users.filter((u) => u.subscription_status === 'active' || u.is_complimentary).length;
+          usersEl.innerHTML = `
+            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 12px;">${total} inscrits · ${active} abonnés actifs</p>
+            ${users.map((u) => `
+              <div style="padding: 10px 14px; margin-bottom: 6px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                  <strong style="color: var(--navy); font-size: 0.9rem;">${u.first_name} ${u.last_name}</strong>
+                  <span style="color: var(--muted); font-size: 0.85rem; margin-left: 8px;">${u.email}</span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${u.subscription_status === 'active' ? '#dcfce7' : u.is_complimentary ? '#ede9fe' : '#f3f4f6'}; color: ${u.subscription_status === 'active' ? '#166534' : u.is_complimentary ? '#5b21b6' : '#6b7280'};">
+                    ${u.subscription_status === 'active' ? 'Abonné' : u.is_complimentary ? 'Gratuit offert' : 'Gratuit'}
+                  </span>
+                  <span style="color: var(--muted); font-size: 0.78rem;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</span>
+                </div>
+              </div>
+            `).join('')}
+          `;
+        } else {
+          usersEl.innerHTML = '<p style="color: var(--muted);">Aucun utilisateur.</p>';
+        }
+      }
+
+      if (user?.email === 'manonbrasseurpro@gmail.com') {
+        await loadAdminData();
+        document.getElementById('admin-complimentary-btn')?.addEventListener('click', async () => {
+          const client = window.__gpxSupabaseClient;
+          const email = document.getElementById('admin-complimentary-email').value.trim();
+          const msgEl = document.getElementById('admin-complimentary-msg');
+          if (!email) {
+            msgEl.textContent = 'Veuillez entrer un email.';
+            msgEl.style.color = 'red';
+            return;
+          }
+          const { data: profile, error } = await client
+            .from('profiles')
+            .update({ is_complimentary: true })
+            .eq('email', email)
+            .select()
+            .single();
+          if (error || !profile) {
+            msgEl.textContent = 'Utilisateur introuvable ou erreur.';
+            msgEl.style.color = 'red';
+          } else {
+            msgEl.textContent = `✅ Accès gratuit activé pour ${email}.`;
+            msgEl.style.color = 'green';
+            document.getElementById('admin-complimentary-email').value = '';
+            await loadAdminData();
+          }
+        });
       }
 
       function renderDashboardWidgets() {

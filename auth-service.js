@@ -89,13 +89,17 @@
       statutAbonnement: statutAbonnement,
       subscriptionEndsAt: null,
       freeTrialUsed: Boolean(profil.free_trial_used ?? profil.freeTrialUsed),
-      freeTrialKey: profil.free_trial_key || profil.freeTrialKey || null
+      freeTrialKey: profil.free_trial_key || profil.freeTrialKey || null,
+      isComplimentary: Boolean(profil.is_complimentary ?? false)
     };
   }
 
   function hasActiveSubscription(profile) {
     if (!profile) {
       return false;
+    }
+    if (profile.isComplimentary === true) {
+      return true;
     }
     return profile.subscriptionStatus === "active" || profile.statutAbonnement === "active";
   }

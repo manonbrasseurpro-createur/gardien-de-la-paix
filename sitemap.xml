@@ -52,6 +52,21 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://prepagpx.fr/salaire-gardien-de-la-paix.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://prepagpx.fr/preparation-physique-gardien-de-la-paix.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://prepagpx.fr/psychotechnique-gardien-de-la-paix.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://prepagpx.fr/personnalite.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

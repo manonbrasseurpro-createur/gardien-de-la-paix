@@ -1511,9 +1511,9 @@ html:has(.page-home) {
 
 .page-home .home-epreuve-card__svg {
   display: block;
-  width: 48px;
-  height: 48px;
-  margin-bottom: 16px;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 16px;
   flex-shrink: 0;
 }
 

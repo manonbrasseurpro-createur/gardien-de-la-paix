@@ -246,6 +246,83 @@
       display: none;
     }
 
+    .flashcards-session {
+      display: grid;
+      gap: 24px;
+    }
+
+    @media (min-width: 900px) {
+      .flashcards-session {
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+        align-items: start;
+      }
+    }
+
+    .flashcards-review-sheet {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+    }
+
+    .flashcards-review-sheet h3 {
+      margin: 0 0 6px;
+      color: var(--navy);
+      font-family: 'Spectral', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .flashcards-review-sheet__count {
+      margin: 0 0 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--seal);
+    }
+
+    .flashcards-review-sheet__list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    .flashcards-review-sheet__empty {
+      margin: 0;
+      padding: 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      background: var(--white);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    .flashcards-review-sheet__item {
+      padding: 12px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--brass);
+      border-radius: 8px;
+    }
+
+    .flashcards-review-sheet__item strong {
+      display: block;
+      color: var(--navy);
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+
+    .flashcards-review-sheet__item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
     .flashcards-locked {
       text-align: center;
       padding: 48px 24px;
@@ -289,6 +366,7 @@
     </section>
 
     <section class="flashcards-shell" id="flashcards-shell" hidden>
+      <div class="flashcards-session">
       <div class="flashcards-play" id="flashcards-play">
         <div class="flashcards-meta">
           <span class="flashcards-counter" id="flashcards-counter">1/20</span>
@@ -317,6 +395,15 @@
           <button type="button" class="flashcards-btn-know" id="btn-know" disabled>Je savais</button>
           <button type="button" class="flashcards-btn-review" id="btn-review" disabled>À revoir</button>
         </div>
+      </div>
+
+      <aside class="flashcards-review-sheet" id="flashcards-review-sheet" aria-labelledby="review-sheet-title">
+        <h3 id="review-sheet-title">Fiche de révision</h3>
+        <p class="flashcards-review-sheet__count" id="review-sheet-count">Aucune carte à revoir</p>
+        <ul class="flashcards-review-sheet__list" id="review-sheet-list" aria-live="polite">
+          <li class="flashcards-review-sheet__empty">Marquez des cartes avec « À revoir » pendant votre session.</li>
+        </ul>
+      </aside>
       </div>
 
       <div class="flashcards-done" id="flashcards-done">
@@ -473,6 +560,7 @@
     let currentIndex = 0;
     let isFlipped = false;
     let isSubscribed = false;
+    let reviewIndices = new Set();
 
     const shell = document.getElementById('flashcards-shell');
     const play = document.getElementById('flashcards-play');
@@ -489,6 +577,53 @@
     const btnRestart = document.getElementById('btn-restart');
     const btnBackFree = document.getElementById('btn-back-free');
     const toolbar = document.getElementById('category-toolbar');
+    const reviewSheetCount = document.getElementById('review-sheet-count');
+    const reviewSheetList = document.getElementById('review-sheet-list');
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderReviewSheet() {
+      const deck = getDeck();
+      const sorted = [...reviewIndices].sort((a, b) => a - b);
+
+      reviewSheetCount.textContent = sorted.length === 0
+        ? 'Aucune carte à revoir'
+        : `${sorted.length} carte${sorted.length > 1 ? 's' : ''} à revoir`;
+
+      if (sorted.length === 0) {
+        reviewSheetList.innerHTML = '<li class="flashcards-review-sheet__empty">Marquez des cartes avec « À revoir » pendant votre session.</li>';
+        return;
+      }
+
+      reviewSheetList.innerHTML = sorted.map((index) => {
+        const card = deck[index];
+        if (!card) return '';
+        return `
+          <li class="flashcards-review-sheet__item">
+            <strong>${escapeHtml(card.front)}</strong>
+            <span>${escapeHtml(card.back)}</span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function markAsKnown() {
+      reviewIndices.delete(currentIndex);
+      renderReviewSheet();
+      nextCard();
+    }
+
+    function markForReview() {
+      reviewIndices.add(currentIndex);
+      renderReviewSheet();
+      nextCard();
+    }
 
     function getDeck() {
       return FLASHCARD_DECKS[currentCategory]?.cards || [];
@@ -546,11 +681,13 @@
     function startCategory(category) {
       currentCategory = category;
       currentIndex = 0;
+      reviewIndices = new Set();
       updateToolbar();
       shell.hidden = false;
       play.classList.remove('is-hidden');
       done.classList.remove('is-visible');
       hidePaywall();
+      renderReviewSheet();
       renderCard();
       shell.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -589,8 +726,8 @@
       }
     });
 
-    btnKnow.addEventListener('click', nextCard);
-    btnReview.addEventListener('click', nextCard);
+    btnKnow.addEventListener('click', markAsKnown);
+    btnReview.addEventListener('click', markForReview);
     btnRestart.addEventListener('click', () => startCategory(currentCategory));
     btnBackFree.addEventListener('click', () => startCategory(currentCategory));
 

@@ -6,10 +6,18 @@
   <title>Tableau de bord | Prepa GPX</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&display=swap" rel="stylesheet">
   <style>
     .dash-layout { display: flex; min-height: 100vh; }
     .dash-sidebar { width: 240px; flex-shrink: 0; background: var(--navy-dark); color: white; padding: 24px 16px; }
-    .dash-sidebar__brand { font-family: 'Cormorant', serif; font-style: italic; font-size: 1.3rem; margin-bottom: 28px; padding-left: 8px; }
+    .dash-sidebar__brand {
+      display: inline-block;
+      margin-bottom: 28px;
+      padding-left: 8px;
+      font-size: 1.15rem;
+    }
     .dash-nav { display: grid; gap: 4px; }
     .dash-nav__item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.92rem; font-weight: 600; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-family: inherit; }
     .dash-nav__item:hover { background: rgba(255,255,255,0.08); color: white; }
@@ -43,7 +51,7 @@
 <body>
   <div class="dash-layout">
     <aside class="dash-sidebar">
-      <div class="dash-sidebar__brand">Prepa GPX</div>
+      <a class="gpx-site-nav__brand dash-sidebar__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
       <nav class="dash-nav" id="dash-nav">
         <a class="dash-nav__item" href="index.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"></path><path d="M5 9.5V20h14V9.5"></path><path d="M10 20v-6h4v6"></path></svg>

@@ -210,7 +210,10 @@
       }
 
       async function loadAdminData() {
-        const client = window.__gpxSupabaseClient;
+        const cfg = window.GPX_SUPABASE || {};
+        const client = window.__gpxSupabaseClient || (window.supabase?.createClient
+          ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
+          : null);
         if (!client) return;
 
         const { data: reports } = await client
@@ -303,9 +306,17 @@
       }
 
       if (user?.email === 'manonbrasseurpro@gmail.com') {
-        await loadAdminData();
+        document.querySelector('.dash-nav__item[data-panel="admin"]')?.addEventListener('click', () => {
+          loadAdminData();
+        });
+        if (window.location.hash === '#admin') {
+          loadAdminData();
+        }
         document.getElementById('admin-complimentary-btn')?.addEventListener('click', async () => {
-          const client = window.__gpxSupabaseClient;
+          const cfg = window.GPX_SUPABASE || {};
+          const client = window.__gpxSupabaseClient || (window.supabase?.createClient
+            ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
+            : null);
           const email = document.getElementById('admin-complimentary-email').value.trim();
           const msgEl = document.getElementById('admin-complimentary-msg');
           if (!email) {

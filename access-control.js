@@ -19,7 +19,8 @@
     "numerique.html": ["complete", "type"],
     "personnalite.html": ["full"],
     "cas-pratique.html": ["simulation", "single", "examples", "vocabulary"],
-    "progression.html": ["full"]
+    "progression.html": ["full"],
+    "flashcards.html": ["full"]
   };
 
   function getPageName() {
@@ -483,7 +484,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
               Historique
             </a>
-            <a class="global-dash-sidebar__item" href="dashboard.html#flashcards">
+            <a class="global-dash-sidebar__item" href="flashcards.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2" fill="var(--navy-dark)"></rect></svg>
               Flashcards
             </a>

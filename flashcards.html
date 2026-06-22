@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards GPX — Vocabulaire juridique et articles de loi</title>
+  <meta name="description" content="Flashcards concours Gardien de la Paix : vocabulaire juridique, articles de loi clés et sigles police. Révision interactive pour abonnés Prepa GPX.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <style>
+    .flashcards-page { display: grid; gap: 24px; }
+
+    .flashcards-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .flashcards-toolbar button {
+      padding: 10px 18px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--navy);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .flashcards-toolbar button:hover {
+      border-color: var(--navy);
+    }
+
+    .flashcards-toolbar button.is-active {
+      background: var(--seal);
+      border-color: var(--seal);
+      color: var(--white);
+    }
+
+    .flashcards-shell {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 28px 24px 32px;
+    }
+
+    .flashcards-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .flashcards-counter {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .flashcards-hint {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .flashcards-progress {
+      height: 8px;
+      background: var(--off-white);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+    }
+
+    .flashcards-progress__bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--seal), var(--brass));
+      border-radius: 999px;
+      transition: width 280ms ease;
+    }
+
+    .flashcard-scene {
+      perspective: 1200px;
+      width: 100%;
+      max-width: 560px;
+      height: 260px;
+      margin: 0 auto 24px;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .flashcard.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard__face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 24px;
+      text-align: center;
+      backface-visibility: hidden;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      box-shadow: 0 12px 28px rgba(11, 31, 58, 0.08);
+    }
+
+    .flashcard__front {
+      background: var(--white);
+      color: var(--navy);
+    }
+
+    .flashcard__back {
+      background: var(--navy);
+      color: var(--white);
+      transform: rotateY(180deg);
+    }
+
+    .flashcard__label {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+
+    .flashcard__text {
+      margin: 0;
+      font-family: 'Spectral', serif;
+      font-size: clamp(1.15rem, 3vw, 1.45rem);
+      line-height: 1.35;
+    }
+
+    .flashcard__back .flashcard__text {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: clamp(0.95rem, 2.5vw, 1.08rem);
+      font-weight: 500;
+    }
+
+    .flashcards-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .flashcards-actions button {
+      min-width: 140px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .flashcards-actions button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .flashcards-btn-know {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .flashcards-btn-review {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .flashcards-done {
+      display: none;
+      text-align: center;
+      padding: 24px 12px;
+    }
+
+    .flashcards-done.is-visible {
+      display: block;
+    }
+
+    .flashcards-done h2 {
+      color: var(--navy);
+      font-family: 'Spectral', serif;
+      margin: 0 0 10px;
+    }
+
+    .flashcards-done p {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .flashcards-play.is-hidden {
+      display: none;
+    }
+
+    .flashcards-locked {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .flashcard-scene { height: 240px; }
+      .flashcards-shell { padding: 20px 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Révision</p>
+      <h1>Flashcards GPX</h1>
+      <p class="hero__subtitle">Vocabulaire juridique, articles de loi et sigles police</p>
+    </div>
+  </header>
+
+  <main class="container auth-container flashcards-page">
+
+    <section class="auth-card auth-card--wide pricing-why">
+      <h2>Choisissez une catégorie</h2>
+      <p>Révisez une carte à la fois. Cliquez sur la carte pour retourner et révéler la réponse, puis indiquez si vous la connaissiez.</p>
+      <div class="flashcards-toolbar" id="category-toolbar">
+        <button type="button" data-category="juridique">Vocabulaire juridique</button>
+        <button type="button" data-category="articles">Articles de loi clés</button>
+        <button type="button" data-category="sigles">Sigles et abréviations</button>
+      </div>
+    </section>
+
+    <section class="flashcards-shell" id="flashcards-shell" hidden>
+      <div class="flashcards-play" id="flashcards-play">
+        <div class="flashcards-meta">
+          <span class="flashcards-counter" id="flashcards-counter">1/20</span>
+          <span class="flashcards-hint" id="flashcards-category-label"></span>
+        </div>
+        <div class="flashcards-progress" aria-hidden="true">
+          <div class="flashcards-progress__bar" id="flashcards-progress-bar"></div>
+        </div>
+
+        <div class="flashcard-scene">
+          <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Retourner la carte">
+            <div class="flashcard__face flashcard__front">
+              <span class="flashcard__label">Question</span>
+              <p class="flashcard__text" id="flashcard-front"></p>
+            </div>
+            <div class="flashcard__face flashcard__back">
+              <span class="flashcard__label">Réponse</span>
+              <p class="flashcard__text" id="flashcard-back"></p>
+            </div>
+          </div>
+        </div>
+
+        <p class="flashcards-hint" style="text-align: center; margin: 0 0 18px;">Cliquez sur la carte pour afficher la réponse</p>
+
+        <div class="flashcards-actions">
+          <button type="button" class="flashcards-btn-know" id="btn-know" disabled>Je savais</button>
+          <button type="button" class="flashcards-btn-review" id="btn-review" disabled>À revoir</button>
+        </div>
+      </div>
+
+      <div class="flashcards-done" id="flashcards-done">
+        <h2>Série terminée !</h2>
+        <p id="flashcards-done-msg">Vous avez parcouru toutes les cartes de cette catégorie.</p>
+        <button type="button" class="primary-button" id="btn-restart">Recommencer</button>
+      </div>
+    </section>
+
+    <p class="auth-footer">
+      <a href="dashboard.html">Tableau de bord</a> · <a href="concours-gpx.html">Concours GPX</a> · <a href="index.html">Accueil</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    const FLASHCARD_DECKS = {
+      juridique: {
+        label: 'Vocabulaire juridique',
+        cards: [
+          { front: 'Légitime défense', back: 'Art. 122-5 CP — conditions : riposte immédiate, proportionnée, injuste agression' },
+          { front: 'Crime', back: 'Peine > 10 ans de réclusion criminelle, jugé aux assises' },
+          { front: 'Délit', back: 'Peine de 2 mois à 10 ans, jugé au tribunal correctionnel' },
+          { front: 'Contravention', back: 'Amende ou peine < 2 mois, jugé au tribunal de police' },
+          { front: 'Flagrant délit', back: 'Infraction en train de se commettre ou venant de se commettre' },
+          { front: 'Garde à vue', back: 'Mesure privative de liberté 24 h renouvelable une fois (48 h max)' },
+          { front: 'Perquisition', back: 'Recherche de preuves au domicile avec accord ou autorisation juge' },
+          { front: 'Mise en examen', back: 'Personne soupçonnée d\'un crime ou délit, sous contrôle juge instruction' },
+          { front: 'Présomption d\'innocence', back: 'Toute personne est innocente jusqu\'à condamnation définitive' },
+          { front: 'Récidive', back: 'Commission d\'une nouvelle infraction après condamnation définitive' },
+          { front: 'Complicité', back: 'Participation intentionnelle à l\'infraction d\'autrui (art. 121-7 CP)' },
+          { front: 'État de nécessité', back: 'Infraction commise pour éviter un danger imminent (art. 122-7 CP)' },
+          { front: 'Contrainte', back: 'Absence de volonté libre, cause d\'irresponsabilité pénale' },
+          { front: 'Tentative', back: 'Commencement d\'exécution non désisté volontairement (art. 121-5 CP)' },
+          { front: 'Amnistie', back: 'Effacement légal des condamnations par loi' },
+          { front: 'Grâce présidentielle', back: 'Remise ou réduction de peine par le Président' },
+          { front: 'Prescription', back: 'Extinction de l\'action publique par écoulement du temps' },
+          { front: 'Médiation pénale', back: 'Alternative aux poursuites, résolution amiable' },
+          { front: 'Comparution immédiate', back: 'Jugement rapide après garde à vue pour délits flagrants' },
+          { front: 'Ordonnance pénale', back: 'Procédure simplifiée sans audience pour contraventions/délits mineurs' }
+        ]
+      },
+      articles: {
+        label: 'Articles de loi clés',
+        cards: [
+          { front: 'Art. 121-1 CP', back: 'Nul n\'est responsable pénalement que de son propre fait' },
+          { front: 'Art. 121-3 CP', back: 'Pas de crime ou délit sans intention (sauf imprudence/négligence)' },
+          { front: 'Art. 122-1 CP', back: 'Irresponsabilité pour trouble mental abolissant le discernement' },
+          { front: 'Art. 122-5 CP', back: 'Légitime défense des personnes' },
+          { front: 'Art. 122-6 CP', back: 'Présomption de légitime défense (nuit, effraction)' },
+          { front: 'Art. 122-7 CP', back: 'État de nécessité' },
+          { front: 'Art. 63 CPP', back: 'Durée de la garde à vue : 24 h renouvelable = 48 h max' },
+          { front: 'Art. 76 CPP', back: 'Perquisition en enquête préliminaire avec accord' },
+          { front: 'Art. 56 CPP', back: 'Perquisition en flagrance sans accord' },
+          { front: 'Art. 78-1 CPP', back: 'Contrôle d\'identité sur réquisitions du procureur' },
+          { front: 'Art. 78-2 CPP', back: 'Contrôle d\'identité par OPJ (raisons plausibles de soupçonner)' },
+          { front: 'Art. 706-88 CPP', back: 'GAV prolongée jusqu\'à 96 h pour criminalité organisée' },
+          { front: 'Art. L211-9 CSI', back: 'Usage des armes par les forces de l\'ordre' },
+          { front: 'Art. R434-18 Code déontologie', back: 'Usage de la force strictement nécessaire' },
+          { front: 'Art. 222-11 CP', back: 'Violences ayant entraîné ITT > 8 jours = délit' },
+          { front: 'Art. 222-13 CP', back: 'Violences sur personne vulnérable ou dépositaire autorité publique' },
+          { front: 'Art. 311-1 CP', back: 'Vol = soustraction frauduleuse de la chose d\'autrui' },
+          { front: 'Art. 312-1 CP', back: 'Vol avec violence = crime ou délit selon circonstances' },
+          { front: 'Art. 321-1 CP', back: 'Recel = détention de chose provenant d\'une infraction' },
+          { front: 'Art. 433-3 CP', back: 'Menaces contre dépositaire autorité publique' }
+        ]
+      },
+      sigles: {
+        label: 'Sigles et abréviations police',
+        cards: [
+          { front: 'OPJ', back: 'Officier de Police Judiciaire' },
+          { front: 'APJ', back: 'Agent de Police Judiciaire' },
+          { front: 'APJA', back: 'Agent de Police Judiciaire Adjoint' },
+          { front: 'GAV', back: 'Garde À Vue' },
+          { front: 'ITT', back: 'Incapacité Totale de Travail' },
+          { front: 'PPE', back: 'Personne Politiquement Exposée' },
+          { front: 'BNRF', back: 'Brigade Nationale de Recherche des Fugitifs' },
+          { front: 'IGPN', back: 'Inspection Générale de la Police Nationale' },
+          { front: 'IGGN', back: 'Inspection Générale de la Gendarmerie Nationale' },
+          { front: 'DNSP', back: 'Direction Nationale de la Sécurité Publique' },
+          { front: 'DGPN', back: 'Direction Générale de la Police Nationale' },
+          { front: 'DGSI', back: 'Direction Générale de la Sécurité Intérieure' },
+          { front: 'DGSE', back: 'Direction Générale de la Sécurité Extérieure' },
+          { front: 'BRI', back: 'Brigade de Recherche et d\'Intervention' },
+          { front: 'RAID', back: 'Recherche Assistance Intervention Dissuasion' },
+          { front: 'GIGN', back: 'Groupe d\'Intervention de la Gendarmerie Nationale' },
+          { front: 'CRS', back: 'Compagnies Républicaines de Sécurité' },
+          { front: 'BAC', back: 'Brigade Anti-Criminalité' },
+          { front: 'BST', back: 'Brigade de Sûreté Territoriale' },
+          { front: 'PTS', back: 'Police Technique et Scientifique' }
+        ]
+      }
+    };
+
+    let currentCategory = null;
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    const shell = document.getElementById('flashcards-shell');
+    const play = document.getElementById('flashcards-play');
+    const done = document.getElementById('flashcards-done');
+    const counter = document.getElementById('flashcards-counter');
+    const categoryLabel = document.getElementById('flashcards-category-label');
+    const progressBar = document.getElementById('flashcards-progress-bar');
+    const flashcard = document.getElementById('flashcard');
+    const frontEl = document.getElementById('flashcard-front');
+    const backEl = document.getElementById('flashcard-back');
+    const btnKnow = document.getElementById('btn-know');
+    const btnReview = document.getElementById('btn-review');
+    const btnRestart = document.getElementById('btn-restart');
+    const toolbar = document.getElementById('category-toolbar');
+
+    function getDeck() {
+      return FLASHCARD_DECKS[currentCategory]?.cards || [];
+    }
+
+    function updateToolbar() {
+      toolbar.querySelectorAll('button').forEach((btn) => {
+        btn.classList.toggle('is-active', btn.dataset.category === currentCategory);
+      });
+    }
+
+    function renderCard() {
+      const deck = getDeck();
+      const card = deck[currentIndex];
+      if (!card) return;
+
+      isFlipped = false;
+      flashcard.classList.remove('is-flipped');
+      frontEl.textContent = card.front;
+      backEl.textContent = card.back;
+      counter.textContent = `${currentIndex + 1}/${deck.length}`;
+      categoryLabel.textContent = FLASHCARD_DECKS[currentCategory].label;
+      progressBar.style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
+      btnKnow.disabled = true;
+      btnReview.disabled = true;
+    }
+
+    function showDone() {
+      play.classList.add('is-hidden');
+      done.classList.add('is-visible');
+      const deck = getDeck();
+      document.getElementById('flashcards-done-msg').textContent =
+        `Vous avez parcouru les ${deck.length} cartes — ${FLASHCARD_DECKS[currentCategory].label}.`;
+      progressBar.style.width = '100%';
+    }
+
+    function startCategory(category) {
+      currentCategory = category;
+      currentIndex = 0;
+      updateToolbar();
+      shell.hidden = false;
+      play.classList.remove('is-hidden');
+      done.classList.remove('is-visible');
+      renderCard();
+      shell.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function nextCard() {
+      const deck = getDeck();
+      if (currentIndex + 1 >= deck.length) {
+        showDone();
+        return;
+      }
+      currentIndex += 1;
+      renderCard();
+    }
+
+    function flipCard() {
+      if (isFlipped) return;
+      isFlipped = true;
+      flashcard.classList.add('is-flipped');
+      btnKnow.disabled = false;
+      btnReview.disabled = false;
+    }
+
+    flashcard.addEventListener('click', flipCard);
+    flashcard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        flipCard();
+      }
+    });
+
+    btnKnow.addEventListener('click', nextCard);
+    btnReview.addEventListener('click', nextCard);
+    btnRestart.addEventListener('click', () => startCategory(currentCategory));
+
+    toolbar.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => startCategory(btn.dataset.category));
+    });
+
+    function initFlashcards() {
+      toolbar.querySelector('button')?.focus();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.GPXAccess) {
+        window.GPXAccess.guard('flashcards.html', 'full', null, initFlashcards);
+      } else {
+        initFlashcards();
+      }
+    });
+  </script>
+</body>
+</html>

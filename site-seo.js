@@ -17,10 +17,12 @@ window.GPX_SITE_URL = "https://prepagpx.fr";
   }
   var url = base + (path === "/" ? "/" : path);
 
-  var link = document.createElement("link");
-  link.rel = "canonical";
-  link.href = url;
-  document.head.appendChild(link);
+  if (!document.querySelector('link[rel="canonical"]')) {
+    var link = document.createElement("link");
+    link.rel = "canonical";
+    link.href = url;
+    document.head.appendChild(link);
+  }
 
   var ogUrl = document.querySelector("meta[property='og:url']");
   if (!ogUrl) {

@@ -63,6 +63,16 @@ a {
   font-weight: 600;
 }
 
+.hero__intro {
+  margin: 20px auto 0;
+  max-width: 72ch;
+  font-size: 1rem;
+  line-height: 1.75;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+  text-align: left;
+}
+
 .container {
   width: min(1120px, calc(100% - 40px));
   margin: -32px auto 56px;

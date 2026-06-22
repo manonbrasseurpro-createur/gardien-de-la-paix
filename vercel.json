@@ -1,5 +1,10 @@
 {
   "rewrites": [
     { "source": "/confirmation", "destination": "/confirmation.html" }
+  ],
+  "redirects": [
+    { "source": "/actualites", "destination": "/actualites.html", "permanent": true },
+    { "source": "/index", "destination": "/", "permanent": true },
+    { "source": "/langue-etrangere.html", "destination": "/culture-langue.html", "permanent": true }
   ]
 }

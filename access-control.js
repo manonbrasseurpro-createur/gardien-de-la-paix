@@ -262,7 +262,7 @@
 
     links.innerHTML = `
       <a href="tarifs.html">Tarifs</a>
-      <span class="gpx-site-nav__user">${escapeHtml(user.firstName)}</span>
+      <span class="gpx-site-nav__user">${escapeHtml(user.firstName)} ${escapeHtml(user.lastName)}</span>
       <span class="gpx-site-nav__badge ${subscribed ? "is-active" : ""}">${subscribed ? "Abonné" : trialLabel}</span>
     `;
   }

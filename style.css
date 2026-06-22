@@ -397,6 +397,27 @@ a {
   cursor: pointer;
 }
 
+/* Header connecté (dashboard + pages avec sidebar) */
+.gpx-site-nav--app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: var(--navy);
+}
+
+.gpx-site-nav--app .gpx-site-nav__inner {
+  max-width: none;
+  margin: 0;
+  padding: 10px 24px;
+  justify-content: flex-end;
+}
+
+.gpx-site-nav--app .gpx-site-nav__brand {
+  display: none;
+}
+
 .auth-container {
   display: grid;
   gap: 24px;
@@ -1706,7 +1727,7 @@ html:has(.page-home) {
   left: 0;
   bottom: 0;
   width: 240px;
-  background: var(--navy-dark);
+  background: var(--navy);
   color: white;
   padding: 24px 16px;
   z-index: 9990;
@@ -1719,10 +1740,23 @@ html:has(.page-home) {
 }
 
 .global-dash-sidebar__brand {
-  display: inline-block;
+  display: block;
+  width: 160px;
+  max-width: calc(100% - 8px);
   margin-bottom: 28px;
   padding-left: 8px;
-  font-size: 1.15rem;
+  font-size: 1.65rem;
+  line-height: 1.15;
+  color: var(--white);
+  font-family: 'Cormorant', serif;
+  font-style: italic;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.global-dash-sidebar__brand .gpx-site-nav__flag {
+  width: 100%;
 }
 
 .global-dash-sidebar__nav {
@@ -1770,6 +1804,7 @@ button.global-dash-sidebar__item {
 
 body.has-dash-sidebar {
   padding-left: 240px;
+  padding-top: 52px;
   transition: padding-left 220ms ease;
 }
 
@@ -1779,14 +1814,14 @@ body.has-dash-sidebar.dash-sidebar-collapsed {
 
 .dash-sidebar-toggle {
   position: fixed;
-  top: 14px;
+  top: 62px;
   left: 14px;
   z-index: 9991;
   width: 36px;
   height: 36px;
   border-radius: 8px;
   border: none;
-  background: var(--navy-dark);
+  background: var(--navy);
   color: white;
   cursor: pointer;
   display: flex;

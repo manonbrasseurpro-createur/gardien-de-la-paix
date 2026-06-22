@@ -10,20 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
   <style>
-    .gpx-site-nav--dashboard {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 10000;
-      background: var(--navy);
-    }
-    .gpx-site-nav--dashboard .gpx-site-nav__inner {
-      max-width: none;
-      margin: 0;
-      padding: 10px 24px;
-      justify-content: flex-end;
-    }
     .dash-layout {
       display: flex;
       min-height: 100vh;
@@ -229,7 +215,7 @@
   </style>
 </head>
 <body>
-  <nav id="gpx-site-nav" class="gpx-site-nav gpx-site-nav--dashboard" aria-label="Navigation principale">
+  <nav id="gpx-site-nav" class="gpx-site-nav gpx-site-nav--app" aria-label="Navigation principale">
     <div class="gpx-site-nav__inner">
       <div class="gpx-site-nav__links" id="gpx-site-nav-links">
         <span class="gpx-site-nav__status">Chargement…</span>

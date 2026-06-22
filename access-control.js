@@ -239,6 +239,7 @@
     }
 
     const user = await window.GPXAuth.getCurrentUser();
+    const nav = document.getElementById("gpx-site-nav");
 
     const commonLinks = `
       <a href="index.html">Accueil</a>
@@ -247,6 +248,7 @@
     `;
 
     if (!user) {
+      nav?.classList.remove("gpx-site-nav--app");
       links.innerHTML = `
         ${commonLinks}
         <a href="connexion.html">Se connecter</a>
@@ -254,6 +256,8 @@
       `;
       return;
     }
+
+    nav?.classList.add("gpx-site-nav--app");
 
     const subscribed = window.GPXAuth.hasActiveSubscription(user);
     const trialLabel = user.freeTrialUsed

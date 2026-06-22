@@ -241,36 +241,10 @@
     document.head.appendChild(script);
   }
 
-  function injectSiteNav() {
-    if (document.getElementById("gpx-site-nav")) {
+  function populateSiteNavLinks() {
+    if (!window.GPXAuth?.getCurrentUser) {
       return;
     }
-
-    if (getPageName() === "dashboard.html") {
-      return;
-    }
-
-    if (!document.getElementById("gpx-fonts-link")) {
-      const fontLink = document.createElement("link");
-      fontLink.id = "gpx-fonts-link";
-      fontLink.rel = "stylesheet";
-      fontLink.href = "https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap";
-      document.head.appendChild(fontLink);
-    }
-
-    const nav = document.createElement("nav");
-    nav.id = "gpx-site-nav";
-    nav.className = "gpx-site-nav";
-    nav.setAttribute("aria-label", "Navigation principale");
-    nav.innerHTML = `
-      <div class="gpx-site-nav__inner">
-        <a class="gpx-site-nav__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
-        <div class="gpx-site-nav__links" id="gpx-site-nav-links">
-          <span class="gpx-site-nav__status">Chargement…</span>
-        </div>
-      </div>
-    `;
-    document.body.insertBefore(nav, document.body.firstChild);
 
     window.GPXAuth.getCurrentUser().then((user) => {
       const links = document.getElementById("gpx-site-nav-links");
@@ -312,6 +286,38 @@
         window.location.href = "connexion.html";
       });
     });
+  }
+
+  function injectSiteNav() {
+    if (getPageName() === "dashboard.html") {
+      return;
+    }
+
+    if (!document.getElementById("gpx-fonts-link")) {
+      const fontLink = document.createElement("link");
+      fontLink.id = "gpx-fonts-link";
+      fontLink.rel = "stylesheet";
+      fontLink.href = "https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap";
+      document.head.appendChild(fontLink);
+    }
+
+    if (!document.getElementById("gpx-site-nav")) {
+      const nav = document.createElement("nav");
+      nav.id = "gpx-site-nav";
+      nav.className = "gpx-site-nav";
+      nav.setAttribute("aria-label", "Navigation principale");
+      nav.innerHTML = `
+        <div class="gpx-site-nav__inner">
+          <a class="gpx-site-nav__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
+          <div class="gpx-site-nav__links" id="gpx-site-nav-links">
+            <span class="gpx-site-nav__status">Chargement…</span>
+          </div>
+        </div>
+      `;
+      document.body.insertBefore(nav, document.body.firstChild);
+    }
+
+    populateSiteNavLinks();
   }
 
   async function submitProblemReport({ userId, email, pageUrl, message }) {
@@ -475,9 +481,7 @@
       return;
     }
 
-    document.body.insertAdjacentHTML(
-      "afterbegin",
-      `
+    const sidebarMarkup = `
         <button class="dash-sidebar-toggle" id="dash-sidebar-toggle" aria-label="Afficher/masquer le menu">☰</button>
         <aside class="global-dash-sidebar" id="global-dash-sidebar">
           <a class="gpx-site-nav__brand global-dash-sidebar__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
@@ -520,8 +524,14 @@
             </a>
           </nav>
         </aside>
-        `
-    );
+    `;
+
+    const navEl = document.getElementById("gpx-site-nav");
+    if (navEl) {
+      navEl.insertAdjacentHTML("afterend", sidebarMarkup);
+    } else {
+      document.body.insertAdjacentHTML("afterbegin", sidebarMarkup);
+    }
 
     document.body.classList.add("has-dash-sidebar");
 
@@ -560,8 +570,8 @@
 
   document.addEventListener("DOMContentLoaded", async () => {
     injectPostHog();
-    await injectGlobalDashboardSidebar();
     injectSiteNav();
+    await injectGlobalDashboardSidebar();
     injectLegalFooter();
     injectProblemReportButton();
     await redirectLoggedInFromHome();

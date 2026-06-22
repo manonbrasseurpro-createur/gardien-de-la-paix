@@ -270,6 +270,8 @@ a {
 }
 
 .gpx-site-nav {
+  position: relative;
+  z-index: 9992;
   background: var(--navy-dark);
   color: var(--white);
   padding: 10px 16px;
@@ -1279,7 +1281,7 @@ html:has(.page-home) {
 
 .global-dash-sidebar {
   position: fixed;
-  top: 0;
+  top: 52px;
   left: 0;
   bottom: 0;
   width: 240px;

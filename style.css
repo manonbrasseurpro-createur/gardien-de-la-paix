@@ -1378,6 +1378,10 @@ body.has-dash-sidebar:not(.dash-sidebar-collapsed) #gpx-problem-report-btn {
     transform: translateX(0);
   }
 
+  .global-dash-sidebar.is-collapsed.is-open {
+    transform: translateX(0);
+  }
+
   body.has-dash-sidebar:not(.dash-sidebar-collapsed) .dash-sidebar-toggle {
     left: 14px;
   }

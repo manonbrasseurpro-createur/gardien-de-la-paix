@@ -444,7 +444,7 @@
     });
   }
 
-  function injectGlobalDashboardSidebar() {
+  async function injectGlobalDashboardSidebar() {
     if (getPageName() === "dashboard.html") {
       return;
     }
@@ -452,14 +452,21 @@
       return;
     }
 
-    window.GPXAuth.getCurrentUser().then((user) => {
-      if (!user || document.getElementById("global-dash-sidebar")) {
-        return;
-      }
+    let user;
+    try {
+      user = await window.GPXAuth.getCurrentUser();
+    } catch (error) {
+      console.warn("[GPX Access] injectGlobalDashboardSidebar:", error);
+      return;
+    }
 
-      document.body.insertAdjacentHTML(
-        "afterbegin",
-        `
+    if (!user || document.getElementById("global-dash-sidebar")) {
+      return;
+    }
+
+    document.body.insertAdjacentHTML(
+      "afterbegin",
+      `
         <button class="dash-sidebar-toggle" id="dash-sidebar-toggle" aria-label="Afficher/masquer le menu">☰</button>
         <aside class="global-dash-sidebar" id="global-dash-sidebar">
           <div class="global-dash-sidebar__brand">Prepa GPX</div>
@@ -495,24 +502,30 @@
           </nav>
         </aside>
         `
-      );
+    );
 
-      document.body.classList.add("has-dash-sidebar");
+    document.body.classList.add("has-dash-sidebar");
 
-      const sidebar = document.getElementById("global-dash-sidebar");
-      const toggle = document.getElementById("dash-sidebar-toggle");
-      const collapsed = localStorage.getItem("gpxSidebarCollapsed") === "true";
+    const sidebar = document.getElementById("global-dash-sidebar");
+    const toggle = document.getElementById("dash-sidebar-toggle");
+    const collapsed = localStorage.getItem("gpxSidebarCollapsed") === "true";
+    const mobileQuery = window.matchMedia("(max-width: 820px)");
 
-      if (collapsed) {
-        document.body.classList.add("dash-sidebar-collapsed");
-        sidebar.classList.add("is-collapsed");
+    if (collapsed) {
+      document.body.classList.add("dash-sidebar-collapsed");
+      sidebar.classList.add("is-collapsed");
+    }
+
+    toggle.addEventListener("click", () => {
+      if (mobileQuery.matches) {
+        sidebar.classList.toggle("is-open");
+        return;
       }
 
-      toggle.addEventListener("click", () => {
-        const isCollapsed = document.body.classList.toggle("dash-sidebar-collapsed");
-        sidebar.classList.toggle("is-collapsed", isCollapsed);
-        localStorage.setItem("gpxSidebarCollapsed", isCollapsed ? "true" : "false");
-      });
+      const isCollapsed = document.body.classList.toggle("dash-sidebar-collapsed");
+      sidebar.classList.toggle("is-collapsed", isCollapsed);
+      sidebar.classList.remove("is-open");
+      localStorage.setItem("gpxSidebarCollapsed", isCollapsed ? "true" : "false");
     });
   }
 
@@ -526,13 +539,13 @@
     getPageName
   };
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     injectPostHog();
     injectSiteNav();
-    injectGlobalDashboardSidebar();
+    await injectGlobalDashboardSidebar();
     injectLegalFooter();
     injectProblemReportButton();
-    redirectLoggedInFromHome();
-    requireAuthForPage();
+    await redirectLoggedInFromHome();
+    await requireAuthForPage();
   });
 })();

@@ -1509,11 +1509,19 @@ html:has(.page-home) {
   border-color: var(--navy);
 }
 
+.page-home .home-epreuve-card__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
 .page-home .home-epreuve-card__svg {
   display: block;
   width: 32px;
   height: 32px;
-  margin: 0 auto 16px;
+  margin: 0 auto;
   flex-shrink: 0;
 }
 

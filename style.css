@@ -1753,6 +1753,15 @@ html:has(.page-home) {
   flex-shrink: 0;
 }
 
+button.global-dash-sidebar__item {
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
 .global-dash-sidebar__sep {
   height: 1px;
   background: rgba(255, 255, 255, 0.12);

@@ -506,6 +506,9 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
               Communauté
             </a>
+            <div class="global-dash-sidebar__sep"></div>
+            <a class="global-dash-sidebar__item" href="compte.html">${NAV_ICON_COMPTE} Mon compte</a>
+            <button class="global-dash-sidebar__item" type="button" id="global-dash-logout-btn">${NAV_ICON_LOGOUT} Déconnexion</button>
           </nav>
         </aside>
     `;
@@ -539,6 +542,11 @@
       sidebar.classList.toggle("is-collapsed", isCollapsed);
       sidebar.classList.remove("is-open");
       localStorage.setItem("gpxSidebarCollapsed", isCollapsed ? "true" : "false");
+    });
+
+    document.getElementById("global-dash-logout-btn")?.addEventListener("click", async () => {
+      await window.GPXAuth.logout();
+      window.location.href = "connexion.html";
     });
   }
 

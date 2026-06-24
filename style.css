@@ -34,6 +34,15 @@ a {
   color: var(--white);
   background: linear-gradient(135deg, var(--navy), var(--navy-dark));
   text-align: center;
+  min-height: 180px;
+}
+
+#gpx-site-nav {
+  min-height: 60px;
+}
+
+#global-dash-sidebar {
+  min-width: 240px;
 }
 
 .hero__content {

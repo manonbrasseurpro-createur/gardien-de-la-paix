@@ -1,5 +1,5 @@
 (function () {
-  const PUBLIC_PAGES = new Set(["index.html", "actualites.html", "flashcards.html", "compte.html", "connexion.html", "inscription.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "politique-confidentialite.html"]);
+  const PUBLIC_PAGES = new Set(["index.html", "actualites.html", "flashcards.html", "compte.html", "connexion.html", "inscription.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "confidentialite.html", "politique-confidentialite.html"]);
   const GUEST_SIDEBAR_PAGES = new Set(["index.html", "actualites.html", "flashcards.html"]);
 
   /** Modes « petits tests » : un seul essai gratuit pour les comptes sans abonnement. */
@@ -239,26 +239,20 @@
       '<a href="concours-gpx.html">Concours GPX</a>' +
       ' · <a href="mentions-legales.html">Mentions légales</a>' +
       ' · <a href="cgv.html">CGV</a>' +
-      ' · <a href="politique-confidentialite.html">Politique de confidentialité</a>';
+      ' · <a href="confidentialite.html">Politique de confidentialité</a>' +
+      ' · <a href="#" data-gpx-manage-cookies>Gérer mes cookies</a>';
     document.body.appendChild(footer);
   }
 
-  function injectPostHog() {
-    if (document.getElementById("gpx-posthog-snippet")) {
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.id = "gpx-posthog-snippet";
-    script.textContent = `
-    !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="Pn On init Wn Qn ki Gn Kn zn capture calculateEventProperties rs register register_once register_for_session unregister unregister_for_session os getFeatureFlag getFeatureFlagPayload getFeatureFlagResult isFeatureEnabled reloadFeatureFlags updateFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync ls identify setPersonProperties unsetPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset setIdentity clearIdentity get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException addExceptionStep captureLog startExceptionAutocapture stopExceptionAutocapture loadToolbar get_property getSessionProperty ns es createPersonProfile setInternalOrTestUser ss Hn cs opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Yn debug Ci gr getPageViewId captureTraceFeedback captureTraceMetric qn".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-    posthog.init('phc_n3a4j525PHcjbxXbpWYTycBJArAWwBiJvN3moC6GY8Jk', {
-        api_host: 'https://us.i.posthog.com',
-        defaults: '2026-05-30',
-        person_profiles: 'identified_only',
+  function bindManageCookiesLinks() {
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("[data-gpx-manage-cookies]");
+      if (!link) {
+        return;
+      }
+      event.preventDefault();
+      window.GPXCookieConsent?.open?.();
     });
-    `;
-    document.head.appendChild(script);
   }
 
   function getSubscriptionBadge(user) {
@@ -677,7 +671,7 @@
   };
 
   document.addEventListener("DOMContentLoaded", async () => {
-    injectPostHog();
+    bindManageCookiesLinks();
     await injectSiteNav();
     const user = await window.GPXAuth?.getCurrentUser?.();
     if (user) {

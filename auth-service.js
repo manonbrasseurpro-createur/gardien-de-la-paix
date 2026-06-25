@@ -111,31 +111,28 @@
     };
   }
 
-  function hasActiveSubscription(profile) {
-    if (!profile) {
+  function hasActiveSubscription(user) {
+    if (!user) {
       return false;
     }
-    if (profile.isComplimentary === true) {
+
+    if (
+      user.subscriptionStatus === "active" &&
+      user.subscriptionEnd &&
+      new Date(user.subscriptionEnd) > new Date()
+    ) {
       return true;
     }
 
-    const status = profile.statutAbonnement || profile.subscriptionStatus;
-    const now = Date.now();
-
-    if (status === "active") {
-      if (profile.subscriptionEnd) {
-        return profile.subscriptionEnd.getTime() > now;
-      }
-      return true;
-    }
-
-    if (status === "trial") {
-      const start = parseTimestamp(profile.freeTrialStart);
-      if (!start) {
+    if (user.subscriptionStatus === "trial") {
+      if (!user.freeTrialStart) {
         return true;
       }
-      const trialEndsAt = new Date(start.getTime() + TRIAL_DAYS * MS_PER_DAY);
-      return trialEndsAt.getTime() > now;
+      const trialEnd = new Date(user.freeTrialStart);
+      trialEnd.setDate(trialEnd.getDate() + 7);
+      if (trialEnd > new Date()) {
+        return true;
+      }
     }
 
     return false;
@@ -458,7 +455,10 @@
       if (!session?.user) {
         return null;
       }
-      return await fetchProfile(session.user.id, session.user.email);
+      const profile = await fetchProfile(session.user.id, session.user.email);
+      console.log("[DEBUG] Profil utilisateur:", JSON.stringify(profile, null, 2));
+      console.log("[DEBUG] hasActiveSubscription:", window.GPXAuth?.hasActiveSubscription?.(profile));
+      return profile;
     } catch (error) {
       console.warn("[GPX Auth] getCurrentUser:", error);
       return null;

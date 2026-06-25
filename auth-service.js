@@ -455,10 +455,7 @@
       if (!session?.user) {
         return null;
       }
-      const profile = await fetchProfile(session.user.id, session.user.email);
-      console.log("[DEBUG] Profil utilisateur:", JSON.stringify(profile, null, 2));
-      console.log("[DEBUG] hasActiveSubscription:", window.GPXAuth?.hasActiveSubscription?.(profile));
-      return profile;
+      return await fetchProfile(session.user.id, session.user.email);
     } catch (error) {
       console.warn("[GPX Auth] getCurrentUser:", error);
       return null;

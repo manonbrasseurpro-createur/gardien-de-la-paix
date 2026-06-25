@@ -26,7 +26,7 @@
     <div class="hero__content">
       <p class="hero__label">Abonnement</p>
       <h1>Tarifs</h1>
-      <p class="hero__subtitle">Le prix d'un café par semaine — 7 jours gratuits, sans carte bancaire</p>
+      <p class="hero__subtitle">7 jours gratuits, puis à partir de 14,90€/mois — sans engagement</p>
     </div>
   </header>
 
@@ -119,7 +119,10 @@
     if (params.get("cancelled") === "1") {
       document.getElementById("checkout-cancelled").hidden = false;
     }
-    if (params.get("expired") === "1") {
+
+    function showExpiredMessage() {
+      statusEl.textContent = "";
+      statusEl.hidden = true;
       document.getElementById("checkout-expired").hidden = false;
     }
 
@@ -176,11 +179,14 @@
 
     async function updateStatusBanner() {
       const user = await window.GPXAuth.getCurrentUser();
+      statusEl.hidden = false;
+
       if (!user) {
         statusEl.textContent = "7 jours gratuits, sans carte bancaire";
         return;
       }
       if (window.GPXAuth.hasActiveSubscription(user)) {
+        document.getElementById("checkout-expired").hidden = true;
         if (user.statutAbonnement === "trial" || user.subscriptionStatus === "trial") {
           const endsAt = window.GPXAuth.getTrialEndsAt(user);
           statusEl.textContent = endsAt
@@ -191,7 +197,7 @@
         statusEl.textContent = "Vous avez un abonnement actif. Vous pouvez changer de formule ci-dessous.";
         return;
       }
-      statusEl.textContent = "Votre essai a expiré. Choisissez une formule pour retrouver l'accès.";
+      showExpiredMessage();
     }
 
     renderPlans();

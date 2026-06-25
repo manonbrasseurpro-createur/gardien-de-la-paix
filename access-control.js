@@ -239,17 +239,27 @@
   }
 
   function getSubscriptionBadge(user) {
-    const isTrial =
-      user?.statutAbonnement === "trial" || user?.subscriptionStatus === "trial";
-    if (isTrial && !window.GPXAuth.isTrialExpired?.(user)) {
+    if (!user) {
+      return { text: "Gratuit", className: "" };
+    }
+
+    const status = user.statutAbonnement || user.subscriptionStatus;
+
+    if (status === "trial") {
+      if (window.GPXAuth.isTrialExpired?.(user)) {
+        return { text: "Expiré", className: "" };
+      }
       return { text: "Essai 7j", className: "is-trial" };
     }
+
     if (window.GPXAuth.hasActiveSubscription(user)) {
       return { text: "Abonné", className: "is-active" };
     }
+
     if (window.GPXAuth.isTrialExpired?.(user)) {
       return { text: "Expiré", className: "" };
     }
+
     return { text: "Gratuit", className: "" };
   }
 

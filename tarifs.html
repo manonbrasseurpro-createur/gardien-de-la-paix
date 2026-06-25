@@ -3,15 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tarifs | Entraînement concours GPX et gardien de la paix</title>
-  <meta name="description" content="Entraînement gratuit concours gardien de la paix (petit test) et abonnement 19,90 €/mois pour s'entraîner au concours GPX en ligne : simulations complètes et progression.">
-  <meta name="keywords" content="entraînement gratuit concours gardien de la paix, s'entraîner concours GPX en ligne, préparation concours GPX, concours gardien de la paix">
+  <title>Tarifs | PrepaGPX — Concours Gardien de la Paix</title>
+  <meta name="description" content="7 jours gratuits sans carte bancaire. Formules PrepaGPX à partir de 14,90 €/mois : cas pratiques IA, QCM, psychotechnique et flashcards juridiques.">
   <meta name="robots" content="index, follow">
-  <meta property="og:type" content="website">
-  <meta property="og:locale" content="fr_FR">
-  <meta property="og:title" content="Tarifs entraînement concours GPX">
-  <meta property="og:description" content="Petit test gratuit et abonnement pour la préparation concours gardien de la paix en ligne.">
-  <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="style.css">
   <script src="site-seo.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,62 +26,37 @@
     <div class="hero__content">
       <p class="hero__label">Abonnement</p>
       <h1>Tarifs</h1>
-      <p class="hero__subtitle">Tous les tests, simulations et la progression</p>
+      <p class="hero__subtitle">Le prix d'un café par semaine — 7 jours gratuits, sans carte bancaire</p>
     </div>
   </header>
 
   <main class="container auth-container">
+    <p id="pricing-status" class="auth-banner pricing-status" role="status"></p>
     <p id="checkout-error" class="auth-error auth-banner" role="alert" hidden></p>
     <p id="checkout-cancelled" class="auth-hint auth-banner" hidden>Vous avez annulé le paiement. Vous pouvez réessayer quand vous le souhaitez.</p>
+    <p id="checkout-expired" class="auth-error auth-banner" hidden>Votre essai a expiré. Choisissez une formule pour retrouver l'accès.</p>
 
-    <section class="pricing-grid pricing-grid--single" aria-label="Offres d'abonnement">
-      <article class="pricing-card">
-        <h2>Gratuit</h2>
-        <p class="pricing-price">0 €</p>
-        <ul>
-          <li>Compte obligatoire (prénom et e-mail)</li>
-          <li><strong>1 petit test</strong> au choix (mini test ou question isolée)</li>
-          <li>Pas de simulations complètes</li>
-        </ul>
-        <a class="secondary-button" href="inscription.html">Créer un compte</a>
-      </article>
+    <section class="pricing-grid pricing-grid--plans" id="pricing-plans" aria-label="Formules d'abonnement"></section>
 
-      <article class="pricing-card pricing-card--featured">
-        <h2>Abonnement mensuel</h2>
-        <p class="pricing-price" id="monthly-price">19,90 €<span class="pricing-price__period"> / mois</span></p>
-        <p class="pricing-reassurance">✓ <strong>Sans engagement</strong>, annulable à tout moment</p>
-        <ul>
-          <li>Simulations complètes (psychotechnique, culture, cas pratiques)</li>
-          <li>Tests par catégorie et entraînements approfondis</li>
-          <li>Suivi de progression</li>
-          <li>Nouveaux contenus inclus</li>
-          <li>Paiement sécurisé par Stripe</li>
-        </ul>
-        <label class="retractation-label">
-          <input type="checkbox" id="retractation-checkbox">
-          <span>J'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV</a> et je demande l'accès immédiat au service, ce qui implique la perte de mon droit de rétractation de 14 jours (comme pour tout contenu numérique à accès immédiat).</span>
-        </label>
-        <button id="subscribe-button" class="primary-button" type="button" disabled>S'abonner</button>
-        <p id="subscribe-hint" class="auth-hint">Connexion requise avant le paiement.</p>
-        <p class="pricing-contact-hint">Une question, un souci ? <a href="mailto:contact@prepagpx.fr">Contactez-nous</a>, on trouve une solution ensemble.</p>
-      </article>
-    </section>
+    <label class="retractation-label pricing-retractation">
+      <input type="checkbox" id="retractation-checkbox">
+      <span>J'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV</a> et je demande l'accès immédiat au service, ce qui implique la perte de mon droit de rétractation de 14 jours (comme pour tout contenu numérique à accès immédiat).</span>
+    </label>
+
+    <p class="pricing-reassurance pricing-reassurance--center">✓ 7 jours gratuits sur toutes les formules · Sans carte bancaire · Annulation en 1 clic</p>
 
     <section class="auth-card auth-card--wide pricing-why">
       <h2>Pourquoi un entraînement plutôt qu'une formation complète ?</h2>
       <p>Vous avez déjà les bases ou suivez une préparation par ailleurs ? Ce site n'est pas un parcours pédagogique complet : c'est un outil d'entraînement ciblé, en conditions réelles du concours (durées et coefficients respectés), avec corrections immédiates. Sans engagement, vous payez uniquement pour vous entraîner, pas pour suivre un cursus.</p>
     </section>
 
-    <section class="auth-card auth-card--wide">
-      <h2>Petits tests vs tests complets</h2>
-      <p><strong>Petits tests</strong> (1 essai gratuit sans abonnement) : mini tests cognitifs, mini culture/langue, mini test culture générale, entraînement par catégorie (10 questions), question isolée en cas pratiques.</p>
-      <p><strong>Tests complets</strong> (abonnement requis) : simulations alignées sur le concours externe — psychotechniques ~2 h, culture + langue ~1 h, cas pratiques ~2 h, personnalité 60 affirmations, entraînements verbal/spatial/numérique, page Ma progression.</p>
-      <p class="auth-hint">Après paiement, vous êtes redirigé vers une page de confirmation. L'abonnement est activé automatiquement via Stripe.</p>
-    </section>
-
     <section class="auth-card auth-card--wide" aria-label="Questions fréquentes">
       <h2>Questions fréquentes</h2>
       <dl class="faq">
+        <div class="faq__item">
+          <dt>Faut-il une carte bancaire pour l'essai gratuit ?</dt>
+          <dd>Non. L'inscription ouvre 7 jours d'accès complet sans saisie de coordonnées bancaires.</dd>
+        </div>
         <div class="faq__item">
           <dt>Puis-je annuler mon abonnement à tout moment ?</dt>
           <dd>Oui, sans engagement, directement depuis « Mon compte », à tout moment.</dd>
@@ -97,16 +66,8 @@
           <dd>Oui, les modules sont alignés sur le cadre réglementaire actuel du concours externe.</dd>
         </div>
         <div class="faq__item">
-          <dt>Qu'est-ce qui est inclus dans l'essai gratuit ?</dt>
-          <dd>Un test ou une question isolée au choix, sans engagement, pour découvrir la plateforme avant de s'abonner.</dd>
-        </div>
-        <div class="faq__item">
           <dt>Le paiement est-il sécurisé ?</dt>
           <dd>Oui, le paiement passe par Stripe ; nous n'avons jamais accès à vos coordonnées bancaires complètes.</dd>
-        </div>
-        <div class="faq__item">
-          <dt>Ce site remplace-t-il une formation officielle ?</dt>
-          <dd>Non, c'est un outil d'entraînement complémentaire à votre préparation, pas un organisme de formation, et il ne garantit pas la réussite au concours.</dd>
         </div>
       </dl>
     </section>
@@ -123,40 +84,144 @@
   <script src="cookie-consent.js"></script>
   <script src="access-control.js"></script>
   <script>
-    const stripeCfg = window.GPX_STRIPE || {};
-    const priceEl = document.getElementById("monthly-price");
-    if (stripeCfg.monthlyPriceLabel && priceEl) {
-      priceEl.innerHTML = `${stripeCfg.monthlyPriceLabel}<span class="pricing-price__period"> / mois</span>`;
-    }
+    const PLAN_FEATURES = {
+      monthly: [
+        "Correction IA cas pratiques",
+        "QCM culture générale",
+        "Tests psychotechniques",
+        "Flashcards juridiques",
+        "Tableau de bord"
+      ],
+      quarterly: [
+        "Tout du forfait 1 mois",
+        "Annales sessions 2025",
+        "Accès 3 mois complets"
+      ],
+      biannual: [
+        "Tout du forfait 3 mois",
+        "Couvre juillet → janvier 2027",
+        "Simulations illimitées",
+        "Accès 6 mois complets"
+      ],
+      annual: [
+        "Tout du forfait 6 mois",
+        "Sessions futures incluses",
+        "Accès 12 mois complets"
+      ]
+    };
 
-    if (new URLSearchParams(window.location.search).get("cancelled") === "1") {
+    const plansRoot = document.getElementById("pricing-plans");
+    const statusEl = document.getElementById("pricing-status");
+    const retractationCheckbox = document.getElementById("retractation-checkbox");
+    const errorEl = document.getElementById("checkout-error");
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("cancelled") === "1") {
       document.getElementById("checkout-cancelled").hidden = false;
     }
+    if (params.get("expired") === "1") {
+      document.getElementById("checkout-expired").hidden = false;
+    }
 
-    const subscribeButton = document.getElementById("subscribe-button");
-    const retractationCheckbox = document.getElementById("retractation-checkbox");
+    function formatDateFr(date) {
+      return date.toLocaleDateString("fr-FR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+    }
+
+    function renderPlans() {
+      const plans = window.GPX_STRIPE?.plans || {};
+      const order = ["monthly", "quarterly", "biannual", "annual"];
+      plansRoot.innerHTML = order.map((key) => {
+        const plan = plans[key];
+        if (!plan) return "";
+        const featured = key === "biannual" ? " pricing-card--featured" : "";
+        const badge = plan.badge
+          ? `<span class="pricing-card__badge">${plan.badge}</span>`
+          : "";
+        const savings = plan.savings
+          ? `<p class="pricing-save">${plan.savings}</p>`
+          : "";
+        const periodBlock = plan.period && plan.period.includes("soit")
+          ? `<p class="pricing-price-sub">${plan.period}</p>`
+          : `<span class="pricing-price__period">${plan.period || " / mois"}</span>`;
+        const priceLine = plan.period && plan.period.includes("soit")
+          ? `<p class="pricing-price">${plan.price}</p>`
+          : `<p class="pricing-price">${plan.price}${periodBlock}</p>`;
+        const features = (PLAN_FEATURES[key] || [])
+          .map((item) => `<li>${item}</li>`)
+          .join("");
+
+        return `
+          <article class="pricing-card${featured}">
+            ${badge}
+            <h2>${plan.label}</h2>
+            ${priceLine}
+            ${plan.period && plan.period.includes("soit") ? periodBlock : ""}
+            ${savings}
+            <ul>${features}</ul>
+            <button type="button" class="primary-button pricing-plan-btn" data-plan="${key}" disabled>Choisir cette formule</button>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function setButtonsEnabled(enabled) {
+      document.querySelectorAll(".pricing-plan-btn").forEach((btn) => {
+        btn.disabled = !enabled;
+      });
+    }
+
+    async function updateStatusBanner() {
+      const user = await window.GPXAuth.getCurrentUser();
+      if (!user) {
+        statusEl.textContent = "7 jours gratuits, sans carte bancaire";
+        return;
+      }
+      if (window.GPXAuth.hasActiveSubscription(user)) {
+        if (user.statutAbonnement === "trial" || user.subscriptionStatus === "trial") {
+          const endsAt = window.GPXAuth.getTrialEndsAt(user);
+          statusEl.textContent = endsAt
+            ? `Votre essai gratuit se termine le ${formatDateFr(endsAt)}. Choisissez votre formule pour continuer.`
+            : "Votre essai gratuit est en cours. Choisissez votre formule pour continuer.";
+          return;
+        }
+        statusEl.textContent = "Vous avez un abonnement actif. Vous pouvez changer de formule ci-dessous.";
+        return;
+      }
+      statusEl.textContent = "Votre essai a expiré. Choisissez une formule pour retrouver l'accès.";
+    }
+
+    renderPlans();
 
     retractationCheckbox.addEventListener("change", () => {
-      subscribeButton.disabled = !retractationCheckbox.checked;
+      setButtonsEnabled(retractationCheckbox.checked);
     });
 
-    subscribeButton.addEventListener("click", async () => {
-      const errorEl = document.getElementById("checkout-error");
+    plansRoot.addEventListener("click", async (event) => {
+      const btn = event.target.closest(".pricing-plan-btn");
+      if (!btn || btn.disabled) return;
+
+      const planId = btn.dataset.plan;
       errorEl.hidden = true;
       errorEl.textContent = "";
-
-      subscribeButton.disabled = true;
-      subscribeButton.textContent = "Redirection vers Stripe…";
+      btn.disabled = true;
+      const originalLabel = btn.textContent;
+      btn.textContent = "Redirection vers Stripe…";
 
       try {
-        await window.GPXStripe.startSubscriptionCheckout();
+        await window.GPXStripe.startSubscriptionCheckout(planId);
       } catch (error) {
         errorEl.hidden = false;
         errorEl.textContent = error.message || "Impossible de lancer le paiement.";
-        subscribeButton.disabled = !retractationCheckbox.checked;
-        subscribeButton.textContent = "S'abonner";
+        btn.disabled = !retractationCheckbox.checked;
+        btn.textContent = originalLabel;
       }
     });
+
+    updateStatusBanner();
   </script>
 </body>
 </html>

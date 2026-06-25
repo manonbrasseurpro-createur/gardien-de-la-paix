@@ -7,9 +7,13 @@ create table if not exists public.profiles (
   last_name text not null default '',
   email text not null,
   phone text not null default '',
-  subscription_status text not null default 'none'
-    check (subscription_status in ('none', 'active', 'cancelled', 'past_due')),
+  subscription_status text not null default 'trial'
+    check (subscription_status in ('none', 'trial', 'active', 'expired', 'cancelled', 'past_due', 'free')),
   subscription_ends_at timestamptz,
+  subscription_end timestamptz,
+  subscription_plan text
+    check (subscription_plan is null or subscription_plan in ('monthly', 'quarterly', 'biannual', 'annual')),
+  free_trial_start timestamptz,
   free_trial_used boolean not null default false,
   free_trial_key text,
   stripe_customer_id text,
@@ -35,13 +39,18 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-  insert into public.profiles (id, email, first_name, last_name, phone)
+  insert into public.profiles (
+    id, email, first_name, last_name, phone,
+    free_trial_start, subscription_status
+  )
   values (
     new.id,
     new.email,
     coalesce(new.raw_user_meta_data->>'first_name', ''),
     coalesce(new.raw_user_meta_data->>'last_name', ''),
-    coalesce(new.raw_user_meta_data->>'phone', '')
+    coalesce(new.raw_user_meta_data->>'phone', ''),
+    now(),
+    'trial'
   );
   return new;
 end;
@@ -60,8 +69,32 @@ create trigger on_auth_user_created
 -- alter table public.profiles add column if not exists stripe_customer_id text;
 -- alter table public.profiles add column if not exists stripe_subscription_id text;
 -- alter table public.profiles add column if not exists is_complimentary boolean not null default false;
+-- alter table public.profiles add column if not exists free_trial_start timestamptz;
+-- alter table public.profiles add column if not exists subscription_plan text;
+-- alter table public.profiles add column if not exists subscription_end timestamptz;
+-- update public.profiles set subscription_status = 'trial', free_trial_start = coalesce(free_trial_start, created_at)
+--   where subscription_status in ('none', 'free') and free_trial_start is null;
 
 alter table public.profiles add column if not exists is_complimentary boolean not null default false;
+
+alter table public.profiles add column if not exists free_trial_start timestamptz;
+alter table public.profiles add column if not exists subscription_plan text;
+alter table public.profiles add column if not exists subscription_end timestamptz;
+
+alter table public.profiles drop constraint if exists profiles_subscription_status_check;
+alter table public.profiles add constraint profiles_subscription_status_check
+  check (subscription_status in ('none', 'trial', 'active', 'expired', 'cancelled', 'past_due', 'free'));
+
+alter table public.profiles drop constraint if exists profiles_subscription_plan_check;
+alter table public.profiles add constraint profiles_subscription_plan_check
+  check (subscription_plan is null or subscription_plan in ('monthly', 'quarterly', 'biannual', 'annual'));
+
+update public.profiles
+set
+  subscription_status = 'trial',
+  free_trial_start = coalesce(free_trial_start, created_at, now())
+where subscription_status in ('none', 'free')
+  and free_trial_start is null;
 
 -- Signalements utilisateurs
 create table if not exists public.problem_reports (

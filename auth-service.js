@@ -1,6 +1,24 @@
 (function () {
   const SUPABASE_JS_VERSION = "2.49.8";
   const PROFILS_TABLE = "profiles";
+  const TRIAL_DAYS = window.GPX_TRIAL_DAYS || 7;
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+  function parseTimestamp(value) {
+    if (!value) {
+      return null;
+    }
+    const date = value instanceof Date ? value : new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function getTrialEndsAt(profile) {
+    const start = parseTimestamp(profile?.freeTrialStart);
+    if (!start) {
+      return null;
+    }
+    return new Date(start.getTime() + TRIAL_DAYS * MS_PER_DAY);
+  }
 
   function getConfig() {
     const cfg = window.GPX_SUPABASE || {};
@@ -58,16 +76,12 @@
     return window.__gpxSupabaseClient;
   }
 
-  function mapStatutAbonnement(statut) {
-    const value = String(statut || "free").toLowerCase();
-    if (value === "active") {
-      return "active";
-    }
-    return "none";
-  }
-
   function normalizeProfile(profil, fallbackEmail) {
-    const statutAbonnement = profil.subscription_status ?? "free";
+    const statutAbonnement = String(profil.subscription_status ?? "trial").toLowerCase();
+    const subscriptionEnd = parseTimestamp(
+      profil.subscription_end ?? profil.subscription_ends_at ?? profil.subscriptionEndsAt
+    );
+    const freeTrialStart = parseTimestamp(profil.free_trial_start ?? profil.freeTrialStart);
 
     return {
       id: profil.id,
@@ -85,9 +99,12 @@
         profil.lastName ||
         "",
       phone: profil.téléphone || profil.telephone || profil.phone || "",
-      subscriptionStatus: mapStatutAbonnement(statutAbonnement),
-      statutAbonnement: statutAbonnement,
-      subscriptionEndsAt: null,
+      subscriptionStatus: statutAbonnement,
+      statutAbonnement,
+      subscriptionPlan: profil.subscription_plan || profil.subscriptionPlan || null,
+      subscriptionEnd,
+      subscriptionEndsAt: subscriptionEnd,
+      freeTrialStart,
       freeTrialUsed: Boolean(profil.free_trial_used ?? profil.freeTrialUsed),
       freeTrialKey: profil.free_trial_key || profil.freeTrialKey || null,
       isComplimentary: Boolean(profil.is_complimentary ?? false)
@@ -101,7 +118,38 @@
     if (profile.isComplimentary === true) {
       return true;
     }
-    return profile.subscriptionStatus === "active" || profile.statutAbonnement === "active";
+
+    const status = profile.statutAbonnement || profile.subscriptionStatus;
+    const now = Date.now();
+
+    if (status === "active") {
+      if (profile.subscriptionEnd) {
+        return profile.subscriptionEnd.getTime() > now;
+      }
+      return true;
+    }
+
+    if (status === "trial") {
+      const trialEndsAt = getTrialEndsAt(profile);
+      return Boolean(trialEndsAt && trialEndsAt.getTime() > now);
+    }
+
+    return false;
+  }
+
+  function isTrialExpired(profile) {
+    if (!profile) {
+      return false;
+    }
+    const status = profile.statutAbonnement || profile.subscriptionStatus;
+    if (status !== "trial") {
+      return false;
+    }
+    const trialEndsAt = getTrialEndsAt(profile);
+    if (!trialEndsAt) {
+      return true;
+    }
+    return trialEndsAt.getTime() <= Date.now();
   }
 
   function mapAuthError(error) {
@@ -188,9 +236,8 @@
         prénom: meta.first_name || meta.prénom || "",
         "nom de famille": meta.last_name || meta.nom_de_famille || "",
         téléphone: meta.phone || meta.téléphone || "",
-        subscription_status: "free",
-        free_trial_used: meta.free_trial_used,
-        free_trial_key: meta.free_trial_key
+        subscription_status: "trial",
+        free_trial_start: new Date().toISOString(),
       },
       user?.email || fallbackEmail
     );
@@ -240,6 +287,23 @@
     }
   }
 
+  async function ensureTrialProfile(userId) {
+    const client = getSupabaseClient();
+    const nowIso = new Date().toISOString();
+    const { error } = await client
+      .from(PROFILS_TABLE)
+      .update({
+        free_trial_start: nowIso,
+        subscription_status: "trial"
+      })
+      .eq("id", userId)
+      .is("free_trial_start", null);
+
+    if (error) {
+      console.warn("[GPX Auth] ensureTrialProfile:", error);
+    }
+  }
+
   async function register({ firstName, email, password }) {
     const normalizedEmail = validateCredentials({
       firstName,
@@ -275,16 +339,21 @@
       session: Boolean(data.session)
     });
 
-    const profile = data.session
-      ? await fetchProfile(data.user.id, data.user.email)
-      : normalizeProfile(
+    let profile;
+    if (data.session) {
+      await ensureTrialProfile(data.user.id);
+      profile = await fetchProfile(data.user.id, data.user.email);
+    } else {
+      profile = normalizeProfile(
           {
             id: data.user.id,
             first_name: String(firstName).trim(),
-            subscription_status: "free"
+            subscription_status: "trial",
+            free_trial_start: new Date().toISOString()
           },
           data.user.email
         );
+    }
 
     return {
       profile,
@@ -446,7 +515,22 @@
 
     const dbPatch = {};
     if (patch.subscriptionStatus !== undefined) {
-      dbPatch.subscription_status = patch.subscriptionStatus === "active" ? "active" : "free";
+      dbPatch.subscription_status = patch.subscriptionStatus;
+    }
+    if (patch.subscriptionPlan !== undefined) {
+      dbPatch.subscription_plan = patch.subscriptionPlan;
+    }
+    if (patch.subscriptionEnd !== undefined) {
+      const iso = patch.subscriptionEnd instanceof Date
+        ? patch.subscriptionEnd.toISOString()
+        : patch.subscriptionEnd;
+      dbPatch.subscription_end = iso;
+      dbPatch.subscription_ends_at = iso;
+    }
+    if (patch.freeTrialStart !== undefined) {
+      dbPatch.free_trial_start = patch.freeTrialStart instanceof Date
+        ? patch.freeTrialStart.toISOString()
+        : patch.freeTrialStart;
     }
     if (patch.phone !== undefined) {
       dbPatch.téléphone = patch.phone;
@@ -522,6 +606,8 @@
     updateProfile,
     activateDemoSubscription,
     hasActiveSubscription,
+    isTrialExpired,
+    getTrialEndsAt,
     onAuthStateChange,
     getDiagnostics
   };

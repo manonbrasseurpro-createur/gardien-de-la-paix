@@ -26,15 +26,15 @@ async function findUserIdByEmail(
   return user?.id ?? null;
 }
 
-async function updateProfilStatut(
+async function updateProfileSubscription(
   supabaseAdmin: ReturnType<typeof createClient>,
-  identifiant: string,
-  statutAbonnement: string
+  userId: string,
+  patch: Record<string, unknown>
 ) {
   const { error } = await supabaseAdmin
     .from("profiles")
-    .update({ subscription_status: statutAbonnement })
-    .eq("id", identifiant);
+    .update(patch)
+    .eq("id", userId);
 
   if (error) {
     throw error;
@@ -65,6 +65,10 @@ async function resolveUserIdFromSubscription(
   }
 
   return await findUserIdByEmail(supabaseAdmin, customer.email);
+}
+
+function subscriptionEndsAt(subscription: Stripe.Subscription): string {
+  return new Date(subscription.current_period_end * 1000).toISOString();
 }
 
 Deno.serve(async (req) => {
@@ -115,23 +119,64 @@ Deno.serve(async (req) => {
           session.customer_details?.email ||
           null;
 
-        if (!email) {
-          console.error("checkout.session.completed: e-mail client introuvable");
-          break;
-        }
-
         const userId =
-          (await findUserIdByEmail(supabaseAdmin, email)) ||
-          session.client_reference_id ||
           session.metadata?.user_id ||
-          null;
+          session.client_reference_id ||
+          (email ? await findUserIdByEmail(supabaseAdmin, email) : null);
 
         if (!userId) {
-          console.error("checkout.session.completed: utilisateur introuvable pour", email);
+          console.error("checkout.session.completed: utilisateur introuvable");
           break;
         }
 
-        await updateProfilStatut(supabaseAdmin, userId, "active");
+        const plan = session.metadata?.plan || null;
+        let subscriptionEnd: string | null = null;
+        let stripeCustomerId =
+          typeof session.customer === "string" ? session.customer : session.customer?.id ?? null;
+        let stripeSubscriptionId =
+          typeof session.subscription === "string"
+            ? session.subscription
+            : session.subscription?.id ?? null;
+
+        if (stripeSubscriptionId) {
+          const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+          subscriptionEnd = subscriptionEndsAt(subscription);
+          stripeCustomerId =
+            typeof subscription.customer === "string"
+              ? subscription.customer
+              : subscription.customer?.id ?? stripeCustomerId;
+        }
+
+        await updateProfileSubscription(supabaseAdmin, userId, {
+          subscription_status: "active",
+          subscription_plan: plan,
+          subscription_end: subscriptionEnd,
+          subscription_ends_at: subscriptionEnd,
+          stripe_customer_id: stripeCustomerId,
+          stripe_subscription_id: stripeSubscriptionId
+        });
+        break;
+      }
+
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as Stripe.Subscription;
+        const userId = await resolveUserIdFromSubscription(supabaseAdmin, stripe, subscription);
+
+        if (!userId) {
+          console.error("customer.subscription.updated: utilisateur introuvable");
+          break;
+        }
+
+        const endsAt = subscriptionEndsAt(subscription);
+        const isActive = subscription.status === "active" || subscription.status === "trialing";
+
+        await updateProfileSubscription(supabaseAdmin, userId, {
+          subscription_status: isActive ? "active" : "expired",
+          subscription_plan: subscription.metadata?.plan || null,
+          subscription_end: endsAt,
+          subscription_ends_at: endsAt,
+          stripe_subscription_id: subscription.id
+        });
         break;
       }
 
@@ -144,7 +189,12 @@ Deno.serve(async (req) => {
           break;
         }
 
-        await updateProfilStatut(supabaseAdmin, userId, "free");
+        await updateProfileSubscription(supabaseAdmin, userId, {
+          subscription_status: "expired",
+          subscription_end: new Date().toISOString(),
+          subscription_ends_at: new Date().toISOString(),
+          stripe_subscription_id: null
+        });
         break;
       }
 

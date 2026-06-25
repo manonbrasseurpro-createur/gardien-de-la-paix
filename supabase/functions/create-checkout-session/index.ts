@@ -6,6 +6,13 @@ const SUCCESS_URL =
   "https://prepagpx.fr/confirmation.html?session_id={CHECKOUT_SESSION_ID}";
 const CANCEL_URL = "https://prepagpx.fr/tarifs.html?cancelled=1";
 
+const PLAN_PRICE_IDS: Record<string, string> = {
+  monthly: Deno.env.get("STRIPE_PRICE_MONTHLY") || "price_1Tm87ERo8Yl21kLocoYxUW1Y",
+  quarterly: Deno.env.get("STRIPE_PRICE_QUARTERLY") || "price_1Tm87zRo8Yl21kLo2W127mKN",
+  biannual: Deno.env.get("STRIPE_PRICE_BIANNUAL") || "price_1Tm88JRo8Yl21kLoIZBe2PI2",
+  annual: Deno.env.get("STRIPE_PRICE_ANNUAL") || "price_1Tm88hRo8Yl21kLoa2mUyLNQ"
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -20,13 +27,22 @@ Deno.serve(async (req) => {
 
   try {
     const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
-    const stripePriceId = Deno.env.get("STRIPE_PRICE_ID");
-
-    if (!stripeSecretKey || !stripePriceId) {
+    if (!stripeSecretKey) {
       return new Response(
-        JSON.stringify({ error: "Configuration Stripe incomplète (STRIPE_SECRET_KEY, STRIPE_PRICE_ID)." }),
+        JSON.stringify({ error: "Configuration Stripe incomplète (STRIPE_SECRET_KEY)." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    const body = await req.json().catch(() => ({}));
+    const plan = String(body.plan || "monthly");
+    const stripePriceId = PLAN_PRICE_IDS[plan];
+
+    if (!stripePriceId) {
+      return new Response(JSON.stringify({ error: "Formule inconnue." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
     }
 
     const authHeader = req.headers.get("Authorization");
@@ -62,8 +78,8 @@ Deno.serve(async (req) => {
       client_reference_id: user.id,
       customer_email: user.email ?? undefined,
       line_items: [{ price: stripePriceId, quantity: 1 }],
-      metadata: { user_id: user.id },
-      subscription_data: { metadata: { user_id: user.id } },
+      metadata: { user_id: user.id, plan },
+      subscription_data: { metadata: { user_id: user.id, plan } },
       success_url: SUCCESS_URL,
       cancel_url: CANCEL_URL
     });

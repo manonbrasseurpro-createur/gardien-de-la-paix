@@ -1,4 +1,6 @@
 (function () {
+  const PLAN_KEYS = ["monthly", "quarterly", "biannual", "annual"];
+
   function getSupabaseConfig() {
     const cfg = window.GPX_SUPABASE || {};
     return {
@@ -7,7 +9,20 @@
     };
   }
 
-  async function startSubscriptionCheckout() {
+  function resolvePlan(planId) {
+    const plans = window.GPX_STRIPE?.plans || {};
+    if (planId && plans[planId]) {
+      return plans[planId];
+    }
+    return null;
+  }
+
+  async function startSubscriptionCheckout(planId) {
+    const plan = resolvePlan(planId);
+    if (!plan) {
+      throw new Error("Formule invalide. Rechargez la page et réessayez.");
+    }
+
     const user = await window.GPXAuth.getCurrentUser();
     if (!user) {
       window.location.href = "connexion.html?redirect=tarifs.html";
@@ -30,7 +45,8 @@
         Authorization: `Bearer ${token}`,
         apikey: anonKey,
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify({ plan: plan.id })
     });
 
     const payload = await response.json().catch(() => ({}));
@@ -80,6 +96,8 @@
   }
 
   window.GPXStripe = {
+    PLAN_KEYS,
+    resolvePlan,
     startSubscriptionCheckout,
     startPortalSession
   };

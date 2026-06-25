@@ -155,39 +155,18 @@
       return { allowed: true, user };
     }
 
-    if (isSmallTestMode(moduleId, mode, extra)) {
-      if (!user.freeTrialUsed) {
-        return {
-          allowed: true,
-          user,
-          consumeFreeTrial: true,
-          trialKey: buildTrialKey(moduleId, mode, extra)
-        };
-      }
-      if (user.freeTrialKey === buildTrialKey(moduleId, mode, extra)) {
-        return { allowed: true, user, replaySameTrial: true };
-      }
-      return {
-        allowed: false,
-        reason: "trial_used",
-        message:
-          "Votre essai gratuit (un petit test) a déjà été utilisé. Souscrivez un abonnement pour accéder à tous les tests et simulations."
-      };
-    }
-
-    if (isPremiumMode(moduleId, mode)) {
+    if (window.GPXAuth.isTrialExpired(user)) {
       return {
         allowed: false,
         reason: "subscription",
-        message:
-          "Ce mode est réservé aux abonnés. Sans abonnement, vous pouvez essayer un seul petit test (mini test ou question isolée)."
+        message: "Votre essai gratuit de 7 jours est terminé. Choisissez une formule sur la page Tarifs pour continuer."
       };
     }
 
     return {
       allowed: false,
       reason: "subscription",
-      message: "Abonnement requis pour accéder à ce contenu."
+      message: "Abonnement requis pour accéder à ce contenu. Consultez la page Tarifs."
     };
   }
 
@@ -200,15 +179,12 @@
         window.location.href = `connexion.html?redirect=${redirect}`;
         return;
       }
+      if (window.GPXAuth.isTrialExpired?.(await window.GPXAuth.getCurrentUser())) {
+        window.location.href = "tarifs.html?expired=1";
+        return;
+      }
       showPaywall(result.message);
       return;
-    }
-
-    if (result.consumeFreeTrial) {
-      await window.GPXAuth.updateProfile(result.user.id, {
-        freeTrialUsed: true,
-        freeTrialKey: result.trialKey
-      });
     }
 
     onAllowed();
@@ -224,7 +200,14 @@
     if (!user) {
       const redirect = encodeURIComponent(page);
       window.location.href = `connexion.html?redirect=${redirect}`;
+      return;
     }
+
+    if (window.GPXAuth.hasActiveSubscription(user)) {
+      return;
+    }
+
+    window.location.href = "tarifs.html?expired=1";
   }
 
   function injectLegalFooter() {
@@ -257,12 +240,15 @@
 
   function getSubscriptionBadge(user) {
     if (window.GPXAuth.hasActiveSubscription(user)) {
+      if (user.statutAbonnement === "trial" || user.subscriptionStatus === "trial") {
+        return { text: "Essai 7j", className: "is-trial" };
+      }
       return { text: "Abonné", className: "is-active" };
     }
-    if (user.freeTrialUsed) {
-      return { text: "Gratuit", className: "" };
+    if (window.GPXAuth.isTrialExpired?.(user)) {
+      return { text: "Expiré", className: "" };
     }
-    return { text: "Essai", className: "is-trial" };
+    return { text: "Gratuit", className: "" };
   }
 
   function removeGlobalDashboardSidebar() {

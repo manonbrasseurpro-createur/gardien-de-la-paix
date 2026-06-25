@@ -165,17 +165,45 @@
             ${plan.period && plan.period.includes("soit") ? periodBlock : ""}
             ${savings}
             <ul>${features}</ul>
-            <button type="button" class="primary-button pricing-plan-btn" data-plan="${key}" disabled>Choisir cette formule</button>
+            <button type="button" class="primary-button pricing-plan-btn" data-plan="${key}">Choisir cette formule</button>
           </article>
         `;
       }).join("");
     }
 
-    function setButtonsEnabled(enabled) {
-      document.querySelectorAll(".pricing-plan-btn").forEach((btn) => {
-        btn.disabled = !enabled;
-      });
-    }
+    plansRoot.addEventListener("click", async (event) => {
+      const btn = event.target.closest(".pricing-plan-btn");
+      if (!btn) return;
+
+      const user = await window.GPXAuth.getCurrentUser();
+      if (!user) {
+        window.location.href = "inscription.html";
+        return;
+      }
+
+      if (!retractationCheckbox.checked) {
+        errorEl.hidden = false;
+        errorEl.textContent = "Veuillez accepter les CGV avant de choisir une formule.";
+        retractationCheckbox.focus();
+        return;
+      }
+
+      const planId = btn.dataset.plan;
+      errorEl.hidden = true;
+      errorEl.textContent = "";
+      btn.disabled = true;
+      const originalLabel = btn.textContent;
+      btn.textContent = "Redirection vers Stripe…";
+
+      try {
+        await window.GPXStripe.startSubscriptionCheckout(planId);
+      } catch (error) {
+        errorEl.hidden = false;
+        errorEl.textContent = error.message || "Impossible de lancer le paiement.";
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      }
+    });
 
     async function updateStatusBanner() {
       const user = await window.GPXAuth.getCurrentUser();
@@ -211,32 +239,6 @@
     }
 
     renderPlans();
-
-    retractationCheckbox.addEventListener("change", () => {
-      setButtonsEnabled(retractationCheckbox.checked);
-    });
-
-    plansRoot.addEventListener("click", async (event) => {
-      const btn = event.target.closest(".pricing-plan-btn");
-      if (!btn || btn.disabled) return;
-
-      const planId = btn.dataset.plan;
-      errorEl.hidden = true;
-      errorEl.textContent = "";
-      btn.disabled = true;
-      const originalLabel = btn.textContent;
-      btn.textContent = "Redirection vers Stripe…";
-
-      try {
-        await window.GPXStripe.startSubscriptionCheckout(planId);
-      } catch (error) {
-        errorEl.hidden = false;
-        errorEl.textContent = error.message || "Impossible de lancer le paiement.";
-        btn.disabled = !retractationCheckbox.checked;
-        btn.textContent = originalLabel;
-      }
-    });
-
     updateStatusBanner();
   </script>
 </body>

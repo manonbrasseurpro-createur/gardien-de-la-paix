@@ -83,21 +83,40 @@
       document.getElementById("hero-subtitle").textContent = "Gérez votre compte et votre abonnement";
 
       const subscribed = window.GPXAuth.hasActiveSubscription(user);
-      document.getElementById("subscription-status").textContent = subscribed
-        ? "Abonnement actif — accès illimité à tous les tests et simulations."
-        : "Pas d'abonnement actif — accès limité à un petit test gratuit.";
+      const isTrial =
+        user.statutAbonnement === "trial" || user.subscriptionStatus === "trial";
+      const trialExpired = window.GPXAuth.isTrialExpired?.(user);
+      const trialEndsAt = window.GPXAuth.getTrialEndsAt?.(user);
+
+      let statusText;
+      let trialText = "";
+
+      if (subscribed && isTrial) {
+        statusText = "Essai gratuit actif — accès complet à tous les modules.";
+        if (trialEndsAt) {
+          const daysLeft = Math.max(
+            0,
+            Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+          );
+          trialText = `Votre essai de 7 jours se termine dans ${daysLeft} jour${daysLeft > 1 ? "s" : ""} — sans carte bancaire.`;
+        }
+      } else if (subscribed) {
+        statusText = "Abonnement actif — accès illimité à tous les tests et simulations.";
+      } else if (trialExpired) {
+        statusText = "Essai gratuit terminé — abonnement requis pour continuer.";
+        trialText = "Choisissez une formule sur la page Tarifs pour retrouver l'accès complet.";
+      } else {
+        statusText = "Pas d'abonnement actif.";
+        trialText = "7 jours d'accès complet gratuit — sans carte bancaire.";
+      }
+
+      document.getElementById("subscription-status").textContent = statusText;
 
       const manageBtn = document.getElementById("manage-subscription-button");
-      manageBtn.classList.toggle("hidden", !subscribed);
+      manageBtn.classList.toggle("hidden", !subscribed || isTrial);
 
       const trialEl = document.getElementById("trial-status");
-      if (subscribed) {
-        trialEl.textContent = "";
-      } else {
-        trialEl.textContent = user.freeTrialUsed
-          ? `Essai gratuit utilisé (${user.freeTrialKey || "test enregistré"}).`
-          : "Essai gratuit disponible : choisissez un mini test ou une question isolée (cas pratiques).";
-      }
+      trialEl.textContent = trialText;
     }
 
     document.getElementById("manage-subscription-button").addEventListener("click", async () => {

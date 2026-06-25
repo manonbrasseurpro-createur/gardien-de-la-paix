@@ -2,7 +2,7 @@
   const PUBLIC_PAGES = new Set(["index.html", "actualites.html", "flashcards.html", "compte.html", "connexion.html", "inscription.html", "tarifs.html", "confirmation.html", "mentions-legales.html", "cgv.html", "confidentialite.html", "politique-confidentialite.html", "concours-gpx.html", "salaire-gardien-de-la-paix.html", "annales-gardien-de-la-paix.html", "psychotechnique-gardien-de-la-paix.html", "preparation-physique-gardien-de-la-paix.html", "qcm-culture-generale-gardien-de-la-paix.html"]);
   const GUEST_SIDEBAR_PAGES = new Set(["index.html", "actualites.html", "flashcards.html"]);
 
-  /** Modes « petits tests » : un seul essai gratuit pour les comptes sans abonnement. */
+  /** Modes d'entraînement courts (mini, question isolée, etc.). */
   const SMALL_TEST_MODES = {
     "psychotechnique.html": ["mini", "category"],
     "culture-langue.html": ["mini-culture", "mini-language"],
@@ -239,10 +239,12 @@
   }
 
   function getSubscriptionBadge(user) {
+    const isTrial =
+      user?.statutAbonnement === "trial" || user?.subscriptionStatus === "trial";
+    if (isTrial && !window.GPXAuth.isTrialExpired?.(user)) {
+      return { text: "Essai 7j", className: "is-trial" };
+    }
     if (window.GPXAuth.hasActiveSubscription(user)) {
-      if (user.statutAbonnement === "trial" || user.subscriptionStatus === "trial") {
-        return { text: "Essai 7j", className: "is-trial" };
-      }
       return { text: "Abonné", className: "is-active" };
     }
     if (window.GPXAuth.isTrialExpired?.(user)) {

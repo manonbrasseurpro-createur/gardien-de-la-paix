@@ -5,10 +5,10 @@ Site d'entraînement au concours GPX : psychotechniques, culture, cas pratiques,
 ## Comptes et abonnement
 
 - **Compte obligatoire** pour accéder aux modules (nom, prénom, e-mail, téléphone, mot de passe).
-- **Sans abonnement** : **1 petit test gratuit** (mini test ou question isolée en cas pratiques).
-- **Avec abonnement** (19,90 €/mois) : simulations complètes, tous les modes, page Ma progression.
+- **Essai gratuit** : **7 jours d'accès complet — sans carte bancaire** (tous les modules et modes).
+- **Avec abonnement** (4 formules : 14,90 €/mois, 29,90 €/3 mois, 49,90 €/6 mois, 89,90 €/an) : accès illimité, page Ma progression.
 
-Pages : `compte.html` (inscription / connexion), `tarifs.html` (paiement Stripe), `confirmation.html` (après paiement).
+Pages : `inscription.html`, `connexion.html`, `compte.html`, `tarifs.html` (paiement Stripe), `confirmation.html` (après paiement).
 
 ## Production : Supabase + Stripe
 
@@ -19,13 +19,20 @@ Pages : `compte.html` (inscription / connexion), `tarifs.html` (paiement Stripe)
 3. Renseigner `supabase-config.js` (URL + clé publishable).
 4. Dans Authentication → Providers, activer **Email** (mot de passe).
 
-### 2. Stripe (abonnement 19,90 €/mois)
+### 2. Stripe (4 formules d'abonnement)
 
-#### A. Créer un produit Stripe (optionnel)
+#### A. Créer les produits Stripe (optionnel)
 
-Vous pouvez créer un prix récurrent **19,90 €/mois** dans le Dashboard Stripe et copier le **Price ID** (`price_...`).
+Créez 4 prix récurrents dans le Dashboard Stripe et copiez les **Price IDs** (`price_...`) :
 
-Sinon, l'Edge Function crée automatiquement un prix à 19,90 € si `STRIPE_PRICE_ID` n'est pas défini.
+| Formule | Prix |
+|---------|------|
+| Mensuel | 14,90 €/mois |
+| Trimestriel | 29,90 €/3 mois |
+| Semestriel | 49,90 €/6 mois |
+| Annuel | 89,90 €/an |
+
+Sinon, les Price IDs par défaut sont définis dans `supabase-config.js` et `create-checkout-session`.
 
 #### B. Déployer les Edge Functions
 
@@ -37,8 +44,11 @@ supabase link --project-ref ivrafclenoukjhmubrgq
 supabase secrets set STRIPE_SECRET_KEY=sk_test_...
 supabase secrets set STRIPE_WEBHOOK_SECRET=whsec_...
 supabase secrets set SITE_URL=https://votre-domaine.fr
-# Optionnel si vous avez créé un prix dans Stripe :
-supabase secrets set STRIPE_PRICE_ID=price_...
+# Optionnel si vous avez créé des prix dans Stripe :
+supabase secrets set STRIPE_PRICE_MONTHLY=price_...
+supabase secrets set STRIPE_PRICE_QUARTERLY=price_...
+supabase secrets set STRIPE_PRICE_BIANNUAL=price_...
+supabase secrets set STRIPE_PRICE_ANNUAL=price_...
 supabase functions deploy create-checkout-session
 supabase functions deploy stripe-webhook --no-verify-jwt
 ```
@@ -67,10 +77,11 @@ alter table public.profiles add column if not exists stripe_subscription_id text
 
 ### 3. Parcours utilisateur
 
-1. L'utilisateur clique **S'abonner** sur `tarifs.html`.
-2. L'API `create-checkout-session` crée une session Stripe Checkout (19,90 €/mois).
-3. Après paiement → redirection vers `confirmation.html`.
-4. Le webhook `stripe-webhook` active l'abonnement dans `profiles` (`subscription_status = active`).
+1. L'utilisateur crée un compte sur `inscription.html` → essai gratuit de 7 jours (sans CB).
+2. Après l'essai, ou pour s'abonner directement, il choisit une formule sur `tarifs.html`.
+3. L'API `create-checkout-session` crée une session Stripe Checkout pour la formule choisie.
+4. Après paiement → redirection vers `confirmation.html`.
+5. Le webhook `stripe-webhook` active l'abonnement dans `profiles` (`subscription_status = active`).
 
 ### 4. Hébergement
 
@@ -82,7 +93,7 @@ Déployer les fichiers statiques (GitHub Pages, Netlify, OVH, etc.). Aucun build
 |---------|------|
 | `auth-service.js` | Inscription, connexion, profil |
 | `stripe-service.js` | Lance le checkout Stripe |
-| `access-control.js` | Grille petits tests / abonnement, paywall |
+| `access-control.js` | Essai 7 jours / abonnement, paywall, badge nav |
 | `supabase-config.js` | Clés Supabase et affichage tarifs |
 | `tarifs.html` | Bouton S'abonner |
 | `confirmation.html` | Page après paiement |

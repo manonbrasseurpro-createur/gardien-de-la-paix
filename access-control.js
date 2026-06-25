@@ -131,6 +131,10 @@
     });
   }
 
+  function hasDashboardSidebar() {
+    return Boolean(document.getElementById("global-dash-sidebar"));
+  }
+
   function insertGlobalSidebarMarkup(sidebarMarkup) {
     const navEl = document.getElementById("gpx-site-nav");
     if (navEl) {
@@ -307,9 +311,10 @@
 
     const subscribed = window.GPXAuth.hasActiveSubscription(user);
     const badge = getSubscriptionBadge(user);
+    const sidebarPresent = hasDashboardSidebar();
 
     nav?.classList.add("gpx-site-nav--app");
-    if (subscribed) {
+    if (sidebarPresent || subscribed) {
       nav?.classList.remove("gpx-site-nav--show-logo");
     } else {
       nav?.classList.add("gpx-site-nav--show-logo");
@@ -331,6 +336,15 @@
       document.head.appendChild(fontLink);
     }
 
+    const existingNavs = document.querySelectorAll("#gpx-site-nav");
+    if (existingNavs.length > 1) {
+      existingNavs.forEach((el, index) => {
+        if (index > 0) {
+          el.remove();
+        }
+      });
+    }
+
     if (!document.getElementById("gpx-site-nav")) {
       if (getPageName() === "dashboard.html") {
         return;
@@ -349,10 +363,6 @@
         </div>
       `;
       document.body.insertBefore(nav, document.body.firstChild);
-    }
-
-    if (document.getElementById("gpx-site-nav-links")) {
-      await populateSiteNavLinks();
     }
   }
 
@@ -675,6 +685,9 @@
       injectGuestSidebar();
     } else {
       removeGlobalDashboardSidebar();
+    }
+    if (document.getElementById("gpx-site-nav-links")) {
+      await populateSiteNavLinks();
     }
     injectLegalFooter();
     injectProblemReportButton();

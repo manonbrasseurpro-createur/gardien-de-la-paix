@@ -2080,6 +2080,19 @@ html:has(.page-home) {
   line-height: 1.55;
 }
 
+.page-home .home-problem__list li strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--navy);
+}
+
+.page-home .home-problem__list li p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .page-home .home-problem__list--accent li {
   border-color: rgba(139, 30, 47, 0.25);
 }

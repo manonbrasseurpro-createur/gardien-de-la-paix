@@ -180,24 +180,34 @@
     async function updateStatusBanner() {
       const user = await window.GPXAuth.getCurrentUser();
       statusEl.hidden = false;
+      document.getElementById("checkout-expired").hidden = true;
 
       if (!user) {
-        statusEl.textContent = "7 jours gratuits, sans carte bancaire";
+        statusEl.textContent = "7 jours gratuits, sans carte bancaire.";
         return;
       }
+
+      if (window.GPXAuth.isTrialExpired?.(user)) {
+        showExpiredMessage();
+        return;
+      }
+
+      const status = user.statutAbonnement || user.subscriptionStatus;
+      if (status === "trial" || (window.GPXAuth.hasActiveSubscription(user) && status !== "active")) {
+        const endsAt = window.GPXAuth.getTrialEndsAt(user);
+        const displayEnd = endsAt || new Date(
+          Date.now() + (window.GPX_TRIAL_DAYS || 7) * 24 * 60 * 60 * 1000
+        );
+        statusEl.textContent = `Votre essai gratuit se termine le ${formatDateFr(displayEnd)}.`;
+        return;
+      }
+
       if (window.GPXAuth.hasActiveSubscription(user)) {
-        document.getElementById("checkout-expired").hidden = true;
-        if (user.statutAbonnement === "trial" || user.subscriptionStatus === "trial") {
-          const endsAt = window.GPXAuth.getTrialEndsAt(user);
-          statusEl.textContent = endsAt
-            ? `Votre essai gratuit se termine le ${formatDateFr(endsAt)}. Choisissez votre formule pour continuer.`
-            : "Votre essai gratuit est en cours. Choisissez votre formule pour continuer.";
-          return;
-        }
         statusEl.textContent = "Vous avez un abonnement actif. Vous pouvez changer de formule ci-dessous.";
         return;
       }
-      showExpiredMessage();
+
+      statusEl.textContent = "7 jours gratuits, sans carte bancaire.";
     }
 
     renderPlans();

@@ -130,8 +130,12 @@
     }
 
     if (status === "trial") {
-      const trialEndsAt = getTrialEndsAt(profile);
-      return Boolean(trialEndsAt && trialEndsAt.getTime() > now);
+      const start = parseTimestamp(profile.freeTrialStart);
+      if (!start) {
+        return true;
+      }
+      const trialEndsAt = new Date(start.getTime() + TRIAL_DAYS * MS_PER_DAY);
+      return trialEndsAt.getTime() > now;
     }
 
     return false;
@@ -145,10 +149,11 @@
     if (status !== "trial") {
       return false;
     }
-    const trialEndsAt = getTrialEndsAt(profile);
-    if (!trialEndsAt) {
-      return true;
+    const start = parseTimestamp(profile.freeTrialStart);
+    if (!start) {
+      return false;
     }
+    const trialEndsAt = new Date(start.getTime() + TRIAL_DAYS * MS_PER_DAY);
     return trialEndsAt.getTime() <= Date.now();
   }
 

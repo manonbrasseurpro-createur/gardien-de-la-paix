@@ -207,7 +207,9 @@
       return;
     }
 
-    window.location.href = "tarifs.html?expired=1";
+    if (window.GPXAuth.isTrialExpired?.(user)) {
+      window.location.href = "tarifs.html?expired=1";
+    }
   }
 
   function injectLegalFooter() {
@@ -243,24 +245,19 @@
       return { text: "Gratuit", className: "" };
     }
 
-    const status = user.statutAbonnement || user.subscriptionStatus;
-
-    if (status === "trial") {
-      if (window.GPXAuth.isTrialExpired?.(user)) {
-        return { text: "Expiré", className: "" };
-      }
-      return { text: "Essai 7j", className: "is-trial" };
-    }
-
-    if (window.GPXAuth.hasActiveSubscription(user)) {
-      return { text: "Abonné", className: "is-active" };
-    }
-
     if (window.GPXAuth.isTrialExpired?.(user)) {
       return { text: "Expiré", className: "" };
     }
 
-    return { text: "Gratuit", className: "" };
+    if (window.GPXAuth.hasActiveSubscription(user)) {
+      const status = user.statutAbonnement || user.subscriptionStatus;
+      if (status === "active") {
+        return { text: "Abonné", className: "is-active" };
+      }
+      return { text: "Essai 7j", className: "is-trial" };
+    }
+
+    return { text: "Expiré", className: "" };
   }
 
   function removeGlobalDashboardSidebar() {

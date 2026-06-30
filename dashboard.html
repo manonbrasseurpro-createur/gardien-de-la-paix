@@ -767,26 +767,50 @@
             msgEl.style.color = 'red';
             return;
           }
-          const { data: profile, error } = await client
+
+          const { data: found, error: findError } = await client
             .from('profiles')
-            .update({ is_complimentary: true })
+            .select('id, email')
             .ilike('email', email)
-            .select()
             .maybeSingle();
-          if (error) {
-            console.log('[admin-complimentary] Erreur Supabase:', error);
+
+          if (findError) {
+            console.log('[admin-complimentary] Erreur recherche:', findError);
             msgEl.textContent = 'Utilisateur introuvable ou erreur.';
             msgEl.style.color = 'red';
-          } else if (!profile) {
+            return;
+          }
+          if (!found) {
             console.log('[admin-complimentary] Aucun profil trouvé pour:', email);
             msgEl.textContent = 'Utilisateur introuvable ou erreur.';
             msgEl.style.color = 'red';
-          } else {
-            msgEl.textContent = `✅ Accès gratuit activé pour ${profile.email}.`;
-            msgEl.style.color = 'green';
-            document.getElementById('admin-complimentary-email').value = '';
-            await loadAdminData();
+            return;
           }
+
+          const { data: updated, error: updateError } = await client
+            .from('profiles')
+            .update({ is_complimentary: true })
+            .eq('id', found.id)
+            .select('id, email, is_complimentary');
+
+          if (updateError) {
+            console.log('[admin-complimentary] Erreur mise à jour:', updateError);
+            msgEl.textContent = 'Utilisateur introuvable ou erreur.';
+            msgEl.style.color = 'red';
+            return;
+          }
+          const profile = updated?.[0];
+          if (!profile) {
+            console.log('[admin-complimentary] Mise à jour refusée (RLS ou profil absent) pour id:', found.id);
+            msgEl.textContent = 'Utilisateur introuvable ou erreur.';
+            msgEl.style.color = 'red';
+            return;
+          }
+
+          msgEl.textContent = `✅ Accès gratuit activé pour ${profile.email}.`;
+          msgEl.style.color = 'green';
+          document.getElementById('admin-complimentary-email').value = '';
+          await loadAdminData();
         });
       }
 

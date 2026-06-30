@@ -754,24 +754,35 @@
           const client = window.__gpxSupabaseClient || (window.supabase?.createClient
             ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
             : null);
-          const email = document.getElementById('admin-complimentary-email').value.trim();
+          const email = document.getElementById('admin-complimentary-email').value.trim().toLowerCase();
           const msgEl = document.getElementById('admin-complimentary-msg');
           if (!email) {
             msgEl.textContent = 'Veuillez entrer un email.';
             msgEl.style.color = 'red';
             return;
           }
+          if (!client) {
+            console.log('[admin-complimentary] Supabase client indisponible');
+            msgEl.textContent = 'Erreur de connexion au serveur.';
+            msgEl.style.color = 'red';
+            return;
+          }
           const { data: profile, error } = await client
             .from('profiles')
             .update({ is_complimentary: true })
-            .eq('email', email)
+            .ilike('email', email)
             .select()
-            .single();
-          if (error || !profile) {
+            .maybeSingle();
+          if (error) {
+            console.log('[admin-complimentary] Erreur Supabase:', error);
+            msgEl.textContent = 'Utilisateur introuvable ou erreur.';
+            msgEl.style.color = 'red';
+          } else if (!profile) {
+            console.log('[admin-complimentary] Aucun profil trouvé pour:', email);
             msgEl.textContent = 'Utilisateur introuvable ou erreur.';
             msgEl.style.color = 'red';
           } else {
-            msgEl.textContent = `✅ Accès gratuit activé pour ${email}.`;
+            msgEl.textContent = `✅ Accès gratuit activé pour ${profile.email}.`;
             msgEl.style.color = 'green';
             document.getElementById('admin-complimentary-email').value = '';
             await loadAdminData();

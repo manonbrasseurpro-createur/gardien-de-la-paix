@@ -80,6 +80,17 @@
       color: #333;
     }
 
+    .quote-card__label {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #0B1F3A;
+    }
+
     .quote-card__context {
       position: relative;
       z-index: 1;
@@ -387,6 +398,8 @@
         const card = document.createElement("article");
         card.className = "quote-card";
 
+        const labelHtml = `<p class="quote-card__label">Intervenant ${escapeHtml(String(item.display_order ?? ""))}</p>`;
+
         const contextHtml = item.context
           ? `<p class="quote-card__context">${escapeHtml(item.context)}</p>`
           : "";
@@ -402,6 +415,7 @@
           : "";
 
         card.innerHTML = `
+          ${labelHtml}
           ${contextHtml}
           <span class="quote-card__mark" aria-hidden="true">“</span>
           <blockquote class="quote-card__text" data-quote-text>${escapeHtml(shortText)}</blockquote>
@@ -555,7 +569,7 @@
 
         const { data, error } = await client
           .from("professional_quotes")
-          .select("id, context, quote_short, quote_full, offers_help")
+          .select("id, context, quote_short, quote_full, offers_help, display_order")
           .eq("is_visible", true)
           .order("display_order", { ascending: true });
 

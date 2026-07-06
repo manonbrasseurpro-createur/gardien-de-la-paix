@@ -50,6 +50,80 @@
       background: none;
       color: #1a7a4a;
     }
+
+    .home-intervenants[hidden] {
+      display: none;
+    }
+
+    .home-intervenants {
+      padding: 40px 24px 48px;
+      background: var(--off-white, #faf9f6);
+    }
+
+    .home-intervenants__inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .home-intervenants__title {
+      margin: 0 0 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.6rem, 3.5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      text-align: center;
+      color: #0B1F3A;
+    }
+
+    .home-intervenants__subtitle {
+      margin: 0 auto 28px;
+      max-width: 640px;
+      font-size: 14px;
+      line-height: 1.55;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .home-intervenants__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .home-intervenant-card {
+      background: #fff;
+      border: 1px solid #e3e1d8;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .home-intervenant-card__label {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #0B1F3A;
+    }
+
+    .home-intervenant-card__context {
+      margin: 0 0 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #8B1E2F;
+      line-height: 1.4;
+    }
+
+    .home-intervenant-card__quote {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 0.92rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: #333;
+    }
   </style>
 </head>
 <body class="page-home has-dash-sidebar">
@@ -122,6 +196,14 @@
       </ul>
     </div>
   </header>
+
+  <section id="home-intervenants" class="home-intervenants" hidden aria-labelledby="home-intervenants-title">
+    <div class="home-intervenants__inner">
+      <h2 id="home-intervenants-title" class="home-intervenants__title">L'avis de ceux qui connaissent le métier</h2>
+      <p class="home-intervenants__subtitle">Des retours de terrain : major de police, officier, gardien de la paix — des profils confirmés qui connaissent le concours de l'intérieur.</p>
+      <div id="home-intervenants-grid" class="home-intervenants__grid"></div>
+    </div>
+  </section>
 
   <section class="home-stats" aria-label="Chiffres clés">
     <div class="home-stats__inner">
@@ -428,5 +510,78 @@
   <script src="auth-service.js"></script>
   <script src="cookie-consent.js"></script>
   <script src="access-control.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function getSupabaseClient() {
+        if (window.__gpxSupabaseClient) {
+          return window.__gpxSupabaseClient;
+        }
+        const cfg = window.GPX_SUPABASE || {};
+        const url = (cfg.url || cfg.SUPABASE_URL || "").replace(/\/$/, "");
+        const anonKey = cfg.anonKey || cfg.anon_key || cfg.publishableKey || "";
+        if (!url || !anonKey || !window.supabase?.createClient) {
+          return null;
+        }
+        window.__gpxSupabaseClient = window.supabase.createClient(url, anonKey);
+        return window.__gpxSupabaseClient;
+      }
+
+      function renderIntervenantCard(item) {
+        const card = document.createElement("article");
+        card.className = "home-intervenant-card";
+
+        const quoteText = String(item.quote_short || item.quote_full || "").trim();
+        const contextHtml = item.context
+          ? `<p class="home-intervenant-card__context">${escapeHtml(item.context)}</p>`
+          : "";
+
+        card.innerHTML = `
+          <p class="home-intervenant-card__label">Intervenant ${escapeHtml(item.display_order ?? "")}</p>
+          ${contextHtml}
+          <blockquote class="home-intervenant-card__quote">${escapeHtml(quoteText)}</blockquote>
+        `;
+
+        return card;
+      }
+
+      async function loadHomeIntervenants() {
+        const sectionEl = document.getElementById("home-intervenants");
+        const gridEl = document.getElementById("home-intervenants-grid");
+        const client = getSupabaseClient();
+
+        if (!sectionEl || !gridEl || !client) {
+          return;
+        }
+
+        const { data, error } = await client
+          .from("professional_quotes")
+          .select("display_order, context, quote_short, quote_full")
+          .eq("is_visible", true)
+          .order("display_order", { ascending: true });
+
+        if (error || !data?.length) {
+          if (error) {
+            console.warn("[index] home intervenants:", error);
+          }
+          return;
+        }
+
+        data.forEach((item) => {
+          gridEl.appendChild(renderIntervenantCard(item));
+        });
+        sectionEl.hidden = false;
+      }
+
+      document.addEventListener("DOMContentLoaded", loadHomeIntervenants);
+    })();
+  </script>
 </body>
 </html>

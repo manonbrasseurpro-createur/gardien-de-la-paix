@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citations et conseils de professionnels — Concours Gardien de la Paix</title>
+  <meta name="description" content="Retours anonymes de professionnels qui connaissent le concours Gardien de la Paix : conseils, méthode et témoignages pour mieux préparer le GPX.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://prepagpx.fr/citations.html" />
+  <link rel="stylesheet" href="style.css">
+  <script src="site-seo.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    .citations-page {
+      padding-top: 32px;
+      padding-bottom: 48px;
+    }
+
+    .citations-page__header {
+      max-width: 640px;
+      margin: 0 auto 32px;
+      text-align: center;
+    }
+
+    .citations-page__title {
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.75rem, 4vw, 2.125rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: #0B1F3A;
+    }
+
+    .citations-page__subtitle {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .citations-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .quote-card {
+      position: relative;
+      background: #fff;
+      border: 1px solid #e3e1d8;
+      border-radius: 12px;
+      padding: 24px 24px 24px 32px;
+    }
+
+    .quote-card__mark {
+      position: absolute;
+      top: 8px;
+      left: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: #B8935E;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .quote-card__text {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      padding-top: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .quote-card__context {
+      margin: 16px 0 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #8B1E2F;
+    }
+
+    .citations-empty {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--muted, #6b7280);
+      font-size: 0.95rem;
+    }
+
+    .citations-empty[hidden] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav id="gpx-site-nav" class="gpx-site-nav" aria-label="Navigation principale">
+    <div class="gpx-site-nav__inner">
+      <a class="gpx-site-nav__brand" href="index.html">Prepa GPX<span class="gpx-site-nav__flag" aria-hidden="true"></span></a>
+      <div class="gpx-site-nav__links" id="gpx-site-nav-links">
+        <a href="index.html">Accueil</a>
+        <a href="actualites.html">Actualités</a>
+        <a href="tarifs.html">Tarifs</a>
+        <a href="connexion.html">Se connecter</a>
+        <a class="gpx-site-nav__cta" href="inscription.html">S'inscrire</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container auth-container citations-page">
+    <header class="citations-page__header">
+      <h1 class="citations-page__title">Citations et conseils de professionnels</h1>
+      <p class="citations-page__subtitle">Des retours anonymes de personnes qui connaissent le concours de l'intérieur</p>
+    </header>
+
+    <div id="citations-list" class="citations-list" aria-live="polite"></div>
+    <p id="citations-empty" class="citations-empty" hidden>De nouveaux témoignages arrivent bientôt</p>
+
+    <p class="auth-footer">
+      <a href="index.html">Retour à l'accueil</a> · <a href="actualites.html">Actualités</a> · <a href="concours-gpx.html">Guide du concours</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="cookie-consent.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    (function () {
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function getSupabaseClient() {
+        if (window.__gpxSupabaseClient) {
+          return window.__gpxSupabaseClient;
+        }
+        const cfg = window.GPX_SUPABASE || {};
+        const url = (cfg.url || cfg.SUPABASE_URL || "").replace(/\/$/, "");
+        const anonKey = cfg.anonKey || cfg.anon_key || cfg.publishableKey || "";
+        if (!url || !anonKey || !window.supabase?.createClient) {
+          return null;
+        }
+        window.__gpxSupabaseClient = window.supabase.createClient(url, anonKey);
+        return window.__gpxSupabaseClient;
+      }
+
+      function renderQuoteCard(quote) {
+        const card = document.createElement("article");
+        card.className = "quote-card";
+
+        const contextHtml = quote.context
+          ? `<p class="quote-card__context">— ${escapeHtml(quote.context)}</p>`
+          : "";
+
+        card.innerHTML = `
+          <span class="quote-card__mark" aria-hidden="true">“</span>
+          <blockquote class="quote-card__text">${escapeHtml(quote.quote)}</blockquote>
+          ${contextHtml}
+        `;
+
+        return card;
+      }
+
+      function showEmptyState() {
+        const emptyEl = document.getElementById("citations-empty");
+        emptyEl.hidden = false;
+      }
+
+      async function loadQuotes() {
+        const listEl = document.getElementById("citations-list");
+        const client = getSupabaseClient();
+
+        if (!client) {
+          showEmptyState();
+          return;
+        }
+
+        const { data, error } = await client
+          .from("professional_quotes")
+          .select("quote, context")
+          .eq("is_visible", true)
+          .order("display_order", { ascending: true });
+
+        if (error) {
+          console.error("[citations]", error);
+          showEmptyState();
+          return;
+        }
+
+        if (!data?.length) {
+          showEmptyState();
+          return;
+        }
+
+        data.forEach((item) => {
+          listEl.appendChild(renderQuoteCard(item));
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", loadQuotes);
+    })();
+  </script>
+</body>
+</html>

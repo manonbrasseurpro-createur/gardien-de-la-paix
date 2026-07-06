@@ -288,6 +288,76 @@
       background: #fef2f2;
       border-color: #fecaca;
     }
+
+    .dash-intervenants-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .dash-intervenant-card {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .dash-intervenant-card__label {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #0B1F3A;
+    }
+
+    .dash-intervenant-card__context {
+      margin: 0 0 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #8B1E2F;
+      line-height: 1.4;
+    }
+
+    .dash-intervenant-card__quote {
+      margin: 0;
+      flex: 1;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 0.88rem;
+      font-style: italic;
+      line-height: 1.55;
+      color: #333;
+    }
+
+    .dash-intervenant-card__toggle {
+      align-self: flex-start;
+      margin-top: 10px;
+      padding: 0;
+      border: none;
+      background: none;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .dash-intervenant-card__toggle:hover {
+      color: #8B1E2F;
+    }
+
+    .dash-community-intro {
+      margin: 0 0 14px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
     .dash-leaderboard-wrap table {
       min-width: 520px;
     }
@@ -502,9 +572,19 @@
         </header>
         <div class="container auth-container">
           <div class="auth-card auth-card--wide">
+            <p class="dash-widget__label">Nos intervenants</p>
+            <h2>Citations et conseils de professionnels</h2>
+            <p style="color: var(--muted); margin: 0 0 16px;">Retours anonymes de personnes qui connaissent le concours de l'intérieur.</p>
+            <div class="dash-intervenants-grid" id="community-intervenants-grid" aria-live="polite">
+              <p style="color: var(--muted); margin: 0; grid-column: 1 / -1;">Chargement…</p>
+            </div>
+          </div>
+
+          <div class="auth-card auth-card--wide">
             <p class="dash-widget__label">Fil de discussion</p>
             <h2>Échangez avec les autres candidats</h2>
             <p>Partagez vos conseils, questions ou retours d'entraînement. Maximum 500 caractères par message.</p>
+            <p class="dash-community-intro">Vos questions sont ouvertes à tous, y compris à nos intervenants qui pourront y répondre.</p>
             <form class="dash-community-form" id="community-post-form">
               <textarea id="community-message" maxlength="500" placeholder="Votre message..." aria-label="Votre message"></textarea>
               <div class="dash-community-form-footer">
@@ -1159,6 +1239,94 @@
         }).join('');
       }
 
+      function hasExpandableIntervenantQuote(item) {
+        const shortText = String(item.quote_short || '').trim();
+        const fullText = String(item.quote_full || '').trim();
+        return Boolean(fullText && fullText !== shortText);
+      }
+
+      function renderIntervenantCard(item) {
+        const card = document.createElement('article');
+        card.className = 'dash-intervenant-card';
+
+        const shortText = String(item.quote_short || item.quote_full || '').trim();
+        const fullText = String(item.quote_full || item.quote_short || '').trim();
+        const expandable = hasExpandableIntervenantQuote(item);
+
+        const contextHtml = item.context
+          ? `<p class="dash-intervenant-card__context">${escapeCommunityHtml(item.context)}</p>`
+          : '';
+
+        card.innerHTML = `
+          <p class="dash-intervenant-card__label">Intervenant ${escapeCommunityHtml(item.display_order ?? '')}</p>
+          ${contextHtml}
+          <blockquote class="dash-intervenant-card__quote" data-quote-text>${escapeCommunityHtml(shortText)}</blockquote>
+          ${expandable ? '<button type="button" class="dash-intervenant-card__toggle" data-quote-toggle aria-expanded="false">Lire la suite</button>' : ''}
+        `;
+
+        if (expandable) {
+          const quoteEl = card.querySelector('[data-quote-text]');
+          const toggleBtn = card.querySelector('[data-quote-toggle]');
+
+          toggleBtn.addEventListener('click', () => {
+            const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+            if (expanded) {
+              quoteEl.textContent = shortText;
+              toggleBtn.textContent = 'Lire la suite';
+              toggleBtn.setAttribute('aria-expanded', 'false');
+            } else {
+              quoteEl.textContent = fullText;
+              toggleBtn.textContent = 'Réduire';
+              toggleBtn.setAttribute('aria-expanded', 'true');
+            }
+          });
+        }
+
+        return card;
+      }
+
+      function renderCommunityIntervenants(items) {
+        const gridEl = document.getElementById('community-intervenants-grid');
+        if (!gridEl) return;
+
+        if (!items || items.length === 0) {
+          gridEl.innerHTML = '<p style="color: var(--muted); margin: 0; grid-column: 1 / -1;">De nouveaux intervenants arrivent bientôt.</p>';
+          return;
+        }
+
+        gridEl.innerHTML = '';
+        items.forEach((item) => {
+          gridEl.appendChild(renderIntervenantCard(item));
+        });
+      }
+
+      async function loadCommunityIntervenants() {
+        const client = getDashSupabaseClient();
+        const gridEl = document.getElementById('community-intervenants-grid');
+        if (!client) {
+          if (gridEl) {
+            gridEl.innerHTML = '<p style="color: var(--muted); margin: 0; grid-column: 1 / -1;">Connexion requise pour afficher les intervenants.</p>';
+          }
+          return;
+        }
+
+        const { data, error } = await client
+          .from('professional_quotes')
+          .select('display_order, context, quote_short, quote_full')
+          .eq('is_visible', true)
+          .order('display_order', { ascending: true });
+
+        if (error) {
+          if (gridEl) {
+            gridEl.innerHTML = '<p style="color: var(--seal); margin: 0; grid-column: 1 / -1;">Impossible de charger les intervenants.</p>';
+          }
+          console.warn('[GPX Communauté] loadCommunityIntervenants:', error);
+          return;
+        }
+
+        renderCommunityIntervenants(data || []);
+      }
+
       async function loadCommunityPosts() {
         const client = getDashSupabaseClient();
         const listEl = document.getElementById('community-posts-list');
@@ -1211,7 +1379,7 @@
         const currentUser = await window.GPXAuth?.getCurrentUser?.();
         communityCurrentUserId = currentUser?.id || null;
         updateCommunityCharCount();
-        await Promise.all([loadCommunityPosts(), loadCommunityLeaderboard()]);
+        await Promise.all([loadCommunityIntervenants(), loadCommunityPosts(), loadCommunityLeaderboard()]);
       }
 
       document.getElementById('community-message')?.addEventListener('input', updateCommunityCharCount);

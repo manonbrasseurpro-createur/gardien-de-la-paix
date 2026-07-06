@@ -289,3 +289,20 @@ as $$
 $$;
 
 grant execute on function public.get_cas_pratique_leaderboard() to authenticated;
+
+-- Questions contact intervenants (page citations)
+create table if not exists public.intervenant_questions (
+  id uuid primary key default gen_random_uuid(),
+  quote_id uuid references public.professional_quotes (id) on delete set null,
+  student_name text not null,
+  student_email text not null,
+  message text not null,
+  status text not null default 'nouveau',
+  created_at timestamptz not null default now()
+);
+
+alter table public.intervenant_questions enable row level security;
+
+create policy "Anyone can submit a question"
+  on public.intervenant_questions for insert
+  with check (true);

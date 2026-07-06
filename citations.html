@@ -81,12 +81,45 @@
     }
 
     .quote-card__context {
-      margin: 16px 0 0;
+      position: relative;
+      z-index: 1;
+      margin: 0 0 12px;
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: #8B1E2F;
+    }
+
+    .quote-card__toggle {
+      position: relative;
+      z-index: 1;
+      margin-top: 12px;
+      padding: 0;
+      border: none;
+      background: none;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #0B1F3A;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .quote-card__toggle:hover {
+      color: #8B1E2F;
+    }
+
+    .quote-card__help {
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      padding: 10px;
+      background: #F6F4EE;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #0B1F3A;
     }
 
     .citations-empty {
@@ -159,19 +192,53 @@
         return window.__gpxSupabaseClient;
       }
 
-      function renderQuoteCard(quote) {
+      function hasExpandableQuote(item) {
+        const shortText = String(item.quote_short || "").trim();
+        const fullText = String(item.quote_full || "").trim();
+        return Boolean(fullText && fullText !== shortText);
+      }
+
+      function renderQuoteCard(item) {
         const card = document.createElement("article");
         card.className = "quote-card";
 
-        const contextHtml = quote.context
-          ? `<p class="quote-card__context">— ${escapeHtml(quote.context)}</p>`
+        const contextHtml = item.context
+          ? `<p class="quote-card__context">${escapeHtml(item.context)}</p>`
+          : "";
+
+        const shortText = String(item.quote_short || item.quote_full || "").trim();
+        const fullText = String(item.quote_full || item.quote_short || "").trim();
+        const expandable = hasExpandableQuote(item);
+
+        const helpHtml = item.offers_help
+          ? `<p class="quote-card__help">Disponible pour vous accompagner — plus d'infos bientôt</p>`
           : "";
 
         card.innerHTML = `
-          <span class="quote-card__mark" aria-hidden="true">“</span>
-          <blockquote class="quote-card__text">${escapeHtml(quote.quote)}</blockquote>
           ${contextHtml}
+          <span class="quote-card__mark" aria-hidden="true">“</span>
+          <blockquote class="quote-card__text" data-quote-text>${escapeHtml(shortText)}</blockquote>
+          ${expandable ? `<button type="button" class="quote-card__toggle" data-quote-toggle aria-expanded="false">Lire la suite</button>` : ""}
+          ${helpHtml}
         `;
+
+        if (expandable) {
+          const quoteEl = card.querySelector("[data-quote-text]");
+          const toggleBtn = card.querySelector("[data-quote-toggle]");
+
+          toggleBtn.addEventListener("click", () => {
+            const expanded = toggleBtn.getAttribute("aria-expanded") === "true";
+            if (expanded) {
+              quoteEl.textContent = shortText;
+              toggleBtn.textContent = "Lire la suite";
+              toggleBtn.setAttribute("aria-expanded", "false");
+            } else {
+              quoteEl.textContent = fullText;
+              toggleBtn.textContent = "Réduire";
+              toggleBtn.setAttribute("aria-expanded", "true");
+            }
+          });
+        }
 
         return card;
       }
@@ -192,7 +259,7 @@
 
         const { data, error } = await client
           .from("professional_quotes")
-          .select("quote, context")
+          .select("context, quote_short, quote_full, offers_help")
           .eq("is_visible", true)
           .order("display_order", { ascending: true });
 

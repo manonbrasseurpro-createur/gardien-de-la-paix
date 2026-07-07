@@ -11,6 +11,52 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <style>
+    .home-booking {
+      padding: 48px 24px 56px;
+      background: var(--white, #fff);
+    }
+
+    .home-booking__inner {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .home-booking__title {
+      margin: 0 0 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.6rem, 3.5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: #0B1F3A;
+    }
+
+    .home-booking__subtitle {
+      margin: 0 0 24px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #6b7280;
+    }
+
+    .home-booking__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      background: #0B1F3A;
+      color: #F6F4EE;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .home-booking__button:hover {
+      background: #071527;
+    }
+  </style>
 </head>
 <body>
   <nav id="gpx-site-nav" class="gpx-site-nav" aria-label="Navigation principale">
@@ -70,6 +116,14 @@
           <dd>Oui, le paiement passe par Stripe ; nous n'avons jamais accès à vos coordonnées bancaires complètes.</dd>
         </div>
       </dl>
+    </section>
+
+    <section class="home-booking" aria-labelledby="home-booking-title">
+      <div class="home-booking__inner">
+        <h2 id="home-booking-title" class="home-booking__title">Une question avant de vous lancer ?</h2>
+        <p class="home-booking__subtitle">Réservez un créneau de 15 minutes pour qu'on en discute ensemble.</p>
+        <a class="home-booking__button" href="https://calendly.com/prepagpx/nouvelle-reunion" target="_blank" rel="noopener noreferrer">Prendre rendez-vous</a>
+      </div>
     </section>
 
     <p class="auth-footer">

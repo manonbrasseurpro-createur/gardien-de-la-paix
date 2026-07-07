@@ -1857,11 +1857,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         documents: [
           {
             title: "Document 1 - Article 222-12 du Code pénal",
-            text: "Sera puni d'un an d'emprisonnement et de 15 000 euros d'amende le fait, pour une personne, de commettre des violences ayant entraîné une incapacité totale de travail personnelle n'excédant pas huit jours."
+            text: "Les violences prévues par l'article 222-11, ayant entraîné une incapacité totale de travail supérieure à huit jours, sont aggravées lorsqu'elles sont commises dans certaines circonstances, notamment par le conjoint, le concubin ou le partenaire lié à la victime. La peine est portée à cinq ans d'emprisonnement et 75 000 euros d'amende avec une circonstance aggravante, peut être portée à sept ans et 100 000 euros en présence de deux circonstances aggravantes, et à dix ans et 150 000 euros en présence de trois circonstances aggravantes."
           },
           {
             title: "Document 2 - Article 222-13 du Code pénal",
-            text: "Sera puni de cinq ans d'emprisonnement et de 75 000 euros d'amende le fait, pour une personne, de commettre des violences habituelles sur le conjoint, l'ex-conjoint, le concubin ou l'ex-concubin."
+            text: "Les violences ayant entraîné une incapacité totale de travail n'excédant pas huit jours sont aggravées lorsqu'elles sont commises dans certaines circonstances, notamment par le conjoint, le concubin ou le partenaire lié à la victime. La peine est portée à trois ans d'emprisonnement et 45 000 euros d'amende avec une circonstance aggravante, peut être portée à cinq ans et 75 000 euros en présence de deux circonstances aggravantes, et à sept ans et 100 000 euros en présence de trois circonstances aggravantes."
           },
           {
             title: "Document 3 - Article 40 du Code de procédure pénale",
@@ -1877,7 +1877,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           },
           {
             title: "Document 6 - Tableau récapitulatif des infractions",
-            text: "Violences avec ITT ≤ 8 jours (art. 222-12 CP) : délit, 1 an + 15 000 €. Violences habituelles sur conjoint (art. 222-13 CP) : délit, 5 ans + 75 000 €. Main courante : consignation des faits sans plainte. Signalement au procureur (art. 40 CPP) : possible même sans plainte."
+            text: "Violences avec ITT ≤ 8 jours, circonstance aggravante — conjoint/concubin (art. 222-13 CP) : délit, 3 ans + 45 000 €. Violences avec ITT > 8 jours, circonstance aggravante — conjoint/concubin (art. 222-12 CP) : délit, 5 ans + 75 000 €. Main courante : consignation des faits sans plainte. Signalement au procureur (art. 40 CPP) : possible même sans plainte."
           },
           {
             title: "Document 7 - Fiche mémo : accueil d'une victime de violences conjugales",
@@ -1893,10 +1893,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
             title: "Question 1 (4 points)",
             points: 4,
             prompt: "Identifiez la ou les infraction(s) susceptibles d'être caractérisées. Précisez leur qualification juridique et le niveau de gravité (contraventionnel ou délictuel) au regard de l'ITT communiquée.",
-            model: "Madame ROUSSEL est victime de violences physiques (saisie par les cheveux, poussée contre le plan de travail, coup de paume au visage) ayant entraîné une ITT provisoire de 5 jours, inférieure à huit jours. Selon l'article 222-12 du code pénal, cela constitue un délit : l'auteur encourt 1 an d'emprisonnement et 15 000 euros d'amende.\nLes faits répétés sur huit mois peuvent aussi caractériser des violences habituelles sur conjoint, selon l'article 222-13 du code pénal : délit puni de 5 ans d'emprisonnement et 75 000 euros d'amende.\nIl s'agit de délits, non de contraventions.",
+            model: "Madame ROUSSEL est victime de violences physiques (saisie par les cheveux, poussée contre le plan de travail, coup de paume au visage) ayant entraîné une ITT provisoire de 5 jours, inférieure ou égale à huit jours. Les faits sont commis par son mari, conjoint de la victime : il s'agit d'une circonstance aggravante. Selon l'article 222-13 du code pénal, cela constitue un délit : l'auteur encourt 3 ans d'emprisonnement et 45 000 euros d'amende (peine portée à 5 ans et 75 000 euros en présence de deux circonstances aggravantes, 7 ans et 100 000 euros en présence de trois).\nSi l'ITT venait à être supérieure à huit jours, l'article 222-12 du code pénal s'appliquerait avec la même circonstance aggravante liée au conjoint : 5 ans d'emprisonnement et 75 000 euros d'amende.\nLes violences répétées depuis environ huit mois renforcent l'évaluation du danger et justifient le signalement au procureur, sans modifier la qualification pénale principale au regard de l'ITT provisoire de 5 jours.\nIl s'agit de délits, non de contraventions.",
             keypoints: [
-              { label: "Violences avec ITT ≤ 8 jours — art. 222-12 CP", keywords: ["222-12", "5 jours", "itt", "delit"] },
-              { label: "Violences habituelles sur conjoint — art. 222-13 CP", keywords: ["222-13", "habituelles", "conjoint", "huit mois"] },
+              { label: "Violences avec ITT ≤ 8 jours sur conjoint — art. 222-13 CP, 3 ans", keywords: ["222-13", "5 jours", "itt", "conjoint", "45000"] },
+              { label: "Si ITT > 8 jours — art. 222-12 CP, 5 ans", keywords: ["222-12", "huit jours", "75000", "aggrave"] },
+              { label: "Répétition sur huit mois — danger et signalement", keywords: ["huit mois", "repetes", "danger", "signalement"] },
               { label: "Qualification délictuelle, pas contraventionnelle", keywords: ["delit", "contravention", "gravite"] },
               { label: "ITT de 5 jours inférieure à 8 jours", keywords: ["5", "huit jours", "provisoire"] },
               { label: "Prudence : qualification possible, pas de culpabilité", keywords: ["susceptible", "autorite judiciaire", "elements"] }
@@ -1935,12 +1936,12 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
             title: "Question 4 (3 points)",
             points: 3,
             prompt: "Le lendemain, monsieur FERNAND se présente au commissariat pour « récupérer sa femme ». Décrivez les mesures d'accueil, de prévention et de procédure à adopter. Quelles infractions pourrait-il encourir en cas de nouvelles violences ?",
-            model: "Je garde mon calme et je n'autorise aucun contact entre monsieur FERNAND et madame ROUSSEL.\nJe lui explique qu'il sera reçu après les personnes déjà en attente et qu'un ton agressif ne fera pas avancer les choses. Je lui demande de se rasseoir et de patienter.\nIl est important d'être calme et ferme pour éviter que la situation dégénère.\nAvec un collègue, je l'accueille en zone séparée. Je préviens l'OPJ et ma hiérarchie.\nSi son comportement se durcit : injonctions, contrôle, interpellation si les conditions légales sont réunies (outrage art. 433-5, rébellion art. 433-6). En cas de nouvelles violences : articles 222-12 ou 222-13 du code pénal.",
+            model: "Je garde mon calme et je n'autorise aucun contact entre monsieur FERNAND et madame ROUSSEL.\nJe lui explique qu'il sera reçu après les personnes déjà en attente et qu'un ton agressif ne fera pas avancer les choses. Je lui demande de se rasseoir et de patienter.\nIl est important d'être calme et ferme pour éviter que la situation dégénère.\nAvec un collègue, je l'accueille en zone séparée. Je préviens l'OPJ et ma hiérarchie.\nSi son comportement se durcit : injonctions, contrôle, interpellation si les conditions légales sont réunies (outrage art. 433-5, rébellion art. 433-6). En cas de nouvelles violences sur conjoint : article 222-13 du code pénal si l'ITT est inférieure ou égale à huit jours (3 ans et 45 000 euros), article 222-12 du code pénal si l'ITT est supérieure à huit jours (5 ans et 75 000 euros).",
             keypoints: [
               { label: "Empêcher le contact avec la victime", keywords: ["contact", "separe", "approcher"] },
               { label: "Accueil sécurisé avec collègue et avis OPJ", keywords: ["collegue", "opj", "securite", "hierarchie"] },
               { label: "Réponse graduée — outrage ou rébellion", keywords: ["outrage", "433-5", "rebellion", "433-6"] },
-              { label: "Nouvelles violences — 222-12 ou 222-13 CP", keywords: ["222-12", "222-13", "violences"] },
+              { label: "Nouvelles violences — 222-13 si ITT ≤ 8 j, 222-12 si ITT > 8 j", keywords: ["222-13", "222-12", "itt", "violences"] },
               { label: "Consignation des propos et comportement", keywords: ["propos", "consigne", "comportement"] }
             ],
             docs: ["Document 1", "Document 2", "Document 7"]
@@ -1966,8 +1967,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         ],
         documents: [
           {
-            title: "Document 1 - Article L. 233-2 du Code de la sécurité intérieure",
-            text: "Le fait, pour le conducteur d'un véhicule, de refuser d'obtempérer à l'injonction de s'arrêter, donnée par un agent de l'autorité publique, est puni de trois ans d'emprisonnement et de 45 000 euros d'amende."
+            title: "Document 1 - Article L. 233-1 du Code de la route",
+            text: "Le fait, pour tout conducteur, d'omettre d'obtempérer à une sommation de s'arrêter émanant d'un fonctionnaire ou agent chargé de constater les infractions et muni des insignes extérieurs et apparents de sa qualité est puni de deux ans d'emprisonnement et de 15 000 euros d'amende."
           },
           {
             title: "Document 2 - Article L. 234-1 du Code de la sécurité intérieure",
@@ -1991,7 +1992,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           },
           {
             title: "Document 7 - Tableau récapitulatif des infractions",
-            text: "Refus d'obtempérer conducteur (L. 233-2 CSI) : délit, 3 ans + 45 000 €. Délit de fuite avec blessés (L. 234-1 CSI) : délit, 5 ans + 75 000 €. Conduite en état d'ivresse (L. 234-2 CSI) : délit, 2 ans + 4 500 €. Excès de vitesse > 50 km/h (R. 413-14 CR) : contravention 5e cl. Violences ITT > 8 jours (222-11 CP) : délit, 3 ans + 45 000 €."
+            text: "Refus d'obtempérer conducteur (L. 233-1 CR) : délit, 2 ans + 15 000 €. Délit de fuite avec blessés (L. 234-1 CSI) : délit, 5 ans + 75 000 €. Conduite en état d'ivresse (L. 234-2 CSI) : délit, 2 ans + 4 500 €. Excès de vitesse > 50 km/h (R. 413-14 CR) : contravention 5e cl. Violences ITT > 8 jours (222-11 CP) : délit, 3 ans + 45 000 €."
           },
           {
             title: "Document 8 - Pouvoirs des FPJA en flagrance",
@@ -2003,11 +2004,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
             title: "Question 1 (4 points)",
             points: 4,
             prompt: "Identifiez l'ensemble des infractions commises par monsieur MOREAU au regard des faits décrits. Classez-les par ordre de gravité et indiquez les peines encourues.",
-            model: "Monsieur MOREAU commet plusieurs infractions. Par gravité décroissante :\n- Délit de fuite après accident avec blessé, article L. 234-1 du code de la sécurité intérieure : 5 ans d'emprisonnement et 75 000 euros d'amende.\n- Refus d'obtempérer en qualité de conducteur, article L. 233-2 CSI : 3 ans et 45 000 euros.\n- Violences ayant entraîné une ITT supérieure à 8 jours pour monsieur LEBLANC (18 jours), article 222-11 du code pénal : 3 ans et 45 000 euros.\n- Conduite en état d'ivresse, article L. 234-2 CSI : 2 ans et 4 500 euros.\n- Excès de vitesse supérieur à 50 km/h en agglomération, article R. 413-14 du code de la route : contravention de 5e classe (amende et suspension).\n- Circulation en sens interdit : contravention.",
+            model: "Monsieur MOREAU commet plusieurs infractions. Par gravité décroissante :\n- Délit de fuite après accident avec blessé, article L. 234-1 du code de la sécurité intérieure : 5 ans d'emprisonnement et 75 000 euros d'amende.\n- Violences ayant entraîné une ITT supérieure à 8 jours pour monsieur LEBLANC (18 jours), article 222-11 du code pénal : 3 ans et 45 000 euros.\n- Refus d'obtempérer en qualité de conducteur, article L. 233-1 du code de la route : 2 ans et 15 000 euros.\n- Conduite en état d'ivresse, article L. 234-2 CSI : 2 ans et 4 500 euros.\n- Excès de vitesse supérieur à 50 km/h en agglomération, article R. 413-14 du code de la route : contravention de 5e classe (amende et suspension).\n- Circulation en sens interdit : contravention.",
             keypoints: [
               { label: "Délit de fuite blessé — L. 234-1 CSI, 5 ans", keywords: ["l. 234-1", "fuite", "5 ans", "bless"] },
-              { label: "Refus d'obtempérer conducteur — L. 233-2 CSI, 3 ans", keywords: ["l. 233-2", "obtemperer", "3 ans", "conducteur"] },
               { label: "ITT 18 jours — art. 222-11 CP, 3 ans", keywords: ["222-11", "18 jours", "itt", "pieton"] },
+              { label: "Refus d'obtempérer conducteur — L. 233-1 CR, 2 ans", keywords: ["l. 233-1", "obtemperer", "2 ans", "conducteur"] },
               { label: "Ivresse — L. 234-2 CSI, 2 ans", keywords: ["l. 234-2", "ivresse", "alcool", "2 ans"] },
               { label: "Excès de vitesse — contravention 5e classe", keywords: ["r. 413-14", "contravention", "vitesse", "50"] }
             ],
@@ -2082,12 +2083,12 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
             text: "Le vol est la soustraction frauduleuse de la chose d'autrui."
           },
           {
-            title: "Document 2 - Article 311-4 du Code pénal",
-            text: "Le vol est puni de cinq ans d'emprisonnement et de 75 000 euros d'amende lorsqu'il est commis sur une personne dont la particulière vulnérabilité, due à son âge, à une maladie, à une infirmité, à une déficience physique ou psychique ou à un état de grossesse, est apparente ou connue de l'auteur."
+            title: "Document 2 - Article 311-5 du Code pénal",
+            text: "Le vol est puni de sept ans d'emprisonnement et de 100 000 euros d'amende lorsqu'il est précédé, accompagné ou suivi de violences ayant entraîné une incapacité totale de travail n'excédant pas huit jours, ou lorsqu'il est facilité par la particulière vulnérabilité de la victime due à son âge, à une maladie, à une infirmité, à une déficience physique ou psychique ou à un état de grossesse, apparente ou connue de l'auteur, ou lorsqu'il est commis dans un local d'habitation par ruse, effraction ou escalade. Lorsque plusieurs circonstances aggravantes sont réunies, la peine peut être portée à dix ans d'emprisonnement et 150 000 euros d'amende."
           },
           {
-            title: "Document 3 - Article 311-5 du Code pénal",
-            text: "Le vol est puni de sept ans d'emprisonnement et de 100 000 euros d'amende lorsqu'il est précédé, accompagné ou suivi de violences sur les personnes."
+            title: "Document 3 - Article 311-4 du Code pénal",
+            text: "Le vol est puni de cinq ans d'emprisonnement et de 75 000 euros d'amende lorsqu'il est commis en réunion, sur une personne dépositaire de l'autorité publique, avec violence n'ayant entraîné aucune incapacité de travail, dans un établissement de santé, dans un local d'habitation, dans un véhicule affecté au transport collectif ou à proximité immédiate, par dégradation, avec le visage dissimulé, dans un établissement scolaire ou dans le cadre d'un trafic d'animaux."
           },
           {
             title: "Document 4 - Article 75 du Code de procédure pénale",
@@ -2099,7 +2100,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           },
           {
             title: "Document 6 - Tableau récapitulatif des infractions",
-            text: "Vol simple (art. 311-1 CP) : délit, 3 ans + 45 000 €. Vol sur personne vulnérable (art. 311-4 al. 5 CP) : délit aggravé, 5 ans + 75 000 €. Vol avec violences (art. 311-5 CP) : délit aggravé, 7 ans + 100 000 €."
+            text: "Vol simple (art. 311-1 CP) : délit, 3 ans + 45 000 €. Vol aggravé, une circonstance art. 311-5 CP (vulnérabilité ou violence ITT ≤ 8 j) : 7 ans + 100 000 €. Vol aggravé, deux circonstances art. 311-5 CP (vulnérabilité + violence ITT ≤ 8 j) : 10 ans + 150 000 €. Vol en transport collectif (art. 311-4 CP) : 5 ans + 75 000 € — sans lien avec la vulnérabilité."
           },
           {
             title: "Document 7 - Ouverture d'une enquête de flagrance",
@@ -2115,12 +2116,13 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
             title: "Question 1 (4 points)",
             points: 4,
             prompt: "Qualifiez juridiquement les faits reprochés à monsieur KOWALSKI. Les violences sur madame PETIT modifient-elles la qualification ? Justifiez par référence aux articles du Code pénal.",
-            model: "Monsieur KOWALSKI a soustrait frauduleusement le sac de madame PETIT : vol, article 311-1 du code pénal.\nMadame PETIT, 71 ans, présente une vulnérabilité apparente liée à son âge. Selon l'article 311-4 al. 5 du code pénal, le vol est aggravé : 5 ans d'emprisonnement et 75 000 euros d'amende.\nL'éraflure à la main et l'ITT de 2 jours liées à l'arrachage peuvent caractériser des violences accompagnant le vol. Dans ce cas, l'article 311-5 du code pénal s'applique : vol avec violences, 7 ans et 100 000 euros.\nLe second portefeuille retrouvé peut constituer un vol distinct.",
+            model: "Monsieur KOWALSKI a soustrait frauduleusement le sac de madame PETIT : vol, article 311-1 du code pénal.\nDeux circonstances aggravantes de l'article 311-5 du code pénal se cumulent : d'une part, le vol est facilité par la vulnérabilité apparente de madame PETIT, 71 ans, liée à son âge ; d'autre part, l'arrachage du sac s'est accompagné de violences ayant entraîné une ITT de 2 jours, inférieure ou égale à huit jours.\nCes deux circonstances relèvent du même article 311-5 et ne constituent pas deux qualifications distinctes à 5 ans puis 7 ans. La peine encourue est portée à dix ans d'emprisonnement et 150 000 euros d'amende.\nL'article 311-4 du code pénal ne vise pas la vulnérabilité liée à l'âge ; il peut concerner notamment le transport collectif, mais ce n'est pas la qualification centrale retenue ici.\nLe second portefeuille retrouvé peut constituer un vol distinct.",
             keypoints: [
               { label: "Vol simple — art. 311-1 CP", keywords: ["311-1", "vol", "soustraction", "sac"] },
-              { label: "Personne vulnérable — art. 311-4 al. 5 CP, 5 ans", keywords: ["311-4", "vulnerabilite", "age", "71", "aggrave"] },
-              { label: "Vol avec violences — art. 311-5 CP, 7 ans", keywords: ["311-5", "violences", "7 ans", "eraflure"] },
-              { label: "ITT 2 jours — violences légères possibles", keywords: ["2 jours", "itt", "arrachage", "main"] },
+              { label: "Vulnérabilité (71 ans) — circonstance art. 311-5 CP", keywords: ["311-5", "vulnerabilite", "age", "71"] },
+              { label: "Violence ITT 2 jours — circonstance art. 311-5 CP", keywords: ["311-5", "2 jours", "itt", "violences", "arrachage"] },
+              { label: "Deux circonstances 311-5 — 10 ans + 150 000 €", keywords: ["10 ans", "150000", "deux", "circonstances"] },
+              { label: "311-4 CP — pas la vulnérabilité", keywords: ["311-4", "transport", "pas vulnerabilite"] },
               { label: "Second portefeuille — vols multiples", keywords: ["second", "portefeuille", "serie", "victime"] }
             ],
             docs: ["Document 1", "Document 2", "Document 3", "Document 6"]
@@ -2171,7 +2173,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         commonErrors: [
           { bad: "J'arrête KOWALSKI.", good: "Je procède à son interpellation en flagrance au sens des art. 75 et 73 CPP." },
           { bad: "Je rends le sac immédiatement.", good: "Je préserve le sac et les portefeuilles comme éléments matériels pour l'OPJ." },
-          { bad: "La vulnérabilité ne change rien.", good: "L'âge de madame PETIT permet d'envisager l'aggravation de l'art. 311-4 al. 5 CP." }
+          { bad: "La vulnérabilité ne change rien.", good: "L'âge de madame PETIT et l'ITT de 2 jours sont deux circonstances aggravantes de l'art. 311-5 CP : peine portée à 10 ans et 150 000 €." }
         ]
       },
       {

@@ -2189,7 +2189,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         documents: [
           {
             title: "Document 1 - Article 222-22 du Code pénal",
-            text: "Constitue une agression sexuelle toute atteinte sexuelle commise avec violence, contrainte, menace ou surprise."
+            text: "Constitue une agression sexuelle tout acte sexuel non consenti commis sur la personne d'autrui. Le consentement est libre et éclairé, spécifique, préalable et révocable ; il ne peut être déduit du seul silence ou de la seule absence de réaction de la victime. Il n'y a pas de consentement si l'acte à caractère sexuel est commis avec violence, contrainte, menace ou surprise, quelle que soit leur nature (loi du 6 novembre 2025)."
           },
           {
             title: "Document 2 - Article 222-27 du Code pénal",
@@ -2197,7 +2197,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           },
           {
             title: "Document 3 - Article 222-28 du Code pénal",
-            text: "Les agressions sexuelles sont aggravées dans plusieurs circonstances, notamment lorsqu'elles sont commises dans un véhicule affecté au transport collectif de voyageurs ou dans un lieu destiné à l'accès à un moyen de transport collectif."
+            text: "Les agressions sexuelles prévues à l'article 222-27 sont aggravées lorsqu'elles sont commises, notamment, par plusieurs personnes agissant en qualité d'auteur ou de complice, ou avec usage ou menace d'une arme."
           },
           {
             title: "Document 4 - Article 73 du Code de procédure pénale",
@@ -2212,11 +2212,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           {
             title: "Question 1 - Qualification juridique",
             prompt: "Comment qualifiez-vous les faits dénoncés par ALPHA ?",
-            model: "Les faits dénoncés relèvent d'une agression sexuelle si l'attouchement à caractère sexuel a été imposé par surprise dans le tramway. L'article 222-22 vise l'atteinte sexuelle commise avec violence, contrainte, menace ou surprise. L'article 222-27 prévoit la peine de base pour les agressions sexuelles autres que le viol. La circonstance du transport collectif peut aggraver les faits au regard de l'article 222-28. Je mentionne aussi que la qualification définitive appartient à l'autorité judiciaire : mon rôle est de relever les éléments objectifs, les déclarations de la victime, les témoins et les images disponibles.",
+            model: "Les faits dénoncés relèvent d'une agression sexuelle si l'attouchement à caractère sexuel constitue un acte sexuel non consenti imposé par surprise dans le tramway. L'article 222-22 définit l'agression sexuelle comme tout acte sexuel non consenti ; l'absence de consentement peut résulter ici de la surprise dans le tramway bondé (loi du 6 novembre 2025). L'article 222-27 prévoit la peine de base pour les agressions sexuelles autres que le viol : cinq ans d'emprisonnement et 75 000 euros d'amende. Aucune circonstance aggravante de l'article 222-28 ne ressort des faits : un seul auteur présumé, pas d'arme, pas de réunion d'auteurs ou de complices. Je mentionne aussi que la qualification définitive appartient à l'autorité judiciaire : mon rôle est de relever les éléments objectifs, les déclarations de la victime, les témoins et les images disponibles.",
             keypoints: [
               { label: "Agression sexuelle par surprise", keywords: ["agression sexuelle", "surprise", "attouchement"] },
-              { label: "Référence à l'article 222-22", keywords: ["222-22", "violence", "contrainte", "menace"] },
-              { label: "Circonstance liée au transport collectif", keywords: ["transport", "tramway", "222-28"] },
+              { label: "Référence à l'article 222-22 — acte non consenti", keywords: ["222-22", "non consenti", "consentement", "surprise"] },
+              { label: "Pas d'aggravation 222-28 — art. 222-27 seul, 5 ans", keywords: ["222-27", "5 ans", "75000", "pas aggravation"] },
               { label: "Prudence sur la qualification définitive", keywords: ["autorite judiciaire", "definitive", "role"] },
               { label: "Exploitation des témoins et vidéos", keywords: ["temoin", "video", "images"] }
             ],
@@ -2251,13 +2251,13 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           {
             title: "Question 4 - Compte rendu opérationnel",
             prompt: "Rédigez les points essentiels à faire figurer dans votre compte rendu.",
-            model: "Le compte rendu doit être chronologique et précis : heure de l'appel ou de la présentation, lieu exact, numéro de ligne ou de station, déclarations spontanées d'ALPHA, description de l'attouchement, réaction de la victime, intervention de BRAVO et CHARLIE, identité ou signalement de l'auteur présumé, propos de contestation, existence de la vidéo et urgence de sauvegarde. J'y ajoute les mesures prises : mise à l'écart, prise en charge, information OPJ, recueil des témoins, demande de conservation des images. Je cite les documents utiles : articles 222-22, 222-27, 222-28 et 73 CPP.",
+            model: "Le compte rendu doit être chronologique et précis : heure de l'appel ou de la présentation, lieu exact, numéro de ligne ou de station, déclarations spontanées d'ALPHA, description de l'attouchement, réaction de la victime, intervention de BRAVO et CHARLIE, identité ou signalement de l'auteur présumé, propos de contestation, existence de la vidéo et urgence de sauvegarde. J'y ajoute les mesures prises : mise à l'écart, prise en charge, information OPJ, recueil des témoins, demande de conservation des images. Je cite les documents utiles : articles 222-22, 222-27 et 73 CPP. Le tramway et la station restent des éléments de contexte et de preuve ; l'article 222-28 n'est pas retenu faute de circonstance aggravante caractérisée.",
             keypoints: [
               { label: "Chronologie précise", keywords: ["chronologique", "heure", "lieu"] },
               { label: "Déclarations de la victime et réaction", keywords: ["declaration", "alpha", "reaction"] },
               { label: "Intervention des témoins", keywords: ["bravo", "charlie", "temoins"] },
               { label: "Vidéoprotection et urgence", keywords: ["video", "urgence", "sauvegarde"] },
-              { label: "Citations des textes utiles", keywords: ["222-22", "222-28", "73"] }
+              { label: "Citations des textes utiles", keywords: ["222-22", "222-27", "73"] }
             ],
             docs: ["Document 1", "Document 3", "Document 4", "Document 5"]
           }
@@ -3444,10 +3444,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     const caseStyleEnhancements = {
       "agression-sexuelle-transports": {
         models: [
-          "En vertu de l'art. 222-22 du Code pénal, les faits sont susceptibles de constituer une agression sexuelle si l'attouchement a été imposé par surprise dans le tramway. L'art. 222-27 du Code pénal fixe la peine de base et l'art. 222-28 du Code pénal prévoit l'aggravation liée au transport collectif. Je rattache ces textes aux déclarations d'ALPHA, au lieu des faits, aux témoins et aux images disponibles, sans décider seul de la qualification définitive.",
+          "En vertu de l'art. 222-22 du Code pénal, les faits sont susceptibles de constituer une agression sexuelle si l'acte sexuel non consenti résulte notamment de la surprise dans le tramway (loi du 6 novembre 2025). L'art. 222-27 du Code pénal fixe la peine de base à cinq ans d'emprisonnement et 75 000 euros d'amende ; aucune circonstance aggravante de l'art. 222-28 n'est caractérisée (auteur seul, pas d'arme). Je rattache ces textes aux déclarations d'ALPHA, au lieu des faits, aux témoins et aux images disponibles, sans décider seul de la qualification définitive.",
           "En vertu de l'art. 222-22 du Code pénal, je traite ALPHA comme une victime potentielle d'atteinte sexuelle et je préserve immédiatement sa parole et les preuves. Je l'isole dans un lieu confidentiel, je l'informe de son droit de plainte et d'une prise en charge médicale ou psychologique, puis je relève l'horaire, la rame, la station, le signalement, les témoins BRAVO et CHARLIE et la vidéoprotection. J'avise l'OPJ pour les réquisitions utiles.",
           "En application de l'art. 73 du CPP, BRAVO et CHARLIE pouvaient appréhender l'auteur présumé d'un délit flagrant puni d'emprisonnement. Je sécurise d'abord la scène, je sépare l'homme de la victime et des témoins, puis je procède aux vérifications d'identité et j'avise l'OPJ. Je reste neutre face à ses dénégations et je veille au respect de ses droits.",
-          "En vertu de l'art. 222-22 du Code pénal, mon compte rendu qualifie les faits comme une possible agression sexuelle par surprise. Il mentionne chronologiquement l'heure, la ligne, la station, les déclarations d'ALPHA, l'intervention de BRAVO et CHARLIE, l'identité ou le signalement de l'auteur présumé, la contestation, les images à sauvegarder et les mesures de prise en charge. J'y ajoute les références aux art. 222-27, 222-28 du Code pénal et 73 du CPP."
+          "En vertu de l'art. 222-22 du Code pénal, mon compte rendu qualifie les faits comme une possible agression sexuelle par surprise. Il mentionne chronologiquement l'heure, la ligne, la station, les déclarations d'ALPHA, l'intervention de BRAVO et CHARLIE, l'identité ou le signalement de l'auteur présumé, la contestation, les images à sauvegarder et les mesures de prise en charge. J'y ajoute les références aux art. 222-22, 222-27 du Code pénal et 73 du CPP, sans application du 222-28 faute de circonstance aggravante caractérisée."
         ],
         commonErrors: [
           { bad: "C'était juste un contact dans la foule.", good: "Je qualifie les faits au regard de l'art. 222-22 du Code pénal et je relève les éléments objectifs." },

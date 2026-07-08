@@ -21,6 +21,22 @@
   };
 
   const SHAPES = ["triangle", "arrow", "cross", "star"];
+
+  // Croix remplacée sur ces indices : symétrie 90° rendant plusieurs options indiscernables.
+  const ROTATION_SHAPE_OVERRIDE = {
+    2: "triangle",
+    6: "arrow",
+    10: "triangle",
+    14: "arrow",
+    18: "triangle"
+  };
+
+  const SEQUENCE_SHAPE_OVERRIDE = {
+    0: "triangle",
+    4: "arrow",
+    12: "triangle"
+  };
+
   const AXES = [
     { key: "h", label: "horizontal", explanation: "Le reflet horizontal inverse le haut et le bas de la figure." },
     { key: "v", label: "vertical", explanation: "Le reflet vertical inverse la gauche et la droite de la figure." },
@@ -53,12 +69,12 @@
       { label: "90° vers la droite", value: 90 },
       { label: "180°", value: 180 },
       { label: "90° vers la gauche", value: 270 },
-      { label: "270° vers la droite", value: 270 },
-      { label: "un quart de tour dans le sens horaire", value: 90 }
+      { label: "90° vers la gauche", value: 270 },
+      { label: "90° vers la droite", value: 90 }
     ];
 
     for (let index = 0; index < 20; index += 1) {
-      const shape = SHAPES[index % SHAPES.length];
+      const shape = ROTATION_SHAPE_OVERRIDE[index] ?? SHAPES[index % SHAPES.length];
       const baseAngle = [0, 45, 90, 135, 180, 225, 270, 315][index % 8];
       const rotation = rotations[index % rotations.length];
       const answerAngle = normalizeAngle(baseAngle + rotation.value);
@@ -247,7 +263,7 @@
     const steps = [45, 60, 90, 120, 135];
 
     for (let index = 0; index < 20; index += 1) {
-      const shape = SHAPES[(index + 2) % SHAPES.length];
+      const shape = SEQUENCE_SHAPE_OVERRIDE[index] ?? SHAPES[(index + 2) % SHAPES.length];
       const startAngle = [0, 30, 45, 90][index % 4];
       const step = steps[index % steps.length];
       const mirrors = index % 3 === 0 ? ["none", "v", "none", "v"] : ["none", "none", "none", "none"];

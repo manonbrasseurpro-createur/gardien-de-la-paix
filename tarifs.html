@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tarifs | PrepaGPX — Concours Gardien de la Paix</title>
-  <meta name="description" content="7 jours gratuits sans carte bancaire. Formules PrepaGPX à partir de 14,90 €/mois : cas pratiques IA, QCM, psychotechnique et flashcards juridiques.">
+  <meta name="description" content="7 jours gratuits sans carte bancaire. Formules PrepaGPX à partir de 29,90 €/mois : cas pratiques IA, QCM, psychotechnique et flashcards juridiques.">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="style.css">
   <script src="site-seo.js"></script>
@@ -243,7 +243,7 @@
     <div class="hero__content">
       <p class="hero__label">Abonnement</p>
       <h1>Tarifs</h1>
-      <p class="hero__subtitle">7 jours gratuits, puis à partir de 14,90€/mois — sans engagement</p>
+      <p class="hero__subtitle">7 jours gratuits, puis à partir de 29,90€/mois — sans engagement</p>
     </div>
   </header>
 
@@ -366,15 +366,12 @@
   </script>
   <script>
     const PLAN_FEATURES = {
-      monthly: [
+      quarterly: [
         "Correction IA cas pratiques",
         "QCM culture générale",
         "Tests psychotechniques",
         "Flashcards juridiques",
-        "Tableau de bord"
-      ],
-      quarterly: [
-        "Tout du forfait 1 mois",
+        "Tableau de bord",
         "Sujets inspirés des sessions 2025",
         "Accès 3 mois complets"
       ],
@@ -417,7 +414,7 @@
 
     function renderPlans() {
       const plans = window.GPX_STRIPE?.plans || {};
-      const order = ["monthly", "quarterly", "biannual", "annual"];
+      const order = ["quarterly", "biannual", "annual"];
       plansRoot.innerHTML = order.map((key) => {
         const plan = plans[key];
         if (!plan) return "";

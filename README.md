@@ -6,7 +6,7 @@ Site d'entraînement au concours GPX : psychotechniques, culture, cas pratiques,
 
 - **Compte obligatoire** pour accéder aux modules (nom, prénom, e-mail, téléphone, mot de passe).
 - **Essai gratuit** : **7 jours d'accès complet — sans carte bancaire** (tous les modules et modes).
-- **Avec abonnement** (4 formules : 14,90 €/mois, 29,90 €/3 mois, 49,90 €/6 mois, 89,90 €/an) : accès illimité, page Ma progression.
+- **Avec abonnement** (3 formules : 29,90 €/3 mois, 49,90 €/6 mois, 89,90 €/an) : accès illimité, page Ma progression.
 
 Pages : `inscription.html`, `connexion.html`, `compte.html`, `tarifs.html` (paiement Stripe), `confirmation.html` (après paiement).
 
@@ -19,15 +19,14 @@ Pages : `inscription.html`, `connexion.html`, `compte.html`, `tarifs.html` (paie
 3. Renseigner `supabase-config.js` (URL + clé publishable).
 4. Dans Authentication → Providers, activer **Email** (mot de passe).
 
-### 2. Stripe (4 formules d'abonnement)
+### 2. Stripe (3 formules d'abonnement)
 
 #### A. Créer les produits Stripe (optionnel)
 
-Créez 4 prix récurrents dans le Dashboard Stripe et copiez les **Price IDs** (`price_...`) :
+Créez 3 prix récurrents dans le Dashboard Stripe et copiez les **Price IDs** (`price_...`) :
 
 | Formule | Prix |
 |---------|------|
-| Mensuel | 14,90 €/mois |
 | Trimestriel | 29,90 €/3 mois |
 | Semestriel | 49,90 €/6 mois |
 | Annuel | 89,90 €/an |

@@ -13,15 +13,6 @@ window.GPX_TRIAL_DAYS = 7;
 window.GPX_STRIPE = {
   currency: "EUR",
   plans: {
-    monthly: {
-      id: "monthly",
-      priceId: "price_1Tm87ERo8Yl21kLocoYxUW1Y",
-      label: "1 mois",
-      price: "14,90 €",
-      period: "/ mois",
-      monthlyEquivalent: null,
-      savings: null
-    },
     quarterly: {
       id: "quarterly",
       priceId: "price_1Tm87zRo8Yl21kLo2W127mKN",

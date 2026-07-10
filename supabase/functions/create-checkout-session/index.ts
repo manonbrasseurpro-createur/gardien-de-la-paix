@@ -7,7 +7,6 @@ const SUCCESS_URL =
 const CANCEL_URL = "https://prepagpx.fr/tarifs.html?cancelled=1";
 
 const PLAN_PRICE_IDS: Record<string, string> = {
-  monthly: Deno.env.get("STRIPE_PRICE_MONTHLY") || "price_1Tm87ERo8Yl21kLocoYxUW1Y",
   quarterly: Deno.env.get("STRIPE_PRICE_QUARTERLY") || "price_1Tm87zRo8Yl21kLo2W127mKN",
   biannual: Deno.env.get("STRIPE_PRICE_BIANNUAL") || "price_1Tm88JRo8Yl21kLoIZBe2PI2",
   annual: Deno.env.get("STRIPE_PRICE_ANNUAL") || "price_1Tm88hRo8Yl21kLoa2mUyLNQ"
@@ -35,7 +34,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const plan = String(body.plan || "monthly");
+    const plan = String(body.plan || "quarterly");
     const stripePriceId = PLAN_PRICE_IDS[plan];
 
     if (!stripePriceId) {

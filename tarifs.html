@@ -117,8 +117,11 @@
 
     .home-physical__grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
       gap: 16px;
+      width: fit-content;
+      max-width: 100%;
+      margin-inline: auto;
     }
 
     .home-physical-card {

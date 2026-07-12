@@ -116,6 +116,10 @@
       return false;
     }
 
+    if (user.isComplimentary === true) {
+      return true;
+    }
+
     if (
       user.subscriptionStatus === "active" &&
       user.subscriptionEnd &&
@@ -140,6 +144,9 @@
 
   function isTrialExpired(profile) {
     if (!profile) {
+      return false;
+    }
+    if (profile.isComplimentary === true) {
       return false;
     }
     const status = profile.statutAbonnement || profile.subscriptionStatus;

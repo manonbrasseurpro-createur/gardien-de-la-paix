@@ -249,6 +249,10 @@
       return { text: "Gratuit", className: "" };
     }
 
+    if (user.isComplimentary) {
+      return { text: "Accès gratuit", className: "is-active" };
+    }
+
     if (window.GPXAuth.isTrialExpired?.(user)) {
       return { text: "Expiré", className: "" };
     }

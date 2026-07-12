@@ -799,20 +799,37 @@
           const active = users.filter((u) => u.subscription_status === 'active' || u.is_complimentary).length;
           usersEl.innerHTML = `
             <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 12px;">${total} inscrits · ${active} abonnés actifs</p>
-            ${users.map((u) => `
+            ${users.map((u) => {
+              const statusLabel = u.is_complimentary
+                ? 'Accès gratuit permanent'
+                : u.subscription_status === 'active'
+                  ? 'Abonné'
+                  : 'Gratuit';
+              const statusBg = u.is_complimentary
+                ? '#ede9fe'
+                : u.subscription_status === 'active'
+                  ? '#dcfce7'
+                  : '#f3f4f6';
+              const statusColor = u.is_complimentary
+                ? '#5b21b6'
+                : u.subscription_status === 'active'
+                  ? '#166534'
+                  : '#6b7280';
+              return `
               <div style="padding: 10px 14px; margin-bottom: 6px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <div>
                   <strong style="color: var(--navy); font-size: 0.9rem;">${u.first_name} ${u.last_name}</strong>
                   <span style="color: var(--muted); font-size: 0.85rem; margin-left: 8px;">${u.email}</span>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center;">
-                  <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${u.subscription_status === 'active' ? '#dcfce7' : u.is_complimentary ? '#ede9fe' : '#f3f4f6'}; color: ${u.subscription_status === 'active' ? '#166534' : u.is_complimentary ? '#5b21b6' : '#6b7280'};">
-                    ${u.subscription_status === 'active' ? 'Abonné' : u.is_complimentary ? 'Gratuit offert' : 'Gratuit'}
+                  <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${statusBg}; color: ${statusColor};">
+                    ${statusLabel}
                   </span>
                   <span style="color: var(--muted); font-size: 0.78rem;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</span>
                 </div>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           `;
         } else {
           usersEl.innerHTML = '<p style="color: var(--muted);">Aucun utilisateur.</p>';
@@ -884,7 +901,7 @@
             return;
           }
 
-          msgEl.textContent = `✅ Accès gratuit activé pour ${profile.email}.`;
+          msgEl.textContent = `✅ Accès gratuit permanent activé pour ${profile.email}.`;
           msgEl.style.color = 'green';
           document.getElementById('admin-complimentary-email').value = '';
           await loadAdminData();

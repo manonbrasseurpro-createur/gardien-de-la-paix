@@ -91,7 +91,9 @@
       let statusText;
       let trialText = "";
 
-      if (subscribed && isTrial) {
+      if (user.isComplimentary) {
+        statusText = "Accès gratuit permanent — accès illimité à tous les modules.";
+      } else if (subscribed && isTrial) {
         statusText = "Essai gratuit actif — accès complet à tous les modules.";
         if (trialEndsAt) {
           const daysLeft = Math.max(
@@ -113,7 +115,7 @@
       document.getElementById("subscription-status").textContent = statusText;
 
       const manageBtn = document.getElementById("manage-subscription-button");
-      manageBtn.classList.toggle("hidden", !subscribed || isTrial);
+      manageBtn.classList.toggle("hidden", !subscribed || isTrial || user.isComplimentary);
 
       const trialEl = document.getElementById("trial-status");
       trialEl.textContent = trialText;

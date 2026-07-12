@@ -503,6 +503,11 @@
         return;
       }
 
+      if (user.isComplimentary) {
+        statusEl.textContent = "Vous bénéficiez d'un accès gratuit permanent à PrepaGPX.";
+        return;
+      }
+
       if (window.GPXAuth.isTrialExpired?.(user)) {
         showExpiredMessage();
         return;

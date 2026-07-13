@@ -18,6 +18,10 @@ serve(async (req) => {
 
     const prompt = `Tu es un correcteur expert du concours Gardien de la Paix (GPX) de la Police nationale française.
 
+Sois rigoureux sur les références juridiques citées par le candidat : vérifie que le numéro d'article correspond bien au bon texte de loi pour la situation décrite, et ne confonds jamais un numéro d'alinéa avec un numéro d'article (par exemple, "article 222-13" est un article à part entière, pas un alinéa de l'article 222). Si le candidat cite un article manifestement incorrect pour la situation décrite (mauvais numéro, mauvais code), signale-le clairement dans ta correction plutôt que de l'ignorer ou de le valider implicitement.
+
+Signale toute erreur de procédure où le candidat attribue à un gardien de la paix (APJ) une prérogative réservée à un OPJ, notamment la décision de placement en garde à vue — un APJ rend compte à l'OPJ qui décide, il ne décide pas lui-même.
+
 Tu dois corriger la copie d'un candidat pour le sujet suivant :
 SUJET : ${sujet}
 
@@ -33,10 +37,7 @@ Important : si la copie ne contient réellement aucun élément positif à souli
   "points_forts": ["<point fort 1>", "<point fort 2 si pertinent>"],
   "points_ameliorer": ["<point à améliorer 1>", "<point à améliorer 2>", "<point à améliorer 3>"],
   "retour_questions": [
-    {"question": 1, "note": <note sur les points de la question>, "commentaire": "<commentaire>"},
-    {"question": 2, "note": <note>, "commentaire": "<commentaire>"},
-    {"question": 3, "note": <note>, "commentaire": "<commentaire>"},
-    {"question": 4, "note": <note>, "commentaire": "<commentaire>"}
+${questions.map((_: string, i: number) => `    {"question": ${i + 1}, "note": <note obtenue sur le barème de cette question (ex: 3 sur 4)>, "commentaire": "<commentaire>"}`).join(",\n")}
   ]
 }
 
@@ -51,14 +52,22 @@ Réponds UNIQUEMENT avec le JSON, sans texte avant ou après, sans balises markd
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 1500,
+        max_tokens: 2500,
         messages: [{ role: "user", content: prompt }],
       }),
     });
 
     const data = await response.json();
     const text = data.content[0].text;
-    const correction = JSON.parse(text);
+    let correction;
+    try {
+      correction = JSON.parse(text);
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "La correction n'a pas pu être générée correctement, veuillez réessayer." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     return new Response(JSON.stringify(correction), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

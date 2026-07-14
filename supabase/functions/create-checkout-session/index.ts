@@ -77,6 +77,8 @@ Deno.serve(async (req) => {
       allow_promotion_codes: true,
       client_reference_id: user.id,
       customer_email: user.email ?? undefined,
+      billing_address_collection: "required",
+      automatic_tax: { enabled: true },
       line_items: [{ price: stripePriceId, quantity: 1 }],
       metadata: { user_id: user.id, plan },
       subscription_data: { metadata: { user_id: user.id, plan } },

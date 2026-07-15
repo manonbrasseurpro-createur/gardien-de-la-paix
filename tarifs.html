@@ -265,11 +265,6 @@
 
     <section class="pricing-grid pricing-grid--plans" id="pricing-plans" aria-label="Formules d'abonnement"></section>
 
-    <label class="retractation-label pricing-retractation">
-      <input type="checkbox" id="retractation-checkbox">
-      <span>J'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV</a> et je demande l'accès immédiat au service, ce qui implique la perte de mon droit de rétractation de 14 jours (comme pour tout contenu numérique à accès immédiat).</span>
-    </label>
-
     <p class="pricing-reassurance pricing-reassurance--center">✓ 7 jours gratuits sur toutes les formules · Sans carte bancaire · Annulation en 1 clic</p>
 
     <section class="auth-card auth-card--wide pricing-why">
@@ -400,7 +395,6 @@
 
     const plansRoot = document.getElementById("pricing-plans");
     const statusEl = document.getElementById("pricing-status");
-    const retractationCheckbox = document.getElementById("retractation-checkbox");
     const errorEl = document.getElementById("checkout-error");
     const params = new URLSearchParams(window.location.search);
 
@@ -453,11 +447,22 @@
             ${plan.period && plan.period.includes("soit") ? periodBlock : ""}
             ${savings}
             <ul>${features}</ul>
-            <button type="button" class="primary-button pricing-plan-btn" data-plan="${key}">Choisir cette formule</button>
+            <label class="retractation-label pricing-card__retractation">
+              <input type="checkbox" id="retractation-${key}" class="pricing-retractation-cb" data-plan="${key}">
+              <span>J'accepte les <a href="cgv.html" target="_blank" rel="noopener">CGV</a> et je demande l'accès immédiat au service, ce qui implique la perte de mon droit de rétractation de 14 jours (comme pour tout contenu numérique à accès immédiat).</span>
+            </label>
+            <button type="button" class="primary-button pricing-plan-btn" data-plan="${key}" disabled>Choisir cette formule</button>
           </article>
         `;
       }).join("");
     }
+
+    plansRoot.addEventListener("change", (event) => {
+      const cb = event.target.closest(".pricing-retractation-cb");
+      if (!cb) return;
+      const btn = plansRoot.querySelector(`.pricing-plan-btn[data-plan="${cb.dataset.plan}"]`);
+      if (btn) btn.disabled = !cb.checked;
+    });
 
     plansRoot.addEventListener("click", async (event) => {
       const btn = event.target.closest(".pricing-plan-btn");
@@ -466,13 +471,6 @@
       const user = await window.GPXAuth.getCurrentUser();
       if (!user) {
         window.location.href = "inscription.html";
-        return;
-      }
-
-      if (!retractationCheckbox.checked) {
-        errorEl.hidden = false;
-        errorEl.textContent = "Veuillez accepter les CGV avant de choisir une formule.";
-        retractationCheckbox.focus();
         return;
       }
 

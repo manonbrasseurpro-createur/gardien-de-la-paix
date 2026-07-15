@@ -775,7 +775,10 @@ a {
 }
 
 .pricing-grid--plans {
-  max-width: 1120px;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
   margin-inline: auto;
 }
 

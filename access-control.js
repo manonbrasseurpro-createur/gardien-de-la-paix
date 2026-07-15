@@ -216,10 +216,27 @@
     }
   }
 
+  const FOOTER_SOCIAL_HTML =
+    '<a href="https://www.instagram.com/prepagpx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram PrepaGPX">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>' +
+    '</a>' +
+    '<a href="https://www.tiktok.com/@prepagpx.fr" target="_blank" rel="noopener noreferrer" aria-label="TikTok PrepaGPX">' +
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.89 2.5 2.89 2.89 0 0 1-2.88-2.89 2.89 2.89 0 0 1 2.88-2.88c.28 0 .54.03.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.81 1.54V6.76a4.85 4.85 0 0 1-1.03-.07z"/></svg>' +
+    '</a>' +
+    '<a href="https://www.facebook.com/profile.php?id=61591946097543" target="_blank" rel="noopener noreferrer" aria-label="Facebook PrepaGPX">' +
+      '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.12 8.44 9.88v-6.99H7.9V12h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99C18.34 21.12 22 16.99 22 12z"/></svg>' +
+    '</a>';
+
   function injectLegalFooter() {
     if (document.getElementById("gpx-legal-footer") || document.querySelector(".site-footer")) {
       return;
     }
+
+    const social = document.createElement("div");
+    social.className = "footer-social";
+    social.setAttribute("aria-label", "Réseaux sociaux PrepaGPX");
+    social.innerHTML = FOOTER_SOCIAL_HTML;
+    document.body.appendChild(social);
 
     const footer = document.createElement("p");
     footer.id = "gpx-legal-footer";

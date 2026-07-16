@@ -251,12 +251,38 @@
     </div>
   </header>
 
-  <section id="home-intervenants" class="home-intervenants" hidden aria-labelledby="home-intervenants-title">
+  <section id="home-intervenants" class="home-intervenants" aria-labelledby="home-intervenants-title">
     <div class="home-intervenants__inner">
       <h2 id="home-intervenants-title" class="home-intervenants__title">L'avis de ceux qui connaissent le métier</h2>
       <p class="home-intervenants__subtitle">Des retours de terrain : major de police, officier, gardien de la paix — des profils confirmés qui connaissent le concours de l'intérieur.</p>
       <p class="home-intervenants__community">En tant qu'abonné, échangez directement avec eux et posez vos questions dans l'espace Communauté.</p>
-      <div id="home-intervenants-grid" class="home-intervenants__grid"></div>
+      <div id="home-intervenants-grid" class="home-intervenants__grid">
+        <article class="home-intervenant-card">
+          <p class="home-intervenant-card__label">Intervenant 1</p>
+          <p class="home-intervenant-card__context">Membre de jury GPX</p>
+          <blockquote class="home-intervenant-card__quote">Un oral réussi, c'est celui où le candidat parvient à montrer au jury qu'il connaît les missions et les qualités attendues d'un gardien de la paix, mais surtout qu'il est capable de démontrer en quoi, dans son propre quotidien, il possède déjà certaines de ces qualités ou peut les transposer.</blockquote>
+        </article>
+        <article class="home-intervenant-card">
+          <p class="home-intervenant-card__label">Intervenant 2</p>
+          <p class="home-intervenant-card__context">Formateur, Police Nationale</p>
+          <blockquote class="home-intervenant-card__quote">L'entretien avec le jury évalue un ensemble de critères, pas une phrase isolée : la motivation et l'intérêt pour la fonction, le savoir-être et la communication, les aptitudes relationnelles (confiance en soi, adaptabilité), la déontologie et le rapport à l'autorité, ainsi que le parcours et les expériences du candidat. Un candidat naturel et sincère, qui a fait des recherches sur l'organisation et les missions de la police, part avec un net avantage.</blockquote>
+        </article>
+        <article class="home-intervenant-card">
+          <p class="home-intervenant-card__label">Intervenant 3</p>
+          <p class="home-intervenant-card__context">Gardien de la paix</p>
+          <blockquote class="home-intervenant-card__quote">La préparation est la clé de la réussite — beaucoup de candidats négligent ce passage crucial. Beaucoup pensent que le concours est "accessible" et se laissent influencer par ce qu'on lit sur les réseaux sociaux, avec la fameuse moyenne de 5/20. Beaucoup essaient d'entrer sans connaître un minimum le métier de policier. Pour chaque épreuve, une préparation physique et mentale minimale est indispensable. C'est un métier exigeant et passionnant, sans routine.</blockquote>
+        </article>
+        <article class="home-intervenant-card">
+          <p class="home-intervenant-card__label">Intervenant 4</p>
+          <p class="home-intervenant-card__context">Présidence de jury GPX</p>
+          <blockquote class="home-intervenant-card__quote">Soyez vrai, ne mentez pas sur vos intentions d'intégrer la police nationale. N'ouvrez pas de "portes" dans vos réponses, car le jury peut s'y engouffrer. Connaissez a minima les différentes filières de la police. Deux questions reviennent souvent : "Pourquoi vous et pas un autre ?" et "Pourquoi la police nationale plutôt que la gendarmerie ou la police municipale ?" — il faut donc bien connaître les différences entre ces institutions pour y répondre.</blockquote>
+        </article>
+        <article class="home-intervenant-card">
+          <p class="home-intervenant-card__label">Intervenant 5</p>
+          <p class="home-intervenant-card__context">Gardien de la paix</p>
+          <blockquote class="home-intervenant-card__quote">Ne cherchez pas à impressionner le jury, cherchez simplement à lui montrer qui vous êtes. Les connaissances s'acquièrent avec le travail, mais les valeurs, le discernement, la capacité à garder son sang-froid ou encore l'humilité sont autant de qualités qui font réellement la différence. Préparez-vous avec rigueur, mais restez avant tout authentiques. Un concours se prépare un peu chaque jour : c'est cette régularité qui permet d'assimiler durablement les connaissances, tout en conservant un équilibre de vie. Les révisions ne doivent pas devenir une contrainte, mais une habitude. Comme le disait Robert Collier : "Le succès est la somme de petits efforts, répétés jour après jour."</blockquote>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -644,10 +670,10 @@
           return;
         }
 
+        gridEl.innerHTML = "";
         data.forEach((item) => {
           gridEl.appendChild(renderIntervenantCard(item));
         });
-        sectionEl.hidden = false;
       }
 
       document.addEventListener("DOMContentLoaded", loadHomeIntervenants);

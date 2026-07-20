@@ -423,6 +423,12 @@
     function renderPlans() {
       const plans = window.GPX_STRIPE?.plans || {};
       const order = ["monthly", "quarterly", "biannual"];
+      const MONTHLY = { quarterly: "9,97\u00a0€/mois", biannual: "8,32\u00a0€/mois" };
+      const COMMITMENT = {
+        monthly: "Sans engagement — résiliable à tout moment",
+        quarterly: "Paiement unique — sans renouvellement automatique",
+        biannual: "Paiement unique — sans renouvellement automatique"
+      };
       plansRoot.innerHTML = order.map((key) => {
         const plan = plans[key];
         if (!plan) return "";
@@ -437,12 +443,6 @@
         const commitmentBlock = commitment
           ? `<p class="pricing-commitment">${commitment}</p>`
           : "";
-        const MONTHLY = { quarterly: "9,97\u00a0€/mois", biannual: "8,32\u00a0€/mois" };
-        const COMMITMENT = {
-          monthly: "Sans engagement — résiliable à tout moment",
-          quarterly: "Paiement unique — sans renouvellement automatique",
-          biannual: "Paiement unique — sans renouvellement automatique"
-        };
         const periodBlock = plan.period && plan.period.includes("soit")
           ? `<p class="pricing-price-sub">Facturé ${plan.price} en une fois.</p>`
           : `<span class="pricing-price__period">${plan.period || " / mois"}</span>`;

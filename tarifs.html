@@ -254,7 +254,7 @@
     <div class="hero__content">
       <p class="hero__label">Abonnement</p>
       <h1>Tarifs</h1>
-      <p class="hero__subtitle">7 jours gratuits, puis à partir de 29,90€/mois — sans engagement</p>
+      <p class="hero__subtitle">7 jours gratuits, puis à partir de 14,90€/mois</p>
     </div>
   </header>
 
@@ -266,7 +266,7 @@
 
     <section class="pricing-grid pricing-grid--plans" id="pricing-plans" aria-label="Formules d'abonnement"></section>
 
-    <p class="pricing-reassurance pricing-reassurance--center">✓ 7 jours gratuits sur toutes les formules · Sans carte bancaire · Annulation en 1 clic</p>
+    <p class="pricing-reassurance pricing-reassurance--center">✓ 7 jours gratuits sur toutes les formules · Sans carte bancaire · Formule mensuelle résiliable à tout moment</p>
 
     <section class="auth-card auth-card--wide pricing-why">
       <h2>Pourquoi un entraînement plutôt qu'une formation complète ?</h2>
@@ -324,7 +324,7 @@
         </div>
         <div class="faq__item">
           <dt>Puis-je annuler mon abonnement à tout moment ?</dt>
-          <dd>Oui, sans engagement, directement depuis « Mon compte », à tout moment.</dd>
+          <dd>La formule mensuelle est résiliable à tout moment depuis « Mon compte ». Les formules 3 mois et 6 mois sont des paiements uniques sans renouvellement automatique — l'accès expire à la date de fin, sans prélèvement supplémentaire.</dd>
         </div>
         <div class="faq__item">
           <dt>Le contenu est-il à jour avec la réforme du concours de 2024 ?</dt>
@@ -372,6 +372,14 @@
   </script>
   <script>
     const PLAN_FEATURES = {
+      monthly: [
+        "Correction IA cas pratiques",
+        "QCM culture générale",
+        "Tests psychotechniques",
+        "Flashcards juridiques",
+        "Tableau de bord",
+        "Accès 1 mois complet"
+      ],
       quarterly: [
         "Correction IA cas pratiques",
         "QCM culture générale",
@@ -386,11 +394,6 @@
         "Couvre juillet → janvier 2027",
         "Simulations illimitées",
         "Accès 6 mois complets"
-      ],
-      annual: [
-        "Tout du forfait 6 mois",
-        "Sessions futures incluses",
-        "Accès 12 mois complets"
       ]
     };
 
@@ -419,18 +422,27 @@
 
     function renderPlans() {
       const plans = window.GPX_STRIPE?.plans || {};
-      const order = ["quarterly", "biannual", "annual"];
+      const order = ["monthly", "quarterly", "biannual"];
       plansRoot.innerHTML = order.map((key) => {
         const plan = plans[key];
         if (!plan) return "";
-        const featured = key === "biannual" ? " pricing-card--featured" : "";
+        const featured = key === "quarterly" ? " pricing-card--featured" : "";
         const badge = plan.badge
           ? `<span class="pricing-card__badge">${plan.badge}</span>`
           : "";
         const savings = plan.savings
           ? `<p class="pricing-save">${plan.savings}</p>`
           : "";
-        const MONTHLY = { quarterly: "9,97\u00a0€/mois", biannual: "8,32\u00a0€/mois", annual: "7,49\u00a0€/mois" };
+        const commitment = COMMITMENT[key] || "";
+        const commitmentBlock = commitment
+          ? `<p class="pricing-commitment">${commitment}</p>`
+          : "";
+        const MONTHLY = { quarterly: "9,97\u00a0€/mois", biannual: "8,32\u00a0€/mois" };
+        const COMMITMENT = {
+          monthly: "Sans engagement — résiliable à tout moment",
+          quarterly: "Paiement unique — sans renouvellement automatique",
+          biannual: "Paiement unique — sans renouvellement automatique"
+        };
         const periodBlock = plan.period && plan.period.includes("soit")
           ? `<p class="pricing-price-sub">Facturé ${plan.price} en une fois.</p>`
           : `<span class="pricing-price__period">${plan.period || " / mois"}</span>`;
@@ -448,6 +460,7 @@
             ${priceLine}
             ${plan.period && plan.period.includes("soit") ? periodBlock : ""}
             ${savings}
+            ${commitmentBlock}
             <ul>${features}</ul>
             <label class="retractation-label pricing-card__retractation">
               <input type="checkbox" id="retractation-${key}" class="pricing-retractation-cb" data-plan="${key}">

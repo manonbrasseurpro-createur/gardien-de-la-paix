@@ -1,5 +1,5 @@
 (function () {
-  const PLAN_KEYS = ["quarterly", "biannual", "annual"];
+  const PLAN_KEYS = ["monthly", "quarterly", "biannual"];
 
   function getSupabaseConfig() {
     const cfg = window.GPX_SUPABASE || {};

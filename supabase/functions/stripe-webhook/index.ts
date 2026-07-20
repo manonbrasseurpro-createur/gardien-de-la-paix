@@ -71,6 +71,15 @@ function subscriptionEndsAt(subscription: Stripe.Subscription): string {
   return new Date(subscription.current_period_end * 1000).toISOString();
 }
 
+function planEndsAt(plan: string): string | null {
+  const PLAN_MONTHS: Record<string, number> = { quarterly: 3, biannual: 6 };
+  const months = PLAN_MONTHS[plan];
+  if (!months) return null;
+  const end = new Date();
+  end.setMonth(end.getMonth() + months);
+  return end.toISOString();
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return new Response("Méthode non autorisée", { status: 405 });
@@ -139,12 +148,16 @@ Deno.serve(async (req) => {
             : session.subscription?.id ?? null;
 
         if (stripeSubscriptionId) {
+          // Formule récurrente (monthly) : on lit current_period_end depuis la subscription Stripe
           const subscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
           subscriptionEnd = subscriptionEndsAt(subscription);
           stripeCustomerId =
             typeof subscription.customer === "string"
               ? subscription.customer
               : subscription.customer?.id ?? stripeCustomerId;
+        } else if (plan) {
+          // Paiement unique (quarterly / biannual) : on calcule la date de fin à partir du plan
+          subscriptionEnd = planEndsAt(plan);
         }
 
         await updateProfileSubscription(supabaseAdmin, userId, {

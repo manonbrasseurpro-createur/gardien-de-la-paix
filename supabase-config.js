@@ -13,33 +13,34 @@ window.GPX_TRIAL_DAYS = 7;
 window.GPX_STRIPE = {
   currency: "EUR",
   plans: {
+    monthly: {
+      id: "monthly",
+      priceId: "price_1TvHsSRo8Yl21kLoiekwHVfF",
+      label: "1 mois",
+      price: "14,90 €",
+      period: "/ mois",
+      monthlyEquivalent: "14,90 € / mois",
+      savings: null,
+      badge: null
+    },
     quarterly: {
       id: "quarterly",
-      priceId: "price_1Tm87zRo8Yl21kLo2W127mKN",
+      priceId: "price_1TvHuDRo8Yl21kLoGTA5OZb2",
       label: "3 mois",
       price: "29,90 €",
       period: "soit 9,97 € / mois",
       monthlyEquivalent: "9,97 € / mois",
-      savings: "Économisez 33 %"
+      savings: "Économisez 33 %",
+      badge: "Le plus populaire"
     },
     biannual: {
       id: "biannual",
-      priceId: "price_1Tm88JRo8Yl21kLoIZBe2PI2",
+      priceId: "price_1TvHvBRo8Yl21kLoSua5O2wj",
       label: "6 mois",
       price: "49,90 €",
       period: "soit 8,32 € / mois",
       monthlyEquivalent: "8,32 € / mois",
       savings: "Économisez 44 %",
-      badge: "Le plus populaire"
-    },
-    annual: {
-      id: "annual",
-      priceId: "price_1Tm88hRo8Yl21kLoa2mUyLNQ",
-      label: "1 an",
-      price: "89,90 €",
-      period: "soit 7,49 € / mois",
-      monthlyEquivalent: "7,49 € / mois",
-      savings: "Économisez 50 %",
       badge: "Meilleur tarif"
     }
   }

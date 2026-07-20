@@ -7,9 +7,16 @@ const SUCCESS_URL =
 const CANCEL_URL = "https://prepagpx.fr/tarifs.html?cancelled=1";
 
 const PLAN_PRICE_IDS: Record<string, string> = {
-  quarterly: Deno.env.get("STRIPE_PRICE_QUARTERLY") || "price_1Tm87zRo8Yl21kLo2W127mKN",
-  biannual: Deno.env.get("STRIPE_PRICE_BIANNUAL") || "price_1Tm88JRo8Yl21kLoIZBe2PI2",
-  annual: Deno.env.get("STRIPE_PRICE_ANNUAL") || "price_1Tm88hRo8Yl21kLoa2mUyLNQ"
+  monthly: Deno.env.get("STRIPE_PRICE_MONTHLY") || "price_1TvHsSRo8Yl21kLoiekwHVfF",
+  quarterly: Deno.env.get("STRIPE_PRICE_QUARTERLY") || "price_1TvHuDRo8Yl21kLoGTA5OZb2",
+  biannual: Deno.env.get("STRIPE_PRICE_BIANNUAL") || "price_1TvHvBRo8Yl21kLoSua5O2wj"
+};
+
+// "monthly" est un abonnement récurrent ; "quarterly" et "biannual" sont des paiements uniques
+const PLAN_MODE: Record<string, "subscription" | "payment"> = {
+  monthly: "subscription",
+  quarterly: "payment",
+  biannual: "payment"
 };
 
 Deno.serve(async (req) => {
@@ -73,7 +80,7 @@ Deno.serve(async (req) => {
     });
 
     const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
+      mode: PLAN_MODE[plan] ?? "payment",
       allow_promotion_codes: true,
       client_reference_id: user.id,
       customer_email: user.email ?? undefined,
@@ -81,7 +88,9 @@ Deno.serve(async (req) => {
       automatic_tax: { enabled: true },
       line_items: [{ price: stripePriceId, quantity: 1 }],
       metadata: { user_id: user.id, plan },
-      subscription_data: { metadata: { user_id: user.id, plan } },
+      ...(PLAN_MODE[plan] === "subscription"
+        ? { subscription_data: { metadata: { user_id: user.id, plan } } }
+        : { payment_intent_data: { metadata: { user_id: user.id, plan } } }),
       success_url: SUCCESS_URL,
       cancel_url: CANCEL_URL
     });

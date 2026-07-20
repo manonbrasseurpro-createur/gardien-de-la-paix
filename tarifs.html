@@ -430,11 +430,12 @@
         const savings = plan.savings
           ? `<p class="pricing-save">${plan.savings}</p>`
           : "";
+        const MONTHLY = { quarterly: "9,97\u00a0€/mois", biannual: "8,32\u00a0€/mois", annual: "7,49\u00a0€/mois" };
         const periodBlock = plan.period && plan.period.includes("soit")
-          ? `<p class="pricing-price-sub">${plan.period}</p>`
+          ? `<p class="pricing-price-sub">Facturé ${plan.price} en une fois.</p>`
           : `<span class="pricing-price__period">${plan.period || " / mois"}</span>`;
         const priceLine = plan.period && plan.period.includes("soit")
-          ? `<p class="pricing-price">${plan.price}</p>`
+          ? `<p class="pricing-price">${MONTHLY[key] || plan.period}</p>`
           : `<p class="pricing-price">${plan.price}${periodBlock}</p>`;
         const features = (PLAN_FEATURES[key] || [])
           .map((item) => `<li>${item}</li>`)

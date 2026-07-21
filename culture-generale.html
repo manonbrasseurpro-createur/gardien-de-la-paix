@@ -194,6 +194,21 @@
       font-size: 1.35rem;
     }
 
+    .gpx-inline-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: -2px;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    .mode-card__icon .gpx-inline-icon {
+      width: 22px;
+      height: 22px;
+      margin: 0;
+    }
+
     .mode-card h3 {
       margin: 0;
       color: var(--navy);
@@ -525,7 +540,7 @@
       </div>
 
       <section class="info-panel" aria-labelledby="essential-title">
-        <h3 id="essential-title">🎯 INFORMATIONS ESSENTIELLES</h3>
+        <h3 id="essential-title"><span data-gpx-icon="target"></span> INFORMATIONS ESSENTIELLES</h3>
         <ul>
           <li>Concours externe : <strong>1 heure</strong> pour le QCM de culture générale et le QCM de langue étrangère, réalisés <strong>simultanément</strong>.</li>
           <li>40 questions de culture générale (coefficient <strong>2</strong>).</li>
@@ -535,7 +550,7 @@
 
       <div class="callout-grid">
         <article class="callout callout--danger">
-          <h3>⚠️ Ce n'est pas de la culture générale au sens large !</h3>
+          <h3><span data-gpx-icon="alert"></span> Ce n'est pas de la culture générale au sens large !</h3>
           <p>
             Cette épreuve ne porte pas sur les capitales du monde ou la géographie internationale.
             Elle évalue des connaissances très ciblées : les symboles de la République, les institutions
@@ -545,7 +560,7 @@
         </article>
 
         <article class="callout callout--success">
-          <h3>💡 3 à 5 questions garanties sur l'hymne national et le drapeau français</h3>
+          <h3><span data-gpx-icon="bulb"></span> 3 à 5 questions garanties sur l'hymne national et le drapeau français</h3>
           <p>
             À chaque session du concours, plusieurs questions portent sur la Marseillaise et le drapeau
             tricolore. Ces sujets sont précis, faciles à réviser et représentent des points quasi certains.
@@ -554,7 +569,7 @@
         </article>
 
         <article class="callout callout--warning">
-          <h3>⚠️ Les institutions : un tiers des questions !</h3>
+          <h3><span data-gpx-icon="alert"></span> Les institutions : un tiers des questions !</h3>
           <p>
             Le fonctionnement des institutions françaises et européennes représente environ un tiers de
             l'épreuve. Ces notions sont peu abordées en dehors d'un cursus juridique, il est donc indispensable
@@ -563,7 +578,7 @@
         </article>
 
         <article class="callout callout--success">
-          <h3>💡 Restez focalisé sur l'année écoulée</h3>
+          <h3><span data-gpx-icon="bulb"></span> Restez focalisé sur l'année écoulée</h3>
           <p>
             Les questions d'actualité portent exclusivement sur les événements récents. Inutile de remonter
             à plusieurs années en arrière : concentrez-vous sur les grands faits marquants des 12 derniers mois.
@@ -572,7 +587,7 @@
       </div>
 
       <article class="winning-formula">
-        <h3>🏆 FORMULE GAGNANTE</h3>
+        <h3><span data-gpx-icon="trophy"></span> FORMULE GAGNANTE</h3>
         <p>
           Histoire de France + Institutions françaises et européennes + Actualité récente =
           La combinaison gagnante pour réussir cette épreuve.
@@ -587,14 +602,14 @@
 
         <div class="mode-grid" aria-label="Modes de test culture générale">
           <button class="mode-card" type="button" data-mode="complete">
-            <span class="mode-card__icon" aria-hidden="true">🚀</span>
+            <span class="mode-card__icon" aria-hidden="true"><span data-gpx-icon="rocket" data-gpx-size="22"></span></span>
             <h3>Test Complet</h3>
             <p>40 questions - ~25 min. Mélange de toutes les catégories avec institutions autour d'un tiers du test.</p>
             <span class="mode-card__duration">Lancer le test complet</span>
           </button>
 
           <button class="mode-card" type="button" data-mode="institutions">
-            <span class="mode-card__icon" aria-hidden="true">🏛️</span>
+            <span class="mode-card__icon" aria-hidden="true"><span data-gpx-icon="landmark" data-gpx-size="22"></span></span>
             <h3>Institutions françaises et européennes</h3>
             <p>~10 min. Priorité absolue : République, Parlement, Gouvernement et Union européenne.</p>
             <span class="mode-card__duration">20 questions ciblées</span>
@@ -608,14 +623,14 @@
           </button>
 
           <button class="mode-card" type="button" data-mode="histoire-actualite">
-            <span class="mode-card__icon" aria-hidden="true">📰</span>
+            <span class="mode-card__icon" aria-hidden="true"><span data-gpx-icon="newspaper" data-gpx-size="22"></span></span>
             <h3>Actualité et Histoire de France</h3>
             <p>~10 min. Grandes dates, personnages clés et actualité récente 2025-2026.</p>
             <span class="mode-card__duration">20 questions mixtes</span>
           </button>
 
           <button class="mode-card" type="button" data-mode="mini">
-            <span class="mode-card__icon" aria-hidden="true">⚡</span>
+            <span class="mode-card__icon" aria-hidden="true"><span data-gpx-icon="zap" data-gpx-size="22"></span></span>
             <h3>Mini test</h3>
             <p>10 questions - ~5 min. Pour s'entraîner rapidement sur toutes les familles de notions.</p>
             <span class="mode-card__duration">Démarrer vite</span>
@@ -688,7 +703,9 @@
   <script src="cookie-consent.js"></script>
   <script src="access-control.js"></script>
   <script src="progression-storage.js"></script>
+  <script src="gpx-icons.js"></script>
   <script>
+    window.gpxMountIcons?.();
     const letters = ["A", "B", "C"];
     const categoryInfo = {
       "institutions-francaises": {

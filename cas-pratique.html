@@ -1314,6 +1314,33 @@
       border-color: var(--navy);
     }
 
+    .gpx-inline-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: -2px;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
+    .gpx-inline-icon--lg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .favorite-button.is-active .gpx-inline-icon {
+      fill: currentColor;
+    }
+
+    .mode-card__duration .gpx-inline-icon {
+      margin-right: 6px;
+    }
+
+    #ai-correction-btn .gpx-inline-icon,
+    .floating-vocabulary-button .gpx-inline-icon {
+      margin-right: 8px;
+    }
+
     .floating-vocabulary-button {
       position: fixed;
       right: 22px;
@@ -1494,21 +1521,21 @@
           <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
           <h3>Simulation d'entraînement</h3>
           <p>3 cas fictifs en 2 h (format pédagogique). Au concours officiel : un dossier ≤ 15 pages, un ou plusieurs cas sur 2 h.</p>
-          <span class="mode-card__duration">⏱ 2 heures chronomètre dégressif</span>
+          <span class="mode-card__duration"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>2 heures chronomètre dégressif</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="single">
           <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"></path><path d="M14 3v4h4"></path><path d="M9 12h6M9 16h6"></path></svg>
           <h3>Cas pratique unique</h3>
           <p>Un seul cas pratique avec 4 questions et son dossier documentaire.</p>
-          <span class="mode-card__duration">⏱ ~40 min</span>
+          <span class="mode-card__duration"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>~40 min</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="question">
           <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7v.5"></path><line x1="12" y1="17" x2="12" y2="17.01"></line></svg>
           <h3>Question isolée</h3>
           <p>Entraînez-vous sur une seule question.</p>
-          <span class="mode-card__duration">⏱ ~10 min</span>
+          <span class="mode-card__duration"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>~10 min</span>
         </button>
 
         <button class="mode-card" type="button" data-mode="examples">
@@ -1609,7 +1636,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <div class="question-workspace">
           <div class="exercise-actions">
             <button class="secondary-button" type="button" id="back-to-home">← Accueil du module</button>
-            <button class="secondary-button document-toggle" type="button" id="open-documents">📄 Consulter le dossier</button>
+            <button class="secondary-button document-toggle" type="button" id="open-documents"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg>Consulter le dossier</button>
             <button class="ghost-button" type="button" id="finish-and-score" hidden>Terminer et voir le bilan global</button>
           </div>
 
@@ -1619,7 +1646,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
           <article class="context-help" id="context-help">
             <button class="context-help__toggle" type="button" id="context-help-toggle" aria-expanded="true">
-              <span>💡 Aide méthodologique</span>
+              <span><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12c.6.6 1 1.5 1 2.4V18h6v-1.6c0-.9.4-1.8 1-2.4A7 7 0 0 0 12 2z"></path></svg>Aide méthodologique</span>
               <span id="context-help-toggle-label">Réduire</span>
             </button>
             <div class="context-help__body" id="context-help-body">
@@ -1659,7 +1686,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <aside class="document-panel" id="document-panel" aria-label="Dossier documentaire">
           <div class="document-panel__inner">
             <div class="exercise-actions">
-              <h3>📄 Dossier documentaire</h3>
+              <h3><svg class="gpx-inline-icon gpx-inline-icon--lg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg>Dossier documentaire</h3>
               <button class="ghost-button document-toggle" type="button" id="close-documents">Fermer</button>
             </div>
             <p><strong>Exploitez ces documents dans vos réponses.</strong></p>
@@ -1764,7 +1791,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         </div>
 
         <button class="primary-button" type="button" id="ai-correction-btn" style="background: var(--seal); display: none; font-size: 1.05rem; padding: 14px 28px; box-shadow: 0 8px 20px rgba(139, 30, 47, 0.3); position: relative;">
-          ✨ Faire corriger ma copie par l'IA
+          <svg class="gpx-inline-icon gpx-inline-icon--lg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path><path d="M19 14l.7 2.1L22 17l-2.3.7L19 20l-.7-2.3L16 17l2.3-.9L19 14z"></path></svg>Faire corriger ma copie par l'IA
           <span style="position: absolute; top: -10px; right: -10px; background: var(--brass); color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;">Nouveau</span>
         </button>
         <p id="ai-correction-upsell" hidden style="margin: 12px 0 0; font-size: 0.95rem; color: var(--muted);">
@@ -1819,7 +1846,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       <div class="vocabulary-body">
         <div class="vocabulary-actions">
           <button class="secondary-button" type="button" id="vocabulary-back">← Retour</button>
-          <button class="ghost-button" type="button" id="vocabulary-download-all">📄 Tout télécharger</button>
+          <button class="ghost-button" type="button" id="vocabulary-download-all"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg>Tout télécharger</button>
         </div>
 
         <article class="vocabulary-intro">
@@ -1830,7 +1857,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <div class="vocabulary-tools">
           <label class="hidden" for="vocabulary-search">Rechercher dans les fiches</label>
           <input class="vocabulary-search" type="search" id="vocabulary-search" placeholder="Rechercher un mot, une formule, un article...">
-          <button class="secondary-button" type="button" id="vocabulary-favorites-button">⭐ Mes favoris</button>
+          <button class="secondary-button" type="button" id="vocabulary-favorites-button"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon></svg>Mes favoris</button>
           <button class="ghost-button" type="button" id="vocabulary-clear-search">Effacer</button>
         </div>
 
@@ -1841,7 +1868,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     </section>
   </main>
 
-  <button class="primary-button floating-vocabulary-button" type="button" id="floating-vocabulary-button">✍️ Fiches de vocabulaire</button>
+  <button class="primary-button floating-vocabulary-button" type="button" id="floating-vocabulary-button"><svg class="gpx-inline-icon gpx-inline-icon--lg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>Fiches de vocabulaire</button>
 
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
@@ -3666,7 +3693,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     const modeConfig = {
       simulation: {
-        label: "🎯 Simulation complète",
+        labelHtml: () => `${gpxIcon("target")} Simulation complète`,
         duration: 120 * 60,
         buildItems: () => OFFICIAL_SESSION_CASE_IDS
           .map((caseId) => cases.find((caseItem) => caseItem.id === caseId))
@@ -3674,7 +3701,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           .flatMap((caseItem) => caseItem.questions.map((question, questionIndex) => ({ caseId: caseItem.id, questionIndex })))
       },
       single: {
-        label: "📝 Cas pratique unique",
+        labelHtml: () => `${gpxIcon("file-pen")} Cas pratique unique`,
         duration: 40 * 60,
         buildItems: (caseId) => {
           const selectedCase = cases.find((caseItem) => caseItem.id === caseId) || cases[0];
@@ -3682,7 +3709,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         }
       },
       question: {
-        label: "❓ Question isolée",
+        labelHtml: () => `${gpxIcon("help")} Question isolée`,
         duration: 10 * 60,
         buildItems: (caseId) => [{ caseId: caseId || cases[0].id, questionIndex: 0 }]
       }
@@ -3693,7 +3720,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "qualifier-les-faits",
         number: 1,
-        icon: "📋",
+        icon: "clipboard",
         title: "Qualifier les faits",
         sections: [
           {
@@ -3729,7 +3756,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "decrire-une-intervention",
         number: 2,
-        icon: "🚨",
+        icon: "siren",
         title: "Décrire une intervention",
         sections: [
           {
@@ -3771,7 +3798,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "parler-de-la-victime",
         number: 3,
-        icon: "👥",
+        icon: "users",
         title: "Parler de la victime",
         sections: [
           {
@@ -3792,7 +3819,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "citer-les-textes-de-loi",
         number: 4,
-        icon: "⚖️",
+        icon: "scales",
         title: "Citer les textes de loi",
         sections: [
           {
@@ -3836,7 +3863,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "rendre-compte-hierarchie",
         number: 5,
-        icon: "🏛️",
+        icon: "landmark",
         title: "Rendre compte à la hiérarchie",
         sections: [
           {
@@ -3867,7 +3894,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "structurer-sa-reponse",
         number: 6,
-        icon: "📝",
+        icon: "file-pen",
         title: "Structurer sa réponse",
         sections: [
           {
@@ -3904,7 +3931,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "vocabulaire-garde-a-vue",
         number: 7,
-        icon: "🔒",
+        icon: "lock",
         title: "Vocabulaire de la garde à vue",
         sections: [
           {
@@ -3930,7 +3957,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       {
         id: "erreurs-vocabulaire-a-eviter",
         number: 8,
-        icon: "🚫",
+        icon: "ban",
         title: "Erreurs de vocabulaire à éviter",
         sections: [
           {
@@ -4160,11 +4187,11 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           <p style="margin-top: 16px; font-size: 0.8rem; color: var(--muted);">⚠️ Cette correction est générée par IA à titre indicatif. Elle ne reflète pas le jugement officiel du jury GPX.</p>
         `;
 
-        btn.textContent = "✨ Correction effectuée";
+        btn.innerHTML = `${gpxIcon("sparkles", { size: 18, className: "gpx-inline-icon--lg" })} Correction effectuée`;
       } catch (err) {
         resultDiv.innerHTML = `<p style="color: #b42318;">Une erreur s'est produite : ${err.message}. Veuillez réessayer.</p>`;
         btn.disabled = false;
-        btn.textContent = "✨ Faire corriger ma copie par l'IA";
+        btn.innerHTML = `${gpxIcon("sparkles", { size: 18, className: "gpx-inline-icon--lg" })} Faire corriger ma copie par l'IA <span style="position: absolute; top: -10px; right: -10px; background: var(--brass); color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;">Nouveau</span>`;
       }
     });
 
@@ -4235,6 +4262,37 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    function gpxIcon(name, opts = {}) {
+      const size = opts.size || 16;
+      const filled = Boolean(opts.filled) || name === "star-solid";
+      const extraClass = opts.className ? ` ${opts.className}` : "";
+      const paths = {
+        clock: '<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>',
+        document: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path>',
+        bulb: '<path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12c.6.6 1 1.5 1 2.4V18h6v-1.6c0-.9.4-1.8 1-2.4A7 7 0 0 0 12 2z"></path>',
+        sparkles: '<path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path><path d="M19 14l.7 2.1L22 17l-2.3.7L19 20l-.7-2.3L16 17l2.3-.9L19 14z"></path>',
+        star: '<polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon>',
+        "star-solid": '<polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon>',
+        pen: '<path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>',
+        target: '<circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle>',
+        "file-pen": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M12 18l4-4-2-2-4 4 .5 1.5L12 18z"></path>',
+        help: '<circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7v.5"></path><line x1="12" y1="17" x2="12.01" y2="17"></line>',
+        clipboard: '<rect x="8" y="3" width="8" height="4" rx="1"></rect><path d="M9 3H7a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2"></path><path d="M9 12h6M9 16h4"></path>',
+        siren: '<path d="M12 4v2"></path><path d="M6 10a6 6 0 0 1 12 0"></path><path d="M5 14h14l-1 6H6l-1-6z"></path><path d="M9 10l-2-2M15 10l2-2"></path>',
+        users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="3"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a3 3 0 0 1 0 5.74"></path>',
+        scales: '<path d="M12 3v18"></path><path d="M5 7h14"></path><path d="M5 7l-3 7h6L5 7z"></path><path d="M19 7l-3 7h6l-3-7z"></path>',
+        landmark: '<path d="M4 21h16"></path><path d="M6 21V10l6-4 6 4v11"></path><path d="M9 21v-6h6v6"></path><path d="M9 10h6"></path>',
+        lock: '<rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path>',
+        ban: '<circle cx="12" cy="12" r="9"></circle><path d="m5.5 5.5 13 13"></path>',
+        trophy: '<path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M7 4h10v5a5 5 0 0 1-10 0V4z"></path><path d="M5 6H3a3 3 0 0 0 3 5"></path><path d="M19 6h2a3 3 0 0 1-3 5"></path>'
+      };
+      const body = paths[name];
+      if (!body) {
+        return "";
+      }
+      return `<svg class="gpx-inline-icon${extraClass}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="${filled ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
     }
 
     function getVisibleScreenKey() {
@@ -4358,7 +4416,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       const isFavorite = favorites.has(formulaId);
       return `
         <button class="favorite-button ${isFavorite ? "is-active" : ""}" type="button" data-favorite-formula="${escapeHtml(formulaId)}" aria-pressed="${isFavorite}">
-          ${isFavorite ? "⭐ Favori" : "⭐ Favoris"}
+          ${gpxIcon("star", { filled: isFavorite })} ${isFavorite ? "Favori" : "Favoris"}
         </button>
       `;
     }
@@ -4368,10 +4426,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       elements.vocabularyMenu.innerHTML = [
         ...vocabularySheets.map((sheet) => `
           <button class="vocabulary-tab ${active === sheet.id ? "is-active" : ""}" type="button" data-vocabulary-sheet="${sheet.id}" aria-pressed="${active === sheet.id}">
-            Fiche ${sheet.number} — ${sheet.icon} ${escapeHtml(sheet.title)}
+            Fiche ${sheet.number} — ${gpxIcon(sheet.icon)} ${escapeHtml(sheet.title)}
           </button>
         `),
-        `<button class="vocabulary-tab ${active === "favorites" ? "is-active" : ""}" type="button" data-vocabulary-sheet="favorites" aria-pressed="${active === "favorites"}">⭐ Mes favoris</button>`
+        `<button class="vocabulary-tab ${active === "favorites" ? "is-active" : ""}" type="button" data-vocabulary-sheet="favorites" aria-pressed="${active === "favorites"}">${gpxIcon("star")} Mes favoris</button>`
       ].join("");
     }
 
@@ -4471,9 +4529,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           <div class="vocabulary-sheet__header">
             <div class="vocabulary-sheet__title">
               <p class="hero__label">FICHE ${sheet.number}</p>
-              <h3>${sheet.icon} ${escapeHtml(sheet.title)}</h3>
+              <h3>${gpxIcon(sheet.icon)} ${escapeHtml(sheet.title)}</h3>
             </div>
-            <button class="ghost-button" type="button" data-download-vocabulary-sheet="${sheet.id}">📄 Télécharger la fiche (PDF)</button>
+            <button class="ghost-button" type="button" data-download-vocabulary-sheet="${sheet.id}">${gpxIcon("document")} Télécharger la fiche (PDF)</button>
           </div>
           ${sections}
         </article>
@@ -4488,8 +4546,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       if (!entries.length) {
         elements.vocabularyContent.innerHTML = `
           <article class="vocabulary-sheet">
-            <h3>⭐ Mes favoris</h3>
-            <p>Aucune formule favorite pour le moment. Cliquez sur “⭐ Favoris” dans une fiche pour l'ajouter ici.</p>
+            <h3>${gpxIcon("star")} Mes favoris</h3>
+            <p>Aucune formule favorite pour le moment. Cliquez sur « Favoris » dans une fiche pour l'ajouter ici.</p>
           </article>
         `;
         return;
@@ -4500,13 +4558,13 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           <div class="vocabulary-sheet__header">
             <div class="vocabulary-sheet__title">
               <p class="hero__label">${entries.length} formule${entries.length > 1 ? "s" : ""} sauvegardée${entries.length > 1 ? "s" : ""}</p>
-              <h3>⭐ Mes favoris</h3>
+              <h3>${gpxIcon("star")} Mes favoris</h3>
             </div>
           </div>
           <div class="favorite-results">
             ${entries.map((entry) => `
               <article class="vocabulary-section">
-                <h4>Fiche ${entry.sheet.number} — ${entry.sheet.icon} ${escapeHtml(entry.sheet.title)} / ${escapeHtml(entry.section.title)}</h4>
+                <h4>Fiche ${entry.sheet.number} — ${gpxIcon(entry.sheet.icon)} ${escapeHtml(entry.sheet.title)} / ${escapeHtml(entry.section.title)}</h4>
                 ${entry.bad ? `<p><strong>À éviter :</strong> ${escapeHtml(entry.bad)}</p>` : ""}
                 <div class="formula-item">
                   <span>${escapeHtml(entry.text)}</span>
@@ -4561,7 +4619,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     function buildVocabularyPrintableSheet(sheet) {
       return `
         <section>
-          <h2>FICHE ${sheet.number} — ${sheet.icon} ${escapeHtml(sheet.title)}</h2>
+          <h2>FICHE ${sheet.number} — ${gpxIcon(sheet.icon)} ${escapeHtml(sheet.title)}</h2>
           ${sheet.sections.map((section) => `
             <h3>${escapeHtml(section.title)}</h3>
             ${section.type === "comparison" ? `
@@ -4652,7 +4710,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       document.getElementById("case-selector-title").textContent = mode === "single" ? "Choisissez un cas pratique complet" : "Choisissez le thème de votre question isolée";
       caseGrid.innerHTML = cases.map((caseItem) => `
         <button class="case-select" type="button" data-case="${caseItem.id}">
-          <h3>${caseItem.title}${caseItem.sessionPoints ? " <span style='font-size:0.85em;color:#1a2744'>★ Type concours</span>" : ""}</h3>
+          <h3>${caseItem.title}${caseItem.sessionPoints ? ` <span style="font-size:0.85em;color:#1a2744">${gpxIcon("star-solid")} Type concours</span>` : ""}</h3>
           <p>${caseItem.theme}</p>
           <p><strong>${caseItem.questions.length} questions</strong>${caseItem.sessionPoints ? ` — barème ${caseItem.sessionPoints} pts` : ""} + dossier documentaire</p>
         </button>
@@ -4748,7 +4806,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       const total = state.items.length;
       const key = getCurrentKey();
 
-      elements.modeLabel.textContent = modeConfig[state.mode].label;
+      elements.modeLabel.innerHTML = modeConfig[state.mode]?.labelHtml
+        ? modeConfig[state.mode].labelHtml()
+        : escapeHtml(state.mode || "");
       elements.caseTitle.textContent = caseItem.title;
       elements.progressLabel.textContent = `Question ${currentNumber}/${total}`;
       elements.progressBar.style.width = `${(currentNumber / total) * 100}%`;
@@ -5838,7 +5898,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       if (score20 <= 17) {
         return "Bien - Vous êtes sur la bonne voie !";
       }
-      return "Excellent - Niveau concours atteint ! 🏆";
+      return `Excellent - Niveau concours atteint ! ${gpxIcon("trophy")}`;
     }
 
     function showFinalScore() {
@@ -5862,7 +5922,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       document.getElementById("final-score-50").textContent = `${finalScore.score50}/50`;
       document.getElementById("final-score-20").textContent = `${finalScore.score20}/20`;
       document.getElementById("final-spelling-score").textContent = `${finalScore.spellingScore}/5`;
-      document.getElementById("final-score-message").textContent = getFinalMessage(finalScore.score20);
+      document.getElementById("final-score-message").innerHTML = getFinalMessage(finalScore.score20);
       document.getElementById("final-score-breakdown").innerHTML = `
         <li>
           <span>${caseLabel}</span>

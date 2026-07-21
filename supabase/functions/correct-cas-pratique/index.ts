@@ -60,6 +60,33 @@ serve(async (req) => {
       );
     }
 
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const { data: claimed, error: rateError } = await supabaseAdmin.rpc(
+      "claim_ai_correction_slot",
+      { p_user_id: authData.user.id }
+    );
+
+    if (rateError) {
+      console.error("claim_ai_correction_slot:", rateError);
+      return new Response(
+        JSON.stringify({ error: "Impossible de vérifier la limite de fréquence." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!claimed) {
+      return new Response(
+        JSON.stringify({
+          error: "Merci de patienter quelques instants avant une nouvelle correction.",
+        }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { sujet, questions, reponses } = await req.json();
 
     const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");

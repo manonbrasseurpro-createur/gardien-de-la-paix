@@ -746,11 +746,11 @@
           reportsEl.innerHTML = reports.map((r) => `
             <div style="padding: 12px 16px; margin-bottom: 8px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border);">
               <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                <strong style="color: var(--navy); font-size: 0.9rem;">${r.email || 'Anonyme'}</strong>
+                <strong style="color: var(--navy); font-size: 0.9rem;">${escapeCommunityHtml(r.email || 'Anonyme')}</strong>
                 <span style="color: var(--muted); font-size: 0.8rem;">${new Date(r.created_at).toLocaleDateString('fr-FR')}</span>
               </div>
-              <p style="margin: 0 0 4px; font-size: 0.85rem; color: var(--muted);">${r.page_url || ''}</p>
-              <p style="margin: 0; font-size: 0.92rem;">${r.message}</p>
+              <p style="margin: 0 0 4px; font-size: 0.85rem; color: var(--muted);">${escapeCommunityHtml(r.page_url || '')}</p>
+              <p style="margin: 0; font-size: 0.92rem;">${escapeCommunityHtml(r.message)}</p>
             </div>
           `).join('');
         } else {
@@ -774,11 +774,11 @@
         const surveysEl = document.getElementById('admin-surveys-list');
         if (surveys && surveys.length > 0) {
           surveysEl.innerHTML = surveys.map((s) => {
-            const email = emailByUserId[s.user_id] || 'Anonyme';
+            const email = escapeCommunityHtml(emailByUserId[s.user_id] || 'Anonyme');
             const summary = [
               s.note != null ? `Note : ${s.note}/5` : null,
-              s.modules_utilises ? `Modules : ${s.modules_utilises}` : null,
-              s.commentaire ? `Commentaire : ${s.commentaire}` : null
+              s.modules_utilises ? `Modules : ${escapeCommunityHtml(s.modules_utilises)}` : null,
+              s.commentaire ? `Commentaire : ${escapeCommunityHtml(s.commentaire)}` : null
             ].filter(Boolean).join(' · ');
             return `
               <div style="padding: 12px 16px; margin-bottom: 8px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border);">
@@ -824,8 +824,8 @@
               return `
               <div style="padding: 10px 14px; margin-bottom: 6px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <div>
-                  <strong style="color: var(--navy); font-size: 0.9rem;">${u.first_name} ${u.last_name}</strong>
-                  <span style="color: var(--muted); font-size: 0.85rem; margin-left: 8px;">${u.email}</span>
+                  <strong style="color: var(--navy); font-size: 0.9rem;">${escapeCommunityHtml(u.first_name)} ${escapeCommunityHtml(u.last_name)}</strong>
+                  <span style="color: var(--muted); font-size: 0.85rem; margin-left: 8px;">${escapeCommunityHtml(u.email)}</span>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center;">
                   <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${statusBg}; color: ${statusColor};">

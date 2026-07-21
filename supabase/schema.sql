@@ -18,6 +18,7 @@ create table if not exists public.profiles (
   free_trial_key text,
   stripe_customer_id text,
   stripe_subscription_id text,
+  last_ai_correction_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -60,7 +61,8 @@ begin
      or new.stripe_customer_id is distinct from old.stripe_customer_id
      or new.stripe_subscription_id is distinct from old.stripe_subscription_id
      or new.is_complimentary is distinct from old.is_complimentary
-     or new.sport_access is distinct from old.sport_access then
+     or new.sport_access is distinct from old.sport_access
+     or new.last_ai_correction_at is distinct from old.last_ai_correction_at then
     raise exception 'Modification des champs abonnement interdite'
       using errcode = '42501';
   end if;
@@ -73,6 +75,31 @@ drop trigger if exists protect_profiles_privileged_columns on public.profiles;
 create trigger protect_profiles_privileged_columns
   before update on public.profiles
   for each row execute procedure public.protect_profiles_privileged_columns();
+
+-- Rate limit correction IA (appelé par Edge Function via service_role)
+create or replace function public.claim_ai_correction_slot(p_user_id uuid)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  n int;
+begin
+  update public.profiles
+  set last_ai_correction_at = now()
+  where id = p_user_id
+    and (
+      last_ai_correction_at is null
+      or last_ai_correction_at < now() - interval '60 seconds'
+    );
+  get diagnostics n = row_count;
+  return n > 0;
+end;
+$$;
+
+revoke all on function public.claim_ai_correction_slot(uuid) from public;
+grant execute on function public.claim_ai_correction_slot(uuid) to service_role;
 
 -- Insertion automatique à l'inscription
 create or replace function public.handle_new_user()
@@ -154,6 +181,10 @@ create policy "Authenticated users insert problem_reports"
   on public.problem_reports for insert
   with check (auth.uid() is not null);
 
+create policy "Users read own problem_reports"
+  on public.problem_reports for select
+  using (auth.uid() = user_id);
+
 create policy "Admin read all problem_reports"
   on public.problem_reports for select
   using ((auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com');
@@ -191,11 +222,8 @@ create policy "Admin update profiles complimentary"
   on public.profiles for update
   using ((auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com');
 
--- RLS pour problem_reports : lecture par manonbrasseurpro@gmail.com uniquement via service role
--- (la lecture admin se fait via anon key côté client, donc ajouter une policy SELECT permissive pour auth.uid() = owner)
--- Note : pour l'instant la lecture admin fonctionne si RLS est désactivée sur problem_reports
--- ou si une policy SELECT existe pour les utilisateurs authentifiés
--- Les policies ci-dessus restreignent la lecture SELECT à l'email admin (JWT), pas à tous les utilisateurs authentifiés.
+-- RLS problem_reports SELECT : auteur (auth.uid() = user_id) OU admin JWT email.
+-- service_role bypass RLS. satisfaction_surveys reste lisible publiquement (choix produit).
 
 -- Progression flashcards (abonnés)
 create table if not exists public.flashcard_progress (

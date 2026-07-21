@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-gpx-webhook-secret",
 };
 
 interface ProblemReport {
@@ -56,6 +56,26 @@ serve(async (req) => {
   }
 
   try {
+    const webhookSecret = Deno.env.get("PROBLEM_REPORT_WEBHOOK_SECRET");
+    if (!webhookSecret) {
+      return new Response(JSON.stringify({ error: "Configuration webhook incomplète" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const authHeader = req.headers.get("Authorization") || "";
+    const bearer = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const headerSecret = (req.headers.get("x-gpx-webhook-secret") || "").trim();
+    const provided = bearer || headerSecret;
+
+    if (!provided || provided !== webhookSecret) {
+      return new Response(JSON.stringify({ error: "Non autorisé" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const brevoKey = Deno.env.get("BREVO_API_KEY");
     if (!brevoKey) {
       throw new Error("BREVO_API_KEY manquante");

@@ -1,0 +1,34 @@
+========== DIFFS vs culture-generale.html ==========
+DIFF: [institutions-europeennes] Quel traité de 1957 a créé la Communauté économique européenne ?
+  langue  correct=Le traité de Rome | wrongs=["Le traité de Versailles","Le traité de Maastricht"] | expl=Les traités de Rome fondent notamment la CEE.
+  generale correct=Le traité de Rome | wrongs=["Le traité de Versailles","Le traité de Maastricht"] | expl=Les traités de Rome fondent notamment la CEE (Communauté économique européenne).
+
+DIFF: [institutions-europeennes] Où siège la Cour de justice de l'Union européenne ?
+  langue  correct=Luxembourg | wrongs=["Dublin","Athènes"] | expl=La CJUE siège à Luxembourg.
+  generale correct=Luxembourg | wrongs=["Dublin","Athènes"] | expl=La CJUE (Cour de justice de l'Union européenne) siège à Luxembourg.
+
+ONLY_IN_LANGUE: [institutions-europeennes] Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Croatie ?
+
+DIFF: [institutions-europeennes] Quel office européen lutte contre la fraude au budget de l'Union ?
+  langue  correct=L'OLAF | wrongs=["L'OTAN","L'OPEP"] | expl=L'OLAF enquête sur les fraudes aux intérêts financiers de l'Union.
+  generale correct=L'OLAF | wrongs=["L'OTAN","L'OPEP"] | expl=L'OLAF (Office européen de lutte antifraude) enquête sur les fraudes aux intérêts financiers de l'Union.
+
+DIFF: [institutions-europeennes] Quel seuil minimal permet de lancer une initiative citoyenne européenne ?
+  langue  correct=Un million de citoyens d'au moins sept États membres | wrongs=["Cent maires d'un seul État","La moitié des députés français"] | expl=L'ICE exige au moins un million de soutiens dans au moins sept États membres.
+  generale correct=Un million de citoyens d'au moins sept États membres | wrongs=["Cent maires d'un seul État","La moitié des députés français"] | expl=L'ICE (Initiative citoyenne européenne) exige au moins un million de soutiens dans au moins sept États membres.
+
+DIFF: [histoire-actualite] Quel cardinal est le principal ministre de Louis XIII ?
+  langue  correct=Richelieu | wrongs=["Mazarin sous Louis XVI","Talleyrand sous Clovis"] | expl=Richelieu renforce l'autorité monarchique.
+  generale correct=Richelieu | wrongs=["Mazarin sous Louis XIV","Talleyrand sous Clovis"] | expl=Richelieu renforce l'autorité monarchique.
+
+DIFF: [histoire-actualite] Quelle particularité concerne Paris, Lyon et Marseille aux municipales 2026 ?
+  langue  correct=Les électeurs y votent avec deux bulletins distincts | wrongs=["Les maires y sont élus par le Conseil européen","Le scrutin y est supprimé"] | expl=La réforme prévoit deux votes distincts dans ces villes.
+  generale correct=Les électeurs y votent avec deux bulletins distincts | wrongs=["Les maires y sont élus par le Conseil européen","Le scrutin y est supprimé"] | expl=La loi du 11 août 2025 réforme le scrutin dans ces villes : les électeurs y votent avec deux bulletins distincts.
+
+DIFF: [histoire-actualite] Quelle conférence internationale sur l'océan s'est tenue à Nice en juin 2025 ?
+  langue  correct=La Conférence des Nations unies sur l'océan | wrongs=["Le sommet de l'OTAN","La Coupe du monde des clubs"] | expl=L'UNOC3 s'est tenue à Nice du 9 au 13 juin 2025.
+  generale correct=La Conférence des Nations unies sur l'océan | wrongs=["Le sommet de l'OTAN","La Coupe du monde des clubs"] | expl=L'UNOC3 (3e Conférence des Nations unies sur l'océan) s'est tenue à Nice du 9 au 13 juin 2025.
+
+
+ONLY_IN_GENERALE (1):
+- [institutions-europeennes] Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Bulgarie ? => 21

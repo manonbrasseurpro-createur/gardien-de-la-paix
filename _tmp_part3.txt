@@ -1,0 +1,254 @@
+istoire-actualite] (Consulat et Empire)
+Q: Quel grand code juridique est promulgué en 1804 ?
+   ✓ Le Code civil
+   ✗ Le Code de la route
+   ✗ Le traité de Maastricht
+
+25. [histoire-actualite] (Consulat et Empire)
+Q: Quelle bataille de 1815 met fin à l'épopée napoléonienne ?
+   ✓ Waterloo
+   ✗ Bouvines
+   ✗ Rocroi
+
+26. [histoire-actualite] (XIXe siècle)
+Q: En quelle année l'esclavage est-il définitivement aboli dans les colonies françaises ?
+   ✓ 1848
+   ✗ 1789
+   ✗ 1905
+
+27. [histoire-actualite] (XIXe siècle)
+Q: Quel homme est associé au décret d'abolition de l'esclavage de 1848 ?
+   ✓ Victor Schoelcher
+   ✗ Jules Ferry
+   ✗ Georges Clemenceau
+
+28. [histoire-actualite] (XIXe siècle)
+Q: Quelle défaite de 1870 précipite la chute du Second Empire ?
+   ✓ Sedan
+   ✗ Austerlitz
+   ✗ Marignan
+
+29. [histoire-actualite] (XIXe siècle)
+Q: Quel épisode insurrectionnel parisien se déroule en 1871 ?
+   ✓ La Commune de Paris
+   ✗ La Terreur blanche
+   ✗ La Restauration
+
+30. [histoire-actualite] (République)
+Q: Quelle loi de 1905 fixe la séparation des Églises et de l'État ?
+   ✓ La loi de séparation des Églises et de l'État
+   ✗ La loi Le Chapelier
+   ✗ La loi salique
+
+31. [histoire-actualite] (Affaire Dreyfus)
+Q: Quel écrivain publie J'accuse en défense de Dreyfus ?
+   ✓ Émile Zola
+   ✗ Marcel Proust
+   ✗ Jules Verne
+
+32. [histoire-actualite] (Première Guerre mondiale)
+Q: À quelle date l'armistice de la Première Guerre mondiale est-il signé ?
+   ✓ Le 11 novembre 1918
+   ✗ Le 8 mai 1945
+   ✗ Le 14 juillet 1789
+
+33. [histoire-actualite] (Première Guerre mondiale)
+Q: Quelle bataille de 1916 symbolise la guerre de position ?
+   ✓ Verdun
+   ✗ Azincourt
+   ✗ Valmy
+
+34. [histoire-actualite] (Entre-deux-guerres)
+Q: Quel gouvernement de 1936 est associé aux congés payés ?
+   ✓ Le Front populaire
+   ✗ Le Directoire
+   ✗ Le Second Empire
+
+35. [histoire-actualite] (Seconde Guerre mondiale)
+Q: Qui lance l'appel du 18 Juin 1940 ?
+   ✓ Charles de Gaulle
+   ✗ Philippe Pétain
+   ✗ Jean Jaurès
+
+36. [histoire-actualite] (Résistance)
+Q: Quel résistant unifie les principaux mouvements de Résistance intérieure ?
+   ✓ Jean Moulin
+   ✗ Pierre Laval
+   ✗ Adolphe Thiers
+
+37. [histoire-actualite] (Droits politiques)
+Q: En quelle année le droit de vote est-il accordé aux femmes françaises ?
+   ✓ 1944
+   ✗ 1918
+   ✗ 1968
+
+38. [histoire-actualite] (Seconde Guerre mondiale)
+Q: En quel mois Paris est-il libéré en 1944 ?
+   ✓ Août
+   ✗ Janvier
+   ✗ Décembre
+
+39. [histoire-actualite] (Ve République)
+Q: Quel homme politique revient au pouvoir lors de la crise de 1958 ?
+   ✓ Charles de Gaulle
+   ✗ Léon Blum
+   ✗ Raymond Poincaré
+
+40. [histoire-actualite] (Décolonisation)
+Q: Quels accords de 1962 ouvrent la voie à l'indépendance de l'Algérie ?
+   ✓ Les accords d'Évian
+   ✗ Les accords de Matignon de 1936
+   ✗ Les accords de Grenelle
+
+41. [histoire-actualite] (Actualité 2025-2026)
+Q: Dans quelle ville brésilienne s'est tenue la COP30 en 2025 ?
+   ✓ Belém
+   ✗ Rio de Janeiro
+   ✗ Brasilia
+
+42. [histoire-actualite] (Actualité 2025-2026)
+Q: Quel pays a accueilli le sommet du G7 de 2025 à Kananaskis ?
+   ✓ Le Canada
+   ✗ L'Italie
+   ✗ Le Japon
+
+43. [histoire-actualite] (Actualité 2025-2026)
+Q: Dans quelle ville le sommet du G20 de 2025 s'est-il tenu ?
+   ✓ Johannesburg
+   ✗ Osaka
+   ✗ Buenos Aires
+
+44. [histoire-actualite] (Actualité 2025-2026)
+Q: Quel fait a marqué le sommet du G20 de 2025 ?
+   ✓ Premier sommet du G20 organisé sur le continent africain
+   ✗ Premier sommet du G20 organisé en Antarctique
+   ✗ Dissolution officielle de l'Union européenne
+
+45. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelles étaient les dates des élections municipales françaises de 2026 ?
+   ✓ 15 et 22 mars 2026
+   ✗ 9 et 16 juin 2026
+   ✗ 1er et 8 mai 2026
+
+46. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle réforme de 2025 concerne les communes de moins de 1 000 habitants ?
+   ✓ Le scrutin de liste paritaire y est étendu
+   ✗ Le vote y devient réservé aux propriétaires
+   ✗ Les maires y sont nommés par décret
+
+47. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle particularité concerne Paris, Lyon et Marseille aux municipales 2026 ?
+   ✓ Les électeurs y votent avec deux bulletins distincts
+   ✗ Les maires y sont élus par le Conseil européen
+   ✗ Le scrutin y est supprimé
+
+48. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle structure la loi du 13 juin 2025 contre le narcotrafic crée-t-elle ?
+   ✓ Le parquet national anticriminalité organisée
+   ✗ La Cour européenne des stupéfiants
+   ✗ Le Sénat de sécurité intérieure
+
+49. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle institution a statué le 12 juin 2025 sur la loi contre le narcotrafic ?
+   ✓ Le Conseil constitutionnel
+   ✗ La Cour des comptes
+   ✗ Le Parlement européen
+
+50. [histoire-actualite] (Actualité 2025-2026)
+Q: Quel sujet vise la loi française du 28 avril 2025 sur le renforcement de la sûreté ?
+   ✓ La sûreté dans les transports
+   ✗ La réforme des hymnes régionaux
+   ✗ La création d'une monnaie locale
+
+51. [histoire-actualite] (Police nationale 2025-2026)
+Q: Quelle unité de la Police nationale a célébré ses 40 ans en 2025 ?
+   ✓ Le RAID
+   ✗ La CRS 1
+   ✗ La police municipale
+
+52. [histoire-actualite] (Police nationale 2025-2026)
+Q: Où se trouve l'échelon central du RAID ?
+   ✓ À Bièvres
+   ✗ À Strasbourg
+   ✗ À Brest
+
+53. [histoire-actualite] (Police nationale 2025-2026)
+Q: Quelle autorité judiciaire a dirigé l'opération nationale du 28 avril 2025 liée aux attaques contre des prisons ?
+   ✓ Le parquet national antiterroriste
+   ✗ Le tribunal de commerce
+   ✗ La Cour des comptes européenne
+
+54. [histoire-actualite] (Actualité 2025-2026)
+Q: Quels pays coorganisent la Coupe du monde de football 2026 ?
+   ✓ Canada, Mexique et États-Unis
+   ✗ France, Espagne et Portugal
+   ✗ Japon, Corée du Sud et Chine
+
+55. [histoire-actualite] (Actualité 2025-2026)
+Q: Combien d'équipes participent à la Coupe du monde de football 2026 ?
+   ✓ 48
+   ✗ 32
+   ✗ 24
+
+56. [histoire-actualite] (Actualité 2025-2026)
+Q: Où se déroulent les Jeux olympiques d'hiver de 2026 ?
+   ✓ En Italie, à Milan-Cortina
+   ✗ Au Canada, à Vancouver
+   ✗ En France, à Grenoble
+
+57. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelles sont les dates des Jeux olympiques d'hiver 2026 ?
+   ✓ Du 6 au 22 février 2026
+   ✗ Du 11 juin au 19 juillet 2026
+   ✗ Du 15 au 22 mars 2026
+
+58. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle conférence internationale sur l'océan s'est tenue à Nice en juin 2025 ?
+   ✓ La Conférence des Nations unies sur l'océan
+   ✗ Le sommet de l'OTAN
+   ✗ La Coupe du monde des clubs
+
+59. [histoire-actualite] (Actualité 2025-2026)
+Q: Quels pays ont coorganisé la Conférence des Nations unies sur l'océan de Nice ?
+   ✓ La France et le Costa Rica
+   ✗ La France et le Canada
+   ✗ Le Brésil et l'Afrique du Sud
+
+60. [histoire-actualite] (Actualité 2025-2026)
+Q: Dans quelle ville s'est tenu le sommet de l'OTAN de juin 2025 ?
+   ✓ La Haye
+   ✗ Bruxelles
+   ✗ Varsovie
+
+
+========== CONTROLES FILTRES ==========
+institutions: pool=100, categories=institutions-francaises,institutions-europeennes, contaminants=0
+symboles: pool=40, categories=symboles, contaminants=0
+histoire-actualite: pool=60, categories=histoire-actualite, contaminants=0
+
+========== DIFFS vs culture-generale.html ==========
+DIFF: [institutions-europeennes] Quel traité de 1957 a créé la Communauté économique européenne ?
+  langue  correct=Le traité de Rome | wrongs=["Le traité de Versailles","Le traité de Maastricht"] | expl=Les traités de Rome fondent notamment la CEE.
+  generale correct=Le traité de Rome | wrongs=["Le traité de Versailles","Le traité de Maastricht"] | expl=Les traités de Rome fondent notamment la CEE (Communauté économique européenne).
+
+DIFF: [institutions-europeennes] Où siège la Cour de justice de l'Union européenne ?
+  langue  correct=Luxembourg | wrongs=["Dublin","Athènes"] | expl=La CJUE siège à Luxembourg.
+  generale correct=Luxembourg | wrongs=["Dublin","Athènes"] | expl=La CJUE (Cour de justice de l'Union européenne) siège à Luxembourg.
+
+ONLY_IN_LANGUE: [institutions-europeennes] Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Croatie ?
+
+DIFF: [institutions-europeennes] Quel office européen lutte contre la fraude au budget de l'Union ?
+  langue  correct=L'OLAF | wrongs=["L'OTAN","L'OPEP"] | expl=L'OLAF enquête sur les fraudes aux intérêts financiers de l'Union.
+  generale correct=L'OLAF | wrongs=["L'OTAN","L'OPEP"] | expl=L'OLAF (Office européen de lutte antifraude) enquête sur les fraudes aux intérêts financiers de l'Union.
+
+DIFF: [institutions-europeennes] Quel seuil minimal permet de lancer une initiative citoyenne européenne ?
+  langue  correct=Un million de citoyens d'au moins sept États membres | wrongs=["Cent maires d'un seul État","La moitié des députés français"] | expl=L'ICE exige au moins un million de soutiens dans au moins sept États membres.
+  generale correct=Un million de citoyens d'au moins sept États membres | wrongs=["Cent maires d'un seul État","La moitié des députés français"] | expl=L'ICE (Initiative citoyenne européenne) exige au moins un million de soutiens dans au moins sept États membres.
+
+DIFF: [histoire-actualite] Quel cardinal est le principal ministre de Louis XIII ?
+  langue  correct=Richelieu | wrongs=["Mazarin sous Louis XVI","Talleyrand sous Clovis"] | expl=Richelieu renforce l'autorité monarchique.
+  generale correct=Richelieu | wrongs=["Mazarin sous Louis XIV","Talleyrand sous Clovis"] | expl=Richelieu renforce l'autorité monarchique.
+
+DIFF: [histoire-actualite] Quelle particularité concerne Paris, Lyon et Marseille aux municipales 2026 ?
+  langue  correct=Les électeurs y votent avec deux bulletins distincts | wrongs=["Les maires y sont élus par le Conseil européen","Le scrutin y est supprimé"] | expl=La réforme prévoit deux votes distincts dans ces villes.
+  generale correct=Les électeurs y votent avec deux bulletins distincts | wrongs=["Les maires y sont élus par le Conseil européen

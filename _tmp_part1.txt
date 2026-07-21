@@ -1,0 +1,312 @@
+t le président du conseil départemental ?
+   ✓ Les conseillers départementaux
+   ✗ Les députés
+   ✗ Les préfets
+
+53. [institutions-francaises] (Constitution)
+Q: Quel article encadre principalement la révision constitutionnelle ?
+   ✓ L'article 89
+   ✗ L'article 66
+   ✗ L'article 12
+
+54. [institutions-francaises] (Référendum)
+Q: Quel article permet un référendum législatif national dans certains domaines ?
+   ✓ L'article 11
+   ✗ L'article 24
+   ✗ L'article 72
+
+55. [institutions-francaises] (Justice)
+Q: Quelle institution participe à la garantie de l'indépendance de l'autorité judiciaire ?
+   ✓ Le Conseil supérieur de la magistrature
+   ✗ Le Conseil européen
+   ✗ Le conseil municipal
+
+56. [institutions-francaises] (Gouvernement)
+Q: Quel ministre porte le titre de garde des Sceaux ?
+   ✓ Le ministre de la Justice
+   ✗ Le ministre de l'Intérieur
+   ✗ Le ministre des Armées
+
+57. [institutions-francaises] (Police nationale)
+Q: De quel ministère dépend principalement la Police nationale ?
+   ✓ Le ministère de l'Intérieur
+   ✗ Le ministère de la Culture
+   ✗ Le ministère de l'Agriculture
+
+58. [institutions-francaises] (Sécurité intérieure)
+Q: Quel statut caractérise la Gendarmerie nationale ?
+   ✓ Un statut militaire
+   ✗ Un statut communal
+   ✗ Un statut associatif
+
+59. [institutions-francaises] (Police nationale)
+Q: Quelle unité d'élite appartient à la Police nationale et non à la Gendarmerie ?
+   ✓ Le RAID
+   ✗ Le GIGN
+   ✗ La garde républicaine
+
+60. [institutions-francaises] (Institution consultative)
+Q: Quelle institution représente la société civile organisée auprès des pouvoirs publics ?
+   ✓ Le Conseil économique, social et environnemental
+   ✗ La Cour de cassation
+   ✗ Le Conseil européen
+
+--- institutions-europeennes (40) ---
+
+1. [institutions-europeennes] (Union européenne)
+Q: Combien d'États membres l'Union européenne compte-t-elle depuis le Brexit ?
+   ✓ 27
+   ✗ 20
+   ✗ 32
+
+2. [institutions-europeennes] (Union européenne)
+Q: Quel État a quitté l'Union européenne le 31 janvier 2020 ?
+   ✓ Le Royaume-Uni
+   ✗ L'Irlande
+   ✗ La Norvège
+
+3. [institutions-europeennes] (Construction européenne)
+Q: Quel groupe correspond aux six États fondateurs des Communautés européennes ?
+   ✓ France, Allemagne de l'Ouest, Italie, Belgique, Pays-Bas et Luxembourg
+   ✗ France, Espagne, Portugal, Grèce, Irlande et Danemark
+   ✗ Allemagne, Autriche, Pologne, Hongrie, Roumanie et Bulgarie
+
+4. [institutions-europeennes] (Traités)
+Q: Quel traité de 1957 a créé la Communauté économique européenne ?
+   ✓ Le traité de Rome
+   ✗ Le traité de Versailles
+   ✗ Le traité de Maastricht
+
+5. [institutions-europeennes] (Construction européenne)
+Q: À quelle date célèbre-t-on la Journée de l'Europe ?
+   ✓ Le 9 mai
+   ✗ Le 14 juillet
+   ✗ Le 11 novembre
+
+6. [institutions-europeennes] (Traités)
+Q: Quel traité a institué l'Union européenne et la citoyenneté européenne ?
+   ✓ Le traité de Maastricht
+   ✗ Le traité de Nice
+   ✗ Le traité de Trianon
+
+7. [institutions-europeennes] (Traités)
+Q: Quel traité institutionnel est entré en vigueur en 2009 ?
+   ✓ Le traité de Lisbonne
+   ✗ Le traité de Paris de 1763
+   ✗ Le traité de l'Élysée
+
+8. [institutions-europeennes] (Commission européenne)
+Q: Quelle institution détient le plus souvent l'initiative législative européenne ?
+   ✓ La Commission européenne
+   ✗ La Cour des comptes européenne
+   ✗ La Banque centrale européenne
+
+9. [institutions-europeennes] (Commission européenne)
+Q: Quel est le rôle général de la Commission européenne ?
+   ✓ Promouvoir l'intérêt général de l'Union
+   ✗ Commander les armées nationales
+   ✗ Élire directement les maires
+
+10. [institutions-europeennes] (Conseil européen)
+Q: Qui siège au Conseil européen ?
+   ✓ Les chefs d'État ou de gouvernement des États membres
+   ✗ Les seuls juges européens
+   ✗ Les maires des capitales
+
+11. [institutions-europeennes] (Conseil de l'Union européenne)
+Q: Qui siège au Conseil de l'Union européenne ?
+   ✓ Les ministres des États membres selon le sujet
+   ✗ Les députés nationaux uniquement
+   ✗ Les membres de la Cour de justice
+
+12. [institutions-europeennes] (Parlement européen)
+Q: Comment les députés européens sont-ils élus ?
+   ✓ Au suffrage universel direct
+   ✗ Par les préfets
+   ✗ Par les cours constitutionnelles
+
+13. [institutions-europeennes] (Parlement européen)
+Q: Combien de députés compte le Parlement européen pour 2024-2029 ?
+   ✓ 720
+   ✗ 577
+   ✗ 348
+
+14. [institutions-europeennes] (Parlement européen)
+Q: Combien de députés européens la France élit-elle pour 2024-2029 ?
+   ✓ 81
+   ✗ 74
+   ✗ 96
+
+15. [institutions-europeennes] (Élections européennes)
+Q: À quel rythme les élections européennes ont-elles lieu ?
+   ✓ Tous les 5 ans
+   ✗ Tous les 3 ans
+   ✗ Tous les 9 ans
+
+16. [institutions-europeennes] (Parlement européen)
+Q: Dans quelle ville se tiennent les sessions plénières ordinaires du Parlement européen ?
+   ✓ Strasbourg
+   ✗ Madrid
+   ✗ Varsovie
+
+17. [institutions-europeennes] (Commission européenne)
+Q: Où se trouve le siège principal de la Commission européenne ?
+   ✓ Bruxelles
+   ✗ Rome
+   ✗ Lisbonne
+
+18. [institutions-europeennes] (Justice européenne)
+Q: Où siège la Cour de justice de l'Union européenne ?
+   ✓ Luxembourg
+   ✗ Dublin
+   ✗ Athènes
+
+19. [institutions-europeennes] (Zone euro)
+Q: Où se trouve la Banque centrale européenne ?
+   ✓ Francfort
+   ✗ Marseille
+   ✗ Stockholm
+
+20. [institutions-europeennes] (Zone euro)
+Q: Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Croatie ?
+   ✓ 20
+   ✗ 27
+   ✗ 12
+
+21. [institutions-europeennes] (Zone euro)
+Q: En quelle année les billets et pièces en euro ont-ils été mis en circulation ?
+   ✓ 2002
+   ✗ 1992
+   ✗ 2010
+
+22. [institutions-europeennes] (Espace Schengen)
+Q: Quel est l'objectif principal de l'espace Schengen ?
+   ✓ Faciliter la libre circulation sans contrôles systématiques aux frontières intérieures
+   ✗ Créer une monnaie différente de l'euro
+   ✗ Remplacer les parlements nationaux
+
+23. [institutions-europeennes] (Droit européen)
+Q: Quel acte de l'Union est directement applicable dans les États membres ?
+   ✓ Le règlement
+   ✗ La recommandation
+   ✗ Le voeu parlementaire
+
+24. [institutions-europeennes] (Droit européen)
+Q: Quel acte fixe un objectif tout en laissant les États choisir les moyens ?
+   ✓ La directive
+   ✗ Le règlement intérieur communal
+   ✗ L'arrêt de cour d'assises
+
+25. [institutions-europeennes] (Principes)
+Q: Quel principe limite l'action de l'Union aux cas où elle est plus efficace que les États ?
+   ✓ La subsidiarité
+   ✗ La monarchie parlementaire
+   ✗ La centralisation préfectorale
+
+26. [institutions-europeennes] (Conseil de l'Union européenne)
+Q: Quel mode de vote est fréquent au Conseil de l'Union européenne ?
+   ✓ La majorité qualifiée
+   ✗ Le tirage au sort
+   ✗ L'unanimité des maires
+
+27. [institutions-europeennes] (Budget européen)
+Q: Quelles institutions adoptent ensemble le budget annuel de l'Union ?
+   ✓ Le Parlement européen et le Conseil de l'Union européenne
+   ✗ La BCE et Europol
+   ✗ La Cour de justice et Frontex
+
+28. [institutions-europeennes] (Programmes européens)
+Q: Quel programme est associé à la mobilité des étudiants et apprentis ?
+   ✓ Erasmus+
+   ✗ Europol
+   ✗ Eurojust
+
+29. [institutions-europeennes] (Coopération policière)
+Q: Quelle agence soutient la coopération policière européenne ?
+   ✓ Europol
+   ✗ Eurostat
+   ✗ Erasmus+
+
+30. [institutions-europeennes] (Coopération judiciaire)
+Q: Quelle agence facilite la coopération judiciaire pénale européenne ?
+   ✓ Eurojust
+   ✗ Frontex
+   ✗ La BCE
+
+31. [institutions-europeennes] (Frontières)
+Q: Quelle agence soutient la gestion des frontières extérieures ?
+   ✓ Frontex
+   ✗ Europol
+   ✗ La Cour des comptes européenne
+
+32. [institutions-europeennes] (Contrôle)
+Q: Quel office européen lutte contre la fraude au budget de l'Union ?
+   ✓ L'OLAF
+   ✗ L'OTAN
+   ✗ L'OPEP
+
+33. [institutions-europeennes] (Contrôle)
+Q: Quelle institution contrôle les comptes de l'Union européenne ?
+   ✓ La Cour des comptes européenne
+   ✗ La Cour européenne des droits de l'homme
+   ✗ Le Comité olympique
+
+34. [institutions-europeennes] (Droits fondamentaux)
+Q: Quel texte a la même valeur juridique que les traités depuis Lisbonne ?
+   ✓ La Charte des droits fondamentaux de l'Union européenne
+   ✗ La Déclaration de Philadelphie
+   ✗ La Charte des communes rurales
+
+35. [institutions-europeennes] (Symboles européens)
+Q: Quelle est la devise de l'Union européenne ?
+   ✓ Unie dans la diversité
+   ✗ Liberté, Égalité, Fraternité
+   ✗ Je maintiendrai
+
+36. [institutions-europeennes] (Symboles européens)
+Q: Combien d'étoiles figurent sur le drapeau européen ?
+   ✓ 12
+   ✗ 15
+   ✗ 27
+
+37. [institutions-europeennes] (Symboles européens)
+Q: Quel hymne musical est associé à l'Union européenne ?
+   ✓ L'Ode à la joie
+   ✗ La Marseillaise
+   ✗ Le Chant des partisans
+
+38. [institutions-europeennes] (Démocratie européenne)
+Q: Quel seuil minimal permet de lancer une initiative citoyenne européenne ?
+   ✓ Un million de citoyens d'au moins sept États membres
+   ✗ Cent maires d'un seul État
+   ✗ La moitié des députés français
+
+39. [institutions-europeennes] (Médiation)
+Q: Qui examine les plaintes pour mauvaise administration des institutions européennes ?
+   ✓ Le Médiateur européen
+   ✗ Le préfet européen
+   ✗ Le président de la BCE
+
+40. [institutions-europeennes] (Action extérieure)
+Q: Qui conduit la politique étrangère et de sécurité commune de l'Union ?
+   ✓ Le haut représentant de l'Union pour les affaires étrangères
+   ✗ Le président de la Cour de justice
+   ✗ Le directeur d'Europol
+
+========== MODE: symboles ==========
+
+--- symboles (40) ---
+
+1. [symboles] (Drapeau français)
+Q: Quelles sont les trois couleurs du drapeau national français ?
+   ✓ Bleu, blanc et rouge
+   ✗ Vert, blanc et rouge
+   ✗ Noir, jaune et rouge
+
+2. [symboles] (Drapeau français)
+Q: Dans quel ordre les couleurs apparaissent-elles depuis la hampe ?
+   ✓ Bleu, blanc, rouge
+   ✗ Rouge, blanc, bleu
+   ✗ Blanc, bleu, rouge
+
+3. [symboles] (Dr

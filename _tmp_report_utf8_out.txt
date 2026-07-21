@@ -1,0 +1,1258 @@
+# Counts culture-langue: {"institutions-francaises":60,"institutions-europeennes":40,"symboles":40,"histoire-actualite":60}
+# Total: 200
+
+
+========== MODE: institutions ==========
+
+--- institutions-francaises (60) ---
+
+1. [institutions-francaises] (Constitution)
+Q: Quel texte organise les pouvoirs publics de la Ve République ?
+   ✓ La Constitution du 4 octobre 1958
+   ✗ La Déclaration de 1789 seule
+   ✗ Le Code civil de 1804
+
+2. [institutions-francaises] (Constitution)
+Q: Quelle formule qualifie la République française à l'article 1er ?
+   ✓ Indivisible, laïque, démocratique et sociale
+   ✗ Fédérale, royale et confessionnelle
+   ✗ Militaire, corporative et héréditaire
+
+3. [institutions-francaises] (Président de la République)
+Q: Depuis 1962, comment le président de la République est-il élu ?
+   ✓ Au suffrage universel direct
+   ✗ Par les députés uniquement
+   ✗ Par les maires uniquement
+
+4. [institutions-francaises] (Président de la République)
+Q: Si aucun candidat n'a la majorité absolue au premier tour de la présidentielle, que prévoit le scrutin ?
+   ✓ Un second tour
+   ✗ Une nomination par le Sénat
+   ✗ Un tirage au sort
+
+5. [institutions-francaises] (Président de la République)
+Q: Quel pouvoir permet au président de provoquer de nouvelles élections législatives ?
+   ✓ La dissolution de l'Assemblée nationale
+   ✗ La révocation du Sénat
+   ✗ La nomination des députés
+
+6. [institutions-francaises] (Président de la République)
+Q: Quel rôle militaire la Constitution attribue-t-elle au président ?
+   ✓ Chef des armées
+   ✗ Chef du parquet
+   ✗ Président de la Cour de cassation
+
+7. [institutions-francaises] (Gouvernement)
+Q: Quel bâtiment est le siège traditionnel du Premier ministre ?
+   ✓ L'hôtel de Matignon
+   ✗ Le palais Bourbon
+   ✗ Le palais du Luxembourg
+
+8. [institutions-francaises] (Gouvernement)
+Q: Devant quelle assemblée le Gouvernement est-il politiquement responsable ?
+   ✓ L'Assemblée nationale
+   ✗ Le Conseil constitutionnel
+   ✗ Le Conseil d'État
+
+9. [institutions-francaises] (Gouvernement)
+Q: Qui préside normalement le Conseil des ministres ?
+   ✓ Le président de la République
+   ✗ Le président du Sénat
+   ✗ Le procureur général
+
+10. [institutions-francaises] (Loi)
+Q: Comment appelle-t-on un texte de loi déposé par un parlementaire ?
+   ✓ Une proposition de loi
+   ✗ Un projet de loi
+   ✗ Une ordonnance
+
+11. [institutions-francaises] (Gouvernement)
+Q: Quel mécanisme permet l'adoption d'un texte sauf motion de censure ?
+   ✓ L'article 49 alinéa 3
+   ✗ La grâce présidentielle
+   ✗ Le contrôle de légalité
+
+12. [institutions-francaises] (Loi)
+Q: Quel texte peut être pris par le Gouvernement dans le domaine de la loi après habilitation ?
+   ✓ Une ordonnance
+   ✗ Un arrêt de cassation
+   ✗ Une délibération municipale
+
+13. [institutions-francaises] (Parlement)
+Q: Où siège l'Assemblée nationale ?
+   ✓ Au palais Bourbon
+   ✗ Au palais du Luxembourg
+   ✗ Au palais de l'Élysée
+
+14. [institutions-francaises] (Parlement)
+Q: Combien l'Assemblée nationale compte-t-elle de députés ?
+   ✓ 577
+   ✗ 348
+   ✗ 81
+
+15. [institutions-francaises] (Parlement)
+Q: Comment les députés sont-ils élus ?
+   ✓ Au suffrage universel direct
+   ✗ Au suffrage universel indirect
+   ✗ Par nomination préfectorale
+
+16. [institutions-francaises] (Parlement)
+Q: Où siège le Sénat ?
+   ✓ Au palais du Luxembourg
+   ✗ Au palais Bourbon
+   ✗ Au palais de justice
+
+17. [institutions-francaises] (Parlement)
+Q: Combien le Sénat compte-t-il de sénateurs ?
+   ✓ 348
+   ✗ 577
+   ✗ 720
+
+18. [institutions-francaises] (Parlement)
+Q: Comment les sénateurs sont-ils élus ?
+   ✓ Au suffrage universel indirect
+   ✗ Au suffrage universel direct
+   ✗ Par référendum national
+
+19. [institutions-francaises] (Parlement)
+Q: Que représente spécialement le Sénat selon la Constitution ?
+   ✓ Les collectivités territoriales
+   ✗ Les juridictions pénales
+   ✗ Les entreprises privées
+
+20. [institutions-francaises] (Parlement)
+Q: Comment appelle-t-on un Parlement composé de deux chambres ?
+   ✓ Bicaméral
+   ✗ Monocaméral
+   ✗ Judiciaire
+
+21. [institutions-francaises] (Loi)
+Q: Quel nom désigne les allers-retours d'un texte entre les assemblées ?
+   ✓ La navette parlementaire
+   ✗ La cohabitation
+   ✗ La déconcentration
+
+22. [institutions-francaises] (Loi)
+Q: Quelle instance réunit sept députés et sept sénateurs pour chercher un compromis ?
+   ✓ La commission mixte paritaire
+   ✗ Le conseil municipal
+   ✗ La conférence des préfets
+
+23. [institutions-francaises] (Loi)
+Q: En cas de désaccord persistant sur une loi ordinaire, qui peut avoir le dernier mot ?
+   ✓ L'Assemblée nationale
+   ✗ Le Sénat
+   ✗ Le CESE
+
+24. [institutions-francaises] (Loi)
+Q: Où les lois promulguées sont-elles publiées officiellement ?
+   ✓ Au Journal officiel
+   ✗ Dans chaque mairie uniquement
+   ✗ Dans un registre privé
+
+25. [institutions-francaises] (Budget)
+Q: Quel texte fixe chaque année recettes et dépenses de l'État ?
+   ✓ La loi de finances
+   ✗ La loi d'amnistie
+   ✗ La loi municipale
+
+26. [institutions-francaises] (Conseil constitutionnel)
+Q: Combien de membres nommés composent le Conseil constitutionnel ?
+   ✓ 9
+   ✗ 12
+   ✗ 577
+
+27. [institutions-francaises] (Conseil constitutionnel)
+Q: Que signifie QPC ?
+   ✓ Question prioritaire de constitutionnalité
+   ✗ Quota parlementaire de contrôle
+   ✗ Qualification pénale communale
+
+28. [institutions-francaises] (Conseil constitutionnel)
+Q: Quelle institution veille à la régularité de l'élection présidentielle ?
+   ✓ Le Conseil constitutionnel
+   ✗ La Cour des comptes
+   ✗ L'ARCOM
+
+29. [institutions-francaises] (Conseil d'État)
+Q: Quelle juridiction est au sommet de l'ordre administratif ?
+   ✓ Le Conseil d'État
+   ✗ La Cour de cassation
+   ✗ La cour d'assises
+
+30. [institutions-francaises] (Conseil d'État)
+Q: Quel rôle consultatif le Conseil d'État exerce-t-il ?
+   ✓ Il donne des avis sur de nombreux projets de texte
+   ✗ Il élit les ministres
+   ✗ Il vote le budget
+
+31. [institutions-francaises] (Juridictions)
+Q: Quelle juridiction est au sommet de l'ordre judiciaire ?
+   ✓ La Cour de cassation
+   ✗ Le Conseil d'État
+   ✗ Le tribunal administratif
+
+32. [institutions-francaises] (Contrôle)
+Q: Quelle institution contrôle l'utilisation des fonds publics ?
+   ✓ La Cour des comptes
+   ✗ Le parquet national financier
+   ✗ Le conseil régional
+
+33. [institutions-francaises] (Juridictions)
+Q: Quel ordre juge les litiges entre administrés et administration ?
+   ✓ L'ordre administratif
+   ✗ L'ordre judiciaire
+   ✗ L'ordre parlementaire
+
+34. [institutions-francaises] (Juridictions)
+Q: Quel ordre connaît des infractions pénales ?
+   ✓ L'ordre judiciaire
+   ✗ L'ordre administratif
+   ✗ L'ordre européen uniquement
+
+35. [institutions-francaises] (Justice)
+Q: Qui porte l'accusation au nom de la société dans un procès pénal ?
+   ✓ Le ministère public
+   ✗ Le maire
+   ✗ Le rapporteur budgétaire
+
+36. [institutions-francaises] (Autorités indépendantes)
+Q: Quelle autorité peut être saisie en cas de discrimination ou difficulté avec un service public ?
+   ✓ Le Défenseur des droits
+   ✗ Le président du Sénat
+   ✗ Le préfet maritime
+
+37. [institutions-francaises] (Autorités indépendantes)
+Q: Quelle autorité protège les données personnelles en France ?
+   ✓ La CNIL
+   ✗ L'ARCOM
+   ✗ La Cour des comptes
+
+38. [institutions-francaises] (Autorités indépendantes)
+Q: Quelle autorité régule notamment l'audiovisuel et le numérique ?
+   ✓ L'ARCOM
+   ✗ La CNIL
+   ✗ Le Conseil d'État
+
+39. [institutions-francaises] (Administration)
+Q: Qui représente l'État dans un département ?
+   ✓ Le préfet
+   ✗ Le maire
+   ✗ Le président du conseil régional
+
+40. [institutions-francaises] (Administration)
+Q: Que désigne la déconcentration ?
+   ✓ L'action locale de l'État par ses services
+   ✗ Le transfert de souveraineté à l'UE
+   ✗ La suppression des communes
+
+41. [institutions-francaises] (Collectivités)
+Q: Que désigne la décentralisation ?
+   ✓ Le transfert de compétences à des collectivités territoriales
+   ✗ La nomination des députés par le préfet
+   ✗ La fusion des juridictions
+
+42. [institutions-francaises] (Collectivités)
+Q: Quelle collectivité correspond à l'échelon local de base ?
+   ✓ La commune
+   ✗ La région
+   ✗ Le canton
+
+43. [institutions-francaises] (Collectivités)
+Q: Qui élit le maire après les élections municipales ?
+   ✓ Le conseil municipal
+   ✗ Le préfet
+   ✗ Le Conseil constitutionnel
+
+44. [institutions-francaises] (Collectivités)
+Q: Quel élu exerce la police administrative générale dans sa commune ?
+   ✓ Le maire
+   ✗ Le député
+   ✗ Le président de la République
+
+45. [institutions-francaises] (Collectivités)
+Q: Quelle assemblée administre le département ?
+   ✓ Le conseil départemental
+   ✗ Le conseil municipal
+   ✗ Le Conseil d'État
+
+46. [institutions-francaises] (Collectivités)
+Q: Quelle assemblée administre la région ?
+   ✓ Le conseil régional
+   ✗ Le conseil de prud'hommes
+   ✗ Le tribunal correctionnel
+
+47. [institutions-francaises] (Élections)
+Q: Quel scrutin élit les conseillers municipaux ?
+   ✓ Les élections municipales
+   ✗ Les élections sénatoriales
+   ✗ Les élections prud'homales
+
+48. [institutions-francaises] (Élections)
+Q: Quel âge minimum faut-il avoir pour voter aux élections politiques françaises ?
+   ✓ 18 ans
+   ✗ 16 ans
+   ✗ 21 ans
+
+49. [institutions-francaises] (Élections)
+Q: À quelles élections les citoyens de l'UE résidant en France peuvent-ils voter localement ?
+   ✓ Aux élections municipales
+   ✗ À l'élection présidentielle
+   ✗ Aux élections sénatoriales comme grands électeurs
+
+50. [institutions-francaises] (Collectivités)
+Q: Quelle assemblée délibère sur les affaires de la commune ?
+   ✓ Le conseil municipal
+   ✗ Le Conseil constitutionnel
+   ✗ La Cour de cassation
+
+51. [institutions-francaises] (Administration)
+Q: Comment s'appelle le contrôle du préfet sur la légalité des actes locaux ?
+   ✓ Le contrôle de légalité
+   ✗ Le contrôle de constitutionnalité
+   ✗ Le contrôle judiciaire automatique
+
+52. [institutions-francaises] (Collectivités)
+Q: Qui élit le président du conseil départemental ?
+   ✓ Les conseillers départementaux
+   ✗ Les députés
+   ✗ Les préfets
+
+53. [institutions-francaises] (Constitution)
+Q: Quel article encadre principalement la révision constitutionnelle ?
+   ✓ L'article 89
+   ✗ L'article 66
+   ✗ L'article 12
+
+54. [institutions-francaises] (Référendum)
+Q: Quel article permet un référendum législatif national dans certains domaines ?
+   ✓ L'article 11
+   ✗ L'article 24
+   ✗ L'article 72
+
+55. [institutions-francaises] (Justice)
+Q: Quelle institution participe à la garantie de l'indépendance de l'autorité judiciaire ?
+   ✓ Le Conseil supérieur de la magistrature
+   ✗ Le Conseil européen
+   ✗ Le conseil municipal
+
+56. [institutions-francaises] (Gouvernement)
+Q: Quel ministre porte le titre de garde des Sceaux ?
+   ✓ Le ministre de la Justice
+   ✗ Le ministre de l'Intérieur
+   ✗ Le ministre des Armées
+
+57. [institutions-francaises] (Police nationale)
+Q: De quel ministère dépend principalement la Police nationale ?
+   ✓ Le ministère de l'Intérieur
+   ✗ Le ministère de la Culture
+   ✗ Le ministère de l'Agriculture
+
+58. [institutions-francaises] (Sécurité intérieure)
+Q: Quel statut caractérise la Gendarmerie nationale ?
+   ✓ Un statut militaire
+   ✗ Un statut communal
+   ✗ Un statut associatif
+
+59. [institutions-francaises] (Police nationale)
+Q: Quelle unité d'élite appartient à la Police nationale et non à la Gendarmerie ?
+   ✓ Le RAID
+   ✗ Le GIGN
+   ✗ La garde républicaine
+
+60. [institutions-francaises] (Institution consultative)
+Q: Quelle institution représente la société civile organisée auprès des pouvoirs publics ?
+   ✓ Le Conseil économique, social et environnemental
+   ✗ La Cour de cassation
+   ✗ Le Conseil européen
+
+--- institutions-europeennes (40) ---
+
+1. [institutions-europeennes] (Union européenne)
+Q: Combien d'États membres l'Union européenne compte-t-elle depuis le Brexit ?
+   ✓ 27
+   ✗ 20
+   ✗ 32
+
+2. [institutions-europeennes] (Union européenne)
+Q: Quel État a quitté l'Union européenne le 31 janvier 2020 ?
+   ✓ Le Royaume-Uni
+   ✗ L'Irlande
+   ✗ La Norvège
+
+3. [institutions-europeennes] (Construction européenne)
+Q: Quel groupe correspond aux six États fondateurs des Communautés européennes ?
+   ✓ France, Allemagne de l'Ouest, Italie, Belgique, Pays-Bas et Luxembourg
+   ✗ France, Espagne, Portugal, Grèce, Irlande et Danemark
+   ✗ Allemagne, Autriche, Pologne, Hongrie, Roumanie et Bulgarie
+
+4. [institutions-europeennes] (Traités)
+Q: Quel traité de 1957 a créé la Communauté économique européenne ?
+   ✓ Le traité de Rome
+   ✗ Le traité de Versailles
+   ✗ Le traité de Maastricht
+
+5. [institutions-europeennes] (Construction européenne)
+Q: À quelle date célèbre-t-on la Journée de l'Europe ?
+   ✓ Le 9 mai
+   ✗ Le 14 juillet
+   ✗ Le 11 novembre
+
+6. [institutions-europeennes] (Traités)
+Q: Quel traité a institué l'Union européenne et la citoyenneté européenne ?
+   ✓ Le traité de Maastricht
+   ✗ Le traité de Nice
+   ✗ Le traité de Trianon
+
+7. [institutions-europeennes] (Traités)
+Q: Quel traité institutionnel est entré en vigueur en 2009 ?
+   ✓ Le traité de Lisbonne
+   ✗ Le traité de Paris de 1763
+   ✗ Le traité de l'Élysée
+
+8. [institutions-europeennes] (Commission européenne)
+Q: Quelle institution détient le plus souvent l'initiative législative européenne ?
+   ✓ La Commission européenne
+   ✗ La Cour des comptes européenne
+   ✗ La Banque centrale européenne
+
+9. [institutions-europeennes] (Commission européenne)
+Q: Quel est le rôle général de la Commission européenne ?
+   ✓ Promouvoir l'intérêt général de l'Union
+   ✗ Commander les armées nationales
+   ✗ Élire directement les maires
+
+10. [institutions-europeennes] (Conseil européen)
+Q: Qui siège au Conseil européen ?
+   ✓ Les chefs d'État ou de gouvernement des États membres
+   ✗ Les seuls juges européens
+   ✗ Les maires des capitales
+
+11. [institutions-europeennes] (Conseil de l'Union européenne)
+Q: Qui siège au Conseil de l'Union européenne ?
+   ✓ Les ministres des États membres selon le sujet
+   ✗ Les députés nationaux uniquement
+   ✗ Les membres de la Cour de justice
+
+12. [institutions-europeennes] (Parlement européen)
+Q: Comment les députés européens sont-ils élus ?
+   ✓ Au suffrage universel direct
+   ✗ Par les préfets
+   ✗ Par les cours constitutionnelles
+
+13. [institutions-europeennes] (Parlement européen)
+Q: Combien de députés compte le Parlement européen pour 2024-2029 ?
+   ✓ 720
+   ✗ 577
+   ✗ 348
+
+14. [institutions-europeennes] (Parlement européen)
+Q: Combien de députés européens la France élit-elle pour 2024-2029 ?
+   ✓ 81
+   ✗ 74
+   ✗ 96
+
+15. [institutions-europeennes] (Élections européennes)
+Q: À quel rythme les élections européennes ont-elles lieu ?
+   ✓ Tous les 5 ans
+   ✗ Tous les 3 ans
+   ✗ Tous les 9 ans
+
+16. [institutions-europeennes] (Parlement européen)
+Q: Dans quelle ville se tiennent les sessions plénières ordinaires du Parlement européen ?
+   ✓ Strasbourg
+   ✗ Madrid
+   ✗ Varsovie
+
+17. [institutions-europeennes] (Commission européenne)
+Q: Où se trouve le siège principal de la Commission européenne ?
+   ✓ Bruxelles
+   ✗ Rome
+   ✗ Lisbonne
+
+18. [institutions-europeennes] (Justice européenne)
+Q: Où siège la Cour de justice de l'Union européenne ?
+   ✓ Luxembourg
+   ✗ Dublin
+   ✗ Athènes
+
+19. [institutions-europeennes] (Zone euro)
+Q: Où se trouve la Banque centrale européenne ?
+   ✓ Francfort
+   ✗ Marseille
+   ✗ Stockholm
+
+20. [institutions-europeennes] (Zone euro)
+Q: Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Croatie ?
+   ✓ 20
+   ✗ 27
+   ✗ 12
+
+21. [institutions-europeennes] (Zone euro)
+Q: En quelle année les billets et pièces en euro ont-ils été mis en circulation ?
+   ✓ 2002
+   ✗ 1992
+   ✗ 2010
+
+22. [institutions-europeennes] (Espace Schengen)
+Q: Quel est l'objectif principal de l'espace Schengen ?
+   ✓ Faciliter la libre circulation sans contrôles systématiques aux frontières intérieures
+   ✗ Créer une monnaie différente de l'euro
+   ✗ Remplacer les parlements nationaux
+
+23. [institutions-europeennes] (Droit européen)
+Q: Quel acte de l'Union est directement applicable dans les États membres ?
+   ✓ Le règlement
+   ✗ La recommandation
+   ✗ Le voeu parlementaire
+
+24. [institutions-europeennes] (Droit européen)
+Q: Quel acte fixe un objectif tout en laissant les États choisir les moyens ?
+   ✓ La directive
+   ✗ Le règlement intérieur communal
+   ✗ L'arrêt de cour d'assises
+
+25. [institutions-europeennes] (Principes)
+Q: Quel principe limite l'action de l'Union aux cas où elle est plus efficace que les États ?
+   ✓ La subsidiarité
+   ✗ La monarchie parlementaire
+   ✗ La centralisation préfectorale
+
+26. [institutions-europeennes] (Conseil de l'Union européenne)
+Q: Quel mode de vote est fréquent au Conseil de l'Union européenne ?
+   ✓ La majorité qualifiée
+   ✗ Le tirage au sort
+   ✗ L'unanimité des maires
+
+27. [institutions-europeennes] (Budget européen)
+Q: Quelles institutions adoptent ensemble le budget annuel de l'Union ?
+   ✓ Le Parlement européen et le Conseil de l'Union européenne
+   ✗ La BCE et Europol
+   ✗ La Cour de justice et Frontex
+
+28. [institutions-europeennes] (Programmes européens)
+Q: Quel programme est associé à la mobilité des étudiants et apprentis ?
+   ✓ Erasmus+
+   ✗ Europol
+   ✗ Eurojust
+
+29. [institutions-europeennes] (Coopération policière)
+Q: Quelle agence soutient la coopération policière européenne ?
+   ✓ Europol
+   ✗ Eurostat
+   ✗ Erasmus+
+
+30. [institutions-europeennes] (Coopération judiciaire)
+Q: Quelle agence facilite la coopération judiciaire pénale européenne ?
+   ✓ Eurojust
+   ✗ Frontex
+   ✗ La BCE
+
+31. [institutions-europeennes] (Frontières)
+Q: Quelle agence soutient la gestion des frontières extérieures ?
+   ✓ Frontex
+   ✗ Europol
+   ✗ La Cour des comptes européenne
+
+32. [institutions-europeennes] (Contrôle)
+Q: Quel office européen lutte contre la fraude au budget de l'Union ?
+   ✓ L'OLAF
+   ✗ L'OTAN
+   ✗ L'OPEP
+
+33. [institutions-europeennes] (Contrôle)
+Q: Quelle institution contrôle les comptes de l'Union européenne ?
+   ✓ La Cour des comptes européenne
+   ✗ La Cour européenne des droits de l'homme
+   ✗ Le Comité olympique
+
+34. [institutions-europeennes] (Droits fondamentaux)
+Q: Quel texte a la même valeur juridique que les traités depuis Lisbonne ?
+   ✓ La Charte des droits fondamentaux de l'Union européenne
+   ✗ La Déclaration de Philadelphie
+   ✗ La Charte des communes rurales
+
+35. [institutions-europeennes] (Symboles européens)
+Q: Quelle est la devise de l'Union européenne ?
+   ✓ Unie dans la diversité
+   ✗ Liberté, Égalité, Fraternité
+   ✗ Je maintiendrai
+
+36. [institutions-europeennes] (Symboles européens)
+Q: Combien d'étoiles figurent sur le drapeau européen ?
+   ✓ 12
+   ✗ 15
+   ✗ 27
+
+37. [institutions-europeennes] (Symboles européens)
+Q: Quel hymne musical est associé à l'Union européenne ?
+   ✓ L'Ode à la joie
+   ✗ La Marseillaise
+   ✗ Le Chant des partisans
+
+38. [institutions-europeennes] (Démocratie européenne)
+Q: Quel seuil minimal permet de lancer une initiative citoyenne européenne ?
+   ✓ Un million de citoyens d'au moins sept États membres
+   ✗ Cent maires d'un seul État
+   ✗ La moitié des députés français
+
+39. [institutions-europeennes] (Médiation)
+Q: Qui examine les plaintes pour mauvaise administration des institutions européennes ?
+   ✓ Le Médiateur européen
+   ✗ Le préfet européen
+   ✗ Le président de la BCE
+
+40. [institutions-europeennes] (Action extérieure)
+Q: Qui conduit la politique étrangère et de sécurité commune de l'Union ?
+   ✓ Le haut représentant de l'Union pour les affaires étrangères
+   ✗ Le président de la Cour de justice
+   ✗ Le directeur d'Europol
+
+========== MODE: symboles ==========
+
+--- symboles (40) ---
+
+1. [symboles] (Drapeau français)
+Q: Quelles sont les trois couleurs du drapeau national français ?
+   ✓ Bleu, blanc et rouge
+   ✗ Vert, blanc et rouge
+   ✗ Noir, jaune et rouge
+
+2. [symboles] (Drapeau français)
+Q: Dans quel ordre les couleurs apparaissent-elles depuis la hampe ?
+   ✓ Bleu, blanc, rouge
+   ✗ Rouge, blanc, bleu
+   ✗ Blanc, bleu, rouge
+
+3. [symboles] (Drapeau français)
+Q: Quel article de la Constitution mentionne le drapeau tricolore ?
+   ✓ L'article 2
+   ✗ L'article 11
+   ✗ L'article 49
+
+4. [symboles] (Drapeau français)
+Q: Quelle couleur est traditionnellement associée au roi ?
+   ✓ Le blanc
+   ✗ Le vert
+   ✗ Le noir
+
+5. [symboles] (Drapeau français)
+Q: Quel événement a popularisé la cocarde tricolore ?
+   ✓ La Révolution française
+   ✗ La guerre de 1870
+   ✗ La Libération de 1944
+
+6. [symboles] (Devise)
+Q: Quelle est la devise de la République française ?
+   ✓ Liberté, Égalité, Fraternité
+   ✗ Travail, Famille, Patrie
+   ✗ Unie dans la diversité
+
+7. [symboles] (Devise)
+Q: Sur quels bâtiments la devise est-elle fréquemment inscrite ?
+   ✓ Les mairies
+   ✗ Les ambassades étrangères uniquement
+   ✗ Les sièges de sociétés privées obligatoirement
+
+8. [symboles] (Marianne)
+Q: Que personnifie Marianne ?
+   ✓ La République française
+   ✗ La monarchie capétienne
+   ✗ L'Union européenne
+
+9. [symboles] (Marianne)
+Q: Où trouve-t-on souvent un buste de Marianne ?
+   ✓ Dans les mairies
+   ✗ Dans les marchés privés
+   ✗ Dans les gares uniquement
+
+10. [symboles] (Bonnet phrygien)
+Q: Quel symbole de liberté coiffe souvent Marianne ?
+   ✓ Le bonnet phrygien
+   ✗ La couronne fermée
+   ✗ Le casque de samouraï
+
+11. [symboles] (Fête nationale)
+Q: Quelle date correspond à la fête nationale française ?
+   ✓ Le 14 juillet
+   ✗ Le 8 mai
+   ✗ Le 9 mai
+
+12. [symboles] (Fête nationale)
+Q: En quelle année le 14 juillet devient-il fête nationale ?
+   ✓ 1880
+   ✗ 1792
+   ✗ 1958
+
+13. [symboles] (La Marseillaise)
+Q: Qui a composé La Marseillaise ?
+   ✓ Claude Joseph Rouget de Lisle
+   ✗ Victor Hugo
+   ✗ Jean Moulin
+
+14. [symboles] (La Marseillaise)
+Q: Dans quelle ville La Marseillaise a-t-elle été composée ?
+   ✓ Strasbourg
+   ✗ Marseille
+   ✗ Lyon
+
+15. [symboles] (La Marseillaise)
+Q: Quel était le titre d'origine de La Marseillaise ?
+   ✓ Chant de guerre pour l'armée du Rhin
+   ✗ Chant du départ des maires
+   ✗ Hymne européen des citoyens
+
+16. [symboles] (La Marseillaise)
+Q: Pourquoi le chant prend-il le nom de La Marseillaise ?
+   ✓ Il fut popularisé par des volontaires venus de Marseille
+   ✗ Il fut écrit dans le port de Marseille
+   ✗ Il était l'hymne municipal de Marseille
+
+17. [symboles] (La Marseillaise)
+Q: En quelle année la IIIe République rétablit-elle La Marseillaise comme hymne national ?
+   ✓ 1879
+   ✗ 1815
+   ✗ 1946
+
+18. [symboles] (La Marseillaise)
+Q: Quel texte actuel mentionne La Marseillaise comme hymne national ?
+   ✓ La Constitution de 1958
+   ✗ Le Code civil de 1804
+   ✗ Le traité de Lisbonne
+
+19. [symboles] (La Marseillaise)
+Q: Quels sont les premiers mots de La Marseillaise ?
+   ✓ Allons enfants de la Patrie
+   ✗ Amis, chantons la République
+   ✗ Debout les peuples d'Europe
+
+20. [symboles] (La Marseillaise)
+Q: Quelle phrase suit immédiatement Allons enfants de la Patrie ?
+   ✓ Le jour de gloire est arrivé
+   ✗ La victoire nous attend demain
+   ✗ La paix descend sur nos sillons
+
+21. [symboles] (La Marseillaise)
+Q: Dans le premier couplet, contre quoi l'étendard sanglant est-il levé ?
+   ✓ La tyrannie
+   ✗ La famine
+   ✗ La tempête
+
+22. [symboles] (La Marseillaise)
+Q: Quel mot complète : L'étendard sanglant est... ?
+   ✓ Levé
+   ✗ Tombé
+   ✗ Brisé
+
+23. [symboles] (La Marseillaise)
+Q: Quel vers commence par Entendez-vous ?
+   ✓ Entendez-vous dans les campagnes
+   ✗ Entendez-vous sous les murailles
+   ✗ Entendez-vous près des frontières
+
+24. [symboles] (La Marseillaise)
+Q: Quels soldats sont évoqués dans le vers Mugir ces... ?
+   ✓ Ces féroces soldats
+   ✗ Ces vieux soldats
+   ✗ Ces soldats inconnus
+
+25. [symboles] (La Marseillaise)
+Q: Selon le premier couplet, que viennent faire les soldats jusque dans vos bras ?
+   ✓ Égorger vos fils, vos compagnes
+   ✗ Couronner vos fils, vos compagnes
+   ✗ Bénir vos fils, vos compagnes
+
+26. [symboles] (La Marseillaise)
+Q: Par quels mots commence le refrain ?
+   ✓ Aux armes, citoyens
+   ✗ Aux urnes, citoyens
+   ✗ Aux champs, citoyens
+
+27. [symboles] (La Marseillaise)
+Q: Quelle instruction suit Aux armes, citoyens ?
+   ✓ Formez vos bataillons
+   ✗ Fermez vos bataillons
+   ✗ Rangez vos pavillons
+
+28. [symboles] (La Marseillaise)
+Q: Quel verbe est répété avant Qu'un sang impur ?
+   ✓ Marchons
+   ✗ Chantons
+   ✗ Votons
+
+29. [symboles] (La Marseillaise)
+Q: Quelle formule termine le refrain ?
+   ✓ Qu'un sang impur abreuve nos sillons
+   ✗ Qu'un ciel d'azur protège nos maisons
+   ✗ Qu'un vent léger traverse nos vallons
+
+30. [symboles] (La Marseillaise)
+Q: Quel mot complète Amour sacré de la... ?
+   ✓ Patrie
+   ✗ Ville
+   ✗ Victoire
+
+31. [symboles] (La Marseillaise)
+Q: Quelle valeur est appelée chérie dans un couplet ?
+   ✓ La Liberté
+   ✗ La Noblesse
+   ✗ La Fortune
+
+32. [symboles] (Symboles républicains)
+Q: Quel animal est souvent associé à la France sans être l'emblème constitutionnel ?
+   ✓ Le coq
+   ✗ Le lion ailé
+   ✗ L'aigle bicéphale
+
+33. [symboles] (Symboles républicains)
+Q: Que signifie le sigle RF ?
+   ✓ République française
+   ✗ Région fédérale
+   ✗ Réforme financière
+
+34. [symboles] (Grand sceau)
+Q: Quelle figure domine le Grand sceau de France ?
+   ✓ La Liberté assise
+   ✗ Un roi couronné
+   ✗ Un empereur à cheval
+
+35. [symboles] (Faisceau de licteur)
+Q: Quel symbole évoque l'autorité de l'État et l'unité autour de la loi ?
+   ✓ Le faisceau de licteur
+   ✗ La fleur de lys royale
+   ✗ La balance commerciale
+
+36. [symboles] (Panthéon)
+Q: Quelle fonction symbolique remplit le Panthéon ?
+   ✓ Honorer de grandes figures de la Nation
+   ✗ Siéger le Conseil constitutionnel
+   ✗ Abriter le Sénat
+
+37. [symboles] (Ordre national)
+Q: Quel ordre national est créé par Napoléon Bonaparte en 1802 ?
+   ✓ La Légion d'honneur
+   ✗ L'ordre du Mérite agricole
+   ✗ L'ordre de la Libération
+
+38. [symboles] (Cérémonies)
+Q: Quel monument accueille la tombe du Soldat inconnu ?
+   ✓ L'Arc de Triomphe
+   ✗ Le palais Bourbon
+   ✗ L'Opéra Garnier
+
+39. [symboles] (Commémoration)
+Q: Quelle date commémore l'armistice de 1918 ?
+   ✓ Le 11 novembre
+   ✗ Le 1er mai
+   ✗ Le 9 mai
+
+40. [symboles] (Commémoration)
+Q: Quelle date commémore la victoire de 1945 en Europe ?
+   ✓ Le 8 mai
+   ✗ Le 14 juillet
+   ✗ Le 2 décembre
+
+========== MODE: histoire-actualite ==========
+
+--- histoire-actualite (60) ---
+
+1. [histoire-actualite] (Histoire de France)
+Q: Quel roi franc est associé au baptême de Reims vers 496 ?
+   ✓ Clovis
+   ✗ Charlemagne
+   ✗ Hugues Capet
+
+2. [histoire-actualite] (Histoire de France)
+Q: Quel souverain est couronné empereur en l'an 800 ?
+   ✓ Charlemagne
+   ✗ Louis XIV
+   ✗ Philippe Auguste
+
+3. [histoire-actualite] (Histoire de France)
+Q: Quel roi fonde la dynastie capétienne en 987 ?
+   ✓ Hugues Capet
+   ✗ François Ier
+   ✗ Henri IV
+
+4. [histoire-actualite] (Histoire de France)
+Q: Quelle bataille de 1214 renforce Philippe Auguste ?
+   ✓ Bouvines
+   ✗ Azincourt
+   ✗ Waterloo
+
+5. [histoire-actualite] (Histoire de France)
+Q: Quel conflit oppose France et Angleterre de 1337 à 1453 ?
+   ✓ La guerre de Cent Ans
+   ✗ La guerre de Trente Ans
+   ✗ La guerre de Sept Ans
+
+6. [histoire-actualite] (Histoire de France)
+Q: Quelle héroïne est associée à Orléans en 1429 ?
+   ✓ Jeanne d'Arc
+   ✗ Olympe de Gouges
+   ✗ Aliénor d'Aquitaine
+
+7. [histoire-actualite] (Histoire de France)
+Q: Quelle bataille de 1453 marque la fin militaire de la guerre de Cent Ans ?
+   ✓ Castillon
+   ✗ Marignan
+   ✗ Valmy
+
+8. [histoire-actualite] (Exploration)
+Q: Quel navigateur français explore le Saint-Laurent au XVIe siècle ?
+   ✓ Jacques Cartier
+   ✗ La Fayette
+   ✗ Jean Bart
+
+9. [histoire-actualite] (Exploration)
+Q: Quel Français fonde Québec en 1608 ?
+   ✓ Samuel de Champlain
+   ✗ Bougainville
+   ✗ Vauban
+
+10. [histoire-actualite] (Histoire de France)
+Q: Quelle victoire de 1515 est associée à François Ier ?
+   ✓ Marignan
+   ✗ Austerlitz
+   ✗ Sedan
+
+11. [histoire-actualite] (Guerres de religion)
+Q: Quel massacre de 1572 marque les guerres de religion ?
+   ✓ La Saint-Barthélemy
+   ✗ La Commune de Paris
+   ✗ La Fronde
+
+12. [histoire-actualite] (Guerres de religion)
+Q: Quel roi promulgue l'édit de Nantes en 1598 ?
+   ✓ Henri IV
+   ✗ Louis XVI
+   ✗ Charles X
+
+13. [histoire-actualite] (Guerres de religion)
+Q: Quel roi révoque l'édit de Nantes en 1685 ?
+   ✓ Louis XIV
+   ✗ Louis XII
+   ✗ Napoléon III
+
+14. [histoire-actualite] (Monarchie)
+Q: Quel cardinal est le principal ministre de Louis XIII ?
+   ✓ Richelieu
+   ✗ Mazarin sous Louis XVI
+   ✗ Talleyrand sous Clovis
+
+15. [histoire-actualite] (Monarchie)
+Q: Quel château devient le centre du pouvoir sous Louis XIV ?
+   ✓ Versailles
+   ✗ Chambord
+   ✗ Fontainebleau uniquement
+
+16. [histoire-actualite] (Lumières)
+Q: Quel philosophe est célèbre pour la séparation des pouvoirs ?
+   ✓ Montesquieu
+   ✗ Rabelais
+   ✗ Bossuet
+
+17. [histoire-actualite] (Révolution française)
+Q: Quelle assemblée est convoquée en mai 1789 ?
+   ✓ Les États généraux
+   ✗ Le Conseil européen
+   ✗ La Chambre introuvable
+
+18. [histoire-actualite] (Révolution française)
+Q: Quel événement du 14 juillet 1789 devient un symbole révolutionnaire ?
+   ✓ La prise de la Bastille
+   ✗ La bataille de Verdun
+   ✗ Le sacre de Reims
+
+19. [histoire-actualite] (Révolution française)
+Q: Quel texte du 26 août 1789 proclame des droits fondamentaux ?
+   ✓ La Déclaration des droits de l'homme et du citoyen
+   ✗ Le Code civil
+   ✗ Le traité de Rome
+
+20. [histoire-actualite] (Révolution française)
+Q: Quelle assemblée abolit la monarchie en septembre 1792 ?
+   ✓ La Convention nationale
+   ✗ Le Sénat impérial
+   ✗ Le Conseil d'État
+
+21. [histoire-actualite] (Révolution française)
+Q: Quel roi est exécuté le 21 janvier 1793 ?
+   ✓ Louis XVI
+   ✗ Louis XIV
+   ✗ Charles de Gaulle
+
+22. [histoire-actualite] (Révolution française)
+Q: Quelle bataille de 1792 symbolise la sauvegarde de la Révolution ?
+   ✓ Valmy
+   ✗ Poitiers
+   ✗ Crécy
+
+23. [histoire-actualite] (Consulat et Empire)
+Q: Quel coup d'État porte Napoléon Bonaparte au pouvoir ?
+   ✓ Le 18 Brumaire
+   ✗ Le 2 décembre 1851
+   ✗ La journée des Dupes
+
+24. [histoire-actualite] (Consulat et Empire)
+Q: Quel grand code juridique est promulgué en 1804 ?
+   ✓ Le Code civil
+   ✗ Le Code de la route
+   ✗ Le traité de Maastricht
+
+25. [histoire-actualite] (Consulat et Empire)
+Q: Quelle bataille de 1815 met fin à l'épopée napoléonienne ?
+   ✓ Waterloo
+   ✗ Bouvines
+   ✗ Rocroi
+
+26. [histoire-actualite] (XIXe siècle)
+Q: En quelle année l'esclavage est-il définitivement aboli dans les colonies françaises ?
+   ✓ 1848
+   ✗ 1789
+   ✗ 1905
+
+27. [histoire-actualite] (XIXe siècle)
+Q: Quel homme est associé au décret d'abolition de l'esclavage de 1848 ?
+   ✓ Victor Schoelcher
+   ✗ Jules Ferry
+   ✗ Georges Clemenceau
+
+28. [histoire-actualite] (XIXe siècle)
+Q: Quelle défaite de 1870 précipite la chute du Second Empire ?
+   ✓ Sedan
+   ✗ Austerlitz
+   ✗ Marignan
+
+29. [histoire-actualite] (XIXe siècle)
+Q: Quel épisode insurrectionnel parisien se déroule en 1871 ?
+   ✓ La Commune de Paris
+   ✗ La Terreur blanche
+   ✗ La Restauration
+
+30. [histoire-actualite] (République)
+Q: Quelle loi de 1905 fixe la séparation des Églises et de l'État ?
+   ✓ La loi de séparation des Églises et de l'État
+   ✗ La loi Le Chapelier
+   ✗ La loi salique
+
+31. [histoire-actualite] (Affaire Dreyfus)
+Q: Quel écrivain publie J'accuse en défense de Dreyfus ?
+   ✓ Émile Zola
+   ✗ Marcel Proust
+   ✗ Jules Verne
+
+32. [histoire-actualite] (Première Guerre mondiale)
+Q: À quelle date l'armistice de la Première Guerre mondiale est-il signé ?
+   ✓ Le 11 novembre 1918
+   ✗ Le 8 mai 1945
+   ✗ Le 14 juillet 1789
+
+33. [histoire-actualite] (Première Guerre mondiale)
+Q: Quelle bataille de 1916 symbolise la guerre de position ?
+   ✓ Verdun
+   ✗ Azincourt
+   ✗ Valmy
+
+34. [histoire-actualite] (Entre-deux-guerres)
+Q: Quel gouvernement de 1936 est associé aux congés payés ?
+   ✓ Le Front populaire
+   ✗ Le Directoire
+   ✗ Le Second Empire
+
+35. [histoire-actualite] (Seconde Guerre mondiale)
+Q: Qui lance l'appel du 18 Juin 1940 ?
+   ✓ Charles de Gaulle
+   ✗ Philippe Pétain
+   ✗ Jean Jaurès
+
+36. [histoire-actualite] (Résistance)
+Q: Quel résistant unifie les principaux mouvements de Résistance intérieure ?
+   ✓ Jean Moulin
+   ✗ Pierre Laval
+   ✗ Adolphe Thiers
+
+37. [histoire-actualite] (Droits politiques)
+Q: En quelle année le droit de vote est-il accordé aux femmes françaises ?
+   ✓ 1944
+   ✗ 1918
+   ✗ 1968
+
+38. [histoire-actualite] (Seconde Guerre mondiale)
+Q: En quel mois Paris est-il libéré en 1944 ?
+   ✓ Août
+   ✗ Janvier
+   ✗ Décembre
+
+39. [histoire-actualite] (Ve République)
+Q: Quel homme politique revient au pouvoir lors de la crise de 1958 ?
+   ✓ Charles de Gaulle
+   ✗ Léon Blum
+   ✗ Raymond Poincaré
+
+40. [histoire-actualite] (Décolonisation)
+Q: Quels accords de 1962 ouvrent la voie à l'indépendance de l'Algérie ?
+   ✓ Les accords d'Évian
+   ✗ Les accords de Matignon de 1936
+   ✗ Les accords de Grenelle
+
+41. [histoire-actualite] (Actualité 2025-2026)
+Q: Dans quelle ville brésilienne s'est tenue la COP30 en 2025 ?
+   ✓ Belém
+   ✗ Rio de Janeiro
+   ✗ Brasilia
+
+42. [histoire-actualite] (Actualité 2025-2026)
+Q: Quel pays a accueilli le sommet du G7 de 2025 à Kananaskis ?
+   ✓ Le Canada
+   ✗ L'Italie
+   ✗ Le Japon
+
+43. [histoire-actualite] (Actualité 2025-2026)
+Q: Dans quelle ville le sommet du G20 de 2025 s'est-il tenu ?
+   ✓ Johannesburg
+   ✗ Osaka
+   ✗ Buenos Aires
+
+44. [histoire-actualite] (Actualité 2025-2026)
+Q: Quel fait a marqué le sommet du G20 de 2025 ?
+   ✓ Premier sommet du G20 organisé sur le continent africain
+   ✗ Premier sommet du G20 organisé en Antarctique
+   ✗ Dissolution officielle de l'Union européenne
+
+45. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelles étaient les dates des élections municipales françaises de 2026 ?
+   ✓ 15 et 22 mars 2026
+   ✗ 9 et 16 juin 2026
+   ✗ 1er et 8 mai 2026
+
+46. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle réforme de 2025 concerne les communes de moins de 1 000 habitants ?
+   ✓ Le scrutin de liste paritaire y est étendu
+   ✗ Le vote y devient réservé aux propriétaires
+   ✗ Les maires y sont nommés par décret
+
+47. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle particularité concerne Paris, Lyon et Marseille aux municipales 2026 ?
+   ✓ Les électeurs y votent avec deux bulletins distincts
+   ✗ Les maires y sont élus par le Conseil européen
+   ✗ Le scrutin y est supprimé
+
+48. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle structure la loi du 13 juin 2025 contre le narcotrafic crée-t-elle ?
+   ✓ Le parquet national anticriminalité organisée
+   ✗ La Cour européenne des stupéfiants
+   ✗ Le Sénat de sécurité intérieure
+
+49. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle institution a statué le 12 juin 2025 sur la loi contre le narcotrafic ?
+   ✓ Le Conseil constitutionnel
+   ✗ La Cour des comptes
+   ✗ Le Parlement européen
+
+50. [histoire-actualite] (Actualité 2025-2026)
+Q: Quel sujet vise la loi française du 28 avril 2025 sur le renforcement de la sûreté ?
+   ✓ La sûreté dans les transports
+   ✗ La réforme des hymnes régionaux
+   ✗ La création d'une monnaie locale
+
+51. [histoire-actualite] (Police nationale 2025-2026)
+Q: Quelle unité de la Police nationale a célébré ses 40 ans en 2025 ?
+   ✓ Le RAID
+   ✗ La CRS 1
+   ✗ La police municipale
+
+52. [histoire-actualite] (Police nationale 2025-2026)
+Q: Où se trouve l'échelon central du RAID ?
+   ✓ À Bièvres
+   ✗ À Strasbourg
+   ✗ À Brest
+
+53. [histoire-actualite] (Police nationale 2025-2026)
+Q: Quelle autorité judiciaire a dirigé l'opération nationale du 28 avril 2025 liée aux attaques contre des prisons ?
+   ✓ Le parquet national antiterroriste
+   ✗ Le tribunal de commerce
+   ✗ La Cour des comptes européenne
+
+54. [histoire-actualite] (Actualité 2025-2026)
+Q: Quels pays coorganisent la Coupe du monde de football 2026 ?
+   ✓ Canada, Mexique et États-Unis
+   ✗ France, Espagne et Portugal
+   ✗ Japon, Corée du Sud et Chine
+
+55. [histoire-actualite] (Actualité 2025-2026)
+Q: Combien d'équipes participent à la Coupe du monde de football 2026 ?
+   ✓ 48
+   ✗ 32
+   ✗ 24
+
+56. [histoire-actualite] (Actualité 2025-2026)
+Q: Où se déroulent les Jeux olympiques d'hiver de 2026 ?
+   ✓ En Italie, à Milan-Cortina
+   ✗ Au Canada, à Vancouver
+   ✗ En France, à Grenoble
+
+57. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelles sont les dates des Jeux olympiques d'hiver 2026 ?
+   ✓ Du 6 au 22 février 2026
+   ✗ Du 11 juin au 19 juillet 2026
+   ✗ Du 15 au 22 mars 2026
+
+58. [histoire-actualite] (Actualité 2025-2026)
+Q: Quelle conférence internationale sur l'océan s'est tenue à Nice en juin 2025 ?
+   ✓ La Conférence des Nations unies sur l'océan
+   ✗ Le sommet de l'OTAN
+   ✗ La Coupe du monde des clubs
+
+59. [histoire-actualite] (Actualité 2025-2026)
+Q: Quels pays ont coorganisé la Conférence des Nations unies sur l'océan de Nice ?
+   ✓ La France et le Costa Rica
+   ✗ La France et le Canada
+   ✗ Le Brésil et l'Afrique du Sud
+
+60. [histoire-actualite] (Actualité 2025-2026)
+Q: Dans quelle ville s'est tenu le sommet de l'OTAN de juin 2025 ?
+   ✓ La Haye
+   ✗ Bruxelles
+   ✗ Varsovie
+
+
+========== CONTROLES FILTRES ==========
+institutions: pool=100, categories=institutions-francaises,institutions-europeennes, contaminants=0
+symboles: pool=40, categories=symboles, contaminants=0
+histoire-actualite: pool=60, categories=histoire-actualite, contaminants=0
+
+========== DIFFS vs culture-generale.html ==========
+DIFF: [institutions-europeennes] Quel traité de 1957 a créé la Communauté économique européenne ?
+  langue  correct=Le traité de Rome | wrongs=["Le traité de Versailles","Le traité de Maastricht"] | expl=Les traités de Rome fondent notamment la CEE.
+  generale correct=Le traité de Rome | wrongs=["Le traité de Versailles","Le traité de Maastricht"] | expl=Les traités de Rome fondent notamment la CEE (Communauté économique européenne).
+
+DIFF: [institutions-europeennes] Où siège la Cour de justice de l'Union européenne ?
+  langue  correct=Luxembourg | wrongs=["Dublin","Athènes"] | expl=La CJUE siège à Luxembourg.
+  generale correct=Luxembourg | wrongs=["Dublin","Athènes"] | expl=La CJUE (Cour de justice de l'Union européenne) siège à Luxembourg.
+
+ONLY_IN_LANGUE: [institutions-europeennes] Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Croatie ?
+
+DIFF: [institutions-europeennes] Quel office européen lutte contre la fraude au budget de l'Union ?
+  langue  correct=L'OLAF | wrongs=["L'OTAN","L'OPEP"] | expl=L'OLAF enquête sur les fraudes aux intérêts financiers de l'Union.
+  generale correct=L'OLAF | wrongs=["L'OTAN","L'OPEP"] | expl=L'OLAF (Office européen de lutte antifraude) enquête sur les fraudes aux intérêts financiers de l'Union.
+
+DIFF: [institutions-europeennes] Quel seuil minimal permet de lancer une initiative citoyenne européenne ?
+  langue  correct=Un million de citoyens d'au moins sept États membres | wrongs=["Cent maires d'un seul État","La moitié des députés français"] | expl=L'ICE exige au moins un million de soutiens dans au moins sept États membres.
+  generale correct=Un million de citoyens d'au moins sept États membres | wrongs=["Cent maires d'un seul État","La moitié des députés français"] | expl=L'ICE (Initiative citoyenne européenne) exige au moins un million de soutiens dans au moins sept États membres.
+
+DIFF: [histoire-actualite] Quel cardinal est le principal ministre de Louis XIII ?
+  langue  correct=Richelieu | wrongs=["Mazarin sous Louis XVI","Talleyrand sous Clovis"] | expl=Richelieu renforce l'autorité monarchique.
+  generale correct=Richelieu | wrongs=["Mazarin sous Louis XIV","Talleyrand sous Clovis"] | expl=Richelieu renforce l'autorité monarchique.
+
+DIFF: [histoire-actualite] Quelle particularité concerne Paris, Lyon et Marseille aux municipales 2026 ?
+  langue  correct=Les électeurs y votent avec deux bulletins distincts | wrongs=["Les maires y sont élus par le Conseil européen","Le scrutin y est supprimé"] | expl=La réforme prévoit deux votes distincts dans ces villes.
+  generale correct=Les électeurs y votent avec deux bulletins distincts | wrongs=["Les maires y sont élus par le Conseil européen","Le scrutin y est supprimé"] | expl=La loi du 11 août 2025 réforme le scrutin dans ces villes : les électeurs y votent avec deux bulletins distincts.
+
+DIFF: [histoire-actualite] Quelle conférence internationale sur l'océan s'est tenue à Nice en juin 2025 ?
+  langue  correct=La Conférence des Nations unies sur l'océan | wrongs=["Le sommet de l'OTAN","La Coupe du monde des clubs"] | expl=L'UNOC3 s'est tenue à Nice du 9 au 13 juin 2025.
+  generale correct=La Conférence des Nations unies sur l'océan | wrongs=["Le sommet de l'OTAN","La Coupe du monde des clubs"] | expl=L'UNOC3 (3e Conférence des Nations unies sur l'océan) s'est tenue à Nice du 9 au 13 juin 2025.
+
+
+ONLY_IN_GENERALE (1):
+- [institutions-europeennes] Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Bulgarie ? => 21

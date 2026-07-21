@@ -1,0 +1,316 @@
+# Counts culture-langue: {"institutions-francaises":60,"institutions-europeennes":40,"symboles":40,"histoire-actualite":60}
+# Total: 200
+
+
+========== MODE: institutions ==========
+
+--- institutions-francaises (60) ---
+
+1. [institutions-francaises] (Constitution)
+Q: Quel texte organise les pouvoirs publics de la Ve République ?
+   ✓ La Constitution du 4 octobre 1958
+   ✗ La Déclaration de 1789 seule
+   ✗ Le Code civil de 1804
+
+2. [institutions-francaises] (Constitution)
+Q: Quelle formule qualifie la République française à l'article 1er ?
+   ✓ Indivisible, laïque, démocratique et sociale
+   ✗ Fédérale, royale et confessionnelle
+   ✗ Militaire, corporative et héréditaire
+
+3. [institutions-francaises] (Président de la République)
+Q: Depuis 1962, comment le président de la République est-il élu ?
+   ✓ Au suffrage universel direct
+   ✗ Par les députés uniquement
+   ✗ Par les maires uniquement
+
+4. [institutions-francaises] (Président de la République)
+Q: Si aucun candidat n'a la majorité absolue au premier tour de la présidentielle, que prévoit le scrutin ?
+   ✓ Un second tour
+   ✗ Une nomination par le Sénat
+   ✗ Un tirage au sort
+
+5. [institutions-francaises] (Président de la République)
+Q: Quel pouvoir permet au président de provoquer de nouvelles élections législatives ?
+   ✓ La dissolution de l'Assemblée nationale
+   ✗ La révocation du Sénat
+   ✗ La nomination des députés
+
+6. [institutions-francaises] (Président de la République)
+Q: Quel rôle militaire la Constitution attribue-t-elle au président ?
+   ✓ Chef des armées
+   ✗ Chef du parquet
+   ✗ Président de la Cour de cassation
+
+7. [institutions-francaises] (Gouvernement)
+Q: Quel bâtiment est le siège traditionnel du Premier ministre ?
+   ✓ L'hôtel de Matignon
+   ✗ Le palais Bourbon
+   ✗ Le palais du Luxembourg
+
+8. [institutions-francaises] (Gouvernement)
+Q: Devant quelle assemblée le Gouvernement est-il politiquement responsable ?
+   ✓ L'Assemblée nationale
+   ✗ Le Conseil constitutionnel
+   ✗ Le Conseil d'État
+
+9. [institutions-francaises] (Gouvernement)
+Q: Qui préside normalement le Conseil des ministres ?
+   ✓ Le président de la République
+   ✗ Le président du Sénat
+   ✗ Le procureur général
+
+10. [institutions-francaises] (Loi)
+Q: Comment appelle-t-on un texte de loi déposé par un parlementaire ?
+   ✓ Une proposition de loi
+   ✗ Un projet de loi
+   ✗ Une ordonnance
+
+11. [institutions-francaises] (Gouvernement)
+Q: Quel mécanisme permet l'adoption d'un texte sauf motion de censure ?
+   ✓ L'article 49 alinéa 3
+   ✗ La grâce présidentielle
+   ✗ Le contrôle de légalité
+
+12. [institutions-francaises] (Loi)
+Q: Quel texte peut être pris par le Gouvernement dans le domaine de la loi après habilitation ?
+   ✓ Une ordonnance
+   ✗ Un arrêt de cassation
+   ✗ Une délibération municipale
+
+13. [institutions-francaises] (Parlement)
+Q: Où siège l'Assemblée nationale ?
+   ✓ Au palais Bourbon
+   ✗ Au palais du Luxembourg
+   ✗ Au palais de l'Élysée
+
+14. [institutions-francaises] (Parlement)
+Q: Combien l'Assemblée nationale compte-t-elle de députés ?
+   ✓ 577
+   ✗ 348
+   ✗ 81
+
+15. [institutions-francaises] (Parlement)
+Q: Comment les députés sont-ils élus ?
+   ✓ Au suffrage universel direct
+   ✗ Au suffrage universel indirect
+   ✗ Par nomination préfectorale
+
+16. [institutions-francaises] (Parlement)
+Q: Où siège le Sénat ?
+   ✓ Au palais du Luxembourg
+   ✗ Au palais Bourbon
+   ✗ Au palais de justice
+
+17. [institutions-francaises] (Parlement)
+Q: Combien le Sénat compte-t-il de sénateurs ?
+   ✓ 348
+   ✗ 577
+   ✗ 720
+
+18. [institutions-francaises] (Parlement)
+Q: Comment les sénateurs sont-ils élus ?
+   ✓ Au suffrage universel indirect
+   ✗ Au suffrage universel direct
+   ✗ Par référendum national
+
+19. [institutions-francaises] (Parlement)
+Q: Que représente spécialement le Sénat selon la Constitution ?
+   ✓ Les collectivités territoriales
+   ✗ Les juridictions pénales
+   ✗ Les entreprises privées
+
+20. [institutions-francaises] (Parlement)
+Q: Comment appelle-t-on un Parlement composé de deux chambres ?
+   ✓ Bicaméral
+   ✗ Monocaméral
+   ✗ Judiciaire
+
+21. [institutions-francaises] (Loi)
+Q: Quel nom désigne les allers-retours d'un texte entre les assemblées ?
+   ✓ La navette parlementaire
+   ✗ La cohabitation
+   ✗ La déconcentration
+
+22. [institutions-francaises] (Loi)
+Q: Quelle instance réunit sept députés et sept sénateurs pour chercher un compromis ?
+   ✓ La commission mixte paritaire
+   ✗ Le conseil municipal
+   ✗ La conférence des préfets
+
+23. [institutions-francaises] (Loi)
+Q: En cas de désaccord persistant sur une loi ordinaire, qui peut avoir le dernier mot ?
+   ✓ L'Assemblée nationale
+   ✗ Le Sénat
+   ✗ Le CESE
+
+24. [institutions-francaises] (Loi)
+Q: Où les lois promulguées sont-elles publiées officiellement ?
+   ✓ Au Journal officiel
+   ✗ Dans chaque mairie uniquement
+   ✗ Dans un registre privé
+
+25. [institutions-francaises] (Budget)
+Q: Quel texte fixe chaque année recettes et dépenses de l'État ?
+   ✓ La loi de finances
+   ✗ La loi d'amnistie
+   ✗ La loi municipale
+
+26. [institutions-francaises] (Conseil constitutionnel)
+Q: Combien de membres nommés composent le Conseil constitutionnel ?
+   ✓ 9
+   ✗ 12
+   ✗ 577
+
+27. [institutions-francaises] (Conseil constitutionnel)
+Q: Que signifie QPC ?
+   ✓ Question prioritaire de constitutionnalité
+   ✗ Quota parlementaire de contrôle
+   ✗ Qualification pénale communale
+
+28. [institutions-francaises] (Conseil constitutionnel)
+Q: Quelle institution veille à la régularité de l'élection présidentielle ?
+   ✓ Le Conseil constitutionnel
+   ✗ La Cour des comptes
+   ✗ L'ARCOM
+
+29. [institutions-francaises] (Conseil d'État)
+Q: Quelle juridiction est au sommet de l'ordre administratif ?
+   ✓ Le Conseil d'État
+   ✗ La Cour de cassation
+   ✗ La cour d'assises
+
+30. [institutions-francaises] (Conseil d'État)
+Q: Quel rôle consultatif le Conseil d'État exerce-t-il ?
+   ✓ Il donne des avis sur de nombreux projets de texte
+   ✗ Il élit les ministres
+   ✗ Il vote le budget
+
+31. [institutions-francaises] (Juridictions)
+Q: Quelle juridiction est au sommet de l'ordre judiciaire ?
+   ✓ La Cour de cassation
+   ✗ Le Conseil d'État
+   ✗ Le tribunal administratif
+
+32. [institutions-francaises] (Contrôle)
+Q: Quelle institution contrôle l'utilisation des fonds publics ?
+   ✓ La Cour des comptes
+   ✗ Le parquet national financier
+   ✗ Le conseil régional
+
+33. [institutions-francaises] (Juridictions)
+Q: Quel ordre juge les litiges entre administrés et administration ?
+   ✓ L'ordre administratif
+   ✗ L'ordre judiciaire
+   ✗ L'ordre parlementaire
+
+34. [institutions-francaises] (Juridictions)
+Q: Quel ordre connaît des infractions pénales ?
+   ✓ L'ordre judiciaire
+   ✗ L'ordre administratif
+   ✗ L'ordre européen uniquement
+
+35. [institutions-francaises] (Justice)
+Q: Qui porte l'accusation au nom de la société dans un procès pénal ?
+   ✓ Le ministère public
+   ✗ Le maire
+   ✗ Le rapporteur budgétaire
+
+36. [institutions-francaises] (Autorités indépendantes)
+Q: Quelle autorité peut être saisie en cas de discrimination ou difficulté avec un service public ?
+   ✓ Le Défenseur des droits
+   ✗ Le président du Sénat
+   ✗ Le préfet maritime
+
+37. [institutions-francaises] (Autorités indépendantes)
+Q: Quelle autorité protège les données personnelles en France ?
+   ✓ La CNIL
+   ✗ L'ARCOM
+   ✗ La Cour des comptes
+
+38. [institutions-francaises] (Autorités indépendantes)
+Q: Quelle autorité régule notamment l'audiovisuel et le numérique ?
+   ✓ L'ARCOM
+   ✗ La CNIL
+   ✗ Le Conseil d'État
+
+39. [institutions-francaises] (Administration)
+Q: Qui représente l'État dans un département ?
+   ✓ Le préfet
+   ✗ Le maire
+   ✗ Le président du conseil régional
+
+40. [institutions-francaises] (Administration)
+Q: Que désigne la déconcentration ?
+   ✓ L'action locale de l'État par ses services
+   ✗ Le transfert de souveraineté à l'UE
+   ✗ La suppression des communes
+
+41. [institutions-francaises] (Collectivités)
+Q: Que désigne la décentralisation ?
+   ✓ Le transfert de compétences à des collectivités territoriales
+   ✗ La nomination des députés par le préfet
+   ✗ La fusion des juridictions
+
+42. [institutions-francaises] (Collectivités)
+Q: Quelle collectivité correspond à l'échelon local de base ?
+   ✓ La commune
+   ✗ La région
+   ✗ Le canton
+
+43. [institutions-francaises] (Collectivités)
+Q: Qui élit le maire après les élections municipales ?
+   ✓ Le conseil municipal
+   ✗ Le préfet
+   ✗ Le Conseil constitutionnel
+
+44. [institutions-francaises] (Collectivités)
+Q: Quel élu exerce la police administrative générale dans sa commune ?
+   ✓ Le maire
+   ✗ Le député
+   ✗ Le président de la République
+
+45. [institutions-francaises] (Collectivités)
+Q: Quelle assemblée administre le département ?
+   ✓ Le conseil départemental
+   ✗ Le conseil municipal
+   ✗ Le Conseil d'État
+
+46. [institutions-francaises] (Collectivités)
+Q: Quelle assemblée administre la région ?
+   ✓ Le conseil régional
+   ✗ Le conseil de prud'hommes
+   ✗ Le tribunal correctionnel
+
+47. [institutions-francaises] (Élections)
+Q: Quel scrutin élit les conseillers municipaux ?
+   ✓ Les élections municipales
+   ✗ Les élections sénatoriales
+   ✗ Les élections prud'homales
+
+48. [institutions-francaises] (Élections)
+Q: Quel âge minimum faut-il avoir pour voter aux élections politiques françaises ?
+   ✓ 18 ans
+   ✗ 16 ans
+   ✗ 21 ans
+
+49. [institutions-francaises] (Élections)
+Q: À quelles élections les citoyens de l'UE résidant en France peuvent-ils voter localement ?
+   ✓ Aux élections municipales
+   ✗ À l'élection présidentielle
+   ✗ Aux élections sénatoriales comme grands électeurs
+
+50. [institutions-francaises] (Collectivités)
+Q: Quelle assemblée délibère sur les affaires de la commune ?
+   ✓ Le conseil municipal
+   ✗ Le Conseil constitutionnel
+   ✗ La Cour de cassation
+
+51. [institutions-francaises] (Administration)
+Q: Comment s'appelle le contrôle du préfet sur la légalité des actes locaux ?
+   ✓ Le contrôle de légalité
+   ✗ Le contrôle de constitutionnalité
+   ✗ Le contrôle judiciaire automatique
+
+52. [institutions-francaises] (Collectivités)
+Q: Qui éli

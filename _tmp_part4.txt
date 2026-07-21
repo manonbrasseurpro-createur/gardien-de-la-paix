@@ -1,0 +1,9 @@
+","Le scrutin y est supprimé"] | expl=La loi du 11 août 2025 réforme le scrutin dans ces villes : les électeurs y votent avec deux bulletins distincts.
+
+DIFF: [histoire-actualite] Quelle conférence internationale sur l'océan s'est tenue à Nice en juin 2025 ?
+  langue  correct=La Conférence des Nations unies sur l'océan | wrongs=["Le sommet de l'OTAN","La Coupe du monde des clubs"] | expl=L'UNOC3 s'est tenue à Nice du 9 au 13 juin 2025.
+  generale correct=La Conférence des Nations unies sur l'océan | wrongs=["Le sommet de l'OTAN","La Coupe du monde des clubs"] | expl=L'UNOC3 (3e Conférence des Nations unies sur l'océan) s'est tenue à Nice du 9 au 13 juin 2025.
+
+
+ONLY_IN_GENERALE (1):
+- [institutions-europeennes] Combien de pays utilisent l'euro dans la zone euro depuis l'entrée de la Bulgarie ? => 21

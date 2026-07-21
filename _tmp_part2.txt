@@ -1,0 +1,371 @@
+apeau français)
+Q: Quel article de la Constitution mentionne le drapeau tricolore ?
+   ✓ L'article 2
+   ✗ L'article 11
+   ✗ L'article 49
+
+4. [symboles] (Drapeau français)
+Q: Quelle couleur est traditionnellement associée au roi ?
+   ✓ Le blanc
+   ✗ Le vert
+   ✗ Le noir
+
+5. [symboles] (Drapeau français)
+Q: Quel événement a popularisé la cocarde tricolore ?
+   ✓ La Révolution française
+   ✗ La guerre de 1870
+   ✗ La Libération de 1944
+
+6. [symboles] (Devise)
+Q: Quelle est la devise de la République française ?
+   ✓ Liberté, Égalité, Fraternité
+   ✗ Travail, Famille, Patrie
+   ✗ Unie dans la diversité
+
+7. [symboles] (Devise)
+Q: Sur quels bâtiments la devise est-elle fréquemment inscrite ?
+   ✓ Les mairies
+   ✗ Les ambassades étrangères uniquement
+   ✗ Les sièges de sociétés privées obligatoirement
+
+8. [symboles] (Marianne)
+Q: Que personnifie Marianne ?
+   ✓ La République française
+   ✗ La monarchie capétienne
+   ✗ L'Union européenne
+
+9. [symboles] (Marianne)
+Q: Où trouve-t-on souvent un buste de Marianne ?
+   ✓ Dans les mairies
+   ✗ Dans les marchés privés
+   ✗ Dans les gares uniquement
+
+10. [symboles] (Bonnet phrygien)
+Q: Quel symbole de liberté coiffe souvent Marianne ?
+   ✓ Le bonnet phrygien
+   ✗ La couronne fermée
+   ✗ Le casque de samouraï
+
+11. [symboles] (Fête nationale)
+Q: Quelle date correspond à la fête nationale française ?
+   ✓ Le 14 juillet
+   ✗ Le 8 mai
+   ✗ Le 9 mai
+
+12. [symboles] (Fête nationale)
+Q: En quelle année le 14 juillet devient-il fête nationale ?
+   ✓ 1880
+   ✗ 1792
+   ✗ 1958
+
+13. [symboles] (La Marseillaise)
+Q: Qui a composé La Marseillaise ?
+   ✓ Claude Joseph Rouget de Lisle
+   ✗ Victor Hugo
+   ✗ Jean Moulin
+
+14. [symboles] (La Marseillaise)
+Q: Dans quelle ville La Marseillaise a-t-elle été composée ?
+   ✓ Strasbourg
+   ✗ Marseille
+   ✗ Lyon
+
+15. [symboles] (La Marseillaise)
+Q: Quel était le titre d'origine de La Marseillaise ?
+   ✓ Chant de guerre pour l'armée du Rhin
+   ✗ Chant du départ des maires
+   ✗ Hymne européen des citoyens
+
+16. [symboles] (La Marseillaise)
+Q: Pourquoi le chant prend-il le nom de La Marseillaise ?
+   ✓ Il fut popularisé par des volontaires venus de Marseille
+   ✗ Il fut écrit dans le port de Marseille
+   ✗ Il était l'hymne municipal de Marseille
+
+17. [symboles] (La Marseillaise)
+Q: En quelle année la IIIe République rétablit-elle La Marseillaise comme hymne national ?
+   ✓ 1879
+   ✗ 1815
+   ✗ 1946
+
+18. [symboles] (La Marseillaise)
+Q: Quel texte actuel mentionne La Marseillaise comme hymne national ?
+   ✓ La Constitution de 1958
+   ✗ Le Code civil de 1804
+   ✗ Le traité de Lisbonne
+
+19. [symboles] (La Marseillaise)
+Q: Quels sont les premiers mots de La Marseillaise ?
+   ✓ Allons enfants de la Patrie
+   ✗ Amis, chantons la République
+   ✗ Debout les peuples d'Europe
+
+20. [symboles] (La Marseillaise)
+Q: Quelle phrase suit immédiatement Allons enfants de la Patrie ?
+   ✓ Le jour de gloire est arrivé
+   ✗ La victoire nous attend demain
+   ✗ La paix descend sur nos sillons
+
+21. [symboles] (La Marseillaise)
+Q: Dans le premier couplet, contre quoi l'étendard sanglant est-il levé ?
+   ✓ La tyrannie
+   ✗ La famine
+   ✗ La tempête
+
+22. [symboles] (La Marseillaise)
+Q: Quel mot complète : L'étendard sanglant est... ?
+   ✓ Levé
+   ✗ Tombé
+   ✗ Brisé
+
+23. [symboles] (La Marseillaise)
+Q: Quel vers commence par Entendez-vous ?
+   ✓ Entendez-vous dans les campagnes
+   ✗ Entendez-vous sous les murailles
+   ✗ Entendez-vous près des frontières
+
+24. [symboles] (La Marseillaise)
+Q: Quels soldats sont évoqués dans le vers Mugir ces... ?
+   ✓ Ces féroces soldats
+   ✗ Ces vieux soldats
+   ✗ Ces soldats inconnus
+
+25. [symboles] (La Marseillaise)
+Q: Selon le premier couplet, que viennent faire les soldats jusque dans vos bras ?
+   ✓ Égorger vos fils, vos compagnes
+   ✗ Couronner vos fils, vos compagnes
+   ✗ Bénir vos fils, vos compagnes
+
+26. [symboles] (La Marseillaise)
+Q: Par quels mots commence le refrain ?
+   ✓ Aux armes, citoyens
+   ✗ Aux urnes, citoyens
+   ✗ Aux champs, citoyens
+
+27. [symboles] (La Marseillaise)
+Q: Quelle instruction suit Aux armes, citoyens ?
+   ✓ Formez vos bataillons
+   ✗ Fermez vos bataillons
+   ✗ Rangez vos pavillons
+
+28. [symboles] (La Marseillaise)
+Q: Quel verbe est répété avant Qu'un sang impur ?
+   ✓ Marchons
+   ✗ Chantons
+   ✗ Votons
+
+29. [symboles] (La Marseillaise)
+Q: Quelle formule termine le refrain ?
+   ✓ Qu'un sang impur abreuve nos sillons
+   ✗ Qu'un ciel d'azur protège nos maisons
+   ✗ Qu'un vent léger traverse nos vallons
+
+30. [symboles] (La Marseillaise)
+Q: Quel mot complète Amour sacré de la... ?
+   ✓ Patrie
+   ✗ Ville
+   ✗ Victoire
+
+31. [symboles] (La Marseillaise)
+Q: Quelle valeur est appelée chérie dans un couplet ?
+   ✓ La Liberté
+   ✗ La Noblesse
+   ✗ La Fortune
+
+32. [symboles] (Symboles républicains)
+Q: Quel animal est souvent associé à la France sans être l'emblème constitutionnel ?
+   ✓ Le coq
+   ✗ Le lion ailé
+   ✗ L'aigle bicéphale
+
+33. [symboles] (Symboles républicains)
+Q: Que signifie le sigle RF ?
+   ✓ République française
+   ✗ Région fédérale
+   ✗ Réforme financière
+
+34. [symboles] (Grand sceau)
+Q: Quelle figure domine le Grand sceau de France ?
+   ✓ La Liberté assise
+   ✗ Un roi couronné
+   ✗ Un empereur à cheval
+
+35. [symboles] (Faisceau de licteur)
+Q: Quel symbole évoque l'autorité de l'État et l'unité autour de la loi ?
+   ✓ Le faisceau de licteur
+   ✗ La fleur de lys royale
+   ✗ La balance commerciale
+
+36. [symboles] (Panthéon)
+Q: Quelle fonction symbolique remplit le Panthéon ?
+   ✓ Honorer de grandes figures de la Nation
+   ✗ Siéger le Conseil constitutionnel
+   ✗ Abriter le Sénat
+
+37. [symboles] (Ordre national)
+Q: Quel ordre national est créé par Napoléon Bonaparte en 1802 ?
+   ✓ La Légion d'honneur
+   ✗ L'ordre du Mérite agricole
+   ✗ L'ordre de la Libération
+
+38. [symboles] (Cérémonies)
+Q: Quel monument accueille la tombe du Soldat inconnu ?
+   ✓ L'Arc de Triomphe
+   ✗ Le palais Bourbon
+   ✗ L'Opéra Garnier
+
+39. [symboles] (Commémoration)
+Q: Quelle date commémore l'armistice de 1918 ?
+   ✓ Le 11 novembre
+   ✗ Le 1er mai
+   ✗ Le 9 mai
+
+40. [symboles] (Commémoration)
+Q: Quelle date commémore la victoire de 1945 en Europe ?
+   ✓ Le 8 mai
+   ✗ Le 14 juillet
+   ✗ Le 2 décembre
+
+========== MODE: histoire-actualite ==========
+
+--- histoire-actualite (60) ---
+
+1. [histoire-actualite] (Histoire de France)
+Q: Quel roi franc est associé au baptême de Reims vers 496 ?
+   ✓ Clovis
+   ✗ Charlemagne
+   ✗ Hugues Capet
+
+2. [histoire-actualite] (Histoire de France)
+Q: Quel souverain est couronné empereur en l'an 800 ?
+   ✓ Charlemagne
+   ✗ Louis XIV
+   ✗ Philippe Auguste
+
+3. [histoire-actualite] (Histoire de France)
+Q: Quel roi fonde la dynastie capétienne en 987 ?
+   ✓ Hugues Capet
+   ✗ François Ier
+   ✗ Henri IV
+
+4. [histoire-actualite] (Histoire de France)
+Q: Quelle bataille de 1214 renforce Philippe Auguste ?
+   ✓ Bouvines
+   ✗ Azincourt
+   ✗ Waterloo
+
+5. [histoire-actualite] (Histoire de France)
+Q: Quel conflit oppose France et Angleterre de 1337 à 1453 ?
+   ✓ La guerre de Cent Ans
+   ✗ La guerre de Trente Ans
+   ✗ La guerre de Sept Ans
+
+6. [histoire-actualite] (Histoire de France)
+Q: Quelle héroïne est associée à Orléans en 1429 ?
+   ✓ Jeanne d'Arc
+   ✗ Olympe de Gouges
+   ✗ Aliénor d'Aquitaine
+
+7. [histoire-actualite] (Histoire de France)
+Q: Quelle bataille de 1453 marque la fin militaire de la guerre de Cent Ans ?
+   ✓ Castillon
+   ✗ Marignan
+   ✗ Valmy
+
+8. [histoire-actualite] (Exploration)
+Q: Quel navigateur français explore le Saint-Laurent au XVIe siècle ?
+   ✓ Jacques Cartier
+   ✗ La Fayette
+   ✗ Jean Bart
+
+9. [histoire-actualite] (Exploration)
+Q: Quel Français fonde Québec en 1608 ?
+   ✓ Samuel de Champlain
+   ✗ Bougainville
+   ✗ Vauban
+
+10. [histoire-actualite] (Histoire de France)
+Q: Quelle victoire de 1515 est associée à François Ier ?
+   ✓ Marignan
+   ✗ Austerlitz
+   ✗ Sedan
+
+11. [histoire-actualite] (Guerres de religion)
+Q: Quel massacre de 1572 marque les guerres de religion ?
+   ✓ La Saint-Barthélemy
+   ✗ La Commune de Paris
+   ✗ La Fronde
+
+12. [histoire-actualite] (Guerres de religion)
+Q: Quel roi promulgue l'édit de Nantes en 1598 ?
+   ✓ Henri IV
+   ✗ Louis XVI
+   ✗ Charles X
+
+13. [histoire-actualite] (Guerres de religion)
+Q: Quel roi révoque l'édit de Nantes en 1685 ?
+   ✓ Louis XIV
+   ✗ Louis XII
+   ✗ Napoléon III
+
+14. [histoire-actualite] (Monarchie)
+Q: Quel cardinal est le principal ministre de Louis XIII ?
+   ✓ Richelieu
+   ✗ Mazarin sous Louis XVI
+   ✗ Talleyrand sous Clovis
+
+15. [histoire-actualite] (Monarchie)
+Q: Quel château devient le centre du pouvoir sous Louis XIV ?
+   ✓ Versailles
+   ✗ Chambord
+   ✗ Fontainebleau uniquement
+
+16. [histoire-actualite] (Lumières)
+Q: Quel philosophe est célèbre pour la séparation des pouvoirs ?
+   ✓ Montesquieu
+   ✗ Rabelais
+   ✗ Bossuet
+
+17. [histoire-actualite] (Révolution française)
+Q: Quelle assemblée est convoquée en mai 1789 ?
+   ✓ Les États généraux
+   ✗ Le Conseil européen
+   ✗ La Chambre introuvable
+
+18. [histoire-actualite] (Révolution française)
+Q: Quel événement du 14 juillet 1789 devient un symbole révolutionnaire ?
+   ✓ La prise de la Bastille
+   ✗ La bataille de Verdun
+   ✗ Le sacre de Reims
+
+19. [histoire-actualite] (Révolution française)
+Q: Quel texte du 26 août 1789 proclame des droits fondamentaux ?
+   ✓ La Déclaration des droits de l'homme et du citoyen
+   ✗ Le Code civil
+   ✗ Le traité de Rome
+
+20. [histoire-actualite] (Révolution française)
+Q: Quelle assemblée abolit la monarchie en septembre 1792 ?
+   ✓ La Convention nationale
+   ✗ Le Sénat impérial
+   ✗ Le Conseil d'État
+
+21. [histoire-actualite] (Révolution française)
+Q: Quel roi est exécuté le 21 janvier 1793 ?
+   ✓ Louis XVI
+   ✗ Louis XIV
+   ✗ Charles de Gaulle
+
+22. [histoire-actualite] (Révolution française)
+Q: Quelle bataille de 1792 symbolise la sauvegarde de la Révolution ?
+   ✓ Valmy
+   ✗ Poitiers
+   ✗ Crécy
+
+23. [histoire-actualite] (Consulat et Empire)
+Q: Quel coup d'État porte Napoléon Bonaparte au pouvoir ?
+   ✓ Le 18 Brumaire
+   ✗ Le 2 décembre 1851
+   ✗ La journée des Dupes
+
+24. [h

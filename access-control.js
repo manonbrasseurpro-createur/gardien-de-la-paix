@@ -6,7 +6,6 @@
   const SMALL_TEST_MODES = {
     "psychotechnique.html": ["mini", "category"],
     "culture-langue.html": ["mini-culture", "mini-language"],
-    "culture-generale.html": ["mini"],
     "cas-pratique.html": ["question"]
   };
 
@@ -14,7 +13,6 @@
   const FULL_OR_PREMIUM_MODES = {
     "psychotechnique.html": ["complete", "personality", "cognitive"],
     "culture-langue.html": ["complete", "culture", "language", "institutions", "symboles", "histoire-actualite"],
-    "culture-generale.html": ["complete", "institutions", "symboles", "histoire-actualite"],
     "verbal.html": ["complete", "type"],
     "spatial.html": ["complete", "type"],
     "numerique.html": ["complete", "type"],

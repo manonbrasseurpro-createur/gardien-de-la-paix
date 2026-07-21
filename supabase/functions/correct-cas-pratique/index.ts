@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,6 +12,54 @@ serve(async (req) => {
   }
 
   try {
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Authentification requise." }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData.user) {
+      return new Response(JSON.stringify({ error: "Session invalide. Reconnectez-vous." }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("subscription_status, is_complimentary")
+      .eq("id", authData.user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      return new Response(JSON.stringify({ error: "Impossible de vérifier l'abonnement." }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const status = String(profile?.subscription_status ?? "").toLowerCase();
+    const canUseAi = profile?.is_complimentary === true || status === "active";
+
+    if (!canUseAi) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "La correction IA est réservée aux abonnés. Passez à une formule payante pour y accéder.",
+        }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { sujet, questions, reponses } = await req.json();
 
     const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");

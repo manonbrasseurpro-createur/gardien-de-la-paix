@@ -1767,6 +1767,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           ✨ Faire corriger ma copie par l'IA
           <span style="position: absolute; top: -10px; right: -10px; background: var(--brass); color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em;">Nouveau</span>
         </button>
+        <p id="ai-correction-upsell" hidden style="margin: 12px 0 0; font-size: 0.95rem; color: var(--muted);">
+          La correction IA est disponible uniquement avec un abonnement.
+          <a href="tarifs.html" style="color: var(--navy); font-weight: 600;">Découvrez nos formules →</a>
+        </p>
         <div id="ai-correction-result" style="display:none; margin-top: 24px; padding: 24px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border);"></div>
 
         <div class="final-message" id="final-score-message"></div>
@@ -4105,14 +4109,19 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       });
       const reponses = state.items.map((item) => state.answers[`${item.caseId}-${item.questionIndex}`] || "");
       const sujet = state.items[0] ? getCase(state.items[0].caseId).title : "Cas pratique GPX";
-      const anonKey = window.GPX_SUPABASE?.anonKey || "";
 
       try {
+        const anonKey = window.GPX_SUPABASE?.anonKey || window.GPX_SUPABASE?.anon_key || "";
+        const accessToken = await window.GPXAuth?.getAccessToken?.();
+        if (!accessToken) {
+          throw new Error("Session expirée. Reconnectez-vous pour utiliser la correction IA.");
+        }
+
         const response = await fetch("https://ivrafclenoukjhmubrgq.supabase.co/functions/v1/correct-cas-pratique", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${anonKey}`,
+            Authorization: `Bearer ${accessToken}`,
             apikey: anonKey,
           },
           body: JSON.stringify({ sujet, questions, reponses }),
@@ -5873,17 +5882,34 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       document.getElementById("global-ai-analysis").innerHTML = buildGlobalSessionAnalysisHtml(finalScore);
       renderFinalDetailedReview();
 
-      // Afficher le bouton IA uniquement pour les abonnés
+      // Bouton IA : abonnés payants / complimentary uniquement (pas le trial)
       const aiBtn = document.getElementById("ai-correction-btn");
+      const aiUpsell = document.getElementById("ai-correction-upsell");
       const aiResult = document.getElementById("ai-correction-result");
+
       if (aiBtn) {
         aiBtn.style.display = "none";
-        window.GPXAuth?.getCurrentUser?.().then((user) => {
-          if (user && window.GPXAuth?.hasActiveSubscription?.(user)) {
+      }
+      if (aiUpsell) {
+        aiUpsell.hidden = true;
+      }
+
+      window.GPXAuth?.getCurrentUser?.().then((user) => {
+        const canUseAi =
+          Boolean(user) &&
+          (user.isComplimentary === true ||
+            user.subscriptionStatus === "active" ||
+            user.statutAbonnement === "active");
+
+        if (canUseAi) {
+          if (aiBtn) {
             aiBtn.style.display = "inline-flex";
           }
-        });
-      }
+        } else if (user && aiUpsell) {
+          aiUpsell.hidden = false;
+        }
+      });
+
       if (aiResult) {
         aiResult.style.display = "none";
         aiResult.innerHTML = "";

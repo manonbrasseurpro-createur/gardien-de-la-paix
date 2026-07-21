@@ -523,26 +523,20 @@
     }
 
     const dbPatch = {};
-    if (patch.subscriptionStatus !== undefined) {
-      dbPatch.subscription_status = patch.subscriptionStatus;
-    }
-    if (patch.subscriptionPlan !== undefined) {
-      dbPatch.subscription_plan = patch.subscriptionPlan;
-    }
-    if (patch.subscriptionEnd !== undefined) {
-      const iso = patch.subscriptionEnd instanceof Date
-        ? patch.subscriptionEnd.toISOString()
-        : patch.subscriptionEnd;
-      dbPatch.subscription_end = iso;
-      dbPatch.subscription_ends_at = iso;
-    }
+    // Champs abonnement / Stripe / complimentary : uniquement webhook (service role) ou admin.
     if (patch.freeTrialStart !== undefined) {
       dbPatch.free_trial_start = patch.freeTrialStart instanceof Date
         ? patch.freeTrialStart.toISOString()
         : patch.freeTrialStart;
     }
     if (patch.phone !== undefined) {
-      dbPatch.téléphone = patch.phone;
+      dbPatch.phone = patch.phone;
+    }
+    if (patch.firstName !== undefined) {
+      dbPatch.first_name = patch.firstName;
+    }
+    if (patch.lastName !== undefined) {
+      dbPatch.last_name = patch.lastName;
     }
 
     if (Object.keys(dbPatch).length > 0) {
@@ -553,19 +547,6 @@
       }
     }
 
-    return await fetchProfile(userId);
-  }
-
-  async function activateDemoSubscription(userId) {
-    const client = getSupabaseClient();
-    const { error } = await client
-      .from(PROFILS_TABLE)
-      .update({ subscription_status: "active" })
-      .eq("id", userId);
-
-    if (error) {
-      throw new Error(error.message);
-    }
     return await fetchProfile(userId);
   }
 
@@ -603,7 +584,6 @@
 
   window.GPXAuth = {
     isSupabaseConfigured,
-    isLocalMode: () => false,
     isLoggedIn,
     getCurrentUser,
     getAccessToken,
@@ -613,7 +593,6 @@
     submitSatisfactionSurvey,
     logout,
     updateProfile,
-    activateDemoSubscription,
     hasActiveSubscription,
     isTrialExpired,
     getTrialEndsAt,

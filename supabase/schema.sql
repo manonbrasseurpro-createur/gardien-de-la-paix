@@ -28,9 +28,51 @@ create policy "Users read own profile"
   on public.profiles for select
   using (auth.uid() = id);
 
-create policy "Users update own profile (limited)"
+-- Mise à jour profil : identité / contact seulement. Les champs abonnement
+-- sont protégés par le trigger protect_profiles_privileged_columns
+-- (service_role + admin uniquement).
+drop policy if exists "Users update own profile (limited)" on public.profiles;
+drop policy if exists "Authenticated users can update is_complimentary" on public.profiles;
+drop policy if exists "Users update own profile (non-sensitive)" on public.profiles;
+
+create policy "Users update own profile (non-sensitive)"
   on public.profiles for update
-  using (auth.uid() = id);
+  to authenticated
+  using (auth.uid() = id)
+  with check (auth.uid() = id);
+
+create or replace function public.protect_profiles_privileged_columns()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  if coalesce(auth.jwt() ->> 'role', '') = 'service_role'
+     or (auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com' then
+    return new;
+  end if;
+
+  if new.subscription_status is distinct from old.subscription_status
+     or new.subscription_plan is distinct from old.subscription_plan
+     or new.subscription_end is distinct from old.subscription_end
+     or new.subscription_ends_at is distinct from old.subscription_ends_at
+     or new.stripe_customer_id is distinct from old.stripe_customer_id
+     or new.stripe_subscription_id is distinct from old.stripe_subscription_id
+     or new.is_complimentary is distinct from old.is_complimentary
+     or new.sport_access is distinct from old.sport_access then
+    raise exception 'Modification des champs abonnement interdite'
+      using errcode = '42501';
+  end if;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists protect_profiles_privileged_columns on public.profiles;
+create trigger protect_profiles_privileged_columns
+  before update on public.profiles
+  for each row execute procedure public.protect_profiles_privileged_columns();
 
 -- Insertion automatique à l'inscription
 create or replace function public.handle_new_user()

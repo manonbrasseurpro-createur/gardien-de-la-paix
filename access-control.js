@@ -556,25 +556,35 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>
               Actualités
             </a>
-            <a class="global-dash-sidebar__item" href="tarifs.html">
+            <a class="global-dash-sidebar__item global-dash-sidebar__item--locked" href="tarifs.html" title="Réservé aux abonnés">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
               Tableau de bord
+              <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+              <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
             </a>
-            <a class="global-dash-sidebar__item" href="tarifs.html">
+            <a class="global-dash-sidebar__item global-dash-sidebar__item--locked" href="tarifs.html" title="Réservé aux abonnés">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
               Nouvel examen
+              <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+              <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
             </a>
-            <a class="global-dash-sidebar__item" href="tarifs.html">
+            <a class="global-dash-sidebar__item global-dash-sidebar__item--locked" href="tarifs.html" title="Réservé aux abonnés">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2"></rect></svg>
               Flashcards
+              <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+              <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
             </a>
-            <a class="global-dash-sidebar__item" href="tarifs.html">
+            <a class="global-dash-sidebar__item global-dash-sidebar__item--locked" href="tarifs.html" title="Réservé aux abonnés">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M4 16l5-5 4 4 7-7"></path></svg>
               Ma progression
+              <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+              <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
             </a>
-            <a class="global-dash-sidebar__item" href="tarifs.html">
+            <a class="global-dash-sidebar__item global-dash-sidebar__item--locked" href="tarifs.html" title="Réservé aux abonnés">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
               Communauté
+              <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+              <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
             </a>
             <div class="global-dash-sidebar__sep"></div>
             <a class="global-dash-sidebar__item" href="connexion.html">Se connecter</a>

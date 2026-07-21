@@ -55,8 +55,6 @@
         <button id="logout-button" class="secondary-button" type="button">Déconnexion</button>
       </div>
       <p id="manage-subscription-error" class="auth-error" role="alert"></p>
-      <p id="demo-subscription-hint" class="auth-hint hidden"></p>
-      <button id="demo-subscription-button" class="secondary-button hidden" type="button">Activer l'abonnement démo (mode local)</button>
     </section>
 
     <p class="auth-footer">
@@ -74,8 +72,6 @@
     console.info("[GPX Auth] Diagnostic au chargement:", window.GPXAuth.getDiagnostics());
 
     const loggedInView = document.getElementById("logged-in-view");
-    const demoButton = document.getElementById("demo-subscription-button");
-    const demoHint = document.getElementById("demo-subscription-hint");
 
     async function refreshDashboard() {
       const user = await window.GPXAuth.getCurrentUser();
@@ -144,15 +140,6 @@
 
     document.getElementById("logout-button").addEventListener("click", async () => {
       await window.GPXAuth.logout();
-      await refreshDashboard();
-    });
-
-    demoButton.addEventListener("click", async () => {
-      const user = await window.GPXAuth.getCurrentUser();
-      if (!user) {
-        return;
-      }
-      await window.GPXAuth.activateDemoSubscription(user.id);
       await refreshDashboard();
     });
 

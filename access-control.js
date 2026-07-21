@@ -13,7 +13,7 @@
   /** Modes « tests complets » ou entraînements longs : abonnement requis. */
   const FULL_OR_PREMIUM_MODES = {
     "psychotechnique.html": ["complete", "personality", "cognitive"],
-    "culture-langue.html": ["complete", "culture", "language"],
+    "culture-langue.html": ["complete", "culture", "language", "institutions", "symboles", "histoire-actualite"],
     "culture-generale.html": ["complete", "institutions", "symboles", "histoire-actualite"],
     "verbal.html": ["complete", "type"],
     "spatial.html": ["complete", "type"],

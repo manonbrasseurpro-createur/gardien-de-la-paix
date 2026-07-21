@@ -729,6 +729,27 @@
             <span class="mode-card__duration">⏱ ~25 min</span>
           </button>
 
+          <button class="mode-card" type="button" data-mode="institutions" disabled>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"></path><path d="M5 21V10l7-5 7 5v11"></path><path d="M9 21v-6h6v6"></path><path d="M9 10h.01"></path><path d="M15 10h.01"></path></svg>
+            <h3>Institutions</h3>
+            <p>20 questions : 12 institutions françaises + 8 européennes. République, Parlement, Gouvernement et UE.</p>
+            <span class="mode-card__duration">⏱ ~10 min</span>
+          </button>
+
+          <button class="mode-card" type="button" data-mode="symboles" disabled>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4"></path><path d="M4 4h12l-2 3 2 3H4"></path></svg>
+            <h3>Symboles</h3>
+            <p>12 questions. Priorité hymne et drapeau, puis devise, Marianne et 14 juillet.</p>
+            <span class="mode-card__duration">⏱ ~5 min</span>
+          </button>
+
+          <button class="mode-card" type="button" data-mode="histoire-actualite" disabled>
+            <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"></path><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h5"></path></svg>
+            <h3>Histoire &amp; actualité</h3>
+            <p>20 questions. Grandes dates, personnages clés et actualité récente 2025-2026.</p>
+            <span class="mode-card__duration">⏱ ~10 min</span>
+          </button>
+
           <button class="mode-card" type="button" data-mode="language" disabled>
             <svg class="mode-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.5 2.5 4 6 4 9s-1.5 6.5-4 9c-2.5-2.5-4-6-4-9s1.5-6.5 4-9z"></path></svg>
             <h3>Langue Étrangère uniquement</h3>
@@ -870,6 +891,21 @@
         label: "Culture générale uniquement",
         title: "Culture générale uniquement - 40 questions",
         duration: "~25 min"
+      },
+      institutions: {
+        label: "Institutions",
+        title: "Institutions françaises et européennes - 20 questions",
+        duration: "~10 min"
+      },
+      symboles: {
+        label: "Symboles",
+        title: "Symboles de la République - 12 questions",
+        duration: "~5 min"
+      },
+      "histoire-actualite": {
+        label: "Histoire et actualité",
+        title: "Actualité et Histoire de France - 20 questions",
+        duration: "~10 min"
       },
       language: {
         label: "Langue étrangère uniquement",
@@ -1986,6 +2022,21 @@
 
       if (mode === "culture") {
         return buildCultureSet(40);
+      }
+
+      if (mode === "institutions") {
+        return shuffle([
+          ...sampleByCategory(cultureQuestionBank, "institutions-francaises", 12),
+          ...sampleByCategory(cultureQuestionBank, "institutions-europeennes", 8)
+        ]);
+      }
+
+      if (mode === "symboles") {
+        return buildSymbolesSelection(12);
+      }
+
+      if (mode === "histoire-actualite") {
+        return sampleByCategory(cultureQuestionBank, "histoire-actualite", 20);
       }
 
       if (mode === "language") {

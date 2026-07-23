@@ -775,9 +775,13 @@
         if (surveys && surveys.length > 0) {
           surveysEl.innerHTML = surveys.map((s) => {
             const email = escapeCommunityHtml(emailByUserId[s.user_id] || 'Anonyme');
+            const hasComment = !!(s.commentaire && String(s.commentaire).trim());
+            const modulesLabel = Array.isArray(s.modules_utilises)
+              ? s.modules_utilises.join(', ')
+              : (s.modules_utilises || '');
             const summary = [
               s.note != null ? `Note : ${s.note}/5` : null,
-              s.modules_utilises ? `Modules : ${escapeCommunityHtml(s.modules_utilises)}` : null,
+              modulesLabel ? `Modules : ${escapeCommunityHtml(modulesLabel)}` : null,
               s.commentaire ? `Commentaire : ${escapeCommunityHtml(s.commentaire)}` : null
             ].filter(Boolean).join(' · ');
             return `
@@ -787,9 +791,59 @@
                   <span style="color: var(--muted); font-size: 0.8rem;">${new Date(s.created_at).toLocaleDateString('fr-FR')}</span>
                 </div>
                 <p style="margin: 0; font-size: 0.85rem; color: var(--text);">${summary || '—'}</p>
+                <div style="margin-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
+                  <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--navy); ${hasComment ? '' : 'opacity: 0.55;'}">
+                    <input
+                      type="checkbox"
+                      class="admin-survey-publish"
+                      data-survey-id="${escapeCommunityHtml(s.id)}"
+                      ${s.is_visible ? 'checked' : ''}
+                      ${hasComment ? '' : 'disabled'}
+                    >
+                    Publier sur l'accueil
+                  </label>
+                  ${hasComment
+                    ? ''
+                    : '<span style="font-size: 0.8rem; color: var(--muted);">Un commentaire est requis pour publier</span>'}
+                  <span class="admin-survey-publish-msg" data-survey-id="${escapeCommunityHtml(s.id)}" style="font-size: 0.8rem;"></span>
+                </div>
               </div>
             `;
           }).join('');
+
+          surveysEl.querySelectorAll('.admin-survey-publish').forEach((checkbox) => {
+            checkbox.addEventListener('change', async () => {
+              const surveyId = checkbox.dataset.surveyId;
+              const msgEl = surveysEl.querySelector(`.admin-survey-publish-msg[data-survey-id="${surveyId}"]`);
+              const nextVisible = checkbox.checked;
+              checkbox.disabled = true;
+              if (msgEl) {
+                msgEl.textContent = 'Enregistrement…';
+                msgEl.style.color = 'var(--muted)';
+              }
+
+              const { data: updated, error } = await client
+                .from('satisfaction_surveys')
+                .update({ is_visible: nextVisible })
+                .eq('id', surveyId)
+                .select('id, is_visible');
+
+              if (error || !updated?.[0]) {
+                checkbox.checked = !nextVisible;
+                if (msgEl) {
+                  msgEl.textContent = error?.message || 'Mise à jour refusée.';
+                  msgEl.style.color = 'red';
+                }
+              } else if (msgEl) {
+                msgEl.textContent = nextVisible
+                  ? 'Publié sur l\'accueil.'
+                  : 'Retiré de l\'accueil.';
+                msgEl.style.color = 'green';
+              }
+
+              checkbox.disabled = false;
+            });
+          });
         } else {
           surveysEl.innerHTML = '<p style="color: var(--muted);">Aucun avis pour l\'instant.</p>';
         }

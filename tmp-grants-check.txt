@@ -1,0 +1,34 @@
+﻿node.exe : npm warn Unknown env config "devdir". This will stop working in the next major version of npm. See `npm 
+help npmrc` for supported config options.
+Au caractère Ligne:1 : 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn Unknow...config options.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Initialising login role...
+ÔöîÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÉ
+Ôöé table_name                Ôöé grantee       Ôöé privilege_type Ôöé
+Ôö£ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöñ
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé DELETE         Ôöé
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé INSERT         Ôöé
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé REFERENCES     Ôöé
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé SELECT         Ôöé
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé TRIGGER        Ôöé
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé TRUNCATE       Ôöé
+Ôöé satisfaction_surveys      Ôöé authenticated Ôöé UPDATE         Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé DELETE         Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé INSERT         Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé REFERENCES     Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé SELECT         Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé TRIGGER        Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé TRUNCATE       Ôöé
+Ôöé satisfaction_testimonials Ôöé anon          Ôöé UPDATE         Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé DELETE         Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé INSERT         Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé REFERENCES     Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé SELECT         Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé TRIGGER        Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé TRUNCATE       Ôöé
+Ôöé satisfaction_testimonials Ôöé authenticated Ôöé UPDATE         Ôöé
+ÔööÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÿ

@@ -493,7 +493,9 @@
       <div class="home-section__inner">
         <p class="home-section__kicker">Ils l'ont fait</p>
         <h2 id="home-testimonials-title" class="home-section__title">Ce qu'en disent les candidats</h2>
-        <p class="home-testimonials__placeholder">Les premiers retours arrivent bientôt. Vous serez peut-être parmi les premiers à témoigner.</p>
+        <div id="home-testimonials-grid" class="home-testimonials__grid">
+          <p class="home-testimonials__placeholder">Les premiers retours arrivent bientôt. Vous serez peut-être parmi les premiers à témoigner.</p>
+        </div>
       </div>
     </section>
 
@@ -742,7 +744,72 @@
         });
       }
 
-      document.addEventListener("DOMContentLoaded", loadHomeIntervenants);
+      function formatTestimonialMonthYear(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        return new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(date);
+      }
+
+      function formatTestimonialStars(note) {
+        const n = Math.max(0, Math.min(5, Number(note) || 0));
+        return `${"★".repeat(n)}${"☆".repeat(5 - n)} ${n}/5`;
+      }
+
+      function formatTestimonialModules(modules) {
+        if (Array.isArray(modules)) return modules.filter(Boolean).join(", ");
+        return modules ? String(modules) : "";
+      }
+
+      function renderTestimonialCard(item) {
+        const card = document.createElement("article");
+        card.className = "home-testimonial-card";
+
+        const modules = formatTestimonialModules(item.modules_utilises);
+        const monthYear = formatTestimonialMonthYear(item.created_at);
+        const metaParts = [modules, monthYear].filter(Boolean);
+
+        card.innerHTML = `
+          <p class="home-testimonial-card__note">${escapeHtml(formatTestimonialStars(item.note))}</p>
+          <blockquote class="home-testimonial-card__quote">${escapeHtml(String(item.commentaire || "").trim())}</blockquote>
+          ${metaParts.length
+            ? `<p class="home-testimonial-card__meta">${escapeHtml(metaParts.join(" · "))}</p>`
+            : ""}
+        `;
+
+        return card;
+      }
+
+      async function loadHomeTestimonials() {
+        const gridEl = document.getElementById("home-testimonials-grid");
+        const client = getSupabaseClient();
+
+        if (!gridEl || !client) {
+          return;
+        }
+
+        const { data, error } = await client
+          .from("satisfaction_testimonials")
+          .select("note, commentaire, modules_utilises, created_at")
+          .order("created_at", { ascending: false })
+          .limit(6);
+
+        if (error || !data?.length) {
+          if (error) {
+            console.warn("[index] home testimonials:", error);
+          }
+          return;
+        }
+
+        gridEl.innerHTML = "";
+        data.forEach((item) => {
+          gridEl.appendChild(renderTestimonialCard(item));
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadHomeIntervenants();
+        loadHomeTestimonials();
+      });
     })();
   </script>
 </body>

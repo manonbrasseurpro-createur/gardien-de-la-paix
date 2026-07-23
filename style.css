@@ -2420,6 +2420,46 @@ html:has(.page-home) {
   margin: 0;
 }
 
+.page-home .home-testimonials__grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (min-width: 720px) {
+  .page-home .home-testimonials__grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+.page-home .home-testimonial-card {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--off-white);
+}
+
+.page-home .home-testimonial-card__note {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: 0.04em;
+}
+
+.page-home .home-testimonial-card__quote {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.page-home .home-testimonial-card__meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
 .page-home .home-salary__table-wrap {
   overflow-x: auto;
   margin-top: 24px;

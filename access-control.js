@@ -560,12 +560,6 @@
               <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
               <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
             </a>
-            <a class="global-dash-sidebar__item global-dash-sidebar__item--locked" href="tarifs.html" title="Réservé aux abonnés">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
-              Nouvel examen
-              <svg class="global-dash-sidebar__lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
-              <span class="global-dash-sidebar__lock-hint">Réservé aux abonnés</span>
-            </a>
             <a class="global-dash-sidebar__item" href="flashcards.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2"></rect></svg>
               Flashcards
@@ -654,10 +648,6 @@
             <a class="global-dash-sidebar__item" href="dashboard.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
               Tableau de bord
-            </a>
-            <a class="global-dash-sidebar__item" href="dashboard.html#examen">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="currentColor"></circle></svg>
-              Nouvel examen
             </a>
             <a class="global-dash-sidebar__item" href="flashcards.html">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2" fill="var(--navy-dark)"></rect></svg>

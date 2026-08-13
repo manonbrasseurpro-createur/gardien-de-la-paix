@@ -809,7 +809,6 @@
 
         <div class="actions">
           <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
-          <button id="restart-quiz-button" class="secondary-button" type="button">Nouveau test</button>
           <button id="menu-button" class="secondary-button" type="button">Retour au menu</button>
         </div>
       </div>
@@ -1730,7 +1729,6 @@
     const optionsContainer = document.getElementById("options");
     const feedback = document.getElementById("feedback");
     const nextButton = document.getElementById("next-button");
-    const restartQuizButton = document.getElementById("restart-quiz-button");
     const menuButton = document.getElementById("menu-button");
     const restartButton = document.getElementById("restart-button");
     const backMenuButton = document.getElementById("back-menu-button");
@@ -1763,7 +1761,6 @@
     });
 
     nextButton.addEventListener("click", nextQuestion);
-    restartQuizButton.addEventListener("click", () => startQuiz(currentMode));
     menuButton.addEventListener("click", showHome);
     restartButton.addEventListener("click", () => startQuiz(currentMode));
     backMenuButton.addEventListener("click", showHome);

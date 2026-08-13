@@ -980,7 +980,6 @@
 
         <div class="actions">
           <button id="next-button" class="primary-button" type="button" disabled>Question suivante</button>
-          <button id="restart-quiz-button" class="secondary-button" type="button">Nouveau test</button>
           <button id="menu-button" class="secondary-button" type="button">Retour accueil du test</button>
         </div>
       </div>
@@ -1321,7 +1320,6 @@
     document.getElementById("personality-results-menu-button").addEventListener("click", showHome);
     nextButton.addEventListener("click", nextQuestion);
     document.getElementById("restart-button").addEventListener("click", restartCurrentMode);
-    document.getElementById("restart-quiz-button").addEventListener("click", restartCurrentMode);
     document.getElementById("menu-button").addEventListener("click", showHome);
     document.getElementById("back-menu-button").addEventListener("click", showHome);
     downloadPdfButton.addEventListener("click", generateRevisionPdf);

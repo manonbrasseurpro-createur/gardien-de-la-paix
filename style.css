@@ -709,6 +709,11 @@ a {
   margin: 0;
 }
 
+.auth-error a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .auth-success {
   color: #0d6832;
   font-weight: 600;

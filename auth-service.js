@@ -173,8 +173,12 @@
     if (message.includes("Invalid login credentials")) {
       return new Error("Identifiants incorrects.");
     }
-    if (message.includes("User already registered")) {
-      return new Error("Un compte existe déjà avec cette adresse e-mail.");
+    if (message.includes("User already registered") || message.includes("Database error saving new user")) {
+      const duplicateError = new Error(
+        "Un compte existe déjà avec cet email — connectez-vous ou réinitialisez votre mot de passe."
+      );
+      duplicateError.code = "EMAIL_ALREADY_REGISTERED";
+      return duplicateError;
     }
     if (message.includes("Password should be at least")) {
       return new Error("Le mot de passe doit contenir au moins 8 caractères.");
@@ -409,6 +413,40 @@
     }
   }
 
+  async function requestPasswordReset(email) {
+    const normalizedEmail = String(email || "").trim().toLowerCase();
+    if (!normalizedEmail) {
+      throw new Error("Veuillez indiquer votre adresse e-mail.");
+    }
+
+    const client = getSupabaseClient();
+    console.info("[GPX Auth] resetPasswordForEmail…", { email: normalizedEmail });
+
+    const { error } = await client.auth.resetPasswordForEmail(normalizedEmail, {
+      redirectTo: window.location.origin + "/reinitialiser-mot-de-passe.html"
+    });
+
+    if (error) {
+      console.error("[GPX Auth] resetPasswordForEmail error:", error);
+      throw mapAuthError(error);
+    }
+  }
+
+  async function updatePassword(newPassword) {
+    if (!newPassword || newPassword.length < 8) {
+      throw new Error("Le mot de passe doit contenir au moins 8 caractères.");
+    }
+
+    const client = getSupabaseClient();
+    const { error } = await client.auth.updateUser({ password: newPassword });
+
+    if (error) {
+      console.error("[GPX Auth] updateUser password error:", error);
+      throw mapAuthError(error);
+    }
+    console.info("[GPX Auth] updatePassword OK");
+  }
+
   async function submitSatisfactionSurvey({ note, modulesUtilises, contenuRealiste, aidePrincipale, amelioration, recommande, commentaire }) {
     const client = getSupabaseClient();
     const { data: userData } = await client.auth.getUser();
@@ -590,6 +628,8 @@
     register,
     login,
     loginWithGoogle,
+    requestPasswordReset,
+    updatePassword,
     submitSatisfactionSurvey,
     logout,
     updateProfile,

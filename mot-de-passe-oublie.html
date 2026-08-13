@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mot de passe oublié | PrepaGPX</title>
+  <meta name="description" content="Réinitialisez votre mot de passe PrepaGPX.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+  <script src="site-seo.js"></script>
+</head>
+<body class="auth-page">
+  <header class="hero hero--compact">
+    <div class="hero__content">
+      <p class="hero__label">Concours Gardien de la Paix</p>
+      <h1>Mot de passe oublié</h1>
+      <p class="hero__subtitle">Recevez un lien pour choisir un nouveau mot de passe</p>
+    </div>
+  </header>
+
+  <main class="container auth-container">
+    <section class="auth-card auth-card--narrow">
+      <h2>Réinitialiser mon mot de passe</h2>
+      <p class="auth-card__intro">Indiquez l'adresse e-mail de votre compte. Si un compte existe, vous recevrez un lien de réinitialisation par e-mail.</p>
+      <form id="reset-request-form" class="auth-form" novalidate>
+        <label>
+          Adresse e-mail
+          <input type="email" name="email" required autocomplete="email">
+        </label>
+        <button class="primary-button" type="submit">Envoyer le lien</button>
+        <p id="reset-request-success" class="auth-success" role="status"></p>
+        <p id="reset-request-error" class="auth-error" role="alert"></p>
+      </form>
+      <p class="auth-switch">
+        <a href="connexion.html">Retour à la connexion</a> · <a href="inscription.html">Créer un compte</a>
+      </p>
+    </section>
+
+    <p class="auth-footer">
+      <a href="index.html">Retour à l'accueil</a> · <a href="tarifs.html">Tarifs et abonnement</a>
+    </p>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+  <script src="auth-service.js"></script>
+  <script src="cookie-consent.js"></script>
+  <script src="access-control.js"></script>
+  <script>
+    document.getElementById("reset-request-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const errorEl = document.getElementById("reset-request-error");
+      const successEl = document.getElementById("reset-request-success");
+      const submitButton = form.querySelector('button[type="submit"]');
+      errorEl.textContent = "";
+      successEl.textContent = "";
+
+      try {
+        submitButton.disabled = true;
+        await window.GPXAuth.requestPasswordReset(form.email.value);
+        successEl.textContent =
+          "Si un compte existe avec cette adresse, un e-mail contenant un lien de réinitialisation vient de vous être envoyé.";
+        form.reset();
+      } catch (error) {
+        console.error("[GPX Auth] requestPasswordReset failed:", error);
+        errorEl.textContent = error.message || "Impossible d'envoyer le lien de réinitialisation.";
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -9,39 +9,42 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Créer un compte | PrepaGPX</title>
-  <meta name="description" content="Créez votre compte PrepaGPX : 7 jours d'accès complet gratuit, sans carte bancaire. Préparez le concours Gardien de la Paix 2026 dès aujourd'hui.">
-  <meta name="robots" content="index, follow">
+  <title>Réinitialiser mon mot de passe | PrepaGPX</title>
+  <meta name="description" content="Choisissez un nouveau mot de passe pour votre compte PrepaGPX.">
+  <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
-  <script src="site-seo.js"></script>
 </head>
 <body class="auth-page">
   <header class="hero hero--compact">
     <div class="hero__content">
       <p class="hero__label">Concours Gardien de la Paix</p>
-      <h1>Créer un compte</h1>
-      <p class="hero__subtitle">Rejoignez l'entraînement au concours gardien de la paix</p>
+      <h1>Nouveau mot de passe</h1>
+      <p class="hero__subtitle">Choisissez un nouveau mot de passe pour votre compte</p>
     </div>
   </header>
 
   <main class="container auth-container">
     <section class="auth-card auth-card--narrow">
-      <h2>Créer un compte</h2>
-      <p class="auth-card__intro">Prénom, e-mail et mot de passe. <strong>7 jours d'accès complet gratuit — sans carte bancaire</strong>.</p>
-      <form id="register-form" class="auth-form" novalidate>
+      <div id="reset-loading-view">
+        <p style="color: var(--muted);">Vérification du lien de réinitialisation…</p>
+      </div>
+
+      <div id="reset-invalid-view" class="hidden">
+        <h2>Lien invalide ou expiré</h2>
+        <p>Ce lien de réinitialisation n'est plus valide. Demandez-en un nouveau ci-dessous.</p>
+        <div class="auth-actions">
+          <a class="primary-button" href="mot-de-passe-oublie.html">Demander un nouveau lien</a>
+          <a class="secondary-button" href="connexion.html">Retour à la connexion</a>
+        </div>
+      </div>
+
+      <form id="reset-password-form" class="auth-form hidden" novalidate>
+        <h2>Choisir un nouveau mot de passe</h2>
         <label>
-          Prénom
-          <input type="text" name="firstName" required autocomplete="given-name">
-        </label>
-        <label>
-          Adresse e-mail
-          <input type="email" name="email" required autocomplete="email">
-        </label>
-        <label>
-          Mot de passe (8 caractères minimum)
+          Nouveau mot de passe (8 caractères minimum)
           <span class="auth-password-wrap">
             <input type="password" name="password" required minlength="8" autocomplete="new-password">
             <button type="button" class="auth-password-toggle" aria-label="Afficher le mot de passe">
@@ -58,13 +61,14 @@
             </button>
           </span>
         </label>
-        <p class="auth-legal-notice">En créant un compte, vous acceptez les <a href="cgv.html" target="_blank">CGV</a> et la <a href="confidentialite.html" target="_blank">politique de confidentialité</a>.</p>
-        <button class="primary-button" type="submit">Créer mon compte</button>
-        <p id="register-success" class="auth-success" role="status"></p>
-        <p id="register-error" class="auth-error" role="alert"></p>
+        <label>
+          Confirmer le mot de passe
+          <input type="password" name="passwordConfirm" required minlength="8" autocomplete="new-password">
+        </label>
+        <button class="primary-button" type="submit">Enregistrer le nouveau mot de passe</button>
+        <p id="reset-password-success" class="auth-success" role="status"></p>
+        <p id="reset-password-error" class="auth-error" role="alert"></p>
       </form>
-      <button id="google-signin-btn" type="button" class="secondary-button">Continuer avec Google</button>
-      <p class="auth-switch">Déjà un compte ? <a href="connexion.html">Se connecter</a></p>
     </section>
 
     <p class="auth-footer">
@@ -78,57 +82,53 @@
   <script src="cookie-consent.js"></script>
   <script src="access-control.js"></script>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const redirectTarget = params.get("redirect") || "compte.html";
+    const loadingView = document.getElementById("reset-loading-view");
+    const invalidView = document.getElementById("reset-invalid-view");
+    const form = document.getElementById("reset-password-form");
 
     (async () => {
-      if (window.GPXAuth.isSupabaseConfigured()) {
-        const user = await window.GPXAuth.getCurrentUser();
-        if (user) {
-          window.location.href = "compte.html";
-          return;
-        }
+      if (!window.GPXAuth.isSupabaseConfigured()) {
+        loadingView.classList.add("hidden");
+        invalidView.classList.remove("hidden");
+        return;
       }
+
+      const user = await window.GPXAuth.getCurrentUser();
+      loadingView.classList.add("hidden");
+      if (!user) {
+        invalidView.classList.remove("hidden");
+        return;
+      }
+      form.classList.remove("hidden");
     })();
 
-    document.getElementById("register-form").addEventListener("submit", async (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const form = event.target;
-      const errorEl = document.getElementById("register-error");
-      const successEl = document.getElementById("register-success");
+      const errorEl = document.getElementById("reset-password-error");
+      const successEl = document.getElementById("reset-password-success");
+      const submitButton = form.querySelector('button[type="submit"]');
       errorEl.textContent = "";
       successEl.textContent = "";
-      try {
-        const result = await window.GPXAuth.register({
-          firstName: form.firstName.value,
-          email: form.email.value,
-          password: form.password.value
-        });
-        if (result.emailConfirmationRequired) {
-          successEl.textContent =
-            "Compte créé. Vérifiez votre boîte e-mail et confirmez votre inscription, puis connectez-vous.";
-          form.reset();
-          return;
-        }
-        window.location.href = redirectTarget;
-      } catch (error) {
-        console.error("[GPX Auth] register failed:", error);
-        if (error.code === "EMAIL_ALREADY_REGISTERED") {
-          errorEl.innerHTML =
-            'Un compte existe déjà avec cet email — <a href="connexion.html">connectez-vous</a> ou <a href="mot-de-passe-oublie.html">réinitialisez votre mot de passe</a>.';
-        } else {
-          errorEl.textContent = error.message || "Inscription impossible.";
-        }
+
+      const password = form.password.value;
+      const passwordConfirm = form.passwordConfirm.value;
+      if (password !== passwordConfirm) {
+        errorEl.textContent = "Les deux mots de passe ne correspondent pas.";
+        return;
       }
-    });
-    document.getElementById("google-signin-btn").addEventListener("click", async () => {
-      const errorEl = document.getElementById("register-error");
-      errorEl.textContent = "";
+
       try {
-        await window.GPXAuth.loginWithGoogle();
+        submitButton.disabled = true;
+        await window.GPXAuth.updatePassword(password);
+        successEl.textContent = "Mot de passe mis à jour. Redirection vers votre compte…";
+        form.reset();
+        window.setTimeout(() => {
+          window.location.href = "compte.html";
+        }, 1500);
       } catch (error) {
-        console.error("[GPX Auth] Google login failed:", error);
-        errorEl.textContent = error.message || "Connexion Google impossible.";
+        console.error("[GPX Auth] updatePassword failed:", error);
+        errorEl.textContent = error.message || "Impossible de mettre à jour le mot de passe.";
+        submitButton.disabled = false;
       }
     });
 

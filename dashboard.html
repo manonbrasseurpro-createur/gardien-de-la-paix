@@ -664,6 +664,16 @@
         </header>
         <div class="container auth-container">
           <div class="auth-card auth-card--wide">
+            <h2>Offrir un accès gratuit</h2>
+            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 14px;">Saisissez l'email exact d'un utilisateur inscrit. Une confirmation vous sera demandée avant d'activer l'accès.</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <input type="email" id="admin-complimentary-email" placeholder="email@exemple.fr" style="flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font: inherit;">
+              <button class="primary-button" type="button" id="admin-complimentary-btn">Offrir un accès gratuit à cet email</button>
+            </div>
+            <p id="admin-complimentary-msg" style="margin: 10px 0 0; font-size: 0.9rem;"></p>
+          </div>
+
+          <div class="auth-card auth-card--wide">
             <h2>Signalements utilisateurs</h2>
             <div id="admin-reports-list"><p style="color: var(--muted);">Chargement…</p></div>
           </div>
@@ -686,16 +696,6 @@
               </select>
             </label>
             <div id="admin-users-list"><p style="color: var(--muted);">Chargement…</p></div>
-          </div>
-
-          <div class="auth-card auth-card--wide">
-            <h2>Donner un accès gratuit</h2>
-            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 14px;">Entrez l'email exact de l'utilisateur inscrit pour lui activer l'accès complémentaire.</p>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <input type="email" id="admin-complimentary-email" placeholder="email@exemple.fr" style="flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font: inherit;">
-              <button class="primary-button" type="button" id="admin-complimentary-btn">Activer l'accès</button>
-            </div>
-            <p id="admin-complimentary-msg" style="margin: 10px 0 0; font-size: 0.9rem;"></p>
           </div>
         </div>
       </section>
@@ -879,13 +879,13 @@
                   ${statusLabel}
                 </span>
                 <span style="color: var(--muted); font-size: 0.78rem;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</span>
+                ${u.is_complimentary ? `
                 <button
                   type="button"
                   class="admin-users-complimentary-btn"
                   data-user-id="${escapeCommunityHtml(u.id)}"
-                  data-next="${u.is_complimentary ? 'false' : 'true'}"
                   data-label="${escapeCommunityHtml([u.first_name, u.last_name].filter(Boolean).join(' ') || u.email)}"
-                >${u.is_complimentary ? "Retirer l'accès" : "Offrir l'accès"}</button>
+                >Retirer l'accès</button>` : ''}
               </div>
             </div>
           `;
@@ -906,15 +906,11 @@
         usersEl.querySelectorAll('.admin-users-complimentary-btn').forEach((button) => {
           button.addEventListener('click', async () => {
             const userId = button.dataset.userId;
-            const nextValue = button.dataset.next === 'true';
             const label = button.dataset.label || 'cet utilisateur';
-            const confirmMsg = nextValue
-              ? `Offrir l'accès complémentaire à ${label} ?`
-              : `Retirer l'accès complémentaire de ${label} ?`;
-            if (!window.confirm(confirmMsg)) return;
+            if (!window.confirm(`Retirer l'accès complémentaire de ${label} ?`)) return;
 
             button.disabled = true;
-            const { error } = await setComplimentaryAccess(client, userId, nextValue);
+            const { error } = await setComplimentaryAccess(client, userId, false);
             if (error) {
               button.disabled = false;
               window.alert(error);
@@ -1074,6 +1070,9 @@
           if (!email) {
             msgEl.textContent = 'Veuillez entrer un email.';
             msgEl.style.color = 'red';
+            return;
+          }
+          if (!window.confirm(`Confirmer l'accès offert pour ${email} ?`)) {
             return;
           }
           if (!client) {

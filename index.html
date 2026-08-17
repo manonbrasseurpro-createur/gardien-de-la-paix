@@ -790,15 +790,18 @@
         const average = Number(stats?.average_note);
         if (!count || !Number.isFinite(average)) return;
 
-        const averageLabel = average.toLocaleString("fr-FR", {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1
-        });
+        const isWhole = Number.isInteger(average);
+        const averageLabel = isWhole
+          ? `${average}/5`
+          : `${average.toLocaleString("fr-FR", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+          })}/5`;
         const fillPercent = Math.max(0, Math.min(100, (average / 5) * 100));
         const countLabel = `${count} avis`;
 
         summaryEl.hidden = false;
-        summaryEl.setAttribute("aria-label", `Note moyenne ${averageLabel} sur 5, basée sur ${countLabel}`);
+        summaryEl.setAttribute("aria-label", `Note moyenne ${averageLabel}, basée sur ${countLabel}`);
         summaryEl.innerHTML = `
           <p class="home-testimonials__summary-score">${escapeHtml(averageLabel)}</p>
           <span class="home-testimonials__stars" aria-hidden="true">

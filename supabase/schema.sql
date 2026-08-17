@@ -172,10 +172,14 @@ create table if not exists public.problem_reports (
   email text,
   page_url text,
   message text not null,
+  resolved boolean not null default false,
   created_at timestamptz not null default now()
 );
 
 alter table public.problem_reports enable row level security;
+
+alter table public.problem_reports
+  add column if not exists resolved boolean not null default false;
 
 create policy "Authenticated users insert problem_reports"
   on public.problem_reports for insert
@@ -188,6 +192,12 @@ create policy "Users read own problem_reports"
 create policy "Admin read all problem_reports"
   on public.problem_reports for select
   using ((auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com');
+
+drop policy if exists "Admin update problem_reports" on public.problem_reports;
+create policy "Admin update problem_reports"
+  on public.problem_reports for update
+  using ((auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com')
+  with check ((auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com');
 
 -- Questionnaire de satisfaction
 create table if not exists public.satisfaction_surveys (

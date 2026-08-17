@@ -152,6 +152,9 @@ q("institutions-francaises", "Constitution", "Quel texte organise les pouvoirs p
       q("symboles", "Cérémonies", "Quel monument accueille la tombe du Soldat inconnu ?", "L'Arc de Triomphe", ["Le palais Bourbon", "L'Opéra Garnier"], "La tombe se trouve sous l'Arc de Triomphe."),
       q("symboles", "Commémoration", "Quelle date commémore l'armistice de 1918 ?", "Le 11 novembre", ["Le 1er mai", "Le 9 mai"], "Le 11 novembre rappelle l'armistice de la Première Guerre mondiale."),
       q("symboles", "Commémoration", "Quelle date commémore la victoire de 1945 en Europe ?", "Le 8 mai", ["Le 14 juillet", "Le 2 décembre"], "Le 8 mai commémore la capitulation allemande en Europe."),
+    ];
+
+    const histoireQuestions = [
       q("histoire-actualite", "Histoire de France", "Quel roi franc est associé au baptême de Reims vers 496 ?", "Clovis", ["Charlemagne", "Hugues Capet"], "Clovis est baptisé à Reims."),
       q("histoire-actualite", "Histoire de France", "Quel souverain est couronné empereur en l'an 800 ?", "Charlemagne", ["Louis XIV", "Philippe Auguste"], "Charlemagne est couronné à Rome en 800."),
       q("histoire-actualite", "Histoire de France", "Quel roi fonde la dynastie capétienne en 987 ?", "Hugues Capet", ["François Ier", "Henri IV"], "Son élection ouvre la dynastie capétienne."),
@@ -192,6 +195,10 @@ q("institutions-francaises", "Constitution", "Quel texte organise les pouvoirs p
       q("histoire-actualite", "Seconde Guerre mondiale", "En quel mois Paris est-il libéré en 1944 ?", "Août", ["Janvier", "Décembre"], "La Libération de Paris a lieu en août 1944."),
       q("histoire-actualite", "Ve République", "Quel homme politique revient au pouvoir lors de la crise de 1958 ?", "Charles de Gaulle", ["Léon Blum", "Raymond Poincaré"], "La crise de 1958 conduit au retour de De Gaulle."),
       q("histoire-actualite", "Décolonisation", "Quels accords de 1962 ouvrent la voie à l'indépendance de l'Algérie ?", "Les accords d'Évian", ["Les accords de Matignon de 1936", "Les accords de Grenelle"], "Les accords d'Évian mettent fin à la guerre d'Algérie."),
+    ];
+
+    // À METTRE À JOUR CHAQUE MOIS — actualité France/monde
+    const actualiteQuestions = [
       q("histoire-actualite", "Actualité 2025-2026", "Dans quelle ville brésilienne s'est tenue la COP30 en 2025 ?", "Belém", ["Rio de Janeiro", "Brasilia"], "La COP30 s'est tenue à Belém en novembre 2025."),
       q("histoire-actualite", "Actualité 2025-2026", "Quel pays a accueilli le sommet du G7 de 2025 à Kananaskis ?", "Le Canada", ["L'Italie", "Le Japon"], "Kananaskis se situe en Alberta, au Canada."),
       q("histoire-actualite", "Actualité 2025-2026", "Dans quelle ville le sommet du G20 de 2025 s'est-il tenu ?", "Johannesburg", ["Osaka", "Buenos Aires"], "Le G20 2025 s'est tenu à Johannesburg."),
@@ -212,7 +219,12 @@ q("institutions-francaises", "Constitution", "Quel texte organise les pouvoirs p
       q("histoire-actualite", "Actualité 2025-2026", "Quelle conférence internationale sur l'océan s'est tenue à Nice en juin 2025 ?", "La Conférence des Nations unies sur l'océan", ["Le sommet de l'OTAN", "La Coupe du monde des clubs"], "L'UNOC3 (3e Conférence des Nations unies sur l'océan) s'est tenue à Nice du 9 au 13 juin 2025."),
       q("histoire-actualite", "Actualité 2025-2026", "Quels pays ont coorganisé la Conférence des Nations unies sur l'océan de Nice ?", "La France et le Costa Rica", ["La France et le Canada", "Le Brésil et l'Afrique du Sud"], "Nice 2025 a été coorganisée par la France et le Costa Rica."),
       q("histoire-actualite", "Actualité 2025-2026", "Dans quelle ville s'est tenu le sommet de l'OTAN de juin 2025 ?", "La Haye", ["Bruxelles", "Varsovie"], "Le sommet de l'OTAN 2025 s'est tenu aux Pays-Bas."),
-  ];
+    ];
+
+    window.GPXCultureQuestionBank = window.GPXCultureQuestionBank.concat(
+      histoireQuestions,
+      actualiteQuestions
+    );
 
   (function () {
     const bank = window.GPXCultureQuestionBank;

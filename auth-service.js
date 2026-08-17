@@ -107,7 +107,8 @@
       freeTrialStart,
       freeTrialUsed: Boolean(profil.free_trial_used ?? profil.freeTrialUsed),
       freeTrialKey: profil.free_trial_key || profil.freeTrialKey || null,
-      isComplimentary: Boolean(profil.is_complimentary ?? false)
+      isComplimentary: Boolean(profil.is_complimentary ?? false),
+      seenScoreBugNotice: Boolean(profil.seen_score_bug_notice ?? false)
     };
   }
 

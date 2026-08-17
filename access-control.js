@@ -692,6 +692,86 @@
     });
   }
 
+  const SCORE_BUG_NOTICE_BEFORE = "2026-08-17T17:00:00Z";
+
+  async function shouldShowScoreBugNotice(user) {
+    if (!user?.id || user.seenScoreBugNotice === true) {
+      return false;
+    }
+
+    const client = window.__gpxSupabaseClient;
+    if (!client) {
+      return false;
+    }
+
+    const { data, error } = await client
+      .from("exam_sessions")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("module", "cas-pratique")
+      .lt("created_at", SCORE_BUG_NOTICE_BEFORE)
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.warn("[GPX] score bug notice:", error);
+      return false;
+    }
+
+    return Boolean(data?.id);
+  }
+
+  function dismissScoreBugNotice() {
+    document.getElementById("gpx-score-bug-notice")?.remove();
+  }
+
+  function showScoreBugNotice() {
+    if (document.getElementById("gpx-score-bug-notice")) {
+      return;
+    }
+
+    const notice = document.createElement("aside");
+    notice.id = "gpx-score-bug-notice";
+    notice.className = "gpx-score-bug-notice";
+    notice.setAttribute("role", "status");
+    notice.setAttribute("aria-labelledby", "gpx-score-bug-notice-title");
+    notice.innerHTML = `
+      <button type="button" class="gpx-score-bug-notice__close" data-dismiss-score-bug-notice aria-label="Fermer">×</button>
+      <p class="gpx-score-bug-notice__kicker">Information</p>
+      <h2 id="gpx-score-bug-notice-title">Correction d’un affichage de score</h2>
+      <p>Nous avons identifié et corrigé un bug d'affichage qui sous-évaluait le score final affiché après certains cas pratiques (le calcul utilisait un dénominateur incorrect). Ce bug n'affectait que l'affichage à l'écran/PDF, pas votre historique de progression sur le tableau de bord. Si vous avez eu un score anormalement bas récemment, n'hésitez pas à refaire l'exercice pour voir le score corrigé.</p>
+      <button type="button" class="primary-button gpx-score-bug-notice__btn" data-dismiss-score-bug-notice>Compris</button>
+    `;
+    document.body.appendChild(notice);
+
+    notice.querySelectorAll("[data-dismiss-score-bug-notice]").forEach((el) => {
+      el.addEventListener("click", markScoreBugNoticeSeen);
+    });
+  }
+
+  async function markScoreBugNoticeSeen() {
+    dismissScoreBugNotice();
+    const client = window.__gpxSupabaseClient;
+    const user = await window.GPXAuth?.getCurrentUser?.();
+    if (!client || !user?.id) {
+      return;
+    }
+    const { error } = await client
+      .from("profiles")
+      .update({ seen_score_bug_notice: true })
+      .eq("id", user.id);
+    if (error) {
+      console.warn("[GPX] score bug notice update:", error);
+    }
+  }
+
+  async function maybeShowScoreBugNotice(user) {
+    if (!(await shouldShowScoreBugNotice(user))) {
+      return;
+    }
+    showScoreBugNotice();
+  }
+
   window.GPXAccess = {
     guard,
     evaluateAccess,
@@ -708,6 +788,7 @@
     const user = await window.GPXAuth?.getCurrentUser?.();
     if (user) {
       await injectGlobalDashboardSidebar();
+      await maybeShowScoreBugNotice(user);
     } else if (GUEST_SIDEBAR_PAGES.has(getPageName())) {
       injectGuestSidebar();
     } else {

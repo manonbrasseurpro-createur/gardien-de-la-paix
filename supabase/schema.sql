@@ -19,6 +19,7 @@ create table if not exists public.profiles (
   stripe_customer_id text,
   stripe_subscription_id text,
   promo_code text,
+  seen_score_bug_notice boolean not null default false,
   last_ai_correction_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -152,6 +153,7 @@ alter table public.profiles add column if not exists free_trial_start timestampt
 alter table public.profiles add column if not exists subscription_plan text;
 alter table public.profiles add column if not exists subscription_end timestamptz;
 alter table public.profiles add column if not exists promo_code text;
+alter table public.profiles add column if not exists seen_score_bug_notice boolean not null default false;
 
 alter table public.profiles drop constraint if exists profiles_subscription_status_check;
 alter table public.profiles add constraint profiles_subscription_status_check

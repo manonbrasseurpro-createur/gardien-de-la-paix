@@ -179,6 +179,25 @@
       color: var(--muted);
       font-size: 0.85rem;
     }
+    .admin-users-complimentary-btn {
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .admin-users-complimentary-btn:hover {
+      border-color: var(--navy);
+    }
+    .admin-users-complimentary-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
 
     .dash-evolution-wrap {
       border: 1px solid var(--border);
@@ -758,7 +777,7 @@
           return query.eq('subscription_status', 'trial').eq('is_complimentary', false);
         }
         if (filter === 'active') {
-          return query.eq('subscription_status', 'active');
+          return query.eq('subscription_status', 'active').eq('is_complimentary', false);
         }
         if (filter === 'complimentary') {
           return query.eq('is_complimentary', true);
@@ -771,11 +790,24 @@
         const [{ count: total }, { count: active }] = await Promise.all([
           client.from('profiles').select('id', { count: 'exact', head: true }),
           client.from('profiles').select('id', { count: 'exact', head: true })
-            .or('subscription_status.eq.active,is_complimentary.eq.true')
+            .eq('subscription_status', 'active')
+            .eq('is_complimentary', false)
         ]);
         if (statsEl) {
           statsEl.textContent = `${total ?? 0} inscrits · ${active ?? 0} abonnés actifs`;
         }
+      }
+
+      async function setComplimentaryAccess(client, userId, nextValue) {
+        const { data: updated, error } = await client
+          .from('profiles')
+          .update({ is_complimentary: nextValue })
+          .eq('id', userId)
+          .select('id, email, is_complimentary');
+        if (error || !updated?.[0]) {
+          return { error: error?.message || 'Mise à jour refusée.' };
+        }
+        return { profile: updated[0] };
       }
 
       async function loadAdminUsersList(client) {
@@ -842,11 +874,18 @@
                 <strong style="color: var(--navy); font-size: 0.9rem;">${escapeCommunityHtml(u.first_name)} ${escapeCommunityHtml(u.last_name)}</strong>
                 <span style="color: var(--muted); font-size: 0.85rem; margin-left: 8px;">${escapeCommunityHtml(u.email)}</span>
               </div>
-              <div style="display: flex; gap: 8px; align-items: center;">
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${statusBg}; color: ${statusColor};">
                   ${statusLabel}
                 </span>
                 <span style="color: var(--muted); font-size: 0.78rem;">${new Date(u.created_at).toLocaleDateString('fr-FR')}</span>
+                <button
+                  type="button"
+                  class="admin-users-complimentary-btn"
+                  data-user-id="${escapeCommunityHtml(u.id)}"
+                  data-next="${u.is_complimentary ? 'false' : 'true'}"
+                  data-label="${escapeCommunityHtml([u.first_name, u.last_name].filter(Boolean).join(' ') || u.email)}"
+                >${u.is_complimentary ? "Retirer l'accès" : "Offrir l'accès"}</button>
               </div>
             </div>
           `;
@@ -863,6 +902,27 @@
           if (adminUsersPage >= totalPages) return;
           adminUsersPage += 1;
           loadAdminUsersList(client);
+        });
+        usersEl.querySelectorAll('.admin-users-complimentary-btn').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const userId = button.dataset.userId;
+            const nextValue = button.dataset.next === 'true';
+            const label = button.dataset.label || 'cet utilisateur';
+            const confirmMsg = nextValue
+              ? `Offrir l'accès complémentaire à ${label} ?`
+              : `Retirer l'accès complémentaire de ${label} ?`;
+            if (!window.confirm(confirmMsg)) return;
+
+            button.disabled = true;
+            const { error } = await setComplimentaryAccess(client, userId, nextValue);
+            if (error) {
+              button.disabled = false;
+              window.alert(error);
+              return;
+            }
+            await refreshAdminUsersStats(client);
+            await loadAdminUsersList(client);
+          });
         });
       }
 
@@ -1042,21 +1102,10 @@
             return;
           }
 
-          const { data: updated, error: updateError } = await client
-            .from('profiles')
-            .update({ is_complimentary: true })
-            .eq('id', found.id)
-            .select('id, email, is_complimentary');
+          const { error: updateError, profile } = await setComplimentaryAccess(client, found.id, true);
 
-          if (updateError) {
+          if (updateError || !profile) {
             console.log('[admin-complimentary] Erreur mise à jour:', updateError);
-            msgEl.textContent = 'Utilisateur introuvable ou erreur.';
-            msgEl.style.color = 'red';
-            return;
-          }
-          const profile = updated?.[0];
-          if (!profile) {
-            console.log('[admin-complimentary] Mise à jour refusée (RLS ou profil absent) pour id:', found.id);
             msgEl.textContent = 'Utilisateur introuvable ou erreur.';
             msgEl.style.color = 'red';
             return;

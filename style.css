@@ -2418,6 +2418,50 @@ html:has(.page-home) {
   background: var(--white);
 }
 
+.page-home .home-testimonials__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin: 4px 0 20px;
+}
+
+.page-home .home-testimonials__summary-score {
+  margin: 0;
+  font-family: "Spectral", serif;
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.page-home .home-testimonials__stars {
+  position: relative;
+  display: inline-block;
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.page-home .home-testimonials__stars-bg {
+  color: #d1d5db;
+}
+
+.page-home .home-testimonials__stars-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #f4b400;
+}
+
+.page-home .home-testimonials__summary-count {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
 .page-home .home-testimonials__placeholder {
   text-align: center;
   color: var(--muted);

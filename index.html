@@ -487,6 +487,7 @@
       <div class="home-section__inner">
         <p class="home-section__kicker">Ils l'ont fait</p>
         <h2 id="home-testimonials-title" class="home-section__title">Ce qu'en disent les candidats</h2>
+        <div id="home-testimonials-summary" class="home-testimonials__summary" hidden></div>
         <div id="home-testimonials-grid" class="home-testimonials__grid">
           <p class="home-testimonials__placeholder">Les premiers retours arrivent bientôt. Vous serez peut-être parmi les premiers à témoigner.</p>
         </div>
@@ -773,6 +774,41 @@
         return card;
       }
 
+      async function loadHomeRatingSummary() {
+        const summaryEl = document.getElementById("home-testimonials-summary");
+        const client = getSupabaseClient();
+        if (!summaryEl || !client) return;
+
+        const { data, error } = await client.rpc("get_satisfaction_rating_stats");
+        if (error) {
+          console.warn("[index] home rating summary:", error);
+          return;
+        }
+
+        const stats = Array.isArray(data) ? data[0] : data;
+        const count = Number(stats?.review_count) || 0;
+        const average = Number(stats?.average_note);
+        if (!count || !Number.isFinite(average)) return;
+
+        const averageLabel = average.toLocaleString("fr-FR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        });
+        const fillPercent = Math.max(0, Math.min(100, (average / 5) * 100));
+        const countLabel = `${count} avis`;
+
+        summaryEl.hidden = false;
+        summaryEl.setAttribute("aria-label", `Note moyenne ${averageLabel} sur 5, basée sur ${countLabel}`);
+        summaryEl.innerHTML = `
+          <p class="home-testimonials__summary-score">${escapeHtml(averageLabel)}</p>
+          <span class="home-testimonials__stars" aria-hidden="true">
+            <span class="home-testimonials__stars-bg">★★★★★</span>
+            <span class="home-testimonials__stars-fill" style="width: ${fillPercent}%">★★★★★</span>
+          </span>
+          <p class="home-testimonials__summary-count">${escapeHtml(countLabel)}</p>
+        `;
+      }
+
       async function loadHomeTestimonials() {
         const gridEl = document.getElementById("home-testimonials-grid");
         const client = getSupabaseClient();
@@ -802,6 +838,7 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         loadHomeIntervenants();
+        loadHomeRatingSummary();
         loadHomeTestimonials();
       });
     })();

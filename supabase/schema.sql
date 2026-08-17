@@ -18,6 +18,7 @@ create table if not exists public.profiles (
   free_trial_key text,
   stripe_customer_id text,
   stripe_subscription_id text,
+  promo_code text,
   last_ai_correction_at timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -60,6 +61,7 @@ begin
      or new.subscription_ends_at is distinct from old.subscription_ends_at
      or new.stripe_customer_id is distinct from old.stripe_customer_id
      or new.stripe_subscription_id is distinct from old.stripe_subscription_id
+     or new.promo_code is distinct from old.promo_code
      or new.is_complimentary is distinct from old.is_complimentary
      or new.sport_access is distinct from old.sport_access
      or new.last_ai_correction_at is distinct from old.last_ai_correction_at then
@@ -149,6 +151,7 @@ alter table public.profiles add column if not exists is_complimentary boolean no
 alter table public.profiles add column if not exists free_trial_start timestamptz;
 alter table public.profiles add column if not exists subscription_plan text;
 alter table public.profiles add column if not exists subscription_end timestamptz;
+alter table public.profiles add column if not exists promo_code text;
 
 alter table public.profiles drop constraint if exists profiles_subscription_status_check;
 alter table public.profiles add constraint profiles_subscription_status_check

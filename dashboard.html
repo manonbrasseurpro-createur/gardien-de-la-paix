@@ -823,7 +823,7 @@
 
         let query = client
           .from('profiles')
-          .select('id, email, first_name, last_name, subscription_status, is_complimentary, created_at', { count: 'exact' })
+          .select('id, email, first_name, last_name, subscription_status, is_complimentary, promo_code, created_at', { count: 'exact' })
           .order('created_at', { ascending: false })
           .range(from, to);
         query = applyAdminUsersFilter(query, filter);
@@ -875,6 +875,9 @@
             <div style="padding: 10px 14px; margin-bottom: 6px; background: var(--off-white); border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
               <div>
                 <strong style="color: var(--navy); font-size: 0.9rem;">${escapeCommunityHtml(u.first_name)} ${escapeCommunityHtml(u.last_name)}</strong>
+                ${u.promo_code
+                  ? `<span style="margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; background: #fef3c7; color: #92400e;">${escapeCommunityHtml(u.promo_code)}</span>`
+                  : ''}
                 <span style="color: var(--muted); font-size: 0.85rem; margin-left: 8px;">${escapeCommunityHtml(u.email)}</span>
               </div>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">

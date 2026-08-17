@@ -80,6 +80,30 @@ function planEndsAt(plan: string): string | null {
   return end.toISOString();
 }
 
+async function extractPromoCode(
+  stripe: Stripe,
+  session: Stripe.Checkout.Session
+): Promise<string | null> {
+  try {
+    const paidSession = await stripe.checkout.sessions.retrieve(session.id, {
+      expand: ["discounts.promotion_code"]
+    });
+    const promotionCode = paidSession.discounts?.[0]?.promotion_code;
+    if (!promotionCode) {
+      return null;
+    }
+    if (typeof promotionCode !== "string") {
+      const code = promotionCode.code?.trim();
+      return code || null;
+    }
+    const fetched = await stripe.promotionCodes.retrieve(promotionCode);
+    return fetched.code?.trim() || null;
+  } catch (error) {
+    console.error("stripe-webhook promo_code:", error);
+    return null;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
     return new Response("Méthode non autorisée", { status: 405 });
@@ -160,13 +184,16 @@ Deno.serve(async (req) => {
           subscriptionEnd = planEndsAt(plan);
         }
 
+        const promoCode = await extractPromoCode(stripe, session);
+
         await updateProfileSubscription(supabaseAdmin, userId, {
           subscription_status: "active",
           subscription_plan: plan,
           subscription_end: subscriptionEnd,
           subscription_ends_at: subscriptionEnd,
           stripe_customer_id: stripeCustomerId,
-          stripe_subscription_id: stripeSubscriptionId
+          stripe_subscription_id: stripeSubscriptionId,
+          ...(promoCode ? { promo_code: promoCode } : {})
         });
         break;
       }

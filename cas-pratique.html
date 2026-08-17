@@ -1627,7 +1627,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         </div>
         <div class="exercise-meta">
           <span class="progress-pill" id="progress-label">Question 1/4</span>
-          <span class="score-pill" id="global-score">Score global : 0/50 - 0/20</span>
+          <span class="score-pill" id="global-score">Score global : 0/0 - 0/20</span>
         </div>
         <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
       </div>
@@ -1778,7 +1778,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <div class="final-score-grid">
           <article class="final-score-card">
             <span>Score concours</span>
-            <strong id="final-score-50">0/50</strong>
+            <strong id="final-score-50">0/0</strong>
           </article>
           <article class="final-score-card">
             <span>Conversion</span>
@@ -5248,7 +5248,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           </div>
           <div class="global-analysis-card">
             <h4>Estimation indicative</h4>
-            <p>${finalScore.caseScoreOfficial}/${finalScore.maxOfficial} pts cas pratiques + ${finalScore.spellingScore}/5 expression → ${finalScore.score50}/50 (${finalScore.score20}/20).</p>
+            <p>${finalScore.caseScoreOfficial}/${finalScore.maxOfficial} pts cas pratiques + ${finalScore.spellingScore}/5 expression → ${finalScore.score50}/${finalScore.maxTotal} (${finalScore.score20}/20).</p>
           </div>
         </div>
         ${Object.values(caseGroups).length ? `
@@ -5744,23 +5744,29 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     function calculateConvertedScore(options = {}) {
       const withSpelling = options.withSpelling === true;
+      const spellingMax = 5;
       const totalPossible = state.items.length * 5;
       const raw = Object.values(state.scores).reduce((sum, score) => sum + score, 0);
       const maxOfficial = getSessionMaxOfficialPoints();
       const earnedOfficial = state.items.reduce((sum, item) => sum + getItemOfficialScore(item), 0);
       const spellingScore = calculateSpellingScore();
       const caseScoreOfficial = Math.round(earnedOfficial * 10) / 10;
-      const casPointsForTotal = withSpelling ? caseScoreOfficial : caseScoreOfficial;
-      const score50 = maxOfficial
-        ? Math.min(50, Math.round((casPointsForTotal + (withSpelling ? spellingScore : 0)) * 10) / 10)
-        : (totalPossible ? Math.round((raw / totalPossible) * 50) : 0);
-      const score20 = score50 ? Math.round((score50 / 50) * 20 * 10) / 10 : 0;
+      const contentMax = maxOfficial || totalPossible;
+      const maxTotal = contentMax ? contentMax + spellingMax : 0;
+      const earnedFromOfficial = caseScoreOfficial + (withSpelling ? spellingScore : 0);
+      const earnedFromRaw = contentMax && totalPossible
+        ? Math.round((raw / totalPossible) * contentMax * 10) / 10
+        : 0;
+      const earned = Math.round((maxOfficial ? earnedFromOfficial : earnedFromRaw) * 10) / 10;
+      const score50 = maxTotal ? Math.min(maxTotal, earned) : 0;
+      const score20 = maxTotal ? Math.round((score50 / maxTotal) * 20 * 10) / 10 : 0;
       return {
         raw,
         totalPossible,
         score50,
         score20,
         maxOfficial,
+        maxTotal,
         earnedOfficial: caseScoreOfficial,
         spellingScore
       };
@@ -5896,7 +5902,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       homeScreen.classList.add("hidden");
       finalScoreScreen.classList.add("is-visible");
 
-      document.getElementById("final-score-50").textContent = `${finalScore.score50}/50`;
+      document.getElementById("final-score-50").textContent = `${finalScore.score50}/${finalScore.maxTotal}`;
       document.getElementById("final-score-20").textContent = `${finalScore.score20}/20`;
       document.getElementById("final-spelling-score").textContent = `${finalScore.spellingScore}/5`;
       document.getElementById("final-score-message").innerHTML = getFinalMessage(finalScore.score20);
@@ -5911,7 +5917,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         </li>
         <li>
           <span>Total final converti</span>
-          <span class="score-breakdown__status">${finalScore.score50}/50 soit ${finalScore.score20}/20</span>
+          <span class="score-breakdown__status">${finalScore.score50}/${finalScore.maxTotal} soit ${finalScore.score20}/20</span>
         </li>
       `;
       document.getElementById("final-ai-disclaimer").innerHTML = renderAiDisclaimerHtml("full");
@@ -5993,7 +5999,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     function updateScoreDisplay() {
       const score = calculateConvertedScore();
-      elements.globalScore.textContent = `Score global : ${score.score50}/50 - ${score.score20}/20`;
+      elements.globalScore.textContent = `Score global : ${score.score50}/${score.maxTotal} - ${score.score20}/20`;
     }
 
     function startTimer() {
@@ -6122,7 +6128,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         </head>
         <body>
           <h1>Résolution de Cas Pratiques - Mes réponses</h1>
-          <p><strong>Score final estimé :</strong> ${score.score50}/50, soit ${score.score20}/20.</p>
+          <p><strong>Score final estimé :</strong> ${score.score50}/${score.maxTotal}, soit ${score.score20}/20.</p>
           <p><strong>Détail :</strong> cas pratiques ${score.caseScoreOfficial}/${score.maxOfficial} + orthographe ${score.spellingScore}/5.</p>
           ${printableAnswers}
           <script>window.print();<\/script>

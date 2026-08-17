@@ -67,8 +67,14 @@
       .replace(/"/g, "&quot;");
   }
 
+  const ADMIN_EMAIL = "manonbrasseurpro@gmail.com";
   const NAV_ICON_COMPTE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>';
+  const NAV_ICON_ADMIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 20 7v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V7l8-4z"></path></svg>';
   const NAV_ICON_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>';
+
+  function isSiteAdmin(user) {
+    return String(user?.email || "").trim().toLowerCase() === ADMIN_EMAIL;
+  }
 
   function ensurePaywallModal() {
     if (document.getElementById("gpx-paywall-modal")) {
@@ -661,6 +667,10 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M15.5 13.5c2.5.3 4.5 2 4.5 4.5"></path></svg>
               Communauté
             </a>
+            ${isSiteAdmin(user) ? `
+            <div class="global-dash-sidebar__sep"></div>
+            <a class="global-dash-sidebar__item" href="dashboard.html#admin">${NAV_ICON_ADMIN} Administrateur</a>
+            ` : ""}
             <div class="global-dash-sidebar__sep"></div>
             <a class="global-dash-sidebar__item" href="compte.html">${NAV_ICON_COMPTE} Mon compte</a>
             <button class="global-dash-sidebar__item" type="button" id="global-dash-logout-btn">${NAV_ICON_LOGOUT} Déconnexion</button>

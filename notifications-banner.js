@@ -70,25 +70,17 @@
 
   function ensureHost() {
     let host = document.getElementById("gpx-site-notices");
-    if (host) return host;
+    if (host) {
+      if (host.parentNode !== document.body) {
+        document.body.appendChild(host);
+      }
+      return host;
+    }
     host = document.createElement("div");
     host.id = "gpx-site-notices";
     host.className = "gpx-site-notices";
     host.setAttribute("aria-live", "polite");
-
-    const dashMain = document.querySelector("main.dash-main, .dash-main");
-    const pageMain = document.querySelector("main");
-    const nav = document.getElementById("gpx-site-nav");
-
-    if (dashMain) {
-      dashMain.prepend(host);
-    } else if (pageMain) {
-      pageMain.prepend(host);
-    } else if (nav && nav.parentNode) {
-      nav.after(host);
-    } else {
-      document.body.prepend(host);
-    }
+    document.body.appendChild(host);
     return host;
   }
 

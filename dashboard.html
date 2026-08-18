@@ -201,6 +201,110 @@
       opacity: 0.45;
       cursor: default;
     }
+    .admin-campaign-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 12px;
+    }
+    .admin-campaign-toolbar button {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+    }
+    .admin-campaign-toolbar button:hover { border-color: var(--navy); }
+    .admin-campaign-toolbar button:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+    .admin-campaign-count {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--seal);
+    }
+    .admin-campaign-form label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin: 14px 0 6px;
+    }
+    .admin-campaign-form input[type="text"],
+    .admin-campaign-form textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font: inherit;
+      box-sizing: border-box;
+      background: var(--white);
+      color: var(--text);
+    }
+    .admin-campaign-form textarea {
+      min-height: 180px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+    .admin-campaign-hint {
+      margin: 6px 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .admin-campaign-status {
+      margin: 12px 0 0;
+      font-size: 0.9rem;
+    }
+    .admin-campaign-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(11, 31, 58, 0.55);
+    }
+    .admin-campaign-modal.is-open { display: flex !important; }
+    .admin-campaign-modal__card {
+      width: min(480px, 100%);
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 18px 50px rgba(11, 31, 58, 0.25);
+    }
+    .admin-campaign-modal__card h3 {
+      margin: 0 0 12px;
+      font-family: 'Spectral', serif;
+      color: var(--navy);
+    }
+    .admin-campaign-modal__card p {
+      margin: 0 0 10px;
+      line-height: 1.6;
+    }
+    .admin-campaign-modal__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+    .admin-campaign-modal__cancel {
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--white);
+      font: inherit;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+    }
 
     .dash-evolution-wrap {
       border: 1px solid var(--border);
@@ -662,7 +766,7 @@
           <div class="hero__content">
             <p class="hero__label">Administrateur</p>
             <h1>Gestion Prepa GPX</h1>
-            <p class="hero__subtitle">Signalements, avis utilisateurs et gestion des accès.</p>
+            <p class="hero__subtitle">Signalements, avis utilisateurs, gestion des accès et campagnes email.</p>
           </div>
         </header>
         <div class="container auth-container">
@@ -700,10 +804,61 @@
             </label>
             <div id="admin-users-list"><p style="color: var(--muted);">Chargement…</p></div>
           </div>
+
+          <div class="auth-card auth-card--wide">
+            <h2>Campagne email</h2>
+            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 14px;">Sélectionnez les destinataires, rédigez l'objet et le message, puis confirmez avant l'envoi réel via Brevo (lien de désinscription automatique).</p>
+            <label class="admin-users-filter">
+              Filtrer les destinataires
+              <select id="admin-campaign-filter">
+                <option value="all">Tous</option>
+                <option value="free">Gratuit</option>
+                <option value="active">Abonné</option>
+                <option value="complimentary">Accès offert</option>
+              </select>
+            </label>
+            <div class="admin-campaign-toolbar">
+              <button type="button" id="admin-campaign-select-page">Tout sélectionner (cette page)</button>
+              <button type="button" id="admin-campaign-select-filter">Sélectionner le filtre actuel</button>
+              <button type="button" id="admin-campaign-select-active">Sélectionner les abonnés</button>
+              <button type="button" id="admin-campaign-deselect">Tout désélectionner</button>
+              <span class="admin-campaign-count" id="admin-campaign-selected-count">0 destinataire sélectionné</span>
+            </div>
+            <div id="admin-campaign-users-list"><p style="color: var(--muted);">Chargement…</p></div>
+            <form class="admin-campaign-form" id="admin-campaign-form">
+              <label for="admin-campaign-subject">Objet</label>
+              <input type="text" id="admin-campaign-subject" maxlength="200" placeholder="Objet de l'email" autocomplete="off">
+              <label for="admin-campaign-body">Corps du message</label>
+              <textarea id="admin-campaign-body" placeholder="Message (HTML basique accepté : p, strong, a href…)"></textarea>
+              <p class="admin-campaign-hint">Un lien « Se désinscrire » est ajouté automatiquement. Les retours à la ligne d'un texte brut sont conservés.</p>
+              <div style="margin-top: 16px;">
+                <button class="primary-button" type="button" id="admin-campaign-send-btn">Envoyer la campagne</button>
+              </div>
+              <p class="admin-campaign-status" id="admin-campaign-msg"></p>
+            </form>
+          </div>
+
+          <div class="auth-card auth-card--wide">
+            <h2>Historique des campagnes</h2>
+            <div id="admin-campaign-history"><p style="color: var(--muted);">Chargement…</p></div>
+          </div>
         </div>
       </section>
     </main>
   </div>
+
+      <div class="admin-campaign-modal" id="admin-campaign-modal" role="dialog" aria-modal="true" aria-labelledby="admin-campaign-modal-title" hidden>
+        <div class="admin-campaign-modal__card">
+          <h3 id="admin-campaign-modal-title">Confirmer l'envoi</h3>
+          <p>Cette action envoie un vrai email via Brevo. Vérifiez le récapitulatif avant de confirmer.</p>
+          <p><strong>Destinataires :</strong> <span id="admin-campaign-modal-count">0</span></p>
+          <p><strong>Objet :</strong> <span id="admin-campaign-modal-subject"></span></p>
+          <div class="admin-campaign-modal__actions">
+            <button type="button" class="admin-campaign-modal__cancel" id="admin-campaign-modal-cancel">Annuler</button>
+            <button type="button" class="primary-button" id="admin-campaign-modal-confirm">Confirmer l'envoi</button>
+          </div>
+        </div>
+      </div>
 
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
@@ -928,6 +1083,331 @@
         });
       }
 
+      const CAMPAIGN_USERS_PAGE_SIZE = 50;
+      let campaignUsersPage = 1;
+      const campaignSelected = new Map();
+      let campaignSending = false;
+      let campaignUsersCache = [];
+
+      function campaignRecipientKey(user) {
+        return String(user.email || '').trim().toLowerCase();
+      }
+
+      function updateCampaignSelectedCount() {
+        const countEl = document.getElementById('admin-campaign-selected-count');
+        if (!countEl) return;
+        const n = campaignSelected.size;
+        countEl.textContent = n + ' destinataire' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : '');
+      }
+
+      function campaignStatusLabel(user) {
+        if (user.is_complimentary) return { label: 'Offert', bg: '#ede9fe', color: '#5b21b6' };
+        if (user.subscription_status === 'active') return { label: 'Abonné', bg: '#dcfce7', color: '#166534' };
+        return { label: 'Gratuit', bg: '#f3f4f6', color: '#6b7280' };
+      }
+
+      function setCampaignMessage(text, ok) {
+        const msgEl = document.getElementById('admin-campaign-msg');
+        if (!msgEl) return;
+        msgEl.textContent = text;
+        msgEl.style.color = ok ? 'green' : (ok === false ? 'red' : 'var(--muted)');
+      }
+
+      function closeCampaignModal() {
+        const modal = document.getElementById('admin-campaign-modal');
+        if (!modal) return;
+        modal.classList.remove('is-open');
+        modal.hidden = true;
+      }
+
+      function openCampaignModal(count, subject) {
+        const modal = document.getElementById('admin-campaign-modal');
+        const countEl = document.getElementById('admin-campaign-modal-count');
+        const subjectEl = document.getElementById('admin-campaign-modal-subject');
+        if (!modal || !countEl || !subjectEl) return;
+        countEl.textContent = String(count);
+        subjectEl.textContent = subject;
+        modal.hidden = false;
+        modal.classList.add('is-open');
+      }
+
+      async function fetchAllFilteredProfiles(client, filter) {
+        const pageSize = 1000;
+        const all = [];
+        let from = 0;
+        while (true) {
+          let query = client
+            .from('profiles')
+            .select('id, email, first_name, subscription_status, is_complimentary')
+            .order('created_at', { ascending: false })
+            .range(from, from + pageSize - 1);
+          query = applyAdminUsersFilter(query, filter);
+          const { data, error } = await query;
+          if (error) throw new Error(error.message);
+          const rows = data || [];
+          all.push(...rows);
+          if (rows.length < pageSize) break;
+          from += pageSize;
+        }
+        return all.filter((u) => u.email);
+      }
+
+      function selectCampaignUsers(users) {
+        users.forEach((u) => {
+          const email = campaignRecipientKey(u);
+          if (!email) return;
+          campaignSelected.set(email, {
+            email,
+            firstName: String(u.first_name || '').trim()
+          });
+        });
+        updateCampaignSelectedCount();
+      }
+
+      async function loadCampaignUsersList(client) {
+        const listEl = document.getElementById('admin-campaign-users-list');
+        if (!listEl || !client) return;
+
+        const filter = document.getElementById('admin-campaign-filter')?.value || 'all';
+        const from = (campaignUsersPage - 1) * CAMPAIGN_USERS_PAGE_SIZE;
+        const to = from + CAMPAIGN_USERS_PAGE_SIZE - 1;
+
+        let query = client
+          .from('profiles')
+          .select('id, email, first_name, last_name, subscription_status, is_complimentary, created_at', { count: 'exact' })
+          .order('created_at', { ascending: false })
+          .range(from, to);
+        query = applyAdminUsersFilter(query, filter);
+
+        const { data: users, count: filteredCount, error } = await query;
+        if (error) {
+          listEl.innerHTML = `<p style="color: red;">Impossible de charger les destinataires : ${escapeCommunityHtml(error.message)}</p>`;
+          return;
+        }
+
+        const totalFiltered = filteredCount ?? 0;
+        const totalPages = Math.max(1, Math.ceil(totalFiltered / CAMPAIGN_USERS_PAGE_SIZE));
+        if (campaignUsersPage > totalPages) {
+          campaignUsersPage = totalPages;
+          return loadCampaignUsersList(client);
+        }
+
+        campaignUsersCache = users || [];
+        if (!users || users.length === 0) {
+          listEl.innerHTML = '<p style="color: var(--muted);">Aucun utilisateur pour ce filtre.</p>';
+          return;
+        }
+
+        const pagination = totalFiltered > CAMPAIGN_USERS_PAGE_SIZE
+          ? `
+            <div class="admin-users-pagination">
+              <button type="button" id="admin-campaign-prev" ${campaignUsersPage <= 1 ? 'disabled' : ''}>Précédent</button>
+              <span>Page ${campaignUsersPage} / ${totalPages} · ${totalFiltered} résultat${totalFiltered > 1 ? 's' : ''}</span>
+              <button type="button" id="admin-campaign-next" ${campaignUsersPage >= totalPages ? 'disabled' : ''}>Suivant</button>
+            </div>
+          `
+          : `<p style="color: var(--muted); font-size: 0.85rem; margin: 12px 0 0;">${totalFiltered} résultat${totalFiltered > 1 ? 's' : ''}</p>`;
+
+        listEl.innerHTML = `
+          <div class="dash-history-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 42px;">
+                    <input type="checkbox" id="admin-campaign-select-all-visible" aria-label="Tout sélectionner sur cette page">
+                  </th>
+                  <th>Email</th>
+                  <th>Prénom</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${users.map((u) => {
+                  const email = campaignRecipientKey(u);
+                  const status = campaignStatusLabel(u);
+                  const checked = campaignSelected.has(email) ? 'checked' : '';
+                  return `
+                    <tr>
+                      <td>
+                        <input type="checkbox" class="admin-campaign-user-cb" data-email="${escapeCommunityHtml(email)}" data-first-name="${escapeCommunityHtml(u.first_name || '')}" ${checked}>
+                      </td>
+                      <td>${escapeCommunityHtml(u.email)}</td>
+                      <td>${escapeCommunityHtml(u.first_name || '—')}</td>
+                      <td>
+                        <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${status.bg}; color: ${status.color};">${status.label}</span>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+          ${pagination}
+        `;
+
+        const visibleBoxes = [...listEl.querySelectorAll('.admin-campaign-user-cb')];
+        const headerBox = document.getElementById('admin-campaign-select-all-visible');
+        if (headerBox) {
+          headerBox.checked = visibleBoxes.length > 0 && visibleBoxes.every((cb) => cb.checked);
+          headerBox.addEventListener('change', () => {
+            visibleBoxes.forEach((cb) => {
+              cb.checked = headerBox.checked;
+              const email = String(cb.dataset.email || '').trim().toLowerCase();
+              if (!email) return;
+              if (headerBox.checked) {
+                campaignSelected.set(email, { email, firstName: cb.dataset.firstName || '' });
+              } else {
+                campaignSelected.delete(email);
+              }
+            });
+            updateCampaignSelectedCount();
+          });
+        }
+
+        visibleBoxes.forEach((cb) => {
+          cb.addEventListener('change', () => {
+            const email = String(cb.dataset.email || '').trim().toLowerCase();
+            if (!email) return;
+            if (cb.checked) {
+              campaignSelected.set(email, { email, firstName: cb.dataset.firstName || '' });
+            } else {
+              campaignSelected.delete(email);
+            }
+            if (headerBox) {
+              headerBox.checked = visibleBoxes.length > 0 && visibleBoxes.every((box) => box.checked);
+            }
+            updateCampaignSelectedCount();
+          });
+        });
+
+        document.getElementById('admin-campaign-prev')?.addEventListener('click', () => {
+          if (campaignUsersPage <= 1) return;
+          campaignUsersPage -= 1;
+          loadCampaignUsersList(client);
+        });
+        document.getElementById('admin-campaign-next')?.addEventListener('click', () => {
+          if (campaignUsersPage >= totalPages) return;
+          campaignUsersPage += 1;
+          loadCampaignUsersList(client);
+        });
+      }
+
+      function campaignStatusDisplay(status) {
+        if (status === 'sent') return { label: 'Envoyée', bg: '#dcfce7', color: '#166534' };
+        if (status === 'failed') return { label: 'Échec', bg: '#fee2e2', color: '#991b1b' };
+        return { label: 'En cours', bg: '#fef3c7', color: '#92400e' };
+      }
+
+      async function loadCampaignHistory(client) {
+        const historyEl = document.getElementById('admin-campaign-history');
+        if (!historyEl) return;
+        const { data: campaigns, error } = await client
+          .from('email_campaigns')
+          .select('id, subject, recipient_count, sent_at, status, brevo_campaign_id')
+          .order('sent_at', { ascending: false })
+          .limit(30);
+
+        if (error) {
+          historyEl.innerHTML = `<p style="color: red;">Impossible de charger l'historique : ${escapeCommunityHtml(error.message)}</p>`;
+          return;
+        }
+        if (!campaigns || campaigns.length === 0) {
+          historyEl.innerHTML = '<p style="color: var(--muted);">Aucune campagne envoyée pour l\'instant.</p>';
+          return;
+        }
+
+        historyEl.innerHTML = `
+          <div class="dash-history-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Objet</th>
+                  <th>Destinataires</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${campaigns.map((c) => {
+                  const st = campaignStatusDisplay(c.status);
+                  const date = c.sent_at
+                    ? new Date(c.sent_at).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' })
+                    : '—';
+                  return `
+                    <tr>
+                      <td>${escapeCommunityHtml(date)}</td>
+                      <td>${escapeCommunityHtml(c.subject)}</td>
+                      <td>${c.recipient_count ?? 0}</td>
+                      <td><span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${st.bg}; color: ${st.color};">${st.label}</span></td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      async function sendCampaignNow(client) {
+        if (campaignSending) return;
+        if ((await getAuthEmail()) !== ADMIN_EMAIL) {
+          setCampaignMessage("Accès refusé. Cette action est réservée à l'administratrice.", false);
+          closeCampaignModal();
+          return;
+        }
+        const sendBtn = document.getElementById('admin-campaign-send-btn');
+        const confirmBtn = document.getElementById('admin-campaign-modal-confirm');
+        const recipients = [...campaignSelected.values()];
+        const subject = document.getElementById('admin-campaign-subject')?.value.trim() || '';
+        const htmlContent = document.getElementById('admin-campaign-body')?.value.trim() || '';
+
+        campaignSending = true;
+        if (sendBtn) sendBtn.disabled = true;
+        if (confirmBtn) confirmBtn.disabled = true;
+        setCampaignMessage('Envoi en cours… ne fermez pas cette page.', null);
+
+        try {
+          const token = await window.GPXAuth?.getAccessToken?.();
+          const cfg = window.GPX_SUPABASE || {};
+          const url = (cfg.url || cfg.SUPABASE_URL || '').replace(/\/$/, '');
+          const anonKey = cfg.anonKey || '';
+          if (!token || !url || !anonKey) {
+            throw new Error('Session expirée ou configuration Supabase manquante.');
+          }
+
+          const response = await fetch(`${url}/functions/v1/send-campaign`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              apikey: anonKey,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ subject, htmlContent, recipients })
+          });
+
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(payload.error || `Erreur d'envoi (${response.status}).`);
+          }
+
+          setCampaignMessage(payload.message || 'Campagne envoyée.', true);
+          document.getElementById('admin-campaign-subject').value = '';
+          document.getElementById('admin-campaign-body').value = '';
+          campaignSelected.clear();
+          updateCampaignSelectedCount();
+          await loadCampaignUsersList(client);
+          await loadCampaignHistory(client);
+        } catch (error) {
+          setCampaignMessage(error instanceof Error ? error.message : String(error), false);
+          if (client) await loadCampaignHistory(client);
+        } finally {
+          campaignSending = false;
+          if (sendBtn) sendBtn.disabled = false;
+          if (confirmBtn) confirmBtn.disabled = false;
+          closeCampaignModal();
+        }
+      }
+
       async function loadAdminData() {
         const cfg = window.GPX_SUPABASE || {};
         const client = window.__gpxSupabaseClient || (window.supabase?.createClient
@@ -1076,6 +1556,9 @@
 
         await refreshAdminUsersStats(client);
         await loadAdminUsersList(client);
+        await loadCampaignUsersList(client);
+        await loadCampaignHistory(client);
+        updateCampaignSelectedCount();
       }
 
       if (isAdmin) {
@@ -1147,6 +1630,98 @@
           msgEl.style.color = 'green';
           document.getElementById('admin-complimentary-email').value = '';
           await loadAdminData();
+        });
+
+        function getAdminClient() {
+          const cfg = window.GPX_SUPABASE || {};
+          return window.__gpxSupabaseClient || (window.supabase?.createClient
+            ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
+            : null);
+        }
+
+        document.getElementById('admin-campaign-filter')?.addEventListener('change', async () => {
+          campaignUsersPage = 1;
+          const client = getAdminClient();
+          if (client) await loadCampaignUsersList(client);
+        });
+        document.getElementById('admin-campaign-select-page')?.addEventListener('click', () => {
+          const client = getAdminClient();
+          selectCampaignUsers(campaignUsersCache);
+          if (client) loadCampaignUsersList(client);
+        });
+        document.getElementById('admin-campaign-form')?.addEventListener('submit', (event) => {
+          event.preventDefault();
+        });
+        document.getElementById('admin-campaign-select-filter')?.addEventListener('click', async (event) => {
+          const button = event.currentTarget;
+          const client = getAdminClient();
+          if (!client) return;
+          button.disabled = true;
+          try {
+            const filter = document.getElementById('admin-campaign-filter')?.value || 'all';
+            const users = await fetchAllFilteredProfiles(client, filter);
+            selectCampaignUsers(users);
+            await loadCampaignUsersList(client);
+          } catch (error) {
+            setCampaignMessage(error instanceof Error ? error.message : String(error), false);
+          } finally {
+            button.disabled = false;
+          }
+        });
+        document.getElementById('admin-campaign-select-active')?.addEventListener('click', async (event) => {
+          const button = event.currentTarget;
+          const client = getAdminClient();
+          if (!client) return;
+          button.disabled = true;
+          try {
+            const users = await fetchAllFilteredProfiles(client, 'active');
+            selectCampaignUsers(users);
+            await loadCampaignUsersList(client);
+          } catch (error) {
+            setCampaignMessage(error instanceof Error ? error.message : String(error), false);
+          } finally {
+            button.disabled = false;
+          }
+        });
+        document.getElementById('admin-campaign-deselect')?.addEventListener('click', () => {
+          campaignSelected.clear();
+          updateCampaignSelectedCount();
+          const client = getAdminClient();
+          if (client) loadCampaignUsersList(client);
+        });
+        document.getElementById('admin-campaign-send-btn')?.addEventListener('click', () => {
+          if (campaignSending) return;
+          const subject = document.getElementById('admin-campaign-subject')?.value.trim() || '';
+          const body = document.getElementById('admin-campaign-body')?.value.trim() || '';
+          if (campaignSelected.size === 0) {
+            setCampaignMessage('Sélectionnez au moins un destinataire.', false);
+            return;
+          }
+          if (!subject) {
+            setCampaignMessage("L'objet de la campagne est obligatoire.", false);
+            return;
+          }
+          if (!body) {
+            setCampaignMessage('Le corps du message est obligatoire.', false);
+            return;
+          }
+          setCampaignMessage('', null);
+          openCampaignModal(campaignSelected.size, subject);
+        });
+        document.getElementById('admin-campaign-modal-cancel')?.addEventListener('click', () => {
+          if (campaignSending) return;
+          closeCampaignModal();
+        });
+        document.getElementById('admin-campaign-modal')?.addEventListener('click', (event) => {
+          if (campaignSending) return;
+          if (event.target === event.currentTarget) closeCampaignModal();
+        });
+        document.getElementById('admin-campaign-modal-confirm')?.addEventListener('click', async () => {
+          const client = getAdminClient();
+          await sendCampaignNow(client);
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && !campaignSending) closeCampaignModal();
         });
       }
 

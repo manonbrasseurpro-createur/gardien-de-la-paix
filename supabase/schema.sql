@@ -409,3 +409,27 @@ alter table public.intervenant_questions enable row level security;
 create policy "Anyone can submit a question"
   on public.intervenant_questions for insert
   with check (true);
+
+-- Historique des campagnes email (admin uniquement)
+create table if not exists public.email_campaigns (
+  id uuid primary key default gen_random_uuid(),
+  sent_by uuid references auth.users (id) on delete set null,
+  subject text not null,
+  recipient_count integer not null default 0,
+  sent_at timestamptz not null default now(),
+  status text not null default 'sending'
+    check (status in ('sending', 'sent', 'failed')),
+  brevo_campaign_id bigint
+);
+
+create index if not exists email_campaigns_sent_at_idx
+  on public.email_campaigns (sent_at desc);
+
+alter table public.email_campaigns enable row level security;
+
+drop policy if exists "Admin read email_campaigns" on public.email_campaigns;
+create policy "Admin read email_campaigns"
+  on public.email_campaigns for select
+  using ((auth.jwt() ->> 'email') = 'manonbrasseurpro@gmail.com');
+
+grant select on table public.email_campaigns to authenticated;

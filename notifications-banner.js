@@ -74,12 +74,17 @@
     host = document.createElement("div");
     host.id = "gpx-site-notices";
     host.className = "gpx-site-notices";
-    if (document.querySelector(".gpx-site-nav--app")) {
-      host.classList.add("gpx-site-notices--app");
-    }
     host.setAttribute("aria-live", "polite");
+
+    const dashMain = document.querySelector("main.dash-main, .dash-main");
+    const pageMain = document.querySelector("main");
     const nav = document.getElementById("gpx-site-nav");
-    if (nav && nav.parentNode) {
+
+    if (dashMain) {
+      dashMain.prepend(host);
+    } else if (pageMain) {
+      pageMain.prepend(host);
+    } else if (nav && nav.parentNode) {
       nav.after(host);
     } else {
       document.body.prepend(host);

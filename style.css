@@ -605,10 +605,10 @@ a {
 }
 
 .gpx-site-notice--info {
-  border-left-color: var(--navy);
+  border-left-color: var(--brass);
 }
 .gpx-site-notice--info .gpx-score-bug-notice__kicker {
-  color: var(--navy);
+  color: var(--brass);
 }
 .gpx-site-notice--warning {
   border-left-color: var(--seal);

@@ -571,6 +571,19 @@
     #panel-admin .admin-notif-header h2 {
       margin: 0;
     }
+    #panel-admin .admin-sort-btn {
+      display: block;
+      margin-top: 4px;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: inherit;
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
     #panel-admin .admin-notif-actions {
       display: flex;
       flex-wrap: wrap;
@@ -1274,7 +1287,7 @@
                 <h2>Notifications</h2>
                 <button class="primary-button" type="button" id="admin-notif-new-btn">Nouvelle notification</button>
               </div>
-              <p class="admin-lead">Bannières affichées aux utilisateurs connectés, selon l'audience et les dates.</p>
+              <p class="admin-lead">Bannières affichées aux utilisateurs connectés, selon l'audience, une sélection manuelle d'utilisateurs, et les dates.</p>
               <div id="admin-notif-list"><p class="admin-lead">Chargement…</p></div>
             </div>
             <div class="auth-card auth-card--wide" id="admin-notif-form-card" hidden>
@@ -1292,13 +1305,39 @@
                   <option value="success">Succès</option>
                   <option value="promo">Promo</option>
                 </select>
-                <label for="admin-notif-audience">Audience</label>
-                <select id="admin-notif-audience">
-                  <option value="all">Tous</option>
-                  <option value="free">Gratuit</option>
-                  <option value="subscriber">Abonné</option>
-                  <option value="complimentary">Accès offert</option>
+                <label for="admin-notif-target-mode">Ciblage</label>
+                <select id="admin-notif-target-mode">
+                  <option value="audience">Par audience (tous / gratuit / abonné / offert)</option>
+                  <option value="users">Cibler des utilisateurs précis</option>
                 </select>
+                <div id="admin-notif-audience-wrap">
+                  <label for="admin-notif-audience">Audience</label>
+                  <select id="admin-notif-audience">
+                    <option value="all">Tous</option>
+                    <option value="free">Gratuit</option>
+                    <option value="subscriber">Abonné</option>
+                    <option value="complimentary">Accès offert</option>
+                  </select>
+                </div>
+                <div id="admin-notif-users-wrap" hidden>
+                  <p class="admin-lead">Sélectionnez manuellement les destinataires. La date d'inscription permet de repérer une cohorte, sans automatisation.</p>
+                  <label class="admin-users-filter">
+                    Filtrer
+                    <select id="admin-notif-users-filter">
+                      <option value="all">Tous</option>
+                      <option value="free">Gratuit</option>
+                      <option value="active">Abonné</option>
+                      <option value="complimentary">Accès offert</option>
+                    </select>
+                  </label>
+                  <div class="admin-campaign-toolbar">
+                    <button type="button" id="admin-notif-select-page">Tout sélectionner (cette page)</button>
+                    <button type="button" id="admin-notif-select-filter">Sélectionner le filtre actuel</button>
+                    <button type="button" id="admin-notif-deselect">Tout désélectionner</button>
+                    <span class="admin-campaign-count" id="admin-notif-selected-count">0 utilisateur sélectionné</span>
+                  </div>
+                  <div id="admin-notif-users-list"><p class="admin-lead">Chargement…</p></div>
+                </div>
                 <label for="admin-notif-start">Début (optionnel)</label>
                 <input type="datetime-local" id="admin-notif-start">
                 <label for="admin-notif-end">Fin (optionnel)</label>
@@ -1981,7 +2020,193 @@
       }
 
       const NOTIF_TYPE_LABELS = { info: 'Info', warning: 'Attention', success: 'Succès', promo: 'Promo' };
-      const NOTIF_AUDIENCE_LABELS = { all: 'Tous', free: 'Gratuit', subscriber: 'Abonné', complimentary: 'Offert' };
+      const NOTIF_AUDIENCE_LABELS = { all: 'Tous', free: 'Gratuit', subscriber: 'Abonné', complimentary: 'Offert', users: 'Utilisateurs ciblés' };
+      const NOTIF_USERS_PAGE_SIZE = 50;
+      let notifUsersPage = 1;
+      let notifUsersSortAsc = false;
+      const notifSelected = new Map();
+      let notifUsersCache = [];
+
+      function updateNotifSelectedCount() {
+        const countEl = document.getElementById('admin-notif-selected-count');
+        if (!countEl) return;
+        const n = notifSelected.size;
+        countEl.textContent = n + ' utilisateur' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : '');
+      }
+
+      function isNotifUsersMode() {
+        return document.getElementById('admin-notif-target-mode')?.value === 'users';
+      }
+
+      function syncNotifTargetMode() {
+        const usersMode = isNotifUsersMode();
+        const audienceWrap = document.getElementById('admin-notif-audience-wrap');
+        const usersWrap = document.getElementById('admin-notif-users-wrap');
+        const audienceSelect = document.getElementById('admin-notif-audience');
+        if (audienceWrap) audienceWrap.hidden = usersMode;
+        if (usersWrap) usersWrap.hidden = !usersMode;
+        if (audienceSelect) audienceSelect.disabled = usersMode;
+      }
+
+      function selectNotifUsers(users) {
+        users.forEach((u) => {
+          if (!u?.id) return;
+          notifSelected.set(u.id, u.id);
+        });
+        updateNotifSelectedCount();
+      }
+
+      async function loadNotifUsersList(client) {
+        const listEl = document.getElementById('admin-notif-users-list');
+        if (!listEl || !client) return;
+
+        const filter = document.getElementById('admin-notif-users-filter')?.value || 'all';
+        const from = (notifUsersPage - 1) * NOTIF_USERS_PAGE_SIZE;
+        const to = from + NOTIF_USERS_PAGE_SIZE - 1;
+
+        let query = client
+          .from('profiles')
+          .select('id, email, first_name, subscription_status, is_complimentary, created_at', { count: 'exact' })
+          .order('created_at', { ascending: notifUsersSortAsc })
+          .range(from, to);
+        query = applyAdminUsersFilter(query, filter);
+
+        const { data: users, count: filteredCount, error } = await query;
+        if (error) {
+          listEl.innerHTML = `<p style="color: #fecaca;">Impossible de charger les utilisateurs : ${escapeCommunityHtml(error.message)}</p>`;
+          return;
+        }
+
+        const totalFiltered = filteredCount ?? 0;
+        const totalPages = Math.max(1, Math.ceil(totalFiltered / NOTIF_USERS_PAGE_SIZE));
+        if (notifUsersPage > totalPages) {
+          notifUsersPage = totalPages;
+          return loadNotifUsersList(client);
+        }
+
+        notifUsersCache = users || [];
+        if (!users || users.length === 0) {
+          listEl.innerHTML = '<p class="admin-lead">Aucun utilisateur pour ce filtre.</p>';
+          updateNotifSelectedCount();
+          return;
+        }
+
+        const sortLabel = notifUsersSortAsc ? 'Plus anciens ↑' : 'Plus récents ↓';
+        const pagination = totalFiltered > NOTIF_USERS_PAGE_SIZE
+          ? `
+            <div class="admin-users-pagination">
+              <button type="button" id="admin-notif-users-prev" ${notifUsersPage <= 1 ? 'disabled' : ''}>Précédent</button>
+              <span>Page ${notifUsersPage} / ${totalPages} · ${totalFiltered} résultat${totalFiltered > 1 ? 's' : ''}</span>
+              <button type="button" id="admin-notif-users-next" ${notifUsersPage >= totalPages ? 'disabled' : ''}>Suivant</button>
+            </div>
+          `
+          : `<p class="admin-lead" style="margin: 12px 0 0;">${totalFiltered} résultat${totalFiltered > 1 ? 's' : ''}</p>`;
+
+        listEl.innerHTML = `
+          <div class="dash-history-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 42px;">
+                    <input type="checkbox" id="admin-notif-select-all-visible" aria-label="Tout sélectionner sur cette page">
+                  </th>
+                  <th>Email</th>
+                  <th>Prénom</th>
+                  <th>Statut</th>
+                  <th>
+                    Inscription
+                    <button type="button" class="admin-sort-btn" id="admin-notif-sort-created">${sortLabel}</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                ${users.map((u) => {
+                  const status = campaignStatusLabel(u);
+                  const checked = notifSelected.has(u.id) ? 'checked' : '';
+                  const inscribed = u.created_at
+                    ? new Date(u.created_at).toLocaleDateString('fr-FR')
+                    : '—';
+                  return `
+                    <tr>
+                      <td>
+                        <input type="checkbox" class="admin-notif-user-cb" data-user-id="${escapeCommunityHtml(u.id)}" ${checked}>
+                      </td>
+                      <td>${escapeCommunityHtml(u.email)}</td>
+                      <td>${escapeCommunityHtml(u.first_name || '—')}</td>
+                      <td>
+                        <span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${status.bg}; color: ${status.color};">${status.label}</span>
+                      </td>
+                      <td>${escapeCommunityHtml(inscribed)}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+          ${pagination}
+        `;
+
+        const visibleBoxes = [...listEl.querySelectorAll('.admin-notif-user-cb')];
+        const headerBox = document.getElementById('admin-notif-select-all-visible');
+        if (headerBox) {
+          headerBox.checked = visibleBoxes.length > 0 && visibleBoxes.every((cb) => cb.checked);
+          headerBox.addEventListener('change', () => {
+            visibleBoxes.forEach((cb) => {
+              cb.checked = headerBox.checked;
+              const userId = cb.dataset.userId;
+              if (!userId) return;
+              if (headerBox.checked) notifSelected.set(userId, userId);
+              else notifSelected.delete(userId);
+            });
+            updateNotifSelectedCount();
+          });
+        }
+        visibleBoxes.forEach((cb) => {
+          cb.addEventListener('change', () => {
+            const userId = cb.dataset.userId;
+            if (!userId) return;
+            if (cb.checked) notifSelected.set(userId, userId);
+            else notifSelected.delete(userId);
+            if (headerBox) {
+              headerBox.checked = visibleBoxes.length > 0 && visibleBoxes.every((box) => box.checked);
+            }
+            updateNotifSelectedCount();
+          });
+        });
+        document.getElementById('admin-notif-users-prev')?.addEventListener('click', () => {
+          if (notifUsersPage <= 1) return;
+          notifUsersPage -= 1;
+          loadNotifUsersList(client);
+        });
+        document.getElementById('admin-notif-users-next')?.addEventListener('click', () => {
+          if (notifUsersPage >= totalPages) return;
+          notifUsersPage += 1;
+          loadNotifUsersList(client);
+        });
+        document.getElementById('admin-notif-sort-created')?.addEventListener('click', () => {
+          notifUsersSortAsc = !notifUsersSortAsc;
+          notifUsersPage = 1;
+          loadNotifUsersList(client);
+        });
+        updateNotifSelectedCount();
+      }
+
+      async function replaceNotifTargets(client, notificationId, userIds) {
+        const { error: deleteError } = await client
+          .from('notification_targets')
+          .delete()
+          .eq('notification_id', notificationId);
+        if (deleteError) throw deleteError;
+        if (!userIds.length) return;
+        for (let i = 0; i < userIds.length; i += 100) {
+          const chunk = userIds.slice(i, i + 100).map((userId) => ({
+            notification_id: notificationId,
+            user_id: userId
+          }));
+          const { error: insertError } = await client.from('notification_targets').insert(chunk);
+          if (insertError) throw insertError;
+        }
+      }
 
       function toDatetimeLocalValue(iso) {
         if (!iso) return '';
@@ -2013,11 +2238,12 @@
       }
 
       function readNotifForm() {
+        const usersMode = isNotifUsersMode();
         return {
           title: document.getElementById('admin-notif-title')?.value.trim() || '',
           message: document.getElementById('admin-notif-message')?.value.trim() || '',
           type: document.getElementById('admin-notif-type')?.value || 'info',
-          target_audience: document.getElementById('admin-notif-audience')?.value || 'all',
+          target_audience: usersMode ? 'users' : (document.getElementById('admin-notif-audience')?.value || 'all'),
           dismissible: Boolean(document.getElementById('admin-notif-dismissible')?.checked),
           active: Boolean(document.getElementById('admin-notif-active')?.checked),
           start_date: fromDatetimeLocalValue(document.getElementById('admin-notif-start')?.value),
@@ -2041,30 +2267,62 @@
         document.getElementById('admin-notif-title').value = '';
         document.getElementById('admin-notif-message').value = '';
         document.getElementById('admin-notif-type').value = 'info';
+        document.getElementById('admin-notif-target-mode').value = 'audience';
         document.getElementById('admin-notif-audience').value = 'all';
+        document.getElementById('admin-notif-users-filter').value = 'all';
         document.getElementById('admin-notif-dismissible').checked = true;
         document.getElementById('admin-notif-active').checked = true;
         document.getElementById('admin-notif-start').value = '';
         document.getElementById('admin-notif-end').value = '';
         document.getElementById('admin-notif-form-title').textContent = 'Nouvelle notification';
+        notifSelected.clear();
+        notifUsersPage = 1;
+        notifUsersSortAsc = false;
+        notifUsersCache = [];
+        updateNotifSelectedCount();
+        syncNotifTargetMode();
         setNotifFormMessage('', null);
         updateNotifPreview();
       }
 
-      function showNotifForm(notification) {
+      async function showNotifForm(notification) {
         const card = document.getElementById('admin-notif-form-card');
         if (!card) return;
+        const client = window.__gpxSupabaseClient;
         if (notification) {
+          notifSelected.clear();
+          notifUsersPage = 1;
+          notifUsersSortAsc = false;
+          let usersMode = String(notification.target_audience || '') === 'users';
+          if (client) {
+            const { data: targets, error: targetError } = await client
+              .from('notification_targets')
+              .select('user_id')
+              .eq('notification_id', notification.id);
+            if (targetError) {
+              setNotifFormMessage(targetError.message || 'Impossible de charger les utilisateurs ciblés.', false);
+            } else if ((targets || []).length > 0) {
+              usersMode = true;
+              (targets || []).forEach((row) => {
+                if (row.user_id) notifSelected.set(row.user_id, row.user_id);
+              });
+            }
+          }
           document.getElementById('admin-notif-id').value = notification.id;
           document.getElementById('admin-notif-title').value = notification.title || '';
           document.getElementById('admin-notif-message').value = notification.message || '';
           document.getElementById('admin-notif-type').value = notification.type || 'info';
-          document.getElementById('admin-notif-audience').value = notification.target_audience || 'all';
+          document.getElementById('admin-notif-target-mode').value = usersMode ? 'users' : 'audience';
+          document.getElementById('admin-notif-audience').value = usersMode ? 'all' : (notification.target_audience || 'all');
+          document.getElementById('admin-notif-users-filter').value = 'all';
           document.getElementById('admin-notif-dismissible').checked = notification.dismissible !== false;
           document.getElementById('admin-notif-active').checked = notification.active !== false;
           document.getElementById('admin-notif-start').value = toDatetimeLocalValue(notification.start_date);
           document.getElementById('admin-notif-end').value = toDatetimeLocalValue(notification.end_date);
           document.getElementById('admin-notif-form-title').textContent = 'Modifier la notification';
+          updateNotifSelectedCount();
+          syncNotifTargetMode();
+          if (usersMode && client) await loadNotifUsersList(client);
         } else {
           resetNotifForm();
         }
@@ -2083,9 +2341,10 @@
         const listEl = document.getElementById('admin-notif-list');
         if (!listEl || !client) return;
 
-        const [{ data: notifications, error }, { data: dismissRows }] = await Promise.all([
+        const [{ data: notifications, error }, { data: dismissRows }, { data: targetRows }] = await Promise.all([
           client.from('site_notifications').select('*').order('created_at', { ascending: false }),
-          client.from('notification_dismissals').select('notification_id')
+          client.from('notification_dismissals').select('notification_id'),
+          client.from('notification_targets').select('notification_id')
         ]);
 
         if (error) {
@@ -2101,6 +2360,10 @@
         (dismissRows || []).forEach((row) => {
           dismissCounts[row.notification_id] = (dismissCounts[row.notification_id] || 0) + 1;
         });
+        const targetCounts = {};
+        (targetRows || []).forEach((row) => {
+          targetCounts[row.notification_id] = (targetCounts[row.notification_id] || 0) + 1;
+        });
 
         listEl.innerHTML = `
           <div class="dash-history-table-wrap">
@@ -2109,7 +2372,7 @@
                 <tr>
                   <th>Message</th>
                   <th>Type</th>
-                  <th>Audience</th>
+                  <th>Ciblage</th>
                   <th>Statut</th>
                   <th>Dates</th>
                   <th>Fermetures</th>
@@ -2122,11 +2385,15 @@
                   const start = n.start_date ? new Date(n.start_date).toLocaleDateString('fr-FR') : 'immédiat';
                   const end = n.end_date ? new Date(n.end_date).toLocaleDateString('fr-FR') : 'illimitée';
                   const status = n.active ? { label: 'Active', bg: '#dcfce7', color: '#166534' } : { label: 'Inactive', bg: '#f3f4f6', color: '#6b7280' };
+                  const targetCount = targetCounts[n.id] || 0;
+                  const targetingLabel = (n.target_audience === 'users' || targetCount > 0)
+                    ? (targetCount + ' utilisateur' + (targetCount > 1 ? 's' : '') + ' ciblé' + (targetCount > 1 ? 's' : ''))
+                    : (NOTIF_AUDIENCE_LABELS[n.target_audience] || n.target_audience);
                   return `
                     <tr>
                       <td>${escapeCommunityHtml(label)}</td>
                       <td>${escapeCommunityHtml(NOTIF_TYPE_LABELS[n.type] || n.type)}</td>
-                      <td>${escapeCommunityHtml(NOTIF_AUDIENCE_LABELS[n.target_audience] || n.target_audience)}</td>
+                      <td>${escapeCommunityHtml(targetingLabel)}</td>
                       <td><span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: ${status.bg}; color: ${status.color};">${status.label}</span></td>
                       <td>${escapeCommunityHtml(start + ' → ' + end)}</td>
                       <td>${dismissCounts[n.id] || 0}</td>
@@ -2523,6 +2790,44 @@
         document.getElementById('admin-notif-cancel-btn')?.addEventListener('click', () => {
           hideNotifForm();
         });
+        document.getElementById('admin-notif-target-mode')?.addEventListener('change', async () => {
+          syncNotifTargetMode();
+          if (!isNotifUsersMode()) return;
+          const client = getAdminClient();
+          if (client) await loadNotifUsersList(client);
+        });
+        document.getElementById('admin-notif-users-filter')?.addEventListener('change', async () => {
+          notifUsersPage = 1;
+          const client = getAdminClient();
+          if (client) await loadNotifUsersList(client);
+        });
+        document.getElementById('admin-notif-select-page')?.addEventListener('click', () => {
+          selectNotifUsers(notifUsersCache);
+          const client = getAdminClient();
+          if (client) loadNotifUsersList(client);
+        });
+        document.getElementById('admin-notif-select-filter')?.addEventListener('click', async (event) => {
+          const button = event.currentTarget;
+          const client = getAdminClient();
+          if (!client) return;
+          button.disabled = true;
+          try {
+            const filter = document.getElementById('admin-notif-users-filter')?.value || 'all';
+            const users = await fetchAllFilteredProfiles(client, filter);
+            selectNotifUsers(users);
+            await loadNotifUsersList(client);
+          } catch (error) {
+            setNotifFormMessage(error instanceof Error ? error.message : String(error), false);
+          } finally {
+            button.disabled = false;
+          }
+        });
+        document.getElementById('admin-notif-deselect')?.addEventListener('click', () => {
+          notifSelected.clear();
+          updateNotifSelectedCount();
+          const client = getAdminClient();
+          if (client) loadNotifUsersList(client);
+        });
         ['admin-notif-title', 'admin-notif-message', 'admin-notif-type', 'admin-notif-audience', 'admin-notif-dismissible'].forEach((id) => {
           document.getElementById(id)?.addEventListener('input', updateNotifPreview);
           document.getElementById(id)?.addEventListener('change', updateNotifPreview);
@@ -2547,17 +2852,24 @@
             setNotifFormMessage('La date de fin doit être postérieure à la date de début.', false);
             return;
           }
+          if (isNotifUsersMode() && notifSelected.size === 0) {
+            setNotifFormMessage('Sélectionnez au moins un utilisateur.', false);
+            return;
+          }
 
           const payload = {
             title: draft.title || null,
             message: draft.message,
             type: draft.type,
-            target_audience: draft.target_audience,
+            target_audience: isNotifUsersMode() ? 'users' : draft.target_audience,
             dismissible: draft.dismissible,
             active: draft.active,
             start_date: draft.start_date,
             end_date: draft.end_date
           };
+          if (payload.target_audience === 'users' && !isNotifUsersMode()) {
+            payload.target_audience = 'all';
+          }
           const existingId = document.getElementById('admin-notif-id')?.value || '';
           const saveBtn = document.getElementById('admin-notif-save-btn');
           if (saveBtn) saveBtn.disabled = true;
@@ -2574,11 +2886,25 @@
             }).select('id');
           }
 
-          if (saveBtn) saveBtn.disabled = false;
           if (result.error || !result.data?.[0]) {
+            if (saveBtn) saveBtn.disabled = false;
             setNotifFormMessage(result.error?.message || 'Enregistrement refusé.', false);
             return;
           }
+
+          try {
+            await replaceNotifTargets(
+              client,
+              result.data[0].id,
+              isNotifUsersMode() ? [...notifSelected.keys()] : []
+            );
+          } catch (error) {
+            if (saveBtn) saveBtn.disabled = false;
+            setNotifFormMessage(error instanceof Error ? error.message : 'Le ciblage utilisateurs a échoué.', false);
+            return;
+          }
+
+          if (saveBtn) saveBtn.disabled = false;
           setNotifFormMessage('Notification enregistrée.', true);
           hideNotifForm();
           await loadAdminNotificationsList(client);

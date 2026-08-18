@@ -124,7 +124,7 @@
     const now = new Date();
     const audience = resolveAudience(user);
 
-    const [{ data: notifications, error: notifError }, { data: dismissals, error: dismissError }] =
+    const [{ data: notifications, error: notifError }, { data: dismissals, error: dismissError }, { data: targets, error: targetError }] =
       await Promise.all([
         client
           .from("site_notifications")
@@ -133,6 +133,10 @@
           .order("created_at", { ascending: false }),
         client
           .from("notification_dismissals")
+          .select("notification_id")
+          .eq("user_id", user.id),
+        client
+          .from("notification_targets")
           .select("notification_id")
           .eq("user_id", user.id)
       ]);
@@ -144,11 +148,19 @@
     if (dismissError) {
       console.warn("[GPX] notification dismissals:", dismissError);
     }
+    if (targetError) {
+      console.warn("[GPX] notification targets:", targetError);
+    }
 
     const dismissed = new Set((dismissals || []).map((row) => row.notification_id));
+    const targeted = new Set((targets || []).map((row) => row.notification_id));
     const visible = (notifications || []).filter((notification) => {
       if (dismissed.has(notification.id)) return false;
       if (!isInDateWindow(notification, now)) return false;
+      if (String(notification.target_audience || "") === "users") {
+        // Mode ciblage précis : ignore target_audience large, uniquement notification_targets.
+        return targeted.has(notification.id) && Boolean(String(notification.message || "").trim());
+      }
       if (!matchesAudience(notification, audience)) return false;
       return Boolean(String(notification.message || "").trim());
     });

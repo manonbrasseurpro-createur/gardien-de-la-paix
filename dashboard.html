@@ -306,6 +306,290 @@
       cursor: pointer;
     }
 
+    #panel-admin.dash-panel.is-active {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 52px);
+      background: var(--navy);
+      color: var(--off-white);
+    }
+    #panel-admin .admin-hero {
+      padding: 36px 20px 8px;
+    }
+    #panel-admin .admin-hero__content {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+    #panel-admin .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--seal);
+      color: var(--off-white);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    #panel-admin .admin-badge svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    #panel-admin .admin-hero h1 {
+      margin: 0;
+      font-family: 'Spectral', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.12;
+      color: var(--off-white);
+    }
+    #panel-admin .admin-hero p {
+      margin: 12px 0 0;
+      font-size: 1.02rem;
+      font-weight: 400;
+      line-height: 1.55;
+      color: rgba(246, 244, 238, 0.62);
+    }
+    #panel-admin .admin-container {
+      width: min(1120px, calc(100% - 40px));
+      margin: 24px auto 56px;
+    }
+    #panel-admin.dash-panel .admin-container {
+      margin: 24px auto 56px;
+    }
+    #panel-admin .admin-hub {
+      display: grid;
+      gap: 22px;
+    }
+    #panel-admin .admin-view:not([hidden]) {
+      display: grid;
+      gap: 24px;
+    }
+    #panel-admin .admin-hub[hidden],
+    #panel-admin .admin-view[hidden] {
+      display: none !important;
+    }
+    #panel-admin .admin-tile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+    #panel-admin .admin-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      margin: 0;
+      padding: 26px 24px;
+      border: 1px solid rgba(184, 147, 94, 0.18);
+      border-radius: 14px;
+      background: linear-gradient(165deg, #143152 0%, #10263f 100%);
+      color: inherit;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    #panel-admin .admin-tile:hover,
+    #panel-admin .admin-tile:focus-visible {
+      transform: translateY(-3px);
+      border-color: var(--brass);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+      outline: none;
+    }
+    #panel-admin .admin-tile--presence {
+      cursor: default;
+      padding: 28px 26px;
+    }
+    #panel-admin .admin-tile--presence:hover,
+    #panel-admin .admin-tile--presence:focus-visible {
+      transform: none;
+      border-color: rgba(184, 147, 94, 0.35);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+    #panel-admin .admin-tile__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(139, 30, 47, 0.28);
+      color: var(--seal);
+    }
+    #panel-admin .admin-tile__icon svg {
+      width: 20px;
+      height: 20px;
+    }
+    #panel-admin .admin-tile--presence .admin-tile__icon {
+      background: rgba(184, 147, 94, 0.18);
+      color: var(--brass);
+    }
+    #panel-admin .admin-tile h2 {
+      margin: 4px 0 0;
+      font-family: 'Spectral', serif;
+      font-size: 1.28rem;
+      font-weight: 600;
+      color: var(--off-white);
+    }
+    #panel-admin .admin-tile p,
+    #panel-admin .admin-tile__desc {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: rgba(246, 244, 238, 0.62);
+    }
+    #panel-admin .admin-online-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 8px 0 4px;
+      min-height: 32px;
+    }
+    #panel-admin .admin-online-empty {
+      margin: 0;
+      font-size: 0.9rem;
+      color: rgba(246, 244, 238, 0.55);
+    }
+    #panel-admin .admin-online-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(246, 244, 238, 0.08);
+      color: var(--off-white);
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+    #panel-admin .admin-online-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.5em;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--seal);
+      color: var(--off-white);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      vertical-align: middle;
+    }
+    #panel-admin .admin-online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3ddc84;
+      box-shadow: 0 0 0 4px rgba(61, 220, 132, 0.18);
+    }
+    #panel-admin .admin-tile__link {
+      margin-top: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--brass);
+      text-decoration: none;
+      background: none;
+      border: 0;
+      padding: 0;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    #panel-admin .admin-tile__link:hover {
+      color: var(--off-white);
+    }
+    #panel-admin .admin-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 18px;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--brass);
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    #panel-admin .admin-back:hover {
+      color: var(--off-white);
+    }
+    #panel-admin .admin-view .auth-card {
+      background: linear-gradient(165deg, #143152 0%, #10263f 100%);
+      border: 1px solid rgba(184, 147, 94, 0.18);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      color: var(--off-white);
+    }
+    #panel-admin .admin-view .auth-card h2 {
+      color: var(--off-white);
+    }
+    #panel-admin .admin-view .auth-card > p,
+    #panel-admin .admin-campaign-hint,
+    #panel-admin .admin-users-filter,
+    #panel-admin .admin-users-pagination span {
+      color: rgba(246, 244, 238, 0.68);
+    }
+    #panel-admin .admin-users-filter select,
+    #panel-admin .admin-text-input,
+    #panel-admin .admin-campaign-form input[type="text"],
+    #panel-admin .admin-campaign-form textarea,
+    #panel-admin .admin-campaign-toolbar button,
+    #panel-admin .admin-users-pagination button,
+    #panel-admin .admin-users-complimentary-btn,
+    #panel-admin .admin-report-resolve-btn,
+    #panel-admin .admin-campaign-modal__cancel {
+      background: rgba(246, 244, 238, 0.96);
+      color: var(--navy);
+    }
+    #panel-admin .admin-campaign-count {
+      color: var(--brass);
+    }
+    #panel-admin .admin-lead,
+    #panel-admin .admin-placeholder {
+      margin: 0 0 14px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(246, 244, 238, 0.68);
+    }
+    #panel-admin .admin-campaign-form label {
+      color: var(--off-white);
+    }
+    #panel-admin .dash-history-table-wrap {
+      border-color: rgba(184, 147, 94, 0.22);
+    }
+    #panel-admin .dash-history-table-wrap table {
+      background: transparent;
+    }
+    #panel-admin .dash-history-table-wrap td {
+      color: var(--off-white);
+      border-bottom-color: rgba(184, 147, 94, 0.16);
+    }
+    @media (max-width: 768px) {
+      #panel-admin .admin-tile-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      #panel-admin .admin-hero {
+        padding-top: 28px;
+      }
+      #panel-admin .admin-container {
+        width: min(100% - 28px, 1120px);
+        margin-bottom: 36px;
+      }
+      #panel-admin .admin-hero__content {
+        width: min(100% - 28px, 1120px);
+      }
+    }
+
     .dash-evolution-wrap {
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -762,85 +1046,175 @@
       </section>
 
       <section class="dash-panel" id="panel-admin">
-        <header class="hero hero--compact">
-          <div class="hero__content">
-            <p class="hero__label">Administrateur</p>
-            <h1>Gestion Prepa GPX</h1>
-            <p class="hero__subtitle">Signalements, avis utilisateurs, gestion des accès et campagnes email.</p>
+        <header class="admin-hero">
+          <div class="admin-hero__content">
+            <p class="admin-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 20 7v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V7l8-4z"></path></svg>
+              Espace admin
+            </p>
+            <h1>Panneau admin</h1>
+            <p>Pilotez les accès, les campagnes et la modération depuis une vue d’ensemble.</p>
           </div>
         </header>
-        <div class="container auth-container">
-          <div class="auth-card auth-card--wide">
-            <h2>Offrir un accès gratuit</h2>
-            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 14px;">Saisissez l'email exact d'un utilisateur inscrit. Une confirmation vous sera demandée avant d'activer l'accès.</p>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <input type="email" id="admin-complimentary-email" placeholder="email@exemple.fr" style="flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font: inherit;">
-              <button class="primary-button" type="button" id="admin-complimentary-btn">Offrir un accès gratuit à cet email</button>
-            </div>
-            <p id="admin-complimentary-msg" style="margin: 10px 0 0; font-size: 0.9rem;"></p>
-          </div>
-
-          <div class="auth-card auth-card--wide">
-            <h2>Signalements utilisateurs</h2>
-            <div id="admin-reports-list"><p style="color: var(--muted);">Chargement…</p></div>
-          </div>
-
-          <div class="auth-card auth-card--wide">
-            <h2>Avis de satisfaction</h2>
-            <div id="admin-surveys-list"><p style="color: var(--muted);">Chargement…</p></div>
-          </div>
-
-          <div class="auth-card auth-card--wide">
-            <h2>Utilisateurs inscrits</h2>
-            <p id="admin-users-stats" style="color: var(--muted); font-size: 0.9rem; margin: 0 0 12px;">Chargement…</p>
-            <label class="admin-users-filter">
-              Filtrer
-              <select id="admin-users-filter">
-                <option value="all">Tous</option>
-                <option value="free">Gratuit</option>
-                <option value="active">Abonné</option>
-                <option value="complimentary">Accès offert</option>
-              </select>
-            </label>
-            <div id="admin-users-list"><p style="color: var(--muted);">Chargement…</p></div>
-          </div>
-
-          <div class="auth-card auth-card--wide">
-            <h2>Campagne email</h2>
-            <p style="color: var(--muted); font-size: 0.9rem; margin: 0 0 14px;">Sélectionnez les destinataires, rédigez l'objet et le message, puis confirmez avant l'envoi réel via Brevo (lien de désinscription automatique).</p>
-            <label class="admin-users-filter">
-              Filtrer les destinataires
-              <select id="admin-campaign-filter">
-                <option value="all">Tous</option>
-                <option value="free">Gratuit</option>
-                <option value="active">Abonné</option>
-                <option value="complimentary">Accès offert</option>
-              </select>
-            </label>
-            <div class="admin-campaign-toolbar">
-              <button type="button" id="admin-campaign-select-page">Tout sélectionner (cette page)</button>
-              <button type="button" id="admin-campaign-select-filter">Sélectionner le filtre actuel</button>
-              <button type="button" id="admin-campaign-select-active">Sélectionner les abonnés</button>
-              <button type="button" id="admin-campaign-deselect">Tout désélectionner</button>
-              <span class="admin-campaign-count" id="admin-campaign-selected-count">0 destinataire sélectionné</span>
-            </div>
-            <div id="admin-campaign-users-list"><p style="color: var(--muted);">Chargement…</p></div>
-            <form class="admin-campaign-form" id="admin-campaign-form">
-              <label for="admin-campaign-subject">Objet</label>
-              <input type="text" id="admin-campaign-subject" maxlength="200" placeholder="Objet de l'email" autocomplete="off">
-              <label for="admin-campaign-body">Corps du message</label>
-              <textarea id="admin-campaign-body" placeholder="Message (HTML basique accepté : p, strong, a href…)"></textarea>
-              <p class="admin-campaign-hint">Un lien « Se désinscrire » est ajouté automatiquement. Les retours à la ligne d'un texte brut sont conservés.</p>
-              <div style="margin-top: 16px;">
-                <button class="primary-button" type="button" id="admin-campaign-send-btn">Envoyer la campagne</button>
+        <div class="container auth-container admin-container">
+          <div id="admin-hub" class="admin-hub">
+            <article class="admin-tile admin-tile--presence">
+              <span class="admin-tile__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><path d="M12 20h.01"></path></svg>
+              </span>
+              <h2>Utilisateurs connectés <span class="admin-online-badge" id="admin-online-count">0</span></h2>
+              <p class="admin-tile__desc">Candidats actuellement présents sur le tableau de bord.</p>
+              <div class="admin-online-list" id="admin-online-list">
+                <p class="admin-online-empty">Chargement…</p>
               </div>
-              <p class="admin-campaign-status" id="admin-campaign-msg"></p>
-            </form>
+              <button class="admin-tile__link" type="button" data-admin-view="users">Voir tous les utilisateurs →</button>
+            </article>
+
+            <div class="admin-tile-grid">
+              <button class="admin-tile" type="button" data-admin-view="users">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="3"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a3 3 0 0 1 0 5.74"></path></svg>
+                </span>
+                <h2>Utilisateurs</h2>
+                <p class="admin-tile__desc">Inscriptions, abonnements et accès offerts.</p>
+              </button>
+              <button class="admin-tile" type="button" data-admin-view="campaigns">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><path d="M22 6l-10 7L2 6"></path></svg>
+                </span>
+                <h2>Campagnes email</h2>
+                <p class="admin-tile__desc">Rédiger et envoyer une campagne Brevo.</p>
+              </button>
+              <button class="admin-tile" type="button" data-admin-view="partners">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13l3 3 8-8"></path><path d="M16 21v-2a4 4 0 0 0-3-3.87"></path><path d="M8 21v-2a4 4 0 0 1 4-4h.5"></path><circle cx="9" cy="7" r="3"></circle><circle cx="17" cy="7" r="3"></circle></svg>
+                </span>
+                <h2>Partenaires</h2>
+                <p class="admin-tile__desc">Offres partenaires et accès associés.</p>
+              </button>
+              <button class="admin-tile" type="button" data-admin-view="notifications">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a8 8 0 0 0 8 8h2"></path><path d="M21 8a5 5 0 0 0-9.9-1"></path><path d="M11 5a5 5 0 0 1 9.9 1"></path><path d="M15.5 12.5 8 16l1 4 2.5-1.5"></path></svg>
+                </span>
+                <h2>Notifications</h2>
+                <p class="admin-tile__desc">Annonces et alertes destinées aux candidats.</p>
+              </button>
+              <button class="admin-tile" type="button" data-admin-view="reports">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                </span>
+                <h2>Modération</h2>
+                <p class="admin-tile__desc">Signalements utilisateurs à traiter.</p>
+              </button>
+              <button class="admin-tile" type="button" data-admin-view="surveys">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14.2 18.2 21.2 12 18 5.8 21.2 7 14.2 2 9.3 9 8.5"></polygon></svg>
+                </span>
+                <h2>Avis</h2>
+                <p class="admin-tile__desc">Questionnaires de satisfaction et publication.</p>
+              </button>
+            </div>
           </div>
 
-          <div class="auth-card auth-card--wide">
-            <h2>Historique des campagnes</h2>
-            <div id="admin-campaign-history"><p style="color: var(--muted);">Chargement…</p></div>
+          <div class="admin-view" id="admin-view-users" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Offrir un accès gratuit</h2>
+              <p class="admin-lead">Saisissez l'email exact d'un utilisateur inscrit. Une confirmation vous sera demandée avant d'activer l'accès.</p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <input type="email" class="admin-text-input" id="admin-complimentary-email" placeholder="email@exemple.fr" style="flex: 1; min-width: 220px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font: inherit;">
+                <button class="primary-button" type="button" id="admin-complimentary-btn">Offrir un accès gratuit à cet email</button>
+              </div>
+              <p id="admin-complimentary-msg" style="margin: 10px 0 0; font-size: 0.9rem;"></p>
+            </div>
+
+            <div class="auth-card auth-card--wide">
+              <h2>Utilisateurs inscrits</h2>
+              <p id="admin-users-stats" class="admin-lead">Chargement…</p>
+              <label class="admin-users-filter">
+                Filtrer
+                <select id="admin-users-filter">
+                  <option value="all">Tous</option>
+                  <option value="free">Gratuit</option>
+                  <option value="active">Abonné</option>
+                  <option value="complimentary">Accès offert</option>
+                </select>
+              </label>
+              <div id="admin-users-list"><p style="color: var(--muted);">Chargement…</p></div>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-campaigns" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Campagne email</h2>
+              <p class="admin-lead">Sélectionnez les destinataires, rédigez l'objet et le message, puis confirmez avant l'envoi réel via Brevo (lien de désinscription automatique).</p>
+              <label class="admin-users-filter">
+                Filtrer les destinataires
+                <select id="admin-campaign-filter">
+                  <option value="all">Tous</option>
+                  <option value="free">Gratuit</option>
+                  <option value="active">Abonné</option>
+                  <option value="complimentary">Accès offert</option>
+                </select>
+              </label>
+              <div class="admin-campaign-toolbar">
+                <button type="button" id="admin-campaign-select-page">Tout sélectionner (cette page)</button>
+                <button type="button" id="admin-campaign-select-filter">Sélectionner le filtre actuel</button>
+                <button type="button" id="admin-campaign-select-active">Sélectionner les abonnés</button>
+                <button type="button" id="admin-campaign-deselect">Tout désélectionner</button>
+                <span class="admin-campaign-count" id="admin-campaign-selected-count">0 destinataire sélectionné</span>
+              </div>
+              <div id="admin-campaign-users-list"><p style="color: var(--muted);">Chargement…</p></div>
+              <form class="admin-campaign-form" id="admin-campaign-form">
+                <label for="admin-campaign-subject">Objet</label>
+                <input type="text" id="admin-campaign-subject" maxlength="200" placeholder="Objet de l'email" autocomplete="off">
+                <label for="admin-campaign-body">Corps du message</label>
+                <textarea id="admin-campaign-body" placeholder="Message (HTML basique accepté : p, strong, a href…)"></textarea>
+                <p class="admin-campaign-hint">Un lien « Se désinscrire » est ajouté automatiquement. Les retours à la ligne d'un texte brut sont conservés.</p>
+                <div style="margin-top: 16px;">
+                  <button class="primary-button" type="button" id="admin-campaign-send-btn">Envoyer la campagne</button>
+                </div>
+                <p class="admin-campaign-status" id="admin-campaign-msg"></p>
+              </form>
+            </div>
+
+            <div class="auth-card auth-card--wide">
+              <h2>Historique des campagnes</h2>
+              <div id="admin-campaign-history"><p style="color: var(--muted);">Chargement…</p></div>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-reports" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Signalements utilisateurs</h2>
+              <div id="admin-reports-list"><p style="color: var(--muted);">Chargement…</p></div>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-surveys" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Avis de satisfaction</h2>
+              <div id="admin-surveys-list"><p style="color: var(--muted);">Chargement…</p></div>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-partners" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Partenaires</h2>
+              <p class="admin-placeholder">Cette section est prête visuellement. Branchez-y la gestion des partenaires dès qu’elle sera disponible : les cartes du panneau resteront identiques.</p>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-notifications" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Notifications</h2>
+              <p class="admin-placeholder">Les campagnes email restent l’outil d’envoi actuel. Cette carte accueillera plus tard les alertes in-app et les annonces ciblées.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -896,6 +1270,96 @@
       if (user) {
         const firstName = user.firstName || '';
         document.getElementById('dash-greeting').textContent = `Bonjour, ${firstName} 👋`;
+      }
+
+      function getDashClient() {
+        const cfg = window.GPX_SUPABASE || {};
+        return window.__gpxSupabaseClient || (window.supabase?.createClient
+          ? window.supabase.createClient(cfg.url || cfg.SUPABASE_URL, cfg.anonKey)
+          : null);
+      }
+
+      function renderOnlineUsers() {
+        const listEl = document.getElementById('admin-online-list');
+        const countEl = document.getElementById('admin-online-count');
+        if (!listEl) return;
+        const state = window.__gpxPresenceState || {};
+        const people = [];
+        Object.values(state).forEach((presences) => {
+          (Array.isArray(presences) ? presences : []).forEach((presence) => {
+            const name = String(presence.firstName || presence.first_name || '').trim() || 'Candidat';
+            const key = String(presence.email || presence.userId || name).toLowerCase();
+            if (!people.some((item) => item.key === key)) {
+              people.push({ key, name });
+            }
+          });
+        });
+        if (countEl) countEl.textContent = String(people.length);
+        if (people.length === 0) {
+          listEl.innerHTML = '<p class="admin-online-empty">Aucun utilisateur connecté pour le moment.</p>';
+          return;
+        }
+        listEl.innerHTML = people.map((item) => (
+          `<span class="admin-online-chip"><span class="admin-online-dot" aria-hidden="true"></span>${escapeCommunityHtml(item.name)}</span>`
+        )).join('');
+      }
+
+      async function startDashboardPresence() {
+        const client = getDashClient();
+        if (!client || !user?.id) {
+          renderOnlineUsers();
+          return;
+        }
+        try {
+          const channel = client.channel('dashboard-online', {
+            config: { presence: { key: user.id } }
+          });
+          channel.on('presence', { event: 'sync' }, () => {
+            window.__gpxPresenceState = channel.presenceState();
+            renderOnlineUsers();
+          });
+          channel.subscribe(async (status) => {
+            if (status !== 'SUBSCRIBED') return;
+            await channel.track({
+              userId: user.id,
+              firstName: user.firstName || 'Candidat',
+              email: user.email || ''
+            });
+          });
+        } catch (error) {
+          console.warn('[admin-presence]', error);
+          renderOnlineUsers();
+        }
+      }
+
+      startDashboardPresence();
+
+      function showAdminHub() {
+        const hub = document.getElementById('admin-hub');
+        if (hub) hub.hidden = false;
+        document.querySelectorAll('#panel-admin .admin-view').forEach((view) => {
+          view.hidden = true;
+        });
+        renderOnlineUsers();
+        document.querySelector('.dash-main')?.scrollTo(0, 0);
+      }
+
+      function showAdminView(viewId) {
+        if (!viewId) {
+          showAdminHub();
+          return;
+        }
+        const hub = document.getElementById('admin-hub');
+        const target = document.getElementById('admin-view-' + viewId);
+        if (!target) {
+          showAdminHub();
+          return;
+        }
+        if (hub) hub.hidden = true;
+        document.querySelectorAll('#panel-admin .admin-view').forEach((view) => {
+          view.hidden = view !== target;
+        });
+        document.querySelector('.dash-main')?.scrollTo(0, 0);
       }
 
       const ADMIN_EMAIL = 'manonbrasseurpro@gmail.com';
@@ -1562,7 +2026,21 @@
       }
 
       if (isAdmin) {
+        document.querySelectorAll('#panel-admin [data-admin-view]').forEach((el) => {
+          el.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            showAdminView(el.getAttribute('data-admin-view'));
+          });
+        });
+        document.querySelectorAll('#panel-admin [data-admin-back]').forEach((el) => {
+          el.addEventListener('click', (event) => {
+            event.preventDefault();
+            showAdminHub();
+          });
+        });
         document.querySelector('.dash-nav__item[data-panel="admin"]')?.addEventListener('click', () => {
+          showAdminHub();
           loadAdminData();
         });
         if (window.location.hash === '#admin') {

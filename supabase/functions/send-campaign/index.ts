@@ -11,6 +11,7 @@ const LIST_ADD_CHUNK_SIZE = 150;
 const RATE_LIMIT_SECONDS = 20;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CAMPAIGN_FOLDER_NAME = "PrepaGPX Campagnes";
 
 let inFlight = false;
 let lastAcceptedAt = 0;
@@ -163,6 +164,54 @@ async function mapWithConcurrency<T, R>(
   const workers = Array.from({ length: Math.min(concurrency, items.length) }, () => run());
   await Promise.all(workers);
   return results;
+}
+
+function folderNameOf(folder: unknown): string {
+  if (!folder || typeof folder !== "object") return "";
+  return String((folder as { name?: unknown }).name || "").trim();
+}
+
+function folderIdOf(folder: unknown): number {
+  if (!folder || typeof folder !== "object") return NaN;
+  return Number((folder as { id?: unknown }).id);
+}
+
+async function ensureCampaignFolderId(apiKey: string): Promise<number> {
+  const pageSize = 50;
+  let offset = 0;
+
+  while (true) {
+    const { data } = await brevoRequest(
+      apiKey,
+      "GET",
+      `/contacts/folders?limit=${pageSize}&offset=${offset}`,
+      "Lecture des dossiers Brevo",
+    );
+    const folders = Array.isArray(data.folders) ? data.folders : [];
+    const existing = folders.find((folder) => folderNameOf(folder) === CAMPAIGN_FOLDER_NAME);
+    if (existing) {
+      const id = folderIdOf(existing);
+      if (!Number.isFinite(id) || id <= 0) {
+        throw new Error("Lecture des dossiers Brevo : identifiant de dossier invalide.");
+      }
+      return id;
+    }
+    if (folders.length < pageSize) break;
+    offset += pageSize;
+  }
+
+  const created = await brevoRequest(
+    apiKey,
+    "POST",
+    "/contacts/folders",
+    "Création du dossier Brevo",
+    { name: CAMPAIGN_FOLDER_NAME },
+  );
+  const id = Number(created.data.id);
+  if (!Number.isFinite(id) || id <= 0) {
+    throw new Error("Création du dossier Brevo : identifiant de dossier manquant.");
+  }
+  return id;
 }
 
 Deno.serve(async (req) => {
@@ -401,14 +450,18 @@ Deno.serve(async (req) => {
       );
     }
 
+    const folderId = await ensureCampaignFolderId(brevoKey);
+
     let listRes;
     try {
       listRes = await brevoRequest(brevoKey, "POST", "/contacts/lists", "Création de la liste Brevo", {
         name: listName,
+        folderId,
       });
     } catch {
       listRes = await brevoRequest(brevoKey, "POST", "/contacts/lists", "Création de la liste Brevo", {
         name: `${listName}_${Date.now().toString().slice(-4)}`,
+        folderId,
       });
     }
     const listId = Number(listRes.data.id);

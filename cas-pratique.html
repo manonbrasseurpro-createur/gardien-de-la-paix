@@ -712,8 +712,17 @@
       display: inline-flex;
     }
 
+    #open-documents {
+      display: none;
+    }
+
     #close-documents {
       display: none;
+    }
+
+    html.document-panel-open,
+    body.document-panel-open {
+      overflow: hidden;
     }
 
     .doc-card {
@@ -1375,23 +1384,66 @@
         grid-template-columns: 1fr;
       }
 
-      .document-panel {
-        display: none;
-        border-left: 0;
-        border-top: 1px solid var(--border);
+      .exercise-panel {
+        overflow: visible;
       }
 
-      .document-panel.is-open {
-        display: block;
-      }
-
-      .document-panel__inner {
-        position: static;
-        max-height: none;
+      #open-documents {
+        display: inline-flex;
       }
 
       #close-documents {
         display: inline-flex;
+      }
+
+      .document-panel {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: block;
+        border: 0;
+        background: rgba(26, 39, 68, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 240ms ease, visibility 240ms ease;
+      }
+
+      .document-panel.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .document-panel__inner {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 90vh;
+        height: 90dvh;
+        max-height: none;
+        overflow: auto;
+        padding: 16px 20px 28px;
+        background: #f8fafd;
+        border-radius: 18px 18px 0 0;
+        box-shadow: 0 -12px 32px rgba(26, 39, 68, 0.18);
+        transform: translateY(100%);
+        transition: transform 280ms ease;
+      }
+
+      .document-panel.is-open .document-panel__inner {
+        transform: translateY(0);
+      }
+
+      .document-panel__inner > .exercise-actions {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        margin: -16px -20px 0;
+        padding: 16px 20px 12px;
+        background: #f8fafd;
       }
     }
 
@@ -1636,7 +1688,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <div class="question-workspace">
           <div class="exercise-actions">
             <button class="secondary-button" type="button" id="back-to-home">← Accueil du module</button>
-            <button class="secondary-button document-toggle" type="button" id="open-documents"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg>Consulter le dossier</button>
+            <button class="secondary-button document-toggle" type="button" id="open-documents" aria-expanded="false" aria-controls="document-panel"><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg>Consulter le dossier</button>
             <button class="ghost-button" type="button" id="finish-and-score" hidden>Terminer et voir le bilan global</button>
           </div>
 
@@ -4113,8 +4165,33 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     document.getElementById("back-to-home").addEventListener("click", showHome);
     document.getElementById("examples-home").addEventListener("click", showHome);
     document.getElementById("final-home").addEventListener("click", showHome);
-    document.getElementById("open-documents").addEventListener("click", () => documentPanel.classList.add("is-open"));
-    document.getElementById("close-documents").addEventListener("click", () => documentPanel.classList.remove("is-open"));
+    function setDocumentPanelOpen(isOpen) {
+      documentPanel.classList.toggle("is-open", isOpen);
+      document.documentElement.classList.toggle("document-panel-open", isOpen);
+      document.body.classList.toggle("document-panel-open", isOpen);
+      const openButton = document.getElementById("open-documents");
+      if (openButton) {
+        openButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      }
+    }
+
+    document.getElementById("open-documents").addEventListener("click", () => setDocumentPanelOpen(true));
+    document.getElementById("close-documents").addEventListener("click", () => setDocumentPanelOpen(false));
+    documentPanel.addEventListener("click", (event) => {
+      if (event.target === documentPanel && window.matchMedia("(max-width: 980px)").matches) {
+        setDocumentPanelOpen(false);
+      }
+    });
+    window.matchMedia("(max-width: 980px)").addEventListener("change", (event) => {
+      if (!event.matches) {
+        setDocumentPanelOpen(false);
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && documentPanel.classList.contains("is-open")) {
+        setDocumentPanelOpen(false);
+      }
+    });
     document.getElementById("validate-answer").addEventListener("click", validateAnswer);
     document.getElementById("retry-question").addEventListener("click", hideCorrection);
     document.getElementById("next-question").addEventListener("click", goNext);
@@ -4821,7 +4898,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       if (finishButton) {
         finishButton.hidden = state.currentIndex !== state.items.length - 1;
       }
-      documentPanel.classList.remove("is-open");
+      setDocumentPanelOpen(false);
       updateWordCount();
       updateScoreDisplay();
       saveSession();
@@ -5400,6 +5477,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       exerciseScreen.classList.remove("is-visible");
       finalScoreScreen.classList.remove("is-visible");
       correctionScreen.classList.add("is-visible");
+      setDocumentPanelOpen(false);
       updateScoreDisplay();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -5887,6 +5965,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     function showFinalScore() {
       stopTimer();
+      setDocumentPanelOpen(false);
       scoreAllAnswers();
       state.correctionReturnTo = null;
       const finalScore = calculateFinalScore();
@@ -6056,6 +6135,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     function showHome() {
       stopTimer();
+      setDocumentPanelOpen(false);
       methodologyScreen.classList.remove("is-visible");
       exerciseScreen.classList.remove("is-visible");
       correctionScreen.classList.remove("is-visible");

@@ -19,6 +19,47 @@
   <meta property="og:description" content="Inscription pour la préparation concours gardien de la paix en ligne.">
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .compte-avis-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      background: #1f6b45;
+      color: var(--white);
+      white-space: nowrap;
+    }
+    .compte-avis-button:hover {
+      background: #185736;
+    }
+    .compte-avis-button__stars {
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+      color: #e2c48a;
+      line-height: 0;
+    }
+    .compte-avis-button__star {
+      display: block;
+      width: 11px;
+      height: 11px;
+      flex-shrink: 0;
+      fill: currentColor;
+    }
+    .auth-actions .secondary-button {
+      background: var(--white);
+      color: var(--navy);
+      border: 2px solid var(--border);
+    }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -49,7 +90,16 @@
       <p id="trial-status" class="auth-status"></p>
       <div class="auth-actions">
         <a class="primary-button" href="dashboard.html">Accéder aux modules</a>
-        <a class="primary-button" href="avis.html">Donner mon avis</a>
+        <a class="compte-avis-button" href="avis.html" aria-label="Donner mon avis — 5 étoiles">
+          <span class="compte-avis-button__stars" aria-hidden="true">
+            <svg class="compte-avis-button__star" viewBox="0 0 24 24"><polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon></svg>
+            <svg class="compte-avis-button__star" viewBox="0 0 24 24"><polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon></svg>
+            <svg class="compte-avis-button__star" viewBox="0 0 24 24"><polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon></svg>
+            <svg class="compte-avis-button__star" viewBox="0 0 24 24"><polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon></svg>
+            <svg class="compte-avis-button__star" viewBox="0 0 24 24"><polygon points="12 3 14.5 9.5 21.5 10 16.5 14.5 18.2 21.5 12 17.8 5.8 21.5 7.5 14.5 2.5 10 9.5 9.5"></polygon></svg>
+          </span>
+          Donner mon avis
+        </a>
         <button id="manage-subscription-button" class="primary-button hidden" type="button">Gérer mon abonnement</button>
         <a class="secondary-button" href="tarifs.html">Voir les tarifs</a>
         <button id="logout-button" class="secondary-button" type="button">Déconnexion</button>

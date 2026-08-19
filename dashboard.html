@@ -785,9 +785,32 @@
       margin-bottom: 8px;
     }
     .dash-community-post__author {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px 8px;
       font-weight: 700;
       color: var(--navy);
       font-size: 0.92rem;
+    }
+    .dash-community-post__author-sep {
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .dash-community-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+    .dash-community-badge--founder {
+      background: rgba(184, 147, 94, 0.18);
+      color: #8a6a3a;
+      border: 1px solid var(--brass);
     }
     .dash-community-post__date {
       font-size: 0.8rem;
@@ -3144,7 +3167,70 @@
       }
 
       const COMMUNITY_MSG_MAX = 500;
+      const COMMUNITY_FOUNDER_EMAIL = 'manonbrasseurpro@gmail.com';
+      const COMMUNITY_FOUNDER_PRENOM = 'Manon';
+      const COMMUNITY_FOUNDER_BADGE = 'Fondatrice';
+      const COMMUNITY_FOUNDER_LABEL = 'Manon · Fondatrice';
+      const COMMUNITY_TRAINER_LABEL = 'Formateur, PN';
       let communityCurrentUserId = null;
+
+      function normalizeCommunityEmail(value) {
+        return String(value || '').trim().toLowerCase();
+      }
+
+      function isCommunityFounderUser(user) {
+        return normalizeCommunityEmail(user?.email) === COMMUNITY_FOUNDER_EMAIL;
+      }
+
+      function resolveCommunityPrenom(user) {
+        if (isCommunityFounderUser(user)) {
+          return COMMUNITY_FOUNDER_LABEL;
+        }
+        return String(user?.firstName || 'Candidat').trim() || 'Candidat';
+      }
+
+      function getCommunityAuthorRole(post) {
+        const prenom = String(post?.prenom || '').trim();
+        const prenomNorm = prenom.toLowerCase().replace(/\s+/g, ' ');
+        if (
+          prenom === COMMUNITY_FOUNDER_LABEL
+          || prenomNorm === 'manon · fondatrice'
+          || prenomNorm === 'manon ·fondatrice'
+          || (prenomNorm.startsWith('manon') && prenomNorm.includes('fondatrice'))
+        ) {
+          return 'founder';
+        }
+        if (
+          prenom === COMMUNITY_TRAINER_LABEL
+          || /^formateur,?\s*pn$/i.test(prenom)
+        ) {
+          return 'trainer';
+        }
+        return 'student';
+      }
+
+      function renderCommunityAuthorHtml(post) {
+        const role = getCommunityAuthorRole(post);
+        if (role === 'founder') {
+          return `<span class="dash-community-post__author dash-community-post__author--founder" aria-label="${escapeCommunityHtml(COMMUNITY_FOUNDER_LABEL)}"><span class="dash-community-post__name">${escapeCommunityHtml(COMMUNITY_FOUNDER_PRENOM)}</span><span class="dash-community-post__author-sep" aria-hidden="true">·</span><span class="dash-community-badge dash-community-badge--founder">${escapeCommunityHtml(COMMUNITY_FOUNDER_BADGE)}</span></span>`;
+        }
+        if (role === 'trainer') {
+          return `<span class="dash-community-post__author dash-community-post__author--trainer">${escapeCommunityHtml(COMMUNITY_TRAINER_LABEL)}</span>`;
+        }
+        return `<span class="dash-community-post__author">${escapeCommunityHtml(post.prenom || 'Candidat')}</span>`;
+      }
+
+      function ensureCommunityComposerEnabled() {
+        const form = document.getElementById('community-post-form');
+        const textarea = document.getElementById('community-message');
+        const publishBtn = document.getElementById('community-publish-btn');
+        if (form) {
+          form.hidden = false;
+          form.removeAttribute('aria-disabled');
+        }
+        if (textarea) textarea.disabled = false;
+        if (publishBtn) publishBtn.disabled = false;
+      }
 
       function getDashSupabaseClient() {
         const cfg = window.GPX_SUPABASE || {};
@@ -3220,7 +3306,7 @@
           return `
             <article class="dash-community-post" data-post-id="${escapeCommunityHtml(post.id)}">
               <div class="dash-community-post__header">
-                <span class="dash-community-post__author">${escapeCommunityHtml(post.prenom || 'Candidat')}</span>
+                ${renderCommunityAuthorHtml(post)}
                 <time class="dash-community-post__date" datetime="${escapeCommunityHtml(post.created_at)}">${formatCommunityDate(post.created_at)}</time>
               </div>
               <p class="dash-community-post__message">${escapeCommunityHtml(post.message)}</p>
@@ -3395,6 +3481,7 @@
       async function loadCommunityPanel() {
         const currentUser = await window.GPXAuth?.getCurrentUser?.();
         communityCurrentUserId = currentUser?.id || null;
+        ensureCommunityComposerEnabled();
         updateCommunityCharCount();
         await Promise.all([loadCommunityIntervenants(), loadCommunityPosts(), loadCommunityLeaderboard()]);
       }
@@ -3429,7 +3516,7 @@
 
         const { error } = await client.from('community_posts').insert({
           user_id: currentUser.id,
-          prenom: String(currentUser.firstName || 'Candidat').trim() || 'Candidat',
+          prenom: resolveCommunityPrenom(currentUser),
           message
         });
 
@@ -3475,6 +3562,7 @@
         loadCommunityPanel();
       });
 
+      ensureCommunityComposerEnabled();
       if (window.location.hash === '#communaute') {
         loadCommunityPanel();
       }

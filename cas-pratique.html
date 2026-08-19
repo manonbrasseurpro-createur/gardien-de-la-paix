@@ -534,7 +534,6 @@
     }
 
     .situation-box,
-    .method-reminder,
     .context-help,
     .gpx-reminder-bar,
     .documents-highlight,
@@ -549,7 +548,6 @@
     }
 
     .situation-box h3,
-    .method-reminder h3,
     .context-help h3,
     .documents-highlight h3,
     .advice-box h3,
@@ -1727,10 +1725,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
           <article class="situation-box" id="situation-box"></article>
 
-          <article class="context-help" id="context-help">
-            <button class="context-help__toggle" type="button" id="context-help-toggle" aria-expanded="true">
+          <article class="context-help is-collapsed" id="context-help">
+            <button class="context-help__toggle" type="button" id="context-help-toggle" aria-expanded="false">
               <span><svg class="gpx-inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M12 2a7 7 0 0 0-4 12c.6.6 1 1.5 1 2.4V18h6v-1.6c0-.9.4-1.8 1-2.4A7 7 0 0 0 12 2z"></path></svg>Aide méthodologique</span>
-              <span id="context-help-toggle-label">Réduire</span>
+              <span id="context-help-toggle-label">Afficher</span>
             </button>
             <div class="context-help__body" id="context-help-body">
               <span class="context-help__type" id="context-help-type">Conseil ciblé</span>
@@ -1746,11 +1744,6 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               <span id="word-count">0 mot</span>
               <span id="autosave-status">Sauvegarde automatique active</span>
             </div>
-          </article>
-
-          <article class="method-reminder">
-            <h3>Rappel méthodologique</h3>
-            <p>Pensez à : qualifier les faits / citer le dossier / argumenter vos actions / rester dans votre rôle.</p>
           </article>
 
           <div class="gpx-reminder-bar" role="note">

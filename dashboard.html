@@ -733,7 +733,8 @@
       gap: 12px;
       margin-bottom: 24px;
     }
-    .dash-community-form textarea {
+    .dash-community-form textarea,
+    .dash-community-reply-form textarea {
       width: 100%;
       min-height: 104px;
       padding: 12px 14px;
@@ -744,7 +745,11 @@
       box-sizing: border-box;
       background: var(--white);
     }
-    .dash-community-form textarea:focus {
+    .dash-community-reply-form textarea {
+      min-height: 80px;
+    }
+    .dash-community-form textarea:focus,
+    .dash-community-reply-form textarea:focus {
       outline: 2px solid rgba(11, 31, 58, 0.15);
       border-color: var(--navy);
     }
@@ -825,22 +830,77 @@
       word-break: break-word;
     }
     .dash-community-post__actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
       margin-top: 10px;
     }
+    .dash-community-reply-btn,
     .dash-community-delete {
       padding: 6px 12px;
       border: 1px solid var(--border);
       border-radius: 6px;
       background: var(--white);
-      color: var(--seal);
       font: inherit;
       font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
     }
+    .dash-community-reply-btn {
+      color: var(--navy);
+    }
+    .dash-community-reply-btn:hover {
+      background: #f3f0ea;
+      border-color: #d9d2c5;
+    }
+    .dash-community-delete {
+      color: var(--seal);
+    }
     .dash-community-delete:hover {
       background: #fef2f2;
       border-color: #fecaca;
+    }
+    .dash-community-thread {
+      display: grid;
+      gap: 8px;
+    }
+    .dash-community-replies {
+      display: grid;
+      gap: 8px;
+      margin-left: 18px;
+      padding-left: 14px;
+      border-left: 2px solid #d9d2c5;
+    }
+    .dash-community-post--reply {
+      background: #f7f4ee;
+      border-color: #e6e0d4;
+    }
+    .dash-community-reply-form {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .dash-community-reply-form[hidden] {
+      display: none;
+    }
+    .dash-community-reply-form-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-community-reply-cancel {
+      padding: 6px 10px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .dash-community-reply-cancel:hover {
+      color: var(--navy);
     }
 
     .dash-intervenants-grid {
@@ -3283,41 +3343,147 @@
         statusEl.style.color = isError ? 'var(--seal)' : 'var(--muted)';
       }
 
-      function updateCommunityCharCount() {
-        const textarea = document.getElementById('community-message');
-        const countEl = document.getElementById('community-char-count');
-        if (!textarea || !countEl) return;
-        const length = textarea.value.length;
-        countEl.textContent = `${length} / ${COMMUNITY_MSG_MAX}`;
-        countEl.classList.toggle('is-limit', length >= COMMUNITY_MSG_MAX);
+      function updateCommunityCharCount(textarea, countEl) {
+        const field = textarea || document.getElementById('community-message');
+        const counter = countEl || document.getElementById('community-char-count');
+        if (!field || !counter) return;
+        const length = field.value.length;
+        counter.textContent = `${length} / ${COMMUNITY_MSG_MAX}`;
+        counter.classList.toggle('is-limit', length >= COMMUNITY_MSG_MAX);
+      }
+
+      function getCommunityThreadRoot(post, byId) {
+        let current = post;
+        const seen = new Set();
+        while (current && current.parent_id && byId.has(current.parent_id) && !seen.has(current.id)) {
+          seen.add(current.id);
+          current = byId.get(current.parent_id);
+        }
+        return current;
+      }
+
+      function groupCommunityThreads(posts) {
+        const list = Array.isArray(posts) ? posts : [];
+        const byId = new Map(list.map((post) => [post.id, post]));
+        const threadsByRootId = new Map();
+
+        list.forEach((post) => {
+          const root = getCommunityThreadRoot(post, byId);
+          if (!root) return;
+          if (!threadsByRootId.has(root.id)) {
+            threadsByRootId.set(root.id, { root: null, replies: [] });
+          }
+          const thread = threadsByRootId.get(root.id);
+          if (post.id === root.id) {
+            thread.root = post;
+          } else {
+            thread.replies.push(post);
+          }
+        });
+
+        const threads = [];
+        threadsByRootId.forEach((thread) => {
+          if (!thread.root) return;
+          thread.replies.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+          threads.push(thread);
+        });
+        threads.sort((a, b) => new Date(b.root.created_at) - new Date(a.root.created_at));
+        return threads;
+      }
+
+      function renderCommunityReplyFormHtml(anchorPostId, threadRootId) {
+        return `
+          <form class="dash-community-reply-form" hidden data-reply-form="${escapeCommunityHtml(anchorPostId)}" data-reply-parent="${escapeCommunityHtml(threadRootId)}">
+            <textarea data-reply-message maxlength="${COMMUNITY_MSG_MAX}" placeholder="Votre réponse..." aria-label="Votre réponse"></textarea>
+            <div class="dash-community-form-footer">
+              <span class="dash-community-char-count" data-reply-count aria-live="polite">0 / ${COMMUNITY_MSG_MAX}</span>
+              <div class="dash-community-reply-form-actions">
+                <button class="dash-community-reply-cancel" type="button" data-reply-cancel>Annuler</button>
+                <button class="primary-button" type="submit">Publier</button>
+              </div>
+            </div>
+          </form>
+        `;
+      }
+
+      function renderCommunityPostArticle(post, threadRootId, isReply) {
+        const canDelete = communityCurrentUserId && post.user_id === communityCurrentUserId;
+        const postId = escapeCommunityHtml(post.id);
+        const rootId = escapeCommunityHtml(threadRootId);
+        return `
+          <article class="dash-community-post${isReply ? ' dash-community-post--reply' : ''}" data-post-id="${postId}" data-thread-root="${rootId}">
+            <div class="dash-community-post__header">
+              ${renderCommunityAuthorHtml(post)}
+              <time class="dash-community-post__date" datetime="${escapeCommunityHtml(post.created_at)}">${formatCommunityDate(post.created_at)}</time>
+            </div>
+            <p class="dash-community-post__message">${escapeCommunityHtml(post.message)}</p>
+            <div class="dash-community-post__actions">
+              <button class="dash-community-reply-btn" type="button" data-reply-post="${rootId}" data-reply-anchor="${postId}">Répondre</button>
+              ${canDelete ? `<button class="dash-community-delete" type="button" data-delete-post="${postId}">Supprimer</button>` : ''}
+            </div>
+            ${renderCommunityReplyFormHtml(post.id, threadRootId)}
+          </article>
+        `;
       }
 
       function renderCommunityPosts(posts) {
         const listEl = document.getElementById('community-posts-list');
         if (!listEl) return;
 
-        if (!posts || posts.length === 0) {
+        const threads = groupCommunityThreads(posts);
+        if (threads.length === 0) {
           listEl.innerHTML = '<p style="color: var(--muted); margin: 0;">Aucun message pour l\'instant. Soyez le premier à écrire !</p>';
           return;
         }
 
-        listEl.innerHTML = posts.map((post) => {
-          const canDelete = communityCurrentUserId && post.user_id === communityCurrentUserId;
+        listEl.innerHTML = threads.map((thread) => {
+          const repliesHtml = thread.replies.length
+            ? `<div class="dash-community-replies">${thread.replies.map((reply) => renderCommunityPostArticle(reply, thread.root.id, true)).join('')}</div>`
+            : '';
           return `
-            <article class="dash-community-post" data-post-id="${escapeCommunityHtml(post.id)}">
-              <div class="dash-community-post__header">
-                ${renderCommunityAuthorHtml(post)}
-                <time class="dash-community-post__date" datetime="${escapeCommunityHtml(post.created_at)}">${formatCommunityDate(post.created_at)}</time>
-              </div>
-              <p class="dash-community-post__message">${escapeCommunityHtml(post.message)}</p>
-              ${canDelete ? `
-                <div class="dash-community-post__actions">
-                  <button class="dash-community-delete" type="button" data-delete-post="${escapeCommunityHtml(post.id)}">Supprimer</button>
-                </div>
-              ` : ''}
-            </article>
+            <div class="dash-community-thread" data-thread-id="${escapeCommunityHtml(thread.root.id)}">
+              ${renderCommunityPostArticle(thread.root, thread.root.id, false)}
+              ${repliesHtml}
+            </div>
           `;
         }).join('');
+      }
+
+      function closeAllCommunityReplyForms(exceptForm) {
+        document.querySelectorAll('[data-reply-form]').forEach((form) => {
+          if (form === exceptForm) return;
+          form.hidden = true;
+          const textarea = form.querySelector('[data-reply-message]');
+          if (textarea) textarea.value = '';
+          const countEl = form.querySelector('[data-reply-count]');
+          updateCommunityCharCount(textarea, countEl);
+        });
+      }
+
+      function openCommunityReplyForm(anchorPostId) {
+        const form = document.querySelector(`[data-reply-form="${anchorPostId}"]`);
+        if (!form) return;
+        const willOpen = form.hidden;
+        closeAllCommunityReplyForms(willOpen ? form : null);
+        form.hidden = !willOpen;
+        if (!form.hidden) {
+          const textarea = form.querySelector('[data-reply-message]');
+          const countEl = form.querySelector('[data-reply-count]');
+          updateCommunityCharCount(textarea, countEl);
+          textarea?.focus();
+        }
+      }
+
+      async function insertCommunityPost(client, currentUser, message, parentId) {
+        const payload = {
+          user_id: currentUser.id,
+          prenom: resolveCommunityPrenom(currentUser),
+          message
+        };
+        if (parentId) {
+          payload.parent_id = parentId;
+        }
+        return client.from('community_posts').insert(payload);
       }
 
       function renderCommunityLeaderboard(rows) {
@@ -3442,7 +3608,7 @@
 
         const { data, error } = await client
           .from('community_posts')
-          .select('id, user_id, prenom, message, created_at')
+          .select('id, user_id, prenom, message, created_at, parent_id')
           .order('created_at', { ascending: false });
 
         if (error) {
@@ -3486,7 +3652,7 @@
         await Promise.all([loadCommunityIntervenants(), loadCommunityPosts(), loadCommunityLeaderboard()]);
       }
 
-      document.getElementById('community-message')?.addEventListener('input', updateCommunityCharCount);
+      document.getElementById('community-message')?.addEventListener('input', () => updateCommunityCharCount());
 
       document.getElementById('community-post-form')?.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -3514,11 +3680,7 @@
         publishBtn.disabled = true;
         setCommunityStatus('');
 
-        const { error } = await client.from('community_posts').insert({
-          user_id: currentUser.id,
-          prenom: resolveCommunityPrenom(currentUser),
-          message
-        });
+        const { error } = await insertCommunityPost(client, currentUser, message, null);
 
         publishBtn.disabled = false;
 
@@ -3536,11 +3698,39 @@
       });
 
       document.getElementById('community-posts-list')?.addEventListener('click', async (event) => {
+        const replyBtn = event.target.closest('[data-reply-post]');
+        if (replyBtn) {
+          event.preventDefault();
+          const anchorId = replyBtn.getAttribute('data-reply-anchor');
+          if (anchorId) openCommunityReplyForm(anchorId);
+          return;
+        }
+
+        const cancelBtn = event.target.closest('[data-reply-cancel]');
+        if (cancelBtn) {
+          event.preventDefault();
+          const form = cancelBtn.closest('[data-reply-form]');
+          if (form) {
+            form.hidden = true;
+            const textarea = form.querySelector('[data-reply-message]');
+            if (textarea) textarea.value = '';
+            const countEl = form.querySelector('[data-reply-count]');
+            updateCommunityCharCount(textarea, countEl);
+          }
+          return;
+        }
+
         const button = event.target.closest('[data-delete-post]');
         if (!button) return;
 
         const postId = button.getAttribute('data-delete-post');
-        if (!postId || !confirm('Supprimer ce message ?')) return;
+        const threadEl = button.closest('.dash-community-thread');
+        const isRoot = button.closest('.dash-community-post')?.getAttribute('data-post-id') === threadEl?.getAttribute('data-thread-id');
+        const replyCount = threadEl ? threadEl.querySelectorAll('.dash-community-post--reply').length : 0;
+        const confirmMessage = isRoot && replyCount > 0
+          ? 'Supprimer ce message et toutes ses réponses ?'
+          : 'Supprimer ce message ?';
+        if (!postId || !confirm(confirmMessage)) return;
 
         const client = getDashSupabaseClient();
         if (!client) return;
@@ -3555,6 +3745,58 @@
         }
 
         setCommunityStatus('');
+        await loadCommunityPosts();
+      });
+
+      document.getElementById('community-posts-list')?.addEventListener('input', (event) => {
+        const textarea = event.target.closest('[data-reply-message]');
+        if (!textarea) return;
+        const form = textarea.closest('[data-reply-form]');
+        const countEl = form?.querySelector('[data-reply-count]');
+        updateCommunityCharCount(textarea, countEl);
+      });
+
+      document.getElementById('community-posts-list')?.addEventListener('submit', async (event) => {
+        const form = event.target.closest('[data-reply-form]');
+        if (!form) return;
+        event.preventDefault();
+
+        const client = getDashSupabaseClient();
+        const textarea = form.querySelector('[data-reply-message]');
+        const publishBtn = form.querySelector('button[type="submit"]');
+        const parentId = form.getAttribute('data-reply-parent');
+        if (!client || !textarea || !publishBtn || !parentId) return;
+
+        const message = textarea.value.trim();
+        if (!message) {
+          setCommunityStatus('Veuillez saisir une réponse.', true);
+          return;
+        }
+        if (message.length > COMMUNITY_MSG_MAX) {
+          setCommunityStatus(`Le message ne peut pas dépasser ${COMMUNITY_MSG_MAX} caractères.`, true);
+          return;
+        }
+
+        const currentUser = await window.GPXAuth?.getCurrentUser?.();
+        if (!currentUser?.id) {
+          setCommunityStatus('Vous devez être connecté pour publier.', true);
+          return;
+        }
+
+        publishBtn.disabled = true;
+        setCommunityStatus('');
+
+        const { error } = await insertCommunityPost(client, currentUser, message, parentId);
+        publishBtn.disabled = false;
+
+        if (error) {
+          setCommunityStatus('Impossible de publier la réponse. Réessayez.', true);
+          console.warn('[GPX Communauté] reply:', error);
+          return;
+        }
+
+        communityCurrentUserId = currentUser.id;
+        setCommunityStatus('Réponse publiée.');
         await loadCommunityPosts();
       });
 

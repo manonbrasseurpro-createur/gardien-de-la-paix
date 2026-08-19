@@ -297,11 +297,55 @@ create table if not exists public.community_posts (
   user_id uuid not null references auth.users (id) on delete cascade,
   prenom text not null,
   message text not null check (char_length(message) between 1 and 500),
-  created_at timestamptz not null default now()
+  parent_id uuid references public.community_posts (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  constraint community_posts_parent_not_self check (parent_id is distinct from id)
 );
 
 create index if not exists community_posts_created_at_idx
   on public.community_posts (created_at desc);
+
+create index if not exists community_posts_parent_id_idx
+  on public.community_posts (parent_id, created_at);
+
+create or replace function public.community_posts_flatten_parent()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public
+as $$
+declare
+  walked_id uuid;
+  parent_of uuid;
+  guard integer := 0;
+begin
+  if new.parent_id is null then
+    return new;
+  end if;
+
+  walked_id := new.parent_id;
+  loop
+    select p.parent_id into parent_of
+    from public.community_posts p
+    where p.id = walked_id;
+
+    exit when parent_of is null;
+    walked_id := parent_of;
+    guard := guard + 1;
+    if guard > 20 then
+      raise exception 'parent_id cycle detected';
+    end if;
+  end loop;
+
+  new.parent_id := walked_id;
+  return new;
+end;
+$$;
+
+drop trigger if exists community_posts_flatten_parent on public.community_posts;
+create trigger community_posts_flatten_parent
+  before insert or update of parent_id on public.community_posts
+  for each row execute procedure public.community_posts_flatten_parent();
 
 alter table public.community_posts enable row level security;
 

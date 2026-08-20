@@ -809,6 +809,43 @@
     .dash-personality-history-body {
       margin-top: 12px;
     }
+    .dash-personality-prompt {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 12px 16px;
+      margin-top: 16px;
+    }
+    .dash-personality-prompt p {
+      margin: 0;
+      flex: 1 1 240px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .dash-personality-prompt-fallback {
+      margin-top: 12px;
+    }
+    .dash-personality-prompt-fallback p {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .dash-personality-prompt-fallback textarea {
+      display: block;
+      width: 100%;
+      min-height: 180px;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--off-white);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      resize: vertical;
+    }
 
     .dash-placeholder {
       text-align: center;
@@ -3422,6 +3459,95 @@
           }));
       }
 
+      let latestPersonalityResult = null;
+      let personalityCopyResetTimer = null;
+
+      function buildPersonalityAiPrompt(result) {
+        const dimensions = orderedPersonalityDimensions(result?.dimension_scores);
+        const dimensionLines = dimensions.map((item) => {
+          const score = Number(item.score);
+          const scoreText = Number.isFinite(score) ? formatPersonalityDashScore(score) : '—';
+          return `- ${item.label} : ${scoreText}/10`;
+        }).join('\n');
+        const analyse = String(result?.analyse_text || '').trim()
+          || 'Analyse non disponible pour ce passage (test réalisé avant la mise à jour du site).';
+
+        return [
+          'Je prépare le concours de Gardien de la Paix (Police Nationale, France). J\'ai passé un test de personnalité en 6 dimensions dans le cadre de ma préparation, voici mes résultats :',
+          '',
+          dimensionLines,
+          '',
+          `Analyse fournie par le test : ${analyse}`,
+          '',
+          'À partir de ce profil, aide-moi à me préparer à l\'entretien avec le jury du concours GPX :',
+          '',
+          '1. Identifie 3 à 5 questions que le jury pourrait me poser en lien avec mes points de vigilance (pas mes points forts) — les jurys creusent souvent là où un profil montre une fragilité potentielle pour un métier de terrain (gestion du stress, autorité, travail en équipe, rapport à la hiérarchie, etc.)',
+          '',
+          '2. Pour chaque question, explique pourquoi le jury pourrait la poser (le lien avec mon profil)',
+          '',
+          '3. Donne-moi une structure de réponse possible pour chacune — pas un script à réciter, mais des pistes pour construire ma propre réponse sincère et argumentée',
+          '',
+          '4. Rappelle-moi : le jury n\'attend pas un profil "parfait", mais de la lucidité sur soi-même et une capacité à se remettre en question. Aide-moi à formuler mes réponses dans cet esprit, sans chercher à masquer mes points de vigilance.',
+          '',
+          'Réponds en français, de façon concrète et actionnable.'
+        ].join('\n');
+      }
+
+      function showPersonalityCopySuccess(button) {
+        if (personalityCopyResetTimer) {
+          clearTimeout(personalityCopyResetTimer);
+        }
+        button.textContent = 'Copié !';
+        personalityCopyResetTimer = setTimeout(() => {
+          button.textContent = 'Copier le prompt IA';
+          personalityCopyResetTimer = null;
+        }, 2000);
+      }
+
+      function showPersonalityCopyFallback(text) {
+        const fallback = document.getElementById('dash-personality-prompt-fallback');
+        const textarea = document.getElementById('dash-personality-prompt-text');
+        if (!fallback || !textarea) {
+          return;
+        }
+        fallback.hidden = false;
+        textarea.value = text;
+        textarea.focus();
+        textarea.select();
+      }
+
+      async function copyPersonalityAiPrompt() {
+        if (!latestPersonalityResult) {
+          return;
+        }
+        const button = document.getElementById('dash-personality-copy-prompt');
+        const text = buildPersonalityAiPrompt(latestPersonalityResult);
+        const fallback = document.getElementById('dash-personality-prompt-fallback');
+
+        try {
+          if (!navigator.clipboard?.writeText) {
+            throw new Error('clipboard unavailable');
+          }
+          await navigator.clipboard.writeText(text);
+          if (fallback) {
+            fallback.hidden = true;
+          }
+          if (button) {
+            showPersonalityCopySuccess(button);
+          }
+        } catch (error) {
+          showPersonalityCopyFallback(text);
+        }
+      }
+
+      function bindPersonalityCopyPromptButton() {
+        const button = document.getElementById('dash-personality-copy-prompt');
+        if (!button) {
+          return;
+        }
+        button.addEventListener('click', copyPersonalityAiPrompt);
+      }
+
       function renderPersonalityProfile(results) {
         const countEl = document.getElementById('dash-personality-count');
         const bodyEl = document.getElementById('dash-personality-body');
@@ -3429,13 +3555,20 @@
           return;
         }
 
+        if (personalityCopyResetTimer) {
+          clearTimeout(personalityCopyResetTimer);
+          personalityCopyResetTimer = null;
+        }
+
         if (!results.length) {
+          latestPersonalityResult = null;
           countEl.textContent = 'Aucun test de personnalité enregistré.';
           bodyEl.innerHTML = '<p style="color: var(--muted); margin: 0;">Complétez le test de personnalité (60 affirmations) pour retrouver ici votre profil par dimension, votre analyse et l\'historique de vos passages.</p>';
           return;
         }
 
         const [latest, ...previous] = results;
+        latestPersonalityResult = latest;
         countEl.textContent = results.length === 1
           ? '1 passage enregistré.'
           : `${results.length} passages enregistrés.`;
@@ -3456,8 +3589,17 @@
 
         bodyEl.innerHTML = `
           ${renderPersonalityResultMarkup(latest)}
+          <div class="dash-personality-prompt">
+            <button type="button" class="secondary-button" id="dash-personality-copy-prompt">Copier le prompt IA</button>
+            <p>Copiez ce prompt dans votre assistant IA préféré (ChatGPT, Claude...) pour préparer votre entretien de jury à partir de vos résultats.</p>
+          </div>
+          <div class="dash-personality-prompt-fallback" id="dash-personality-prompt-fallback" hidden>
+            <p>Copie automatique impossible, sélectionnez et copiez le texte ci-dessous.</p>
+            <textarea id="dash-personality-prompt-text" readonly rows="12" aria-label="Prompt à copier"></textarea>
+          </div>
           ${historyHtml}
         `;
+        bindPersonalityCopyPromptButton();
       }
 
       async function loadPersonalityProfile() {

@@ -1,9 +1,15 @@
 /**
  * Présence Realtime des élèves connectés (toutes pages authentifiées).
  * Canal partagé avec le compteur admin : dashboard-online.
+ *
+ * supabase-js 2.49.8 n'active PAS presence.enabled tout seul à l'abonnement.
+ * Sans { presence: { enabled: true } } dans le join, le serveur accepte track()
+ * mais n'envoie pas presence_state / presence_diff à CE client — d'où sync
+ * invisible alors que l'Inspector (lui, presence enabled) voit bien les events.
  */
 (function (global) {
   const CHANNEL_NAME = "dashboard-online";
+  const CHANNEL_TOPIC = "realtime:" + CHANNEL_NAME;
   const TAB_STORAGE_KEY = "gpxPresenceTabId";
   const READY_TIMEOUT_MS = 10000;
   const READY_INTERVAL_MS = 200;
@@ -18,6 +24,7 @@
   let lifecycleBound = false;
 
   global.__gpxPresenceState = global.__gpxPresenceState || {};
+  global.__gpxPresenceChannel = null;
 
   function isDebug() {
     try {
@@ -114,6 +121,8 @@
     const state = target.presenceState() || {};
     if (reason === "sync") {
       console.info("[GPX Presence] sync event fired", state);
+    } else if (reason === "presence_state" || reason === "presence_diff") {
+      console.info("[GPX Presence] " + reason + " received", state);
     } else {
       debugLog("presence update", reason, state);
     }
@@ -141,6 +150,32 @@
     return new Promise(function (resolve) {
       setTimeout(resolve, ms);
     });
+  }
+
+  function isSamePresenceChannel(candidate) {
+    if (!candidate) {
+      return false;
+    }
+    return candidate.topic === CHANNEL_TOPIC
+      || candidate.subTopic === CHANNEL_NAME
+      || candidate.topic === CHANNEL_NAME;
+  }
+
+  async function removeStalePresenceChannels(supabaseClient, keepChannel) {
+    const channels = typeof supabaseClient.getChannels === "function"
+      ? supabaseClient.getChannels()
+      : [];
+    const stale = channels.filter(function (candidate) {
+      return isSamePresenceChannel(candidate) && candidate !== keepChannel;
+    });
+    for (let i = 0; i < stale.length; i += 1) {
+      try {
+        debugLog("removeChannel stale", stale[i].topic, stale[i]);
+        await supabaseClient.removeChannel(stale[i]);
+      } catch (error) {
+        debugLog("removeChannel stale:", error);
+      }
+    }
   }
 
   async function ensureClient() {
@@ -211,6 +246,7 @@
     const activeChannel = channel;
     const activeClient = client;
     channel = null;
+    global.__gpxPresenceChannel = null;
     if (!activeChannel || !activeClient) {
       return;
     }
@@ -226,10 +262,32 @@
     }
   }
 
+  function stampPresenceEnabled(activeChannel, userId) {
+    if (!activeChannel.params) {
+      activeChannel.params = { config: {} };
+    }
+    if (!activeChannel.params.config) {
+      activeChannel.params.config = {};
+    }
+    const presence = Object.assign({}, activeChannel.params.config.presence || {}, {
+      key: userId,
+      enabled: true
+    });
+    activeChannel.params.config.presence = presence;
+    return presence;
+  }
+
   function bindPresenceHandlers(activeChannel) {
-    activeChannel.on("presence", { event: "sync" }, function () {
+    const afterSync = activeChannel.on("presence", { event: "sync" }, function () {
       readAndEmitPresence("sync", activeChannel);
     });
+    console.info("[GPX Presence] handler sync bound", {
+      sameInstance: afterSync === activeChannel,
+      topic: activeChannel.topic,
+      channel: activeChannel,
+      presenceBindings: activeChannel.bindings && activeChannel.bindings.presence
+    });
+
     activeChannel.on("presence", { event: "join" }, function (payload) {
       debugLog("join event", payload);
       readAndEmitPresence("join", activeChannel);
@@ -238,6 +296,17 @@
       debugLog("leave event", payload);
       readAndEmitPresence("leave", activeChannel);
     });
+
+    activeChannel.on("presence_state", {}, function (rawState) {
+      console.info("[GPX Presence] presence_state raw", rawState);
+      readAndEmitPresence("presence_state", activeChannel);
+    });
+    activeChannel.on("presence_diff", {}, function (rawDiff) {
+      console.info("[GPX Presence] presence_diff raw", rawDiff);
+      readAndEmitPresence("presence_diff", activeChannel);
+    });
+
+    return activeChannel;
   }
 
   async function joinChannel(user, supabaseClient) {
@@ -261,21 +330,37 @@
     client = supabaseClient;
 
     try {
-      if (channel) {
-        try {
-          await client.removeChannel(channel);
-        } catch (error) {
-          debugLog("removeChannel précédent:", error);
-        }
-        channel = null;
-      }
+      await removeStalePresenceChannels(supabaseClient, null);
+      channel = null;
 
-      const activeChannel = client.channel(CHANNEL_NAME, {
-        config: { presence: { key: user.id } }
+      const activeChannel = supabaseClient.channel(CHANNEL_NAME, {
+        config: {
+          presence: {
+            key: user.id,
+            enabled: true
+          }
+        }
       });
+      const presenceJoin = stampPresenceEnabled(activeChannel, user.id);
       channel = activeChannel;
+      global.__gpxPresenceChannel = activeChannel;
+
+      console.info("[GPX Presence] channel created", {
+        name: CHANNEL_NAME,
+        topic: activeChannel.topic,
+        subTopic: activeChannel.subTopic,
+        presenceJoin: presenceJoin,
+        channel: activeChannel
+      });
 
       bindPresenceHandlers(activeChannel);
+
+      console.info("[GPX Presence] subscribe() on same instance", {
+        sameAsCreated: activeChannel === channel,
+        topic: activeChannel.topic,
+        presenceEnabled: !!(activeChannel.params && activeChannel.params.config && activeChannel.params.config.presence && activeChannel.params.config.presence.enabled),
+        channel: activeChannel
+      });
 
       activeChannel.subscribe(async function (status) {
         if (status !== "SUBSCRIBED") {
@@ -296,15 +381,18 @@
             email: user.email || "",
             tabId: getTabId()
           });
-          debugLog("track OK", trackResult);
+          debugLog("track OK", trackResult, {
+            sameInstance: activeChannel === channel,
+            topic: activeChannel.topic
+          });
           const stateAfterTrack = activeChannel.presenceState() || {};
           if (Object.keys(stateAfterTrack).length > 0) {
             emitSync(stateAfterTrack);
           } else {
-            debugLog("presenceState vide juste après track — attente sync/join");
+            debugLog("presenceState vide juste après track — attente sync/presence_state");
             setTimeout(function () {
               readAndEmitPresence("track-timeout", activeChannel);
-            }, 400);
+            }, 600);
           }
         } catch (error) {
           console.warn("[GPX Presence] track:", error);

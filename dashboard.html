@@ -600,6 +600,23 @@
       color: var(--navy);
       cursor: pointer;
     }
+    #panel-admin .admin-partner-status-select {
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(246, 244, 238, 0.96);
+      color: var(--navy);
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    #panel-admin .admin-status-badge {
+      display: inline-flex;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
     #panel-admin .admin-notif-check {
       display: flex;
       align-items: center;
@@ -1389,7 +1406,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13l3 3 8-8"></path><path d="M16 21v-2a4 4 0 0 0-3-3.87"></path><path d="M8 21v-2a4 4 0 0 1 4-4h.5"></path><circle cx="9" cy="7" r="3"></circle><circle cx="17" cy="7" r="3"></circle></svg>
                 </span>
                 <h2>Partenaires</h2>
-                <p class="admin-tile__desc">Offres partenaires et accès associés.</p>
+                <p class="admin-tile__desc">Codes promo, suivi des inscriptions affiliées et notes de partenariat.</p>
               </button>
               <button class="admin-tile" type="button" data-admin-view="notifications">
                 <span class="admin-tile__icon" aria-hidden="true">
@@ -1503,8 +1520,37 @@
           <div class="admin-view" id="admin-view-partners" hidden>
             <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
             <div class="auth-card auth-card--wide">
-              <h2>Partenaires</h2>
-              <p class="admin-placeholder">Cette section est prête visuellement. Branchez-y la gestion des partenaires dès qu’elle sera disponible : les cartes du panneau resteront identiques.</p>
+              <div class="admin-notif-header">
+                <h2>Partenaires</h2>
+                <button class="primary-button" type="button" id="admin-partner-new-btn">Nouveau partenaire</button>
+              </div>
+              <p class="admin-lead">Suivi interne des partenariats et des inscriptions via code promo Stripe (<code>profiles.promo_code</code>). Les noms ne sont jamais affichés publiquement.</p>
+              <div id="admin-partners-list"><p class="admin-lead">Chargement…</p></div>
+            </div>
+            <div class="auth-card auth-card--wide" id="admin-partner-form-card" hidden>
+              <h2 id="admin-partner-form-title">Nouveau partenaire</h2>
+              <form class="admin-campaign-form" id="admin-partner-form">
+                <input type="hidden" id="admin-partner-id">
+                <label for="admin-partner-name">Nom (interne)</label>
+                <input type="text" id="admin-partner-name" maxlength="120" required placeholder="Nom du partenaire" autocomplete="off">
+                <label for="admin-partner-email">Email de contact (optionnel)</label>
+                <input type="email" id="admin-partner-email" maxlength="200" placeholder="contact@exemple.fr" autocomplete="off">
+                <label for="admin-partner-promo">Code promo Stripe (optionnel)</label>
+                <input type="text" id="admin-partner-promo" maxlength="64" placeholder="TACTICAL" autocomplete="off">
+                <label for="admin-partner-status">Statut</label>
+                <select id="admin-partner-status">
+                  <option value="active">Actif</option>
+                  <option value="paused">En pause</option>
+                  <option value="ended">Terminé</option>
+                </select>
+                <label for="admin-partner-notes">Notes (deal, commission, dates d'accord…)</label>
+                <textarea id="admin-partner-notes" placeholder="Détails internes du partenariat"></textarea>
+                <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px;">
+                  <button class="primary-button" type="submit" id="admin-partner-save-btn">Enregistrer</button>
+                  <button class="admin-campaign-modal__cancel" type="button" id="admin-partner-cancel-btn">Annuler</button>
+                </div>
+                <p class="admin-campaign-status" id="admin-partner-form-msg"></p>
+              </form>
             </div>
           </div>
 
@@ -2681,6 +2727,298 @@
         });
       }
 
+      let partnersUserSortDir = 'desc';
+      let partnersCache = [];
+
+      const PARTNER_STATUS_LABELS = {
+        active: 'Actif',
+        paused: 'En pause',
+        ended: 'Terminé'
+      };
+      const PARTNER_STATUS_STYLES = {
+        active: { bg: '#dcfce7', color: '#166534' },
+        paused: { bg: '#fef3c7', color: '#92400e' },
+        ended: { bg: '#f3f4f6', color: '#6b7280' }
+      };
+
+      function normalizePartnerPromoCode(value) {
+        const code = String(value || '').trim().toUpperCase();
+        return code || null;
+      }
+
+      function setPartnerFormMessage(text, ok) {
+        const msgEl = document.getElementById('admin-partner-form-msg');
+        if (!msgEl) return;
+        msgEl.textContent = text || '';
+        msgEl.style.color = ok ? 'green' : (ok === false ? '#fecaca' : 'rgba(246, 244, 238, 0.68)');
+      }
+
+      function resetPartnerForm() {
+        const form = document.getElementById('admin-partner-form');
+        if (form) form.reset();
+        const idEl = document.getElementById('admin-partner-id');
+        if (idEl) idEl.value = '';
+        const statusEl = document.getElementById('admin-partner-status');
+        if (statusEl) statusEl.value = 'active';
+        const titleEl = document.getElementById('admin-partner-form-title');
+        if (titleEl) titleEl.textContent = 'Nouveau partenaire';
+        setPartnerFormMessage('');
+      }
+
+      function hidePartnerForm() {
+        const card = document.getElementById('admin-partner-form-card');
+        if (card) card.hidden = true;
+        resetPartnerForm();
+      }
+
+      function showPartnerForm(partner) {
+        const card = document.getElementById('admin-partner-form-card');
+        const titleEl = document.getElementById('admin-partner-form-title');
+        if (!card) return;
+        resetPartnerForm();
+        if (partner) {
+          if (titleEl) titleEl.textContent = 'Modifier le partenaire';
+          document.getElementById('admin-partner-id').value = partner.id || '';
+          document.getElementById('admin-partner-name').value = partner.name || '';
+          document.getElementById('admin-partner-email').value = partner.contact_email || '';
+          document.getElementById('admin-partner-promo').value = partner.promo_code || '';
+          document.getElementById('admin-partner-status').value = PARTNER_STATUS_LABELS[partner.status] ? partner.status : 'active';
+          document.getElementById('admin-partner-notes').value = partner.notes || '';
+        } else if (titleEl) {
+          titleEl.textContent = 'Nouveau partenaire';
+        }
+        card.hidden = false;
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function readPartnerForm() {
+        const name = String(document.getElementById('admin-partner-name')?.value || '').trim();
+        const contactEmail = String(document.getElementById('admin-partner-email')?.value || '').trim();
+        const status = document.getElementById('admin-partner-status')?.value || 'active';
+        const notes = String(document.getElementById('admin-partner-notes')?.value || '').trim();
+        return {
+          id: String(document.getElementById('admin-partner-id')?.value || '').trim(),
+          name,
+          contact_email: contactEmail || null,
+          promo_code: normalizePartnerPromoCode(document.getElementById('admin-partner-promo')?.value),
+          status: PARTNER_STATUS_LABELS[status] ? status : 'active',
+          notes: notes || null
+        };
+      }
+
+      function countProfilesForPromo(promoCounts, promoCode) {
+        const key = normalizePartnerPromoCode(promoCode);
+        if (!key) return 0;
+        return promoCounts[key] || 0;
+      }
+
+      function sortPartnersForAdmin(partners, promoCounts) {
+        const dir = partnersUserSortDir === 'asc' ? 1 : -1;
+        return [...partners].sort((a, b) => {
+          const countA = countProfilesForPromo(promoCounts, a.promo_code);
+          const countB = countProfilesForPromo(promoCounts, b.promo_code);
+          if (countA !== countB) return (countA - countB) * dir;
+          return String(a.name || '').localeCompare(String(b.name || ''), 'fr');
+        });
+      }
+
+      async function loadAdminPartnersList(client) {
+        const listEl = document.getElementById('admin-partners-list');
+        if (!listEl || !client) return;
+        if (!isAdmin) {
+          listEl.innerHTML = '<p style="color: #fecaca;">Accès réservé à l\'administratrice.</p>';
+          return;
+        }
+
+        const [{ data: partners, error }, { data: promoRows, error: promoError }] = await Promise.all([
+          client.from('partners').select('*').order('created_at', { ascending: false }),
+          client.from('profiles').select('promo_code').not('promo_code', 'is', null)
+        ]);
+
+        if (error) {
+          listEl.innerHTML = `<p style="color: #fecaca;">Impossible de charger les partenaires : ${escapeCommunityHtml(error.message)}</p>`;
+          return;
+        }
+        if (promoError) {
+          console.warn('[admin-partners] promo counts:', promoError);
+        }
+
+        const promoCounts = {};
+        (promoRows || []).forEach((row) => {
+          const key = normalizePartnerPromoCode(row.promo_code);
+          if (!key) return;
+          promoCounts[key] = (promoCounts[key] || 0) + 1;
+        });
+
+        partnersCache = partners || [];
+        if (!partnersCache.length) {
+          listEl.innerHTML = '<p class="admin-lead">Aucun partenaire pour l\'instant.</p>';
+          return;
+        }
+
+        const sorted = sortPartnersForAdmin(partnersCache, promoCounts);
+        const sortLabel = partnersUserSortDir === 'asc' ? 'Utilisateurs ↑' : 'Utilisateurs ↓';
+
+        listEl.innerHTML = `
+          <div class="dash-history-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Code promo</th>
+                  <th>Statut</th>
+                  <th>
+                    <button type="button" class="admin-sort-btn" id="admin-partners-sort-users">${escapeCommunityHtml(sortLabel)}</button>
+                  </th>
+                  <th>Créé le</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${sorted.map((partner) => {
+                  const status = PARTNER_STATUS_STYLES[partner.status] || PARTNER_STATUS_STYLES.ended;
+                  const userCount = countProfilesForPromo(promoCounts, partner.promo_code);
+                  const created = partner.created_at
+                    ? new Date(partner.created_at).toLocaleDateString('fr-FR')
+                    : '—';
+                  return `
+                    <tr>
+                      <td>${escapeCommunityHtml(partner.name)}</td>
+                      <td>${partner.promo_code ? escapeCommunityHtml(partner.promo_code) : '—'}</td>
+                      <td>
+                        <span class="admin-status-badge" style="background: ${status.bg}; color: ${status.color};">${escapeCommunityHtml(PARTNER_STATUS_LABELS[partner.status] || partner.status)}</span>
+                      </td>
+                      <td><strong>${userCount}</strong></td>
+                      <td>${escapeCommunityHtml(created)}</td>
+                      <td>
+                        <div class="admin-notif-actions">
+                          <button type="button" data-partner-edit="${escapeCommunityHtml(partner.id)}">Modifier</button>
+                          <select class="admin-partner-status-select" data-partner-status="${escapeCommunityHtml(partner.id)}" aria-label="Changer le statut">
+                            <option value="active" ${partner.status === 'active' ? 'selected' : ''}>Actif</option>
+                            <option value="paused" ${partner.status === 'paused' ? 'selected' : ''}>En pause</option>
+                            <option value="ended" ${partner.status === 'ended' ? 'selected' : ''}>Terminé</option>
+                          </select>
+                          <button type="button" data-partner-delete="${escapeCommunityHtml(partner.id)}">Supprimer</button>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        document.getElementById('admin-partners-sort-users')?.addEventListener('click', () => {
+          partnersUserSortDir = partnersUserSortDir === 'desc' ? 'asc' : 'desc';
+          loadAdminPartnersList(client);
+        });
+
+        listEl.querySelectorAll('[data-partner-edit]').forEach((button) => {
+          button.addEventListener('click', () => {
+            if (!isAdmin) return;
+            const id = button.getAttribute('data-partner-edit');
+            const partner = partnersCache.find((item) => item.id === id);
+            if (partner) showPartnerForm(partner);
+          });
+        });
+
+        listEl.querySelectorAll('[data-partner-status]').forEach((select) => {
+          select.addEventListener('change', async () => {
+            if (!isAdmin) {
+              window.alert("Action réservée à l'administratrice.");
+              await loadAdminPartnersList(client);
+              return;
+            }
+            const id = select.getAttribute('data-partner-status');
+            const nextStatus = select.value;
+            if (!PARTNER_STATUS_LABELS[nextStatus]) return;
+            select.disabled = true;
+            const { error: updateError } = await client
+              .from('partners')
+              .update({ status: nextStatus })
+              .eq('id', id);
+            if (updateError) {
+              window.alert(updateError.message || 'Mise à jour refusée.');
+            }
+            await loadAdminPartnersList(client);
+          });
+        });
+
+        listEl.querySelectorAll('[data-partner-delete]').forEach((button) => {
+          button.addEventListener('click', async () => {
+            if (!isAdmin) {
+              window.alert("Action réservée à l'administratrice.");
+              return;
+            }
+            const id = button.getAttribute('data-partner-delete');
+            const partner = partnersCache.find((item) => item.id === id);
+            const label = partner?.name ? ` « ${partner.name} »` : '';
+            if (!window.confirm(`Supprimer ce partenaire${label} ? Les profils déjà inscrits avec ce code promo ne sont pas modifiés.`)) return;
+            button.disabled = true;
+            const { error: deleteError } = await client.from('partners').delete().eq('id', id);
+            if (deleteError) {
+              window.alert(deleteError.message || 'Suppression refusée.');
+              button.disabled = false;
+              return;
+            }
+            hidePartnerForm();
+            await loadAdminPartnersList(client);
+          });
+        });
+      }
+
+      async function saveAdminPartner(client) {
+        if (!isAdmin || (await getAuthEmail()) !== ADMIN_EMAIL) {
+          setPartnerFormMessage("Accès refusé. Cette action est réservée à l'administratrice.", false);
+          return;
+        }
+        const draft = readPartnerForm();
+        if (!draft.name) {
+          setPartnerFormMessage('Le nom est obligatoire.', false);
+          document.getElementById('admin-partner-name')?.focus();
+          return;
+        }
+        if (draft.contact_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(draft.contact_email)) {
+          setPartnerFormMessage('Email de contact invalide.', false);
+          return;
+        }
+
+        const payload = {
+          name: draft.name,
+          contact_email: draft.contact_email,
+          promo_code: draft.promo_code,
+          status: draft.status,
+          notes: draft.notes
+        };
+
+        const saveBtn = document.getElementById('admin-partner-save-btn');
+        if (saveBtn) saveBtn.disabled = true;
+        setPartnerFormMessage('Enregistrement…');
+
+        let result;
+        if (draft.id) {
+          result = await client.from('partners').update(payload).eq('id', draft.id).select('id');
+        } else {
+          result = await client.from('partners').insert(payload).select('id');
+        }
+
+        if (saveBtn) saveBtn.disabled = false;
+        if (result.error) {
+          const isDuplicate = /partners_promo_code_unique|duplicate key/i.test(result.error.message || '');
+          setPartnerFormMessage(
+            isDuplicate
+              ? 'Ce code promo est déjà associé à un autre partenaire.'
+              : (result.error.message || 'Enregistrement refusé.'),
+            false
+          );
+          return;
+        }
+
+        hidePartnerForm();
+        await loadAdminPartnersList(client);
+      }
+
       async function loadAdminData() {
         const cfg = window.GPX_SUPABASE || {};
         const client = window.__gpxSupabaseClient || (window.supabase?.createClient
@@ -2833,6 +3171,7 @@
         await loadCampaignHistory(client);
         updateCampaignSelectedCount();
         await loadAdminNotificationsList(client);
+        await loadAdminPartnersList(client);
       }
 
       if (isAdmin) {
@@ -3017,6 +3356,22 @@
         });
         document.getElementById('admin-notif-cancel-btn')?.addEventListener('click', () => {
           hideNotifForm();
+        });
+        document.getElementById('admin-partner-new-btn')?.addEventListener('click', () => {
+          if (!isAdmin) return;
+          showPartnerForm(null);
+        });
+        document.getElementById('admin-partner-cancel-btn')?.addEventListener('click', () => {
+          hidePartnerForm();
+        });
+        document.getElementById('admin-partner-form')?.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const client = getAdminClient();
+          if (!client) {
+            setPartnerFormMessage('Erreur de connexion au serveur.', false);
+            return;
+          }
+          await saveAdminPartner(client);
         });
         document.getElementById('admin-notif-target-mode')?.addEventListener('change', async () => {
           syncNotifTargetMode();

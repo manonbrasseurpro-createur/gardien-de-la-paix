@@ -57,19 +57,32 @@
     }
   }
 
+  function presenceList(presences) {
+    if (Array.isArray(presences)) {
+      return presences;
+    }
+    if (presences && Array.isArray(presences.metas)) {
+      return presences.metas;
+    }
+    if (presences && typeof presences === "object") {
+      return [presences];
+    }
+    return [];
+  }
+
   function uniquePeople(state) {
     const source = state || global.__gpxPresenceState || {};
     const people = [];
-    Object.values(source).forEach((presences) => {
-      (Array.isArray(presences) ? presences : []).forEach((presence) => {
+    Object.values(source).forEach(function (presences) {
+      presenceList(presences).forEach(function (presence) {
         const name = String(presence.firstName || presence.first_name || "").trim() || "Candidat";
         const key = String(presence.userId || presence.email || name).trim().toLowerCase();
-        if (!key || people.some((item) => item.key === key)) {
+        if (!key || people.some(function (item) { return item.key === key; })) {
           return;
         }
         people.push({
-          key,
-          name,
+          key: key,
+          name: name,
           userId: presence.userId || "",
           email: presence.email || ""
         });
@@ -79,8 +92,8 @@
   }
 
   function emitSync(state) {
-    global.__gpxPresenceState = state || {};
-    syncListeners.forEach((listener) => {
+    global.__gpxPresenceState = state && typeof state === "object" ? state : {};
+    syncListeners.forEach(function (listener) {
       try {
         listener(global.__gpxPresenceState);
       } catch (error) {
@@ -90,6 +103,21 @@
     global.dispatchEvent(new CustomEvent("gpx-presence-sync", {
       detail: global.__gpxPresenceState
     }));
+  }
+
+  function readAndEmitPresence(reason, activeChannel) {
+    const target = activeChannel || channel;
+    if (!target || typeof target.presenceState !== "function") {
+      debugLog("readAndEmit: channel indisponible", reason);
+      return;
+    }
+    const state = target.presenceState() || {};
+    if (reason === "sync") {
+      console.info("[GPX Presence] sync event fired", state);
+    } else {
+      debugLog("presence update", reason, state);
+    }
+    emitSync(state);
   }
 
   function onSync(listener) {
@@ -198,6 +226,20 @@
     }
   }
 
+  function bindPresenceHandlers(activeChannel) {
+    activeChannel.on("presence", { event: "sync" }, function () {
+      readAndEmitPresence("sync", activeChannel);
+    });
+    activeChannel.on("presence", { event: "join" }, function (payload) {
+      debugLog("join event", payload);
+      readAndEmitPresence("join", activeChannel);
+    });
+    activeChannel.on("presence", { event: "leave" }, function (payload) {
+      debugLog("leave event", payload);
+      readAndEmitPresence("leave", activeChannel);
+    });
+  }
+
   async function joinChannel(user, supabaseClient) {
     if (!user?.id) {
       debugLog("join: sortie user.id manquant");
@@ -228,16 +270,14 @@
         channel = null;
       }
 
-      const presenceKey = user.id + ":" + getTabId();
-      channel = client.channel(CHANNEL_NAME, {
-        config: { presence: { key: presenceKey } }
+      const activeChannel = client.channel(CHANNEL_NAME, {
+        config: { presence: { key: user.id } }
       });
+      channel = activeChannel;
 
-      channel.on("presence", { event: "sync" }, function () {
-        emitSync(channel ? channel.presenceState() : {});
-      });
+      bindPresenceHandlers(activeChannel);
 
-      channel.subscribe(async function (status) {
+      activeChannel.subscribe(async function (status) {
         if (status !== "SUBSCRIBED") {
           console.warn("[GPX Presence] subscribe status =", status);
           if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
@@ -250,13 +290,22 @@
         started = true;
         joining = false;
         try {
-          await channel.track({
+          const trackResult = await activeChannel.track({
             userId: user.id,
             firstName: user.firstName || "Candidat",
-            email: user.email || ""
+            email: user.email || "",
+            tabId: getTabId()
           });
-          emitSync(channel.presenceState());
-          debugLog("track OK", uniquePeople());
+          debugLog("track OK", trackResult);
+          const stateAfterTrack = activeChannel.presenceState() || {};
+          if (Object.keys(stateAfterTrack).length > 0) {
+            emitSync(stateAfterTrack);
+          } else {
+            debugLog("presenceState vide juste après track — attente sync/join");
+            setTimeout(function () {
+              readAndEmitPresence("track-timeout", activeChannel);
+            }, 400);
+          }
         } catch (error) {
           console.warn("[GPX Presence] track:", error);
         }
@@ -340,7 +389,7 @@
   }
 
   global.GPXPresence = {
-    CHANNEL_NAME,
+    CHANNEL_NAME: CHANNEL_NAME,
     uniquePeople: uniquePeople,
     onSync: onSync,
     start: startPresence,

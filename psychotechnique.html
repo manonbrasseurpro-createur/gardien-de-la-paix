@@ -1634,19 +1634,104 @@
         <p>${coherence.message}</p>
         ${detail}
       `;
-      savePersonalityProgression(scores);
+      savePersonalityProgression(scores, coherence);
     }
 
-    function savePersonalityProgression(scores) {
-      const total = 10;
-      const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
-      const categories = scores.reduce((result, item) => {
+    function buildPersonalityDimensionScores(scores) {
+      return scores.reduce((result, item) => {
         result[item.label] = {
           score: item.score,
-          total
+          total: 10
         };
         return result;
       }, {});
+    }
+
+    function personalityCoherenceScore(coherence) {
+      const pairCount = personalityMirrorPairs.length;
+      if (!pairCount) {
+        return null;
+      }
+      const issueCount = Array.isArray(coherence?.issues) ? coherence.issues.length : 0;
+      return Math.round(((pairCount - issueCount) / pairCount) * 10 * 10) / 10;
+    }
+
+    function buildPersonalityAnalyseText(scores, coherence) {
+      const average = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const sortedScores = [...scores].sort((a, b) => b.score - a.score);
+      const lowScores = scores.filter((item) => item.score < 6);
+      const solidScores = scores.filter((item) => item.score >= 7.5);
+      const strengthItems = solidScores.length ? solidScores : sortedScores.slice(0, 2);
+      const progressItems = lowScores.length ? lowScores : sortedScores.slice(-2).reverse();
+      const lines = [
+        "Lecture personnalisée",
+        personalityOverallMessage(average),
+        "",
+        ...scores.map((item) => `${item.label} : ${personalityDimensionMessage(item)}`),
+        "",
+        "Points d'appui",
+        ...strengthItems.map((item) => `- ${item.label} : ${personalityStrengthMessage(item)}`),
+        "",
+        "Axes de progression",
+        ...progressItems.map((item) => `- ${item.label} : ${item.advice}`),
+        "",
+        coherence.title,
+        coherence.message,
+        coherence.issues.length
+          ? `Nombre d'écarts marqués sur les questions miroir : ${coherence.issues.length}/10.`
+          : "Aucun écart marqué n'a été relevé sur les 10 questions miroir."
+      ];
+      return lines.join("\n");
+    }
+
+    function getPersonalitySupabaseClient() {
+      if (window.__gpxSupabaseClient) {
+        return window.__gpxSupabaseClient;
+      }
+      const cfg = window.GPX_SUPABASE || {};
+      const url = cfg.url || cfg.SUPABASE_URL;
+      const anonKey = cfg.anonKey;
+      if (!url || !anonKey || !window.supabase?.createClient) {
+        return null;
+      }
+      window.__gpxSupabaseClient = window.supabase.createClient(url, anonKey);
+      return window.__gpxSupabaseClient;
+    }
+
+    async function savePersonalityResultToSupabase(scores, coherence) {
+      const client = getPersonalitySupabaseClient();
+      if (!client || !window.GPXAuth?.getCurrentUser) {
+        return;
+      }
+
+      try {
+        const user = await window.GPXAuth.getCurrentUser();
+        if (!user?.id) {
+          return;
+        }
+
+        const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+        const { error } = await client.from("personality_test_results").insert({
+          user_id: user.id,
+          duree_secondes: personalityStartedAt ? Math.round((new Date() - personalityStartedAt) / 1000) : 0,
+          dimension_scores: buildPersonalityDimensionScores(scores),
+          score_moyen: Math.round(scoreValue * 10) / 10,
+          coherence_score: personalityCoherenceScore(coherence),
+          analyse_text: buildPersonalityAnalyseText(scores, coherence)
+        });
+
+        if (error) {
+          console.warn("[GPX Personnalité] savePersonalityResultToSupabase:", error);
+        }
+      } catch (error) {
+        console.warn("[GPX Personnalité] savePersonalityResultToSupabase:", error);
+      }
+    }
+
+    function savePersonalityProgression(scores, coherence) {
+      const total = 10;
+      const scoreValue = scores.reduce((sum, item) => sum + item.score, 0) / scores.length;
+      const categories = buildPersonalityDimensionScores(scores);
 
       window.GpxProgression?.saveSession({
         module: "psychotechnique",
@@ -1656,6 +1741,7 @@
         duree: personalityStartedAt ? Math.round((new Date() - personalityStartedAt) / 1000) : 0,
         categories
       });
+      savePersonalityResultToSupabase(scores, coherence);
     }
 
     function personalityOverallMessage(average) {

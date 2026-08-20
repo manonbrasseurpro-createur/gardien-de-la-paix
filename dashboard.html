@@ -714,6 +714,101 @@
       font-weight: 700;
       white-space: nowrap;
     }
+    .dash-personality-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .dash-personality-scores {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 0 0 16px;
+    }
+    .dash-personality-score-card {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .dash-personality-score-card h3 {
+      margin: 0 0 8px;
+      font-size: 0.92rem;
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .dash-personality-score-value {
+      font-family: 'Spectral', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .dash-personality-score-value small {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-left: 2px;
+    }
+    .dash-personality-meter {
+      height: 6px;
+      background: #d8deea;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .dash-personality-meter > span {
+      display: block;
+      height: 100%;
+      background: var(--navy);
+    }
+    .dash-personality-analyse {
+      white-space: pre-wrap;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--off-white);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      margin: 0;
+    }
+    .dash-personality-history {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .dash-personality-history h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+    .dash-personality-history details {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px 12px;
+      background: var(--white);
+    }
+    .dash-personality-history summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--navy);
+      list-style: none;
+    }
+    .dash-personality-history summary::-webkit-details-marker {
+      display: none;
+    }
+    .dash-personality-history summary::before {
+      content: "▸ ";
+      color: var(--muted);
+    }
+    .dash-personality-history details[open] summary::before {
+      content: "▾ ";
+    }
+    .dash-personality-history-body {
+      margin-top: 12px;
+    }
 
     .dash-placeholder {
       text-align: center;
@@ -1106,13 +1201,26 @@
           <div class="hero__content">
             <p class="hero__label">Ma progression</p>
             <h1>Suivez vos résultats</h1>
-            <p class="hero__subtitle">Courbe d'évolution et historique de toutes vos sessions d'entraînement.</p>
+            <p class="hero__subtitle">Courbe d'évolution, profil de personnalité et historique de vos sessions d'entraînement.</p>
           </div>
         </header>
         <div class="container auth-container">
+          <div class="auth-card" id="dash-personality-card">
+            <div class="dash-history-header">
+              <div>
+                <h2>Profil de personnalité</h2>
+                <p id="dash-personality-count">Aucun test de personnalité enregistré.</p>
+              </div>
+              <a class="dash-widget__link" href="psychotechnique.html" style="margin-top: 0;">Faire le test →</a>
+            </div>
+            <div id="dash-personality-body">
+              <p class="empty-note" style="color: var(--muted); margin: 0;">Complétez le test de personnalité (60 affirmations) pour retrouver ici votre profil par dimension, votre analyse et l'historique de vos passages.</p>
+            </div>
+          </div>
+
           <div class="auth-card">
             <h2>Graphique d'évolution</h2>
-            <p>Courbe des 10 derniers tests, toutes épreuves confondues.</p>
+            <p>Courbe des 10 derniers tests d'entraînement, hors test de personnalité.</p>
             <div class="dash-evolution-wrap">
               <svg class="dash-evolution-chart" id="dash-evolution-chart" viewBox="0 0 760 300" role="img" aria-label="Évolution des derniers tests"></svg>
             </div>
@@ -2994,11 +3102,31 @@
         });
       }
 
+      const PERSONALITY_DIMENSION_LABELS = [
+        'Stabilité émotionnelle',
+        "Rapport à l'autorité",
+        'Sens du service et empathie',
+        'Intégrité et éthique',
+        'Travail en équipe',
+        'Gestion du stress et des situations difficiles'
+      ];
+
+      function isPersonalityProgressionSession(session) {
+        const categories = session?.categories;
+        if (!categories || typeof categories !== 'object') {
+          return false;
+        }
+        const keys = Object.keys(categories);
+        const matchCount = PERSONALITY_DIMENSION_LABELS.filter((label) => keys.includes(label)).length;
+        return matchCount >= 4;
+      }
+
       function renderDashboardWidgets() {
         const widgetsEl = document.getElementById('dash-widgets');
         if (!widgetsEl || !window.GpxProgression) return;
 
         const sessions = window.GpxProgression.readSessions() || [];
+        const trainingSessions = sessions.filter((session) => !isPersonalityProgressionSession(session));
         const widgets = [];
 
         const examDate = new Date('2026-09-22');
@@ -3012,16 +3140,18 @@
           </div>
         `);
 
-        if (sessions.length > 0) {
-          const avgPct = Math.round(sessions.reduce((sum, s) => sum + (s.score / s.total * 100), 0) / sessions.length);
+        if (trainingSessions.length > 0) {
+          const avgPct = Math.round(trainingSessions.reduce((sum, s) => sum + (s.score / s.total * 100), 0) / trainingSessions.length);
           widgets.push(`
             <div class="auth-card">
               <p class="dash-widget__label">Score moyen</p>
               <p class="dash-widget__value">${avgPct}%</p>
-              <p class="dash-widget__detail">${sessions.length} test${sessions.length > 1 ? 's' : ''} réalisé${sessions.length > 1 ? 's' : ''}</p>
+              <p class="dash-widget__detail">${trainingSessions.length} test${trainingSessions.length > 1 ? 's' : ''} réalisé${trainingSessions.length > 1 ? 's' : ''}</p>
             </div>
           `);
+        }
 
+        if (sessions.length > 0) {
           const moduleLinks = {
             'cas-pratique': { label: 'Cas pratiques', href: 'cas-pratique.html' },
             'culture-generale': { label: 'Culture générale', href: 'culture-langue.html' },
@@ -3033,7 +3163,9 @@
             'numerique': { label: 'Tests numériques', href: 'psychotechnique.html' }
           };
           const lastSession = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-          const lastModule = moduleLinks[lastSession.module] || { label: lastSession.module, href: 'index.html' };
+          const lastModule = isPersonalityProgressionSession(lastSession)
+            ? { label: 'Personnalité', href: 'psychotechnique.html' }
+            : (moduleLinks[lastSession.module] || { label: lastSession.module, href: 'index.html' });
           widgets.push(`
             <div class="auth-card">
               <p class="dash-widget__label">Reprendre l'entraînement</p>
@@ -3043,7 +3175,7 @@
           `);
 
           const moduleScores = {};
-          sessions.forEach((s) => {
+          trainingSessions.forEach((s) => {
             if (!moduleScores[s.module]) moduleScores[s.module] = [];
             moduleScores[s.module].push(s.score / s.total * 100);
           });
@@ -3208,10 +3340,168 @@
           : '<tr><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
       }
 
+      function formatPersonalityDashScore(value) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) {
+          return '—';
+        }
+        return number.toFixed(1).replace('.', ',');
+      }
+
+      function orderedPersonalityDimensions(dimensionScores) {
+        if (!dimensionScores || typeof dimensionScores !== 'object') {
+          return [];
+        }
+        const seen = new Set();
+        const ordered = [];
+        PERSONALITY_DIMENSION_LABELS.forEach((label) => {
+          if (dimensionScores[label] && typeof dimensionScores[label] === 'object') {
+            ordered.push({ label, ...dimensionScores[label] });
+            seen.add(label);
+          }
+        });
+        Object.entries(dimensionScores).forEach(([label, result]) => {
+          if (seen.has(label) || !result || typeof result !== 'object') {
+            return;
+          }
+          ordered.push({ label, ...result });
+        });
+        return ordered;
+      }
+
+      function renderPersonalityResultMarkup(result) {
+        const dimensions = orderedPersonalityDimensions(result.dimension_scores);
+        const scoresHtml = dimensions.length
+          ? `<div class="dash-personality-scores">${dimensions.map((item) => {
+              const score = Number(item.score) || 0;
+              const total = Number(item.total) || 10;
+              const percent = total > 0 ? Math.max(0, Math.min(100, (score / total) * 100)) : 0;
+              return `
+                <article class="dash-personality-score-card">
+                  <h3>${escapeCommunityHtml(item.label)}</h3>
+                  <div class="dash-personality-score-value">${escapeCommunityHtml(formatPersonalityDashScore(score))}<small>/${escapeCommunityHtml(formatPersonalityDashScore(total).replace(',0', ''))}</small></div>
+                  <div class="dash-personality-meter" aria-hidden="true"><span style="width: ${percent}%"></span></div>
+                </article>
+              `;
+            }).join('')}</div>`
+          : '<p style="color: var(--muted);">Les scores par dimension n\'ont pas été enregistrés pour ce passage.</p>';
+
+        const analyse = String(result.analyse_text || '').trim();
+        const analyseHtml = analyse
+          ? `<p class="dash-personality-analyse">${escapeCommunityHtml(analyse)}</p>`
+          : '<p style="color: var(--muted); margin: 0;">Analyse non enregistrée pour ce passage (test réalisé avant la sauvegarde complète du profil).</p>';
+
+        const metaParts = [
+          `Le ${escapeCommunityHtml(formatProgressionDate(result.created_at))}`,
+          `Durée : ${escapeCommunityHtml(formatProgressionDuration(result.duree_secondes))}`,
+          `Moyenne : ${escapeCommunityHtml(formatPersonalityDashScore(result.score_moyen))}/10`
+        ];
+        if (result.coherence_score != null && result.coherence_score !== '') {
+          metaParts.push(`Cohérence : ${escapeCommunityHtml(formatPersonalityDashScore(result.coherence_score))}/10`);
+        }
+
+        return `
+          <p class="dash-personality-meta">${metaParts.join(' · ')}</p>
+          ${scoresHtml}
+          ${analyseHtml}
+        `;
+      }
+
+      function personalityResultsFromLocalSessions() {
+        return (window.GpxProgression?.readSessions() || [])
+          .filter(isPersonalityProgressionSession)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .map((session) => ({
+            id: `local-${session.date}`,
+            created_at: session.date,
+            duree_secondes: session.duree || 0,
+            dimension_scores: session.categories || {},
+            score_moyen: session.score,
+            coherence_score: null,
+            analyse_text: null
+          }));
+      }
+
+      function renderPersonalityProfile(results) {
+        const countEl = document.getElementById('dash-personality-count');
+        const bodyEl = document.getElementById('dash-personality-body');
+        if (!countEl || !bodyEl) {
+          return;
+        }
+
+        if (!results.length) {
+          countEl.textContent = 'Aucun test de personnalité enregistré.';
+          bodyEl.innerHTML = '<p style="color: var(--muted); margin: 0;">Complétez le test de personnalité (60 affirmations) pour retrouver ici votre profil par dimension, votre analyse et l\'historique de vos passages.</p>';
+          return;
+        }
+
+        const [latest, ...previous] = results;
+        countEl.textContent = results.length === 1
+          ? '1 passage enregistré.'
+          : `${results.length} passages enregistrés.`;
+
+        const historyHtml = previous.length
+          ? `<div class="dash-personality-history">
+              <h3>Passages précédents</h3>
+              ${previous.map((result) => `
+                <details>
+                  <summary>${escapeCommunityHtml(formatProgressionDate(result.created_at))} — moyenne ${escapeCommunityHtml(formatPersonalityDashScore(result.score_moyen))}/10</summary>
+                  <div class="dash-personality-history-body">
+                    ${renderPersonalityResultMarkup(result)}
+                  </div>
+                </details>
+              `).join('')}
+            </div>`
+          : '';
+
+        bodyEl.innerHTML = `
+          ${renderPersonalityResultMarkup(latest)}
+          ${historyHtml}
+        `;
+      }
+
+      async function loadPersonalityProfile() {
+        const countEl = document.getElementById('dash-personality-count');
+        const bodyEl = document.getElementById('dash-personality-body');
+        if (!countEl || !bodyEl) {
+          return;
+        }
+
+        const client = getDashClient();
+        if (!client) {
+          renderPersonalityProfile(personalityResultsFromLocalSessions());
+          return;
+        }
+
+        try {
+          const { data, error } = await client
+            .from('personality_test_results')
+            .select('id, created_at, duree_secondes, dimension_scores, score_moyen, coherence_score, analyse_text')
+            .order('created_at', { ascending: false });
+
+          if (error) {
+            console.warn('[GPX Personnalité] loadPersonalityProfile:', error);
+            renderPersonalityProfile(personalityResultsFromLocalSessions());
+            return;
+          }
+
+          if (Array.isArray(data) && data.length) {
+            renderPersonalityProfile(data);
+            return;
+          }
+        } catch (error) {
+          console.warn('[GPX Personnalité] loadPersonalityProfile:', error);
+        }
+
+        renderPersonalityProfile(personalityResultsFromLocalSessions());
+      }
+
       function renderProgressionPanel() {
         const sessions = readProgressionSessions();
-        renderDashEvolution(sessions);
+        const cognitiveSessions = sessions.filter((session) => !isPersonalityProgressionSession(session));
+        renderDashEvolution(cognitiveSessions);
         renderDashHistory(sessions);
+        loadPersonalityProfile();
       }
 
       document.querySelector('.dash-nav__item[data-panel="progression"]')?.addEventListener('click', renderProgressionPanel);

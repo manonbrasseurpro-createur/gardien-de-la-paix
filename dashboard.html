@@ -1660,6 +1660,7 @@
   <script src="cookie-consent.js"></script>
   <script src="access-control.js"></script>
   <script src="notifications-banner.js"></script>
+  <script src="presence-tracking.js"></script>
   <script src="progression-storage.js"></script>
   <script>
     document.querySelectorAll('.dash-nav__item[data-panel]').forEach((btn) => {
@@ -1704,17 +1705,9 @@
         const listEl = document.getElementById('admin-online-list');
         const countEl = document.getElementById('admin-online-count');
         if (!listEl) return;
-        const state = window.__gpxPresenceState || {};
-        const people = [];
-        Object.values(state).forEach((presences) => {
-          (Array.isArray(presences) ? presences : []).forEach((presence) => {
-            const name = String(presence.firstName || presence.first_name || '').trim() || 'Candidat';
-            const key = String(presence.email || presence.userId || name).toLowerCase();
-            if (!people.some((item) => item.key === key)) {
-              people.push({ key, name });
-            }
-          });
-        });
+        const people = typeof window.GPXPresence?.uniquePeople === 'function'
+          ? window.GPXPresence.uniquePeople()
+          : [];
         if (countEl) countEl.textContent = String(people.length);
         if (people.length === 0) {
           listEl.innerHTML = '<p class="admin-online-empty">Aucun utilisateur connecté pour le moment.</p>';
@@ -1725,35 +1718,8 @@
         )).join('');
       }
 
-      async function startDashboardPresence() {
-        const client = getDashClient();
-        if (!client || !user?.id) {
-          renderOnlineUsers();
-          return;
-        }
-        try {
-          const channel = client.channel('dashboard-online', {
-            config: { presence: { key: user.id } }
-          });
-          channel.on('presence', { event: 'sync' }, () => {
-            window.__gpxPresenceState = channel.presenceState();
-            renderOnlineUsers();
-          });
-          channel.subscribe(async (status) => {
-            if (status !== 'SUBSCRIBED') return;
-            await channel.track({
-              userId: user.id,
-              firstName: user.firstName || 'Candidat',
-              email: user.email || ''
-            });
-          });
-        } catch (error) {
-          console.warn('[admin-presence]', error);
-          renderOnlineUsers();
-        }
-      }
-
-      startDashboardPresence();
+      window.GPXPresence?.onSync?.(renderOnlineUsers);
+      renderOnlineUsers();
 
       function showAdminHub() {
         const hub = document.getElementById('admin-hub');

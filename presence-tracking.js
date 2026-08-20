@@ -5,13 +5,39 @@
 (function (global) {
   const CHANNEL_NAME = "dashboard-online";
   const TAB_STORAGE_KEY = "gpxPresenceTabId";
+  const READY_TIMEOUT_MS = 10000;
+  const READY_INTERVAL_MS = 200;
   const syncListeners = new Set();
 
   let channel = null;
   let client = null;
   let started = false;
+  let joining = false;
   let left = false;
   let authSubscription = null;
+  let lifecycleBound = false;
+
+  global.__gpxPresenceState = global.__gpxPresenceState || {};
+
+  function isDebug() {
+    try {
+      if (global.GPX_PRESENCE_DEBUG === false || localStorage.getItem("gpxPresenceDebug") === "0") {
+        return false;
+      }
+    } catch (error) {
+      if (global.GPX_PRESENCE_DEBUG === false) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function debugLog() {
+    if (!isDebug()) {
+      return;
+    }
+    console.info.apply(console, ["[GPX Presence]"].concat([].slice.call(arguments)));
+  }
 
   function getSupabaseClient() {
     return global.__gpxSupabaseClient || null;
@@ -83,12 +109,77 @@
     };
   }
 
+  function sleep(ms) {
+    return new Promise(function (resolve) {
+      setTimeout(resolve, ms);
+    });
+  }
+
+  async function ensureClient() {
+    if (getSupabaseClient()) {
+      return getSupabaseClient();
+    }
+    if (global.GPXAuth?.getCurrentUser) {
+      try {
+        await global.GPXAuth.getCurrentUser();
+      } catch (error) {
+        debugLog("ensureClient getCurrentUser:", error);
+      }
+    }
+    return getSupabaseClient();
+  }
+
+  async function waitForAuthReady() {
+    const deadline = Date.now() + READY_TIMEOUT_MS;
+
+    while (Date.now() < deadline) {
+      if (!global.GPXAuth?.getCurrentUser) {
+        debugLog("sortie temporaire: GPXAuth.getCurrentUser absent");
+        await sleep(READY_INTERVAL_MS);
+        continue;
+      }
+
+      let user = null;
+      try {
+        user = await global.GPXAuth.getCurrentUser();
+      } catch (error) {
+        debugLog("getCurrentUser a levé:", error);
+      }
+
+      const supabaseClient = await ensureClient();
+      if (supabaseClient) {
+        bindAuthListener(supabaseClient);
+      }
+      if (!user?.id) {
+        debugLog("sortie temporaire: session utilisateur absente (user.id manquant)");
+      } else if (!supabaseClient) {
+        debugLog("sortie temporaire: __gpxSupabaseClient absent");
+      } else {
+        return { user: user, client: supabaseClient };
+      }
+
+      await sleep(READY_INTERVAL_MS);
+    }
+
+    const user = global.GPXAuth?.getCurrentUser ? await global.GPXAuth.getCurrentUser().catch(function () { return null; }) : null;
+    const supabaseClient = getSupabaseClient();
+    if (!global.GPXAuth?.getCurrentUser) {
+      console.warn("[GPX Presence] abandon: GPXAuth.getCurrentUser toujours absent après", READY_TIMEOUT_MS, "ms");
+    } else if (!user?.id) {
+      console.warn("[GPX Presence] abandon: session utilisateur toujours absente après", READY_TIMEOUT_MS, "ms");
+    } else if (!supabaseClient) {
+      console.warn("[GPX Presence] abandon: __gpxSupabaseClient toujours absent après", READY_TIMEOUT_MS, "ms");
+    }
+    return { user: user, client: supabaseClient };
+  }
+
   async function leaveChannel() {
-    if (left) {
+    if (left && !channel) {
       return;
     }
     left = true;
     started = false;
+    joining = false;
     const activeChannel = channel;
     const activeClient = client;
     channel = null;
@@ -107,91 +198,162 @@
     }
   }
 
-  async function startPresence() {
-    if (started) {
-      return;
-    }
-    if (!global.GPXAuth?.getCurrentUser) {
-      return;
-    }
-
-    const user = await global.GPXAuth.getCurrentUser();
+  async function joinChannel(user, supabaseClient) {
     if (!user?.id) {
+      debugLog("join: sortie user.id manquant");
+      return;
+    }
+    if (!supabaseClient) {
+      debugLog("join: sortie client manquant");
+      return;
+    }
+    if (started && channel) {
+      return;
+    }
+    if (joining) {
       return;
     }
 
-    client = getSupabaseClient();
-    if (!client) {
-      return;
-    }
-
-    started = true;
+    joining = true;
     left = false;
-
-    const tabId = getTabId();
-    const presenceKey = `${user.id}:${tabId}`;
+    client = supabaseClient;
 
     try {
+      if (channel) {
+        try {
+          await client.removeChannel(channel);
+        } catch (error) {
+          debugLog("removeChannel précédent:", error);
+        }
+        channel = null;
+      }
+
+      const presenceKey = user.id + ":" + getTabId();
       channel = client.channel(CHANNEL_NAME, {
         config: { presence: { key: presenceKey } }
       });
 
-      channel.on("presence", { event: "sync" }, () => {
+      channel.on("presence", { event: "sync" }, function () {
         emitSync(channel ? channel.presenceState() : {});
       });
 
-      channel.subscribe(async (status) => {
-        if (status !== "SUBSCRIBED" || !channel) {
+      channel.subscribe(async function (status) {
+        if (status !== "SUBSCRIBED") {
+          console.warn("[GPX Presence] subscribe status =", status);
+          if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+            started = false;
+            joining = false;
+          }
           return;
         }
+
+        started = true;
+        joining = false;
         try {
           await channel.track({
             userId: user.id,
             firstName: user.firstName || "Candidat",
             email: user.email || ""
           });
+          emitSync(channel.presenceState());
+          debugLog("track OK", uniquePeople());
         } catch (error) {
           console.warn("[GPX Presence] track:", error);
         }
       });
     } catch (error) {
       started = false;
+      joining = false;
       console.warn("[GPX Presence] start:", error);
     }
   }
 
+  function bindAuthListener(supabaseClient) {
+    if (authSubscription || !supabaseClient?.auth?.onAuthStateChange) {
+      return;
+    }
+    const result = supabaseClient.auth.onAuthStateChange(function (event, session) {
+      if (event === "SIGNED_OUT") {
+        leaveChannel();
+        return;
+      }
+      if (!session?.user) {
+        return;
+      }
+      if (event === "INITIAL_SESSION" || event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+        joinChannel({
+          id: session.user.id,
+          email: session.user.email || "",
+          firstName: session.user.user_metadata?.first_name
+            || session.user.user_metadata?.given_name
+            || "Candidat"
+        }, supabaseClient);
+      }
+    });
+    authSubscription = result?.data?.subscription || null;
+  }
+
   function bindLifecycle() {
-    global.addEventListener("pagehide", () => {
+    if (lifecycleBound) {
+      return;
+    }
+    lifecycleBound = true;
+    global.addEventListener("pagehide", function () {
       leaveChannel();
     });
-    global.addEventListener("pageshow", (event) => {
+    global.addEventListener("pageshow", function (event) {
       if (event.persisted) {
         left = false;
+        started = false;
+        joining = false;
         startPresence();
       }
     });
+  }
 
-    const existingClient = getSupabaseClient();
-    if (existingClient?.auth?.onAuthStateChange && !authSubscription) {
-      const { data } = existingClient.auth.onAuthStateChange((event) => {
-        if (event === "SIGNED_OUT") {
-          leaveChannel();
-        }
-      });
-      authSubscription = data?.subscription || null;
+  async function startPresence() {
+    bindLifecycle();
+
+    if (!global.GPXAuth?.getCurrentUser) {
+      debugLog("sortie: GPXAuth.getCurrentUser absent au démarrage, attente…");
     }
+
+    const ready = await waitForAuthReady();
+    if (ready.client) {
+      bindAuthListener(ready.client);
+    }
+
+    if (!global.GPXAuth?.getCurrentUser) {
+      console.warn("[GPX Presence] sortie: GPXAuth.getCurrentUser absent");
+      return;
+    }
+    if (!ready.user?.id) {
+      debugLog("session pas encore prête — attente onAuthStateChange INITIAL_SESSION");
+      return;
+    }
+    if (!ready.client) {
+      console.warn("[GPX Presence] sortie: __gpxSupabaseClient absent");
+      return;
+    }
+
+    await joinChannel(ready.user, ready.client);
   }
 
   global.GPXPresence = {
     CHANNEL_NAME,
-    uniquePeople,
-    onSync,
+    uniquePeople: uniquePeople,
+    onSync: onSync,
     start: startPresence,
     leave: leaveChannel
   };
 
-  document.addEventListener("DOMContentLoaded", async () => {
-    await startPresence();
-    bindLifecycle();
-  });
+  function boot() {
+    startPresence();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })(typeof window !== "undefined" ? window : globalThis);

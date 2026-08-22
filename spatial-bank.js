@@ -95,7 +95,7 @@
         id: `rotation-${index + 1}`,
         type: "Rotations",
         spatialType: "rotations",
-        text: `Quelle option montre la ${shapeLabel(shape)} après une rotation de ${rotation.label} ?`,
+        text: `Quelle option montre ${shapeWithArticle(shape)} après une rotation de ${rotation.label} ?`,
         answer: 0,
         visual: {
           label: "Figure de départ",
@@ -130,7 +130,7 @@
         id: `symmetry-${index + 1}`,
         type: "Symétries",
         spatialType: "symmetries",
-        text: `Quelle option est le symétrique de la ${shapeLabel(shape)} orientée à ${baseAngle}° selon l'axe ${axis.label} ?`,
+        text: `Quelle option est le symétrique de ${shapeWithArticle(shape)} par rapport à l'axe ${axis.label} ?`,
         answer: 0,
         visual: {
           label: `Figure de départ avec axe ${axis.label}`,
@@ -761,6 +761,10 @@
       star: "étoile"
     };
     return labels[shape];
+  }
+
+  function shapeWithArticle(shape) {
+    return shape === "star" ? "l'étoile" : `la ${shapeLabel(shape)}`;
   }
 
   function normalizeAngle(angle) {

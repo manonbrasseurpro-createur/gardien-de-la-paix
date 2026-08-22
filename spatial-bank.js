@@ -154,7 +154,7 @@
       { folds: ["h"], label: "pli horizontal" },
       { folds: ["v", "h"], label: "pli vertical puis horizontal" },
       { folds: ["diag"], label: "pli diagonal" },
-      { folds: ["h", "diag"], label: "pli horizontal puis diagonal" }
+      { folds: ["h", "hdiag"], label: "pli horizontal puis diagonal" }
     ];
     const cuts = [
       [[34, 30], [78, 48]],
@@ -506,6 +506,9 @@
     if (fold === "anti" && x + y > 120) {
       return [120 - y, 120 - x];
     }
+    if (fold === "hdiag" && x - 2 * y > 0) {
+      return reflectPoint([x, y], "hdiag");
+    }
     return [x, y];
   }
 
@@ -553,6 +556,12 @@
     }
     if (fold === "anti") {
       return [120 - y, 120 - x];
+    }
+    if (fold === "hdiag") {
+      return [
+        roundCoordinate((3 * x + 4 * y) / 5),
+        roundCoordinate((4 * x - 3 * y) / 5)
+      ];
     }
     return [x, y];
   }
@@ -639,6 +648,9 @@
     if (fold === "anti") {
       return x + y - 120;
     }
+    if (fold === "hdiag") {
+      return x - 2 * y;
+    }
     return 0;
   }
 
@@ -715,6 +727,9 @@
     }
     if (axis === "anti") {
       return `<line x1="172" y1="28" x2="28" y2="172" ${common}/>`;
+    }
+    if (axis === "hdiag") {
+      return `<line x1="40" y1="40" x2="160" y2="100" ${common}/>`;
     }
     return `<line x1="28" y1="28" x2="172" y2="172" ${common}/>`;
   }

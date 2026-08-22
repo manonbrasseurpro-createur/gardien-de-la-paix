@@ -639,13 +639,15 @@ a {
 }
 
 .gpx-score-bug-notice h2,
-.gpx-site-notice h2 {
-  margin: 0 0 10px;
+.gpx-site-notice h2,
+.gpx-site-notice__title {
+  margin: 0 0 8px;
   padding-right: 24px;
   color: var(--navy);
   font-family: Spectral, serif;
   font-size: 1.15rem;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .gpx-score-bug-notice p,

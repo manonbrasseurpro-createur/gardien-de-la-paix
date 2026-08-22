@@ -48,7 +48,7 @@
       ? '<button type="button" class="gpx-score-bug-notice__close" data-dismiss-notice aria-label="Fermer">×</button>'
       : "";
     const titleHtml = title
-      ? `<h2>${escapeHtml(title)}</h2>`
+      ? `<h2 class="gpx-site-notice__title">${escapeHtml(title)}</h2>`
       : "";
     return `
       ${closeBtn}

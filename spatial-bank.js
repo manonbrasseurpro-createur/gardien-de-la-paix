@@ -136,7 +136,7 @@
           label: `Figure de départ avec axe ${axis.label}`,
           svg: symmetryPromptSvg(shape, baseAngle, axis.key)
         },
-        options: transformsByAxis[axis.key].map((mirror) => ({
+        options: uniqueMirrors(shape, baseAngle, transformsByAxis[axis.key], "world").map((mirror) => ({
           label: "Figure proposée",
           svg: symmetryOptionSvg(shape, baseAngle, mirror)
         })),
@@ -275,13 +275,13 @@
         angle: normalizeAngle(startAngle + 4 * step),
         mirror: index % 3 === 0 ? "none" : "none"
       };
-      const optionStates = uniqueStates([
+      const optionStates = uniqueStates(shape, [
         correct,
         { angle: normalizeAngle(correct.angle + step), mirror: correct.mirror },
         { angle: normalizeAngle(correct.angle - step), mirror: correct.mirror },
         { angle: normalizeAngle(correct.angle + 180), mirror: correct.mirror === "none" ? "v" : "none" },
         { angle: startAngle, mirror: "h" }
-      ]).slice(0, 4);
+      ], "center");
 
       questions.push({
         id: `sequence-${index + 1}`,
@@ -700,17 +700,117 @@
     return options.slice(0, 4);
   }
 
-  function uniqueStates(candidates) {
+  function shapeAnchors(shape) {
+    if (shape === "triangle") {
+      return [[72, 124], [100, 24]];
+    }
+    if (shape === "arrow") {
+      return [[72, 100], [150, 100]];
+    }
+    if (shape === "cross") {
+      return [[100, 50], [172, 100]];
+    }
+    return [[119, 75], [100, 22]];
+  }
+
+  function applyVisualTransform(x, y, angle, mirror, order) {
+    let px = x - 100;
+    let py = y - 100;
+    const radians = (angle * Math.PI) / 180;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+
+    function applyMirror() {
+      if (mirror === "h") {
+        py = -py;
+      } else if (mirror === "v") {
+        px = -px;
+      } else if (mirror === "diag") {
+        const swapped = px;
+        px = py;
+        py = swapped;
+      } else if (mirror === "anti") {
+        const swapped = px;
+        px = -py;
+        py = -swapped;
+      }
+    }
+
+    function applyRotate() {
+      const rotatedX = px * cos - py * sin;
+      const rotatedY = px * sin + py * cos;
+      px = rotatedX;
+      py = rotatedY;
+    }
+
+    if (order === "world") {
+      applyRotate();
+      applyMirror();
+    } else {
+      applyMirror();
+      applyRotate();
+    }
+
+    return [px + 100, py + 100];
+  }
+
+  function visualStateKey(shape, angle, mirror, order) {
+    return shapeAnchors(shape)
+      .map(([x, y]) => {
+        const [tx, ty] = applyVisualTransform(x, y, angle, mirror, order);
+        return `${Math.round(tx * 10) / 10},${Math.round(ty * 10) / 10}`;
+      })
+      .join("|");
+  }
+
+  function uniqueStates(shape, candidates, order = "center", count = 4) {
     const states = [];
     const keys = new Set();
-    candidates.forEach((state) => {
-      const key = `${state.angle}-${state.mirror}`;
-      if (!keys.has(key)) {
-        keys.add(key);
-        states.push(state);
+
+    function tryPush(state) {
+      const key = visualStateKey(shape, state.angle, state.mirror, order);
+      if (keys.has(key)) {
+        return false;
       }
-    });
-    return states;
+      keys.add(key);
+      states.push(state);
+      return true;
+    }
+
+    candidates.forEach(tryPush);
+
+    const baseAngle = candidates[0] ? candidates[0].angle : 0;
+    const extraMirrors = ["none", "h", "v", "diag", "anti"];
+    let offset = 45;
+    while (states.length < count && offset <= 720) {
+      extraMirrors.forEach((mirror) => {
+        if (states.length < count) {
+          tryPush({ angle: normalizeAngle(baseAngle + offset), mirror });
+        }
+      });
+      offset += 45;
+    }
+
+    return states.slice(0, count);
+  }
+
+  function uniqueMirrors(shape, angle, preferred, order = "world", count = 4) {
+    const mirrors = [];
+    const keys = new Set();
+
+    function tryPush(mirror) {
+      const key = visualStateKey(shape, angle, mirror, order);
+      if (keys.has(key)) {
+        return false;
+      }
+      keys.add(key);
+      mirrors.push(mirror);
+      return true;
+    }
+
+    preferred.forEach(tryPush);
+    ["none", "h", "v", "diag", "anti"].forEach(tryPush);
+    return mirrors.slice(0, count);
   }
 
   function uniqueValues(values) {

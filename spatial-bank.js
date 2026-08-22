@@ -287,7 +287,7 @@
         id: `sequence-${index + 1}`,
         type: "Suites de figures",
         spatialType: "sequences",
-        text: `Quelle figure vient ensuite dans la séquence ${shapeLabel(shape)} n°${index + 1} ?`,
+        text: "Quelle figure vient ensuite dans cette séquence ?",
         answer: 0,
         visual: {
           label: "Suite de figures",

@@ -241,7 +241,7 @@
         id: `cube-${index + 1}`,
         type: "Patrons de cubes",
         spatialType: "cubes",
-        text: `Quel cube correspond au patron de cube ${net.name}, variante ${index + 1} ?`,
+        text: "Quel cube correspond à ce patron ?",
         answer: 0,
         visual: {
           label: "Patron déplié",

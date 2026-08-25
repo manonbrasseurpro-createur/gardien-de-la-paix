@@ -455,13 +455,13 @@ as $$
   select
     es.user_id,
     p.first_name as prenom,
-    round(avg((es.score / es.score_max) * 100)::numeric, 1) as avg_score,
+    round((sum(es.score) / nullif(sum(es.score_max), 0) * 100)::numeric, 1) as avg_score,
     count(*)::bigint as test_count
   from public.exam_sessions es
   join public.profiles p on p.id = es.user_id
   where es.module = 'cas-pratique'
   group by es.user_id, p.first_name
-  having count(*) >= 1
+  having count(*) >= 5
   order by avg_score desc, test_count desc, p.first_name asc
   limit 10;
 $$;

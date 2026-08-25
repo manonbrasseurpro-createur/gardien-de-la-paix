@@ -46,6 +46,40 @@
     return null;
   }
 
+  function isUsableGivenName(value) {
+    return String(value || "").trim().length >= 2;
+  }
+
+  function firstWordOf(value) {
+    return String(value || "").trim().split(/\s+/).filter(Boolean)[0] || "";
+  }
+
+  // Google OAuth often sends full_name ("M Dupont") without first_name/given_name.
+  // Never persist a single-letter initial as a first name.
+  function resolveOAuthFirstName(meta) {
+    const source = meta || {};
+    const direct = String(source.first_name || source.given_name || source.prénom || "").trim();
+    if (isUsableGivenName(direct)) {
+      return direct;
+    }
+
+    const fullName = String(source.full_name || source.name || "").trim();
+    if (!fullName) {
+      return "";
+    }
+
+    const firstWord = firstWordOf(fullName);
+    if (isUsableGivenName(firstWord)) {
+      return firstWord;
+    }
+
+    if (isUsableGivenName(fullName) && fullName !== firstWord) {
+      return fullName;
+    }
+
+    return "";
+  }
+
   function requireSupabaseLibrary() {
     const createClient = resolveCreateClient();
     if (!createClient) {
@@ -247,7 +281,7 @@
     return normalizeProfile(
       {
         id: userId,
-        prénom: meta.first_name || meta.prénom || "",
+        prénom: resolveOAuthFirstName(meta),
         "nom de famille": meta.last_name || meta.nom_de_famille || "",
         téléphone: meta.phone || meta.téléphone || "",
         subscription_status: "trial",
@@ -288,7 +322,7 @@
       return normalizeProfile(
         {
           ...data,
-          first_name: data.first_name || meta.first_name || meta.given_name || (meta.full_name ? meta.full_name.split(" ")[0] : "") || (meta.name ? meta.name.split(" ")[0] : "") || "",
+          first_name: (isUsableGivenName(data.first_name) ? String(data.first_name).trim() : "") || resolveOAuthFirstName(meta),
           last_name: data.last_name || meta.last_name || "",
           free_trial_used: meta.free_trial_used ?? data.free_trial_used,
           free_trial_key: meta.free_trial_key ?? data.free_trial_key

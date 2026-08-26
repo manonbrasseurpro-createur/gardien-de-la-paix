@@ -424,6 +424,30 @@
       font-size: 0.94rem;
     }
 
+    .case-select__badge {
+      display: inline-flex;
+      margin-top: auto;
+      padding: 4px 10px;
+      align-items: center;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: var(--navy);
+      background: #e8eef8;
+      border: 1px solid #c5d0e3;
+    }
+
+    .case-select.is-done {
+      background: #f7f9fc;
+    }
+
+    .case-selector__loading {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     .mode-card__duration {
       margin-top: auto;
       color: var(--navy);
@@ -3777,14 +3801,24 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       });
     });
 
+    const CONTENT_MODULE = "cas-pratique";
+    const CONTENT_TYPE_CASE = "cas-pratique-cas";
+    const CONTENT_TYPE_QUESTION = "cas-pratique-question";
+    const SIMULATION_CASE_COUNT = 3;
+
     const modeConfig = {
       simulation: {
         labelHtml: () => `${gpxIcon("target")} Simulation complète`,
         duration: 120 * 60,
-        buildItems: () => OFFICIAL_SESSION_CASE_IDS
-          .map((caseId) => cases.find((caseItem) => caseItem.id === caseId))
-          .filter(Boolean)
-          .flatMap((caseItem) => caseItem.questions.map((question, questionIndex) => ({ caseId: caseItem.id, questionIndex })))
+        buildItems: (caseIds) => {
+          const selectedIds = Array.isArray(caseIds) && caseIds.length
+            ? caseIds
+            : sampleWithoutReplacement(cases.map((caseItem) => caseItem.id), SIMULATION_CASE_COUNT);
+          return selectedIds
+            .map((caseId) => cases.find((caseItem) => caseItem.id === caseId))
+            .filter(Boolean)
+            .flatMap((caseItem) => caseItem.questions.map((question, questionIndex) => ({ caseId: caseItem.id, questionIndex })));
+        }
       },
       single: {
         labelHtml: () => `${gpxIcon("file-pen")} Cas pratique unique`,
@@ -3797,7 +3831,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       question: {
         labelHtml: () => `${gpxIcon("help")} Question isolée`,
         duration: 10 * 60,
-        buildItems: (caseId) => [{ caseId: caseId || cases[0].id, questionIndex: 0 }]
+        buildItems: (caseId, questionIndex = 0) => [{
+          caseId: caseId || cases[0].id,
+          questionIndex: Number.isInteger(questionIndex) ? questionIndex : 0
+        }]
       }
     };
 
@@ -4758,6 +4795,197 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       printWindow.document.close();
     }
 
+    function questionContentId(caseId, questionIndex) {
+      return `${caseId}:q${questionIndex + 1}`;
+    }
+
+    function getSupabaseClient() {
+      if (window.__gpxSupabaseClient) {
+        return window.__gpxSupabaseClient;
+      }
+      const cfg = window.GPX_SUPABASE || {};
+      const url = cfg.url || cfg.SUPABASE_URL;
+      const anonKey = cfg.anonKey || cfg.anon_key;
+      if (!url || !anonKey || !window.supabase?.createClient) {
+        return null;
+      }
+      window.__gpxSupabaseClient = window.supabase.createClient(url, anonKey);
+      return window.__gpxSupabaseClient;
+    }
+
+    function shuffleInPlace(list) {
+      const copy = list.slice();
+      for (let index = copy.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        const current = copy[index];
+        copy[index] = copy[swapIndex];
+        copy[swapIndex] = current;
+      }
+      return copy;
+    }
+
+    function sampleWithoutReplacement(list, count) {
+      return shuffleInPlace(list).slice(0, Math.min(count, list.length));
+    }
+
+    function pickPrioritizedIds(allIds, doneIds, count) {
+      const doneSet = doneIds instanceof Set ? doneIds : new Set(doneIds);
+      const unseen = allIds.filter((id) => !doneSet.has(id));
+      const seen = allIds.filter((id) => doneSet.has(id));
+      if (unseen.length === 0) {
+        return sampleWithoutReplacement(allIds, count);
+      }
+      if (unseen.length >= count) {
+        return sampleWithoutReplacement(unseen, count);
+      }
+      return unseen.concat(sampleWithoutReplacement(seen, count - unseen.length));
+    }
+
+    async function fetchContentEvents() {
+      const client = getSupabaseClient();
+      if (!client || !window.GPXAuth?.getCurrentUser) {
+        return [];
+      }
+
+      try {
+        const user = await window.GPXAuth.getCurrentUser();
+        if (!user?.id) {
+          return [];
+        }
+
+        const { data, error } = await client
+          .from("content_events")
+          .select("content_type, content_id, mode")
+          .eq("user_id", user.id)
+          .eq("module", CONTENT_MODULE);
+
+        if (error) {
+          console.warn("[cas-pratique] lecture content_events:", error);
+          return [];
+        }
+
+        return Array.isArray(data) ? data : [];
+      } catch (error) {
+        console.warn("[cas-pratique] lecture content_events:", error);
+        return [];
+      }
+    }
+
+    function doneCaseIdSet(events) {
+      return new Set(
+        events
+          .filter((event) => event.content_type === CONTENT_TYPE_CASE)
+          .map((event) => event.content_id)
+      );
+    }
+
+    function doneQuestionIdSet(events) {
+      return new Set(
+        events
+          .filter((event) => event.content_type === CONTENT_TYPE_QUESTION)
+          .map((event) => event.content_id)
+      );
+    }
+
+    async function pickSimulationCaseIds() {
+      const allIds = cases.map((caseItem) => caseItem.id);
+      const events = await fetchContentEvents();
+      return pickPrioritizedIds(allIds, doneCaseIdSet(events), SIMULATION_CASE_COUNT);
+    }
+
+    async function pickUnseenQuestionIndex(caseId) {
+      const selectedCase = cases.find((caseItem) => caseItem.id === caseId) || cases[0];
+      const indices = selectedCase.questions.map((_, questionIndex) => questionIndex);
+      const events = await fetchContentEvents();
+      const doneQuestions = doneQuestionIdSet(events);
+      const unseen = indices.filter((questionIndex) => !doneQuestions.has(questionContentId(selectedCase.id, questionIndex)));
+      if (unseen.length === 0) {
+        return sampleWithoutReplacement(indices, 1)[0] || 0;
+      }
+      return sampleWithoutReplacement(unseen, 1)[0];
+    }
+
+    function caseSelectorBadge(mode, caseItem, doneCases, doneQuestions) {
+      if (mode === "single") {
+        return doneCases.has(caseItem.id)
+          ? `<span class="case-select__badge">Déjà fait</span>`
+          : "";
+      }
+
+      const doneCount = caseItem.questions.reduce((count, _, questionIndex) => {
+        return doneQuestions.has(questionContentId(caseItem.id, questionIndex)) ? count + 1 : count;
+      }, 0);
+
+      if (doneCount <= 0) {
+        return "";
+      }
+
+      if (doneCount >= caseItem.questions.length) {
+        return `<span class="case-select__badge">Déjà fait</span>`;
+      }
+
+      return `<span class="case-select__badge">${doneCount}/${caseItem.questions.length} questions faites</span>`;
+    }
+
+    async function recordContentEvents() {
+      const client = getSupabaseClient();
+      if (!client || !window.GPXAuth?.getCurrentUser || !state.items.length) {
+        return;
+      }
+
+      try {
+        const user = await window.GPXAuth.getCurrentUser();
+        if (!user?.id) {
+          return;
+        }
+
+        const rows = [];
+        const uniqueCaseIds = [...new Set(state.items.map((item) => item.caseId))];
+
+        if (state.mode === "question") {
+          state.items.forEach((item) => {
+            rows.push({
+              user_id: user.id,
+              module: CONTENT_MODULE,
+              content_type: CONTENT_TYPE_QUESTION,
+              content_id: questionContentId(item.caseId, item.questionIndex),
+              mode: state.mode
+            });
+          });
+        } else {
+          uniqueCaseIds.forEach((caseId) => {
+            rows.push({
+              user_id: user.id,
+              module: CONTENT_MODULE,
+              content_type: CONTENT_TYPE_CASE,
+              content_id: caseId,
+              mode: state.mode
+            });
+          });
+          state.items.forEach((item) => {
+            rows.push({
+              user_id: user.id,
+              module: CONTENT_MODULE,
+              content_type: CONTENT_TYPE_QUESTION,
+              content_id: questionContentId(item.caseId, item.questionIndex),
+              mode: state.mode
+            });
+          });
+        }
+
+        if (!rows.length) {
+          return;
+        }
+
+        const { error } = await client.from("content_events").insert(rows);
+        if (error) {
+          console.warn("[cas-pratique] insertion content_events:", error);
+        }
+      } catch (error) {
+        console.warn("[cas-pratique] insertion content_events:", error);
+      }
+    }
+
     function handleMode(mode) {
       if (window.GPXAccess) {
         window.GPXAccess.guard("cas-pratique.html", mode, null, () => handleModeAllowed(mode));
@@ -4785,27 +5013,37 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       renderCaseSelector(mode);
     }
 
-    function renderCaseSelector(mode) {
+    async function renderCaseSelector(mode) {
       caseSelector.classList.add("is-visible");
       document.getElementById("case-selector-title").textContent = mode === "single" ? "Choisissez un cas pratique complet" : "Choisissez le thème de votre question isolée";
-      caseGrid.innerHTML = cases.map((caseItem) => `
-        <button class="case-select" type="button" data-case="${caseItem.id}">
+      caseGrid.innerHTML = `<p class="case-selector__loading">Chargement de votre progression…</p>`;
+      caseSelector.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      const events = await fetchContentEvents();
+      const doneCases = doneCaseIdSet(events);
+      const doneQuestions = doneQuestionIdSet(events);
+
+      caseGrid.innerHTML = cases.map((caseItem) => {
+        const badge = caseSelectorBadge(mode, caseItem, doneCases, doneQuestions);
+        const doneClass = badge.includes("Déjà fait") ? " is-done" : "";
+        return `
+        <button class="case-select${doneClass}" type="button" data-case="${caseItem.id}">
           <h3>${caseItem.title}${caseItem.sessionPoints ? ` <span style="font-size:0.85em;color:#1a2744">${gpxIcon("star-solid")} Type concours</span>` : ""}</h3>
           <p>${caseItem.theme}</p>
           <p><strong>${caseItem.questions.length} questions</strong>${caseItem.sessionPoints ? ` — barème ${caseItem.sessionPoints} pts` : ""} + dossier documentaire</p>
+          ${badge}
         </button>
-      `).join("");
+      `;
+      }).join("");
 
       caseGrid.querySelectorAll("[data-case]").forEach((button) => {
         button.addEventListener("click", () => startSession(mode, button.dataset.case));
       });
-      caseSelector.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function startSession(mode, caseId) {
+    async function startSession(mode, caseId) {
       stopTimer();
       state.mode = mode;
-      state.items = modeConfig[mode].buildItems(caseId);
       state.currentIndex = 0;
       state.answers = {};
       state.scores = {};
@@ -4815,7 +5053,33 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       state.progressionSaved = false;
 
       const saved = loadSession();
-      if (saved) {
+      const savedItems = Array.isArray(saved?.items) ? saved.items : null;
+      const hasSavedAnswers = Boolean(saved && saved.answers && Object.keys(saved.answers).length);
+      let restoreProgress = false;
+
+      if (mode === "simulation") {
+        if (savedItems && savedItems.length) {
+          state.items = savedItems;
+          restoreProgress = true;
+        } else if (hasSavedAnswers) {
+          state.items = modeConfig.simulation.buildItems(OFFICIAL_SESSION_CASE_IDS);
+          restoreProgress = true;
+        } else {
+          state.items = modeConfig.simulation.buildItems(await pickSimulationCaseIds());
+        }
+      } else if (mode === "question") {
+        if (savedItems && savedItems.length === 1 && savedItems[0].caseId === caseId) {
+          state.items = savedItems;
+          restoreProgress = true;
+        } else {
+          state.items = modeConfig.question.buildItems(caseId, await pickUnseenQuestionIndex(caseId));
+        }
+      } else {
+        state.items = modeConfig[mode].buildItems(caseId);
+        restoreProgress = Boolean(saved);
+      }
+
+      if (restoreProgress && saved) {
         state.answers = saved.answers || {};
         state.scores = saved.scores || {};
         state.currentIndex = Number.isFinite(saved.currentIndex) && saved.currentIndex < state.items.length ? saved.currentIndex : 0;
@@ -6100,6 +6364,16 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         duree: Math.max(0, modeConfig[state.mode].duration - state.remainingSeconds),
         categories
       });
+
+      recordContentEvents();
+
+      try {
+        if (state.sessionKey) {
+          localStorage.removeItem(state.sessionKey);
+        }
+      } catch (error) {
+        console.warn("[cas-pratique] nettoyage session locale:", error);
+      }
     }
 
     function updateScoreDisplay() {
@@ -6141,6 +6415,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       }
       const payload = {
         mode: state.mode,
+        items: state.items,
         currentIndex: state.currentIndex,
         answers: state.answers,
         scores: state.scores,

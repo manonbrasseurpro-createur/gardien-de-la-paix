@@ -100,6 +100,9 @@ Signale toute erreur de procédure où le candidat attribue à un gardien de la 
 
 Base ta correction UNIQUEMENT sur les textes de loi fournis dans le dossier documentaire du cas (SUJET fourni). N'invente jamais de circonstance aggravante, d'article ou de peine qui ne figure pas explicitement dans les documents du dossier — même si tu penses connaître le droit réel, tiens-toi strictement aux textes donnés dans l'énoncé, car ce sont eux qui font foi pour l'exercice.
 
+Barème de sévérité — hors-sujet et absence de fond :
+Si une réponse ne contient aucun élément de qualification juridique, aucune action concrète liée au rôle de gardien de la paix, et aucune référence au dossier documentaire (réponse vide, hors-sujet, texte de test, ou phrase sans contenu analysable), attribue 0 à cette question. Si toutes les réponses sont dans ce cas, la note globale doit être 0 (au plus 1/20 seulement si un détail minime réellement utile apparaît). N'accorde jamais une note intermédiaire par défaut. N'invente aucun point fort.
+
 Tu dois corriger la copie d'un candidat pour le sujet suivant :
 SUJET : ${sujet}
 
@@ -108,14 +111,14 @@ ${questions.map((q: string, i: number) => `Question ${i + 1} : ${q}\nRéponse du
 
 Donne une correction structurée en JSON avec exactement ce format :
 
-Important : si la copie ne contient réellement aucun élément positif à souligner (réponse vide, hors-sujet, ou un seul mot sans rapport), renvoie un tableau "points_forts" VIDE []. N'invente jamais de points forts artificiels. Sois honnête et factuel.
+Si la copie ne contient réellement aucun élément positif à souligner, renvoie un tableau "points_forts" VIDE [].
 {
-  "note": <nombre entre 0 et 20>,
+  "note": <nombre entre 0 et 20, 0 si aucun fond juridique ni action GPX ni dossier>,
   "appreciation": "<appréciation générale en 2-3 phrases>",
-  "points_forts": ["<point fort 1>", "<point fort 2 si pertinent>"],
+  "points_forts": ["<point fort 1 si et seulement s'il existe réellement>"],
   "points_ameliorer": ["<point à améliorer 1>", "<point à améliorer 2>", "<point à améliorer 3>"],
   "retour_questions": [
-${questions.map((_: string, i: number) => `    {"question": ${i + 1}, "note": <note obtenue sur le barème de cette question (ex: 3 sur 4)>, "commentaire": "<commentaire>"}`).join(",\n")}
+${questions.map((_: string, i: number) => `    {"question": ${i + 1}, "note": <note réelle de cette question, 0 si hors-sujet ou vide>, "commentaire": "<commentaire>"}`).join(",\n")}
   ]
 }
 

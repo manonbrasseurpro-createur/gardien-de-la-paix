@@ -1877,7 +1877,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         <div id="final-ai-disclaimer"></div>
         <div class="final-score-grid">
           <article class="final-score-card">
-            <span>Score concours</span>
+            <span>Contenu</span>
             <strong id="final-score-50">0/0</strong>
           </article>
           <article class="final-score-card">
@@ -3805,6 +3805,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     const CONTENT_TYPE_CASE = "cas-pratique-cas";
     const CONTENT_TYPE_QUESTION = "cas-pratique-question";
     const SIMULATION_CASE_COUNT = 3;
+    const CONTENT_SCALE = 15;
+    const SPELLING_SCALE = 5;
+    const CONVERTED_MAX = 20;
+    const SESSION_RESUME_MAX_MS = 30 * 60 * 1000;
 
     const modeConfig = {
       simulation: {
@@ -4175,7 +4179,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       activeVocabularySheet: vocabularySheets[0].id,
       correctionReturnTo: null,
       reviewIndex: 0,
-      progressionSaved: false
+      progressionSaved: false,
+      contentRecordPending: false
     };
 
     const homeScreen = document.getElementById("home-screen");
@@ -4941,6 +4946,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
         const rows = [];
         const uniqueCaseIds = [...new Set(state.items.map((item) => item.caseId))];
+        const completedAt = new Date().toISOString();
 
         if (state.mode === "question") {
           state.items.forEach((item) => {
@@ -4949,7 +4955,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               module: CONTENT_MODULE,
               content_type: CONTENT_TYPE_QUESTION,
               content_id: questionContentId(item.caseId, item.questionIndex),
-              mode: state.mode
+              mode: state.mode,
+              completed_at: completedAt
             });
           });
         } else {
@@ -4959,7 +4966,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               module: CONTENT_MODULE,
               content_type: CONTENT_TYPE_CASE,
               content_id: caseId,
-              mode: state.mode
+              mode: state.mode,
+              completed_at: completedAt
             });
           });
           state.items.forEach((item) => {
@@ -4968,7 +4976,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
               module: CONTENT_MODULE,
               content_type: CONTENT_TYPE_QUESTION,
               content_id: questionContentId(item.caseId, item.questionIndex),
-              mode: state.mode
+              mode: state.mode,
+              completed_at: completedAt
             });
           });
         }
@@ -4977,9 +4986,15 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           return;
         }
 
-        const { error } = await client.from("content_events").insert(rows);
+        const { error } = await client.from("content_events").upsert(rows, {
+          onConflict: "user_id,module,content_type,content_id",
+          ignoreDuplicates: true
+        });
         if (error) {
-          console.warn("[cas-pratique] insertion content_events:", error);
+          const retry = await client.from("content_events").insert(rows);
+          if (retry.error) {
+            console.warn("[cas-pratique] insertion content_events:", retry.error);
+          }
         }
       } catch (error) {
         console.warn("[cas-pratique] insertion content_events:", error);
@@ -4987,6 +5002,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     }
 
     function handleMode(mode) {
+      if (state.contentRecordPending) {
+        return;
+      }
       if (window.GPXAccess) {
         window.GPXAccess.guard("cas-pratique.html", mode, null, () => handleModeAllowed(mode));
         return;
@@ -5041,7 +5059,31 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       });
     }
 
+    function isResumableSavedSession(saved, mode, caseId) {
+      if (!saved || saved.completed === true) {
+        return false;
+      }
+
+      const startedAt = saved.startedAt ? Date.parse(saved.startedAt) : NaN;
+      if (!Number.isFinite(startedAt) || (Date.now() - startedAt) > SESSION_RESUME_MAX_MS) {
+        return false;
+      }
+
+      const savedItems = Array.isArray(saved.items) ? saved.items : [];
+      if (mode === "question") {
+        return savedItems.length === 1 && savedItems[0].caseId === caseId;
+      }
+      if (mode === "simulation") {
+        return savedItems.length > 0;
+      }
+      return true;
+    }
+
     async function startSession(mode, caseId) {
+      if (state.contentRecordPending) {
+        return;
+      }
+
       stopTimer();
       state.mode = mode;
       state.currentIndex = 0;
@@ -5053,22 +5095,27 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       state.progressionSaved = false;
 
       const saved = loadSession();
+      const canResume = isResumableSavedSession(saved, mode, caseId);
+      if (saved && !canResume) {
+        try {
+          localStorage.removeItem(state.sessionKey);
+        } catch (error) {
+          console.warn("[cas-pratique] nettoyage session périmée:", error);
+        }
+      }
+
       const savedItems = Array.isArray(saved?.items) ? saved.items : null;
-      const hasSavedAnswers = Boolean(saved && saved.answers && Object.keys(saved.answers).length);
       let restoreProgress = false;
 
       if (mode === "simulation") {
-        if (savedItems && savedItems.length) {
+        if (canResume && savedItems && savedItems.length) {
           state.items = savedItems;
-          restoreProgress = true;
-        } else if (hasSavedAnswers) {
-          state.items = modeConfig.simulation.buildItems(OFFICIAL_SESSION_CASE_IDS);
           restoreProgress = true;
         } else {
           state.items = modeConfig.simulation.buildItems(await pickSimulationCaseIds());
         }
       } else if (mode === "question") {
-        if (savedItems && savedItems.length === 1 && savedItems[0].caseId === caseId) {
+        if (canResume && savedItems && savedItems.length === 1 && savedItems[0].caseId === caseId) {
           state.items = savedItems;
           restoreProgress = true;
         } else {
@@ -5076,7 +5123,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         }
       } else {
         state.items = modeConfig[mode].buildItems(caseId);
-        restoreProgress = Boolean(saved);
+        restoreProgress = canResume;
       }
 
       if (restoreProgress && saved) {
@@ -5084,6 +5131,12 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         state.scores = saved.scores || {};
         state.currentIndex = Number.isFinite(saved.currentIndex) && saved.currentIndex < state.items.length ? saved.currentIndex : 0;
         state.remainingSeconds = Number.isFinite(saved.remainingSeconds) ? saved.remainingSeconds : state.remainingSeconds;
+        if (saved.startedAt) {
+          const resumedStart = new Date(saved.startedAt);
+          if (!Number.isNaN(resumedStart.getTime())) {
+            state.startedAt = resumedStart;
+          }
+        }
       }
 
       homeScreen.classList.add("hidden");
@@ -5615,7 +5668,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           </div>
           <div class="global-analysis-card">
             <h4>Estimation indicative</h4>
-            <p>${finalScore.caseScoreOfficial}/${finalScore.maxOfficial} pts cas pratiques + ${finalScore.spellingScore}/5 expression → ${finalScore.score50}/${finalScore.maxTotal} (${finalScore.score20}/20).</p>
+            <p>${finalScore.content15}/${CONTENT_SCALE} contenu + ${finalScore.spellingScore}/${SPELLING_SCALE} expression → ${finalScore.score20}/${CONVERTED_MAX}.</p>
           </div>
         </div>
         ${Object.values(caseGroups).length ? `
@@ -5730,7 +5783,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       }
       document.getElementById("question-ai-analysis").innerHTML = buildQuestionAiAnalysisHtml(caseItem, question, answer, evaluation);
       document.getElementById("question-score").textContent = scoreLabel;
-      document.getElementById("score-converted").textContent = `${calculateConvertedScore().score20}/20`;
+      document.getElementById("score-converted").textContent = `${calculateConvertedScore({ withSpelling: true }).score20}/${CONVERTED_MAX}`;
       document.getElementById("personal-advice").textContent = buildAdvice(score, answer, checklist);
     }
 
@@ -6112,31 +6165,28 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
     function calculateConvertedScore(options = {}) {
       const withSpelling = options.withSpelling === true;
-      const spellingMax = 5;
       const totalPossible = state.items.length * 5;
       const raw = Object.values(state.scores).reduce((sum, score) => sum + score, 0);
       const maxOfficial = getSessionMaxOfficialPoints();
       const earnedOfficial = state.items.reduce((sum, item) => sum + getItemOfficialScore(item), 0);
-      const spellingScore = calculateSpellingScore();
       const caseScoreOfficial = Math.round(earnedOfficial * 10) / 10;
-      const contentMax = maxOfficial || totalPossible;
-      const maxTotal = contentMax ? contentMax + spellingMax : 0;
-      const earnedFromOfficial = caseScoreOfficial + (withSpelling ? spellingScore : 0);
-      const earnedFromRaw = contentMax && totalPossible
-        ? Math.round((raw / totalPossible) * contentMax * 10) / 10
-        : 0;
-      const earned = Math.round((maxOfficial ? earnedFromOfficial : earnedFromRaw) * 10) / 10;
-      const score50 = maxTotal ? Math.min(maxTotal, earned) : 0;
-      const score20 = maxTotal ? Math.round((score50 / maxTotal) * 20 * 10) / 10 : 0;
+      const contentRatio = totalPossible > 0 ? Math.min(1, raw / totalPossible) : 0;
+      const content15 = Math.round(contentRatio * CONTENT_SCALE * 10) / 10;
+      const spellingScore = contentRatio <= 0 ? 0 : calculateSpellingScore();
+      const spellingPart = withSpelling ? spellingScore : 0;
+      const score20 = Math.round((content15 + spellingPart) * 10) / 10;
+      const maxTotal = CONVERTED_MAX;
+      const score50 = score20;
       return {
         raw,
         totalPossible,
         score50,
         score20,
+        content15,
         maxOfficial,
         maxTotal,
         earnedOfficial: caseScoreOfficial,
-        spellingScore
+        spellingScore: withSpelling ? spellingScore : 0
       };
     }
 
@@ -6252,15 +6302,17 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       return `Excellent - Niveau concours atteint ! ${gpxIcon("trophy")}`;
     }
 
-    function showFinalScore() {
+    async function showFinalScore() {
       stopTimer();
       setDocumentPanelOpen(false);
       scoreAllAnswers();
       state.correctionReturnTo = null;
       const finalScore = calculateFinalScore();
-      const caseLabel = state.mode === "simulation"
-        ? "Simulation d'entraînement : 3 cas (barème interne 45 pts)"
-        : `Cas pratiques : ${finalScore.maxOfficial} points`;
+      const modeLabel = state.mode === "simulation"
+        ? "Simulation (3 cas)"
+        : state.mode === "question"
+          ? "Question isolée"
+          : "Cas pratique unique";
 
       methodologyScreen.classList.remove("is-visible");
       exerciseScreen.classList.remove("is-visible");
@@ -6271,26 +6323,36 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       homeScreen.classList.add("hidden");
       finalScoreScreen.classList.add("is-visible");
 
-      document.getElementById("final-score-50").textContent = `${finalScore.score50}/${finalScore.maxTotal}`;
-      document.getElementById("final-score-20").textContent = `${finalScore.score20}/20`;
-      document.getElementById("final-spelling-score").textContent = `${finalScore.spellingScore}/5`;
+      const finalHome = document.getElementById("final-home");
+      if (finalHome) {
+        finalHome.disabled = true;
+        finalHome.textContent = "Enregistrement de la progression…";
+      }
+
+      document.getElementById("final-score-50").textContent = `${finalScore.content15}/${CONTENT_SCALE}`;
+      document.getElementById("final-score-20").textContent = `${finalScore.score20}/${CONVERTED_MAX}`;
+      document.getElementById("final-spelling-score").textContent = `${finalScore.spellingScore}/${SPELLING_SCALE}`;
       document.getElementById("final-score-message").innerHTML = getFinalMessage(finalScore.score20);
       document.getElementById("final-score-breakdown").innerHTML = `
         <li>
-          <span>${caseLabel}</span>
-          <span class="score-breakdown__status">${finalScore.caseScoreOfficial}/${finalScore.maxOfficial}</span>
+          <span>${modeLabel} — contenu (grille interne, ramené sur ${CONTENT_SCALE})</span>
+          <span class="score-breakdown__status">${finalScore.content15}/${CONTENT_SCALE}</span>
         </li>
         <li>
-          <span>Orthographe, syntaxe et lisibilité : 5 points</span>
-          <span class="score-breakdown__status">${finalScore.spellingScore}/5</span>
+          <span>Orthographe, syntaxe et lisibilité (${SPELLING_SCALE} points, 0 si aucun fond)</span>
+          <span class="score-breakdown__status">${finalScore.spellingScore}/${SPELLING_SCALE}</span>
         </li>
         <li>
           <span>Total final converti</span>
-          <span class="score-breakdown__status">${finalScore.score50}/${finalScore.maxTotal} soit ${finalScore.score20}/20</span>
+          <span class="score-breakdown__status">${finalScore.score20}/${CONVERTED_MAX}</span>
         </li>
       `;
       document.getElementById("final-ai-disclaimer").innerHTML = renderAiDisclaimerHtml("full");
-      saveProgressionResult();
+      await saveProgressionResult();
+      if (finalHome) {
+        finalHome.disabled = false;
+        finalHome.textContent = "← Revenir à l'accueil";
+      }
       document.getElementById("global-ai-analysis").innerHTML = buildGlobalSessionAnalysisHtml(finalScore);
       renderFinalDetailedReview();
 
@@ -6330,12 +6392,12 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function saveProgressionResult() {
+    async function saveProgressionResult() {
       if (state.progressionSaved) {
         return;
       }
 
-      const convertedScore = calculateConvertedScore();
+      const convertedScore = calculateConvertedScore({ withSpelling: true });
       if (convertedScore.totalPossible <= 0) {
         return;
       }
@@ -6355,6 +6417,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       }, {});
 
       state.progressionSaved = true;
+      state.contentRecordPending = true;
 
       window.GpxProgression?.saveSession({
         module: "cas-pratique",
@@ -6365,20 +6428,23 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         categories
       });
 
-      recordContentEvents();
-
       try {
-        if (state.sessionKey) {
-          localStorage.removeItem(state.sessionKey);
+        await recordContentEvents();
+      } finally {
+        try {
+          if (state.sessionKey) {
+            localStorage.removeItem(state.sessionKey);
+          }
+        } catch (error) {
+          console.warn("[cas-pratique] nettoyage session locale:", error);
         }
-      } catch (error) {
-        console.warn("[cas-pratique] nettoyage session locale:", error);
+        state.contentRecordPending = false;
       }
     }
 
     function updateScoreDisplay() {
-      const score = calculateConvertedScore();
-      elements.globalScore.textContent = `Score global : ${score.score50}/${score.maxTotal} - ${score.score20}/20`;
+      const score = calculateConvertedScore({ withSpelling: true });
+      elements.globalScore.textContent = `Score global : ${score.content15}/${CONTENT_SCALE} - ${score.score20}/${CONVERTED_MAX}`;
     }
 
     function startTimer() {
@@ -6410,7 +6476,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     }
 
     function saveSession() {
-      if (!state.sessionKey) {
+      if (!state.sessionKey || state.progressionSaved) {
         return;
       }
       const payload = {
@@ -6419,7 +6485,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         currentIndex: state.currentIndex,
         answers: state.answers,
         scores: state.scores,
-        remainingSeconds: state.remainingSeconds
+        remainingSeconds: state.remainingSeconds,
+        startedAt: state.startedAt instanceof Date ? state.startedAt.toISOString() : state.startedAt,
+        completed: false
       };
       localStorage.setItem(state.sessionKey, JSON.stringify(payload));
     }
@@ -6434,6 +6502,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     }
 
     function showHome() {
+      if (state.contentRecordPending) {
+        return;
+      }
       stopTimer();
       setDocumentPanelOpen(false);
       methodologyScreen.classList.remove("is-visible");
@@ -6509,8 +6580,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         </head>
         <body>
           <h1>Résolution de Cas Pratiques - Mes réponses</h1>
-          <p><strong>Score final estimé :</strong> ${score.score50}/${score.maxTotal}, soit ${score.score20}/20.</p>
-          <p><strong>Détail :</strong> cas pratiques ${score.caseScoreOfficial}/${score.maxOfficial} + orthographe ${score.spellingScore}/5.</p>
+          <p><strong>Score final estimé :</strong> ${score.content15}/${CONTENT_SCALE} contenu + ${score.spellingScore}/${SPELLING_SCALE} expression = ${score.score20}/${CONVERTED_MAX}.</p>
+          <p><strong>Détail interne :</strong> ${score.caseScoreOfficial}/${score.maxOfficial} pts barème questions.</p>
           ${printableAnswers}
           <script>window.print();<\/script>
         </body>

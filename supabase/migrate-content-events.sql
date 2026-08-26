@@ -24,6 +24,19 @@ create index if not exists content_events_user_module_type_idx
 create index if not exists content_events_completed_at_idx
   on public.content_events (completed_at desc);
 
+delete from public.content_events
+where id not in (
+  select kept.id
+  from (
+    select distinct on (user_id, module, content_type, content_id) id
+    from public.content_events
+    order by user_id, module, content_type, content_id, completed_at desc
+  ) kept
+);
+
+create unique index if not exists content_events_user_module_type_id_uidx
+  on public.content_events (user_id, module, content_type, content_id);
+
 alter table public.content_events enable row level security;
 
 drop policy if exists "Users insert own content_events" on public.content_events;

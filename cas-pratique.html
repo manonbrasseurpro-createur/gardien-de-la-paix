@@ -425,17 +425,29 @@
     }
 
     .case-select__badge {
-      display: inline-flex;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
       margin-top: auto;
-      padding: 4px 10px;
-      align-items: center;
-      border-radius: 999px;
+      padding: 6px 10px;
+      border-radius: 12px;
       font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 0.01em;
       color: var(--navy);
       background: #e8eef8;
       border: 1px solid #c5d0e3;
+    }
+
+    .case-select__badge-status {
+      font-weight: 800;
+    }
+
+    .case-select__badge-score {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
     }
 
     .case-select.is-done {
@@ -4860,7 +4872,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
         const { data, error } = await client
           .from("content_events")
-          .select("content_type, content_id, mode")
+          .select("content_type, content_id, mode, score, score_max, completed_at")
           .eq("user_id", user.id)
           .eq("module", CONTENT_MODULE);
 
@@ -4910,13 +4922,68 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       return sampleWithoutReplacement(unseen, 1)[0];
     }
 
-    function caseSelectorBadge(mode, caseItem, doneCases, doneQuestions) {
-      if (mode === "single") {
-        return doneCases.has(caseItem.id)
-          ? `<span class="case-select__badge">Déjà fait</span>`
-          : "";
+    function formatScore20(score, scoreMax) {
+      const value = Number(score);
+      if (!Number.isFinite(value)) {
+        return "";
+      }
+      const max = Number(scoreMax) > 0 ? Number(scoreMax) : CONVERTED_MAX;
+      const display = Number.isInteger(value) ? String(value) : value.toFixed(1);
+      return `${display}/${max}`;
+    }
+
+    function lastAndBestScores(events) {
+      const scored = events
+        .filter((event) => event.score != null && Number.isFinite(Number(event.score)))
+        .slice()
+        .sort((left, right) => Date.parse(right.completed_at || 0) - Date.parse(left.completed_at || 0));
+
+      if (!scored.length) {
+        return null;
       }
 
+      const lastEvent = scored[0];
+      const bestEvent = scored.reduce((best, event) => (
+        Number(event.score) > Number(best.score) ? event : best
+      ));
+
+      return {
+        last: Number(lastEvent.score),
+        lastMax: Number(lastEvent.score_max) > 0 ? Number(lastEvent.score_max) : CONVERTED_MAX,
+        best: Number(bestEvent.score),
+        bestMax: Number(bestEvent.score_max) > 0 ? Number(bestEvent.score_max) : CONVERTED_MAX
+      };
+    }
+
+    function renderScoreBadge(status, stats) {
+      const lastText = stats ? formatScore20(stats.last, stats.lastMax) : "";
+      const bestText = stats ? formatScore20(stats.best, stats.bestMax) : "";
+      const sameScore = Boolean(stats && lastText && lastText === bestText);
+      const scoreLines = !lastText
+        ? ""
+        : sameScore
+          ? `<span class="case-select__badge-score">Dernier : ${lastText}</span>`
+          : `<span class="case-select__badge-score">Dernier : ${lastText}</span><span class="case-select__badge-score">Meilleur : ${bestText}</span>`;
+
+      return `<span class="case-select__badge"><span class="case-select__badge-status">${status}</span>${scoreLines}</span>`;
+    }
+
+    function caseSelectorBadge(mode, caseItem, events) {
+      if (mode === "single") {
+        const caseEvents = events.filter((event) => (
+          event.content_type === CONTENT_TYPE_CASE && event.content_id === caseItem.id
+        ));
+        if (!caseEvents.length) {
+          return "";
+        }
+        return renderScoreBadge("Déjà fait", lastAndBestScores(caseEvents));
+      }
+
+      const questionPrefix = `${caseItem.id}:q`;
+      const questionEvents = events.filter((event) => (
+        event.content_type === CONTENT_TYPE_QUESTION && String(event.content_id).startsWith(questionPrefix)
+      ));
+      const doneQuestions = doneQuestionIdSet(questionEvents);
       const doneCount = caseItem.questions.reduce((count, _, questionIndex) => {
         return doneQuestions.has(questionContentId(caseItem.id, questionIndex)) ? count + 1 : count;
       }, 0);
@@ -4925,11 +4992,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         return "";
       }
 
-      if (doneCount >= caseItem.questions.length) {
-        return `<span class="case-select__badge">Déjà fait</span>`;
-      }
-
-      return `<span class="case-select__badge">${doneCount}/${caseItem.questions.length} questions faites</span>`;
+      const status = doneCount >= caseItem.questions.length
+        ? "Déjà fait"
+        : `${doneCount}/${caseItem.questions.length} questions faites`;
+      return renderScoreBadge(status, lastAndBestScores(questionEvents));
     }
 
     async function recordContentEvents() {
@@ -4944,41 +5010,36 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           return;
         }
 
+        const converted = calculateConvertedScore({ withSpelling: true });
+        const attemptScore = converted.score20;
+        const attemptMax = CONVERTED_MAX;
         const rows = [];
         const uniqueCaseIds = [...new Set(state.items.map((item) => item.caseId))];
         const completedAt = new Date().toISOString();
 
+        function eventRow(contentType, contentId) {
+          return {
+            user_id: user.id,
+            module: CONTENT_MODULE,
+            content_type: contentType,
+            content_id: contentId,
+            mode: state.mode,
+            score: attemptScore,
+            score_max: attemptMax,
+            completed_at: completedAt
+          };
+        }
+
         if (state.mode === "question") {
           state.items.forEach((item) => {
-            rows.push({
-              user_id: user.id,
-              module: CONTENT_MODULE,
-              content_type: CONTENT_TYPE_QUESTION,
-              content_id: questionContentId(item.caseId, item.questionIndex),
-              mode: state.mode,
-              completed_at: completedAt
-            });
+            rows.push(eventRow(CONTENT_TYPE_QUESTION, questionContentId(item.caseId, item.questionIndex)));
           });
         } else {
           uniqueCaseIds.forEach((caseId) => {
-            rows.push({
-              user_id: user.id,
-              module: CONTENT_MODULE,
-              content_type: CONTENT_TYPE_CASE,
-              content_id: caseId,
-              mode: state.mode,
-              completed_at: completedAt
-            });
+            rows.push(eventRow(CONTENT_TYPE_CASE, caseId));
           });
           state.items.forEach((item) => {
-            rows.push({
-              user_id: user.id,
-              module: CONTENT_MODULE,
-              content_type: CONTENT_TYPE_QUESTION,
-              content_id: questionContentId(item.caseId, item.questionIndex),
-              mode: state.mode,
-              completed_at: completedAt
-            });
+            rows.push(eventRow(CONTENT_TYPE_QUESTION, questionContentId(item.caseId, item.questionIndex)));
           });
         }
 
@@ -4986,15 +5047,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
           return;
         }
 
-        const { error } = await client.from("content_events").upsert(rows, {
-          onConflict: "user_id,module,content_type,content_id",
-          ignoreDuplicates: true
-        });
+        const { error } = await client.from("content_events").insert(rows);
         if (error) {
-          const retry = await client.from("content_events").insert(rows);
-          if (retry.error) {
-            console.warn("[cas-pratique] insertion content_events:", retry.error);
-          }
+          console.warn("[cas-pratique] insertion content_events:", error);
         }
       } catch (error) {
         console.warn("[cas-pratique] insertion content_events:", error);
@@ -5038,11 +5093,9 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       caseSelector.scrollIntoView({ behavior: "smooth", block: "start" });
 
       const events = await fetchContentEvents();
-      const doneCases = doneCaseIdSet(events);
-      const doneQuestions = doneQuestionIdSet(events);
 
       caseGrid.innerHTML = cases.map((caseItem) => {
-        const badge = caseSelectorBadge(mode, caseItem, doneCases, doneQuestions);
+        const badge = caseSelectorBadge(mode, caseItem, events);
         const doneClass = badge.includes("Déjà fait") ? " is-done" : "";
         return `
         <button class="case-select${doneClass}" type="button" data-case="${caseItem.id}">

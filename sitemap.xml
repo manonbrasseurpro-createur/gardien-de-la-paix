@@ -3,16 +3,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://prepagpx.fr/</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://prepagpx.fr/concours-gpx.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://prepagpx.fr/actualites.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -38,6 +41,7 @@
   </url>
   <url>
     <loc>https://prepagpx.fr/preparation-physique-gardien-de-la-paix.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -48,18 +52,19 @@
   </url>
   <url>
     <loc>https://prepagpx.fr/tarifs.html</loc>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://prepagpx.fr/2e-session-concours-gpx-2026.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://prepagpx.fr/concours-interne-externe-gardien-de-la-paix.html</loc>
-    <lastmod>2026-07-16</lastmod>
+    <lastmod>2026-08-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

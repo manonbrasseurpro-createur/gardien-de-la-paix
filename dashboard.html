@@ -3491,14 +3491,21 @@
         const trainingSessions = sessions.filter((session) => !isPersonalityProgressionSession(session));
         const widgets = [];
 
-        const examDate = new Date('2026-09-22');
-        const today = new Date();
-        const daysLeft = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+        const examDates = [
+          { iso: '2026-09-22', label: '22 septembre 2026', session: '2ᵉ session 2026' },
+          { iso: '2027-03-09', label: '9 mars 2027', session: '1ʳᵉ session 2027' }
+        ];
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const nextExam = examDates.find((exam) => new Date(exam.iso + 'T00:00:00') >= startOfToday) || examDates[examDates.length - 1];
+        const examDate = new Date(nextExam.iso + 'T00:00:00');
+        const daysLeft = Math.ceil((examDate - startOfToday) / (1000 * 60 * 60 * 24));
+        const countdownLabel = daysLeft > 0 ? daysLeft + ' jours' : (daysLeft === 0 ? "Aujourd'hui" : 'Épreuves passées');
         widgets.push(`
           <div class="auth-card">
             <p class="dash-widget__label">Avant les épreuves écrites</p>
-            <p class="dash-widget__value">${daysLeft > 0 ? daysLeft + ' jours' : 'Épreuves passées'}</p>
-            <p class="dash-widget__detail">22 septembre 2026</p>
+            <p class="dash-widget__value">${countdownLabel}</p>
+            <p class="dash-widget__detail">${nextExam.label} · ${nextExam.session}</p>
           </div>
         `);
 

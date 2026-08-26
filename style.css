@@ -2323,6 +2323,15 @@ html:has(.page-home) {
   color: rgba(255, 255, 255, 0.72);
 }
 
+.page-home .home-stats__disclaimer {
+  grid-column: 1 / -1;
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 .page-home .home-section__kicker {
   margin: 0 0 8px;
   color: var(--seal);

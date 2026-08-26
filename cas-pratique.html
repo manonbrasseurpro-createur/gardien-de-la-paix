@@ -356,6 +356,54 @@
       margin-top: 24px;
     }
 
+    .resume-banner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 20px;
+      padding: 16px 18px;
+      color: var(--navy);
+      background: #eef3fb;
+      border: 1px solid #c5d0e3;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(26, 39, 68, 0.08);
+    }
+
+    .resume-banner[hidden] {
+      display: none !important;
+    }
+
+    .resume-banner__text {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      flex: 1 1 240px;
+    }
+
+    .resume-banner__title {
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .resume-banner__meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .resume-banner__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
     .mode-card,
     .case-select {
       display: flex;
@@ -1562,6 +1610,17 @@
         <a class="back-link" href="dashboard.html">← Retour au tableau de bord</a>
         <button class="ghost-button" type="button" id="download-home">Télécharger mes réponses (PDF)</button>
       </div>
+
+      <aside class="resume-banner" id="resume-banner" hidden>
+        <div class="resume-banner__text">
+          <p class="resume-banner__title" id="resume-banner-title"></p>
+          <p class="resume-banner__meta" id="resume-banner-meta"></p>
+        </div>
+        <div class="resume-banner__actions">
+          <button class="ghost-button" type="button" id="resume-banner-dismiss">Recommencer à zéro</button>
+          <button class="primary-button" type="button" id="resume-banner-start">Reprendre</button>
+        </div>
+      </aside>
 
       <section class="guide-unified" aria-labelledby="guide-title">
         <header class="guide-unified__header">
@@ -3821,6 +3880,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     const SPELLING_SCALE = 5;
     const CONVERTED_MAX = 20;
     const SESSION_RESUME_MAX_MS = 24 * 60 * 60 * 1000;
+    const SESSION_KEY_PATTERN = /^cas-pratique-(simulation|single|question)-(.+)$/;
 
     const modeConfig = {
       simulation: {
@@ -4244,6 +4304,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
     document.getElementById("back-to-home").addEventListener("click", showHome);
     document.getElementById("examples-home").addEventListener("click", showHome);
     document.getElementById("final-home").addEventListener("click", showHome);
+    document.getElementById("resume-banner-start").addEventListener("click", resumePendingSession);
+    document.getElementById("resume-banner-dismiss").addEventListener("click", dismissPendingSession);
     function setDocumentPanelOpen(isOpen) {
       documentPanel.classList.toggle("is-open", isOpen);
       document.documentElement.classList.toggle("document-panel-open", isOpen);
@@ -5129,7 +5191,147 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       if (mode === "simulation") {
         return savedItems.length > 0;
       }
-      return true;
+      return savedItems.length > 0;
+    }
+
+    function readLocalSessionByKey(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function formatResumeRemaining(seconds) {
+      const total = Math.max(0, Math.round(Number(seconds) || 0));
+      const hours = Math.floor(total / 3600);
+      const minutes = Math.floor((total % 3600) / 60);
+      if (hours > 0) {
+        return `${hours} h ${String(minutes).padStart(2, "0")} min restantes`;
+      }
+      if (minutes > 0) {
+        return `${minutes} min restantes`;
+      }
+      return "Moins d'une minute restante";
+    }
+
+    function resumeSessionLabel(entry) {
+      const firstCaseId = entry.saved.items?.[0]?.caseId;
+      const caseItem = firstCaseId ? getCase(firstCaseId) : null;
+      const caseTitle = caseItem?.title || "";
+      if (entry.mode === "simulation") {
+        return caseTitle ? `Simulation en cours : ${caseTitle}` : "Simulation en cours";
+      }
+      if (entry.mode === "single") {
+        return caseTitle ? `Cas pratique en cours : ${caseTitle}` : "Cas pratique en cours";
+      }
+      return caseTitle ? `Question en cours : ${caseTitle}` : "Question isolée en cours";
+    }
+
+    function resumeSessionMeta(saved) {
+      const items = Array.isArray(saved.items) ? saved.items : [];
+      const total = items.length;
+      const current = Number.isFinite(saved.currentIndex) ? saved.currentIndex + 1 : 1;
+      const answered = saved.answers
+        ? Object.keys(saved.answers).filter((key) => String(saved.answers[key] || "").trim()).length
+        : 0;
+      const parts = [];
+      if (total > 0) {
+        parts.push(`Question ${Math.min(current, total)}/${total}`);
+      }
+      if (answered > 0) {
+        parts.push(`${answered} réponse${answered > 1 ? "s" : ""} enregistrée${answered > 1 ? "s" : ""}`);
+      }
+      if (Number.isFinite(saved.remainingSeconds)) {
+        parts.push(formatResumeRemaining(saved.remainingSeconds));
+      }
+      return parts.join(" · ");
+    }
+
+    function listResumableLocalSessions() {
+      const found = [];
+      if (!window.localStorage) {
+        return found;
+      }
+
+      for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+        const key = localStorage.key(index);
+        const match = key && key.match(SESSION_KEY_PATTERN);
+        if (!match) {
+          continue;
+        }
+
+        const mode = match[1];
+        const caseId = mode === "simulation" ? null : match[2];
+        const saved = readLocalSessionByKey(key);
+        if (!isResumableSavedSession(saved, mode, caseId)) {
+          if (saved) {
+            try {
+              localStorage.removeItem(key);
+            } catch (error) {
+              console.warn("[cas-pratique] nettoyage session périmée:", error);
+            }
+          }
+          continue;
+        }
+
+        found.push({ key, mode, caseId, saved });
+      }
+
+      found.sort((left, right) => Date.parse(right.saved.startedAt) - Date.parse(left.saved.startedAt));
+      return found;
+    }
+
+    function renderResumeBanner() {
+      const banner = document.getElementById("resume-banner");
+      if (!banner) {
+        return;
+      }
+
+      const pending = listResumableLocalSessions()[0] || null;
+      if (!pending) {
+        banner.hidden = true;
+        banner.dataset.resumeKey = "";
+        banner.dataset.resumeMode = "";
+        banner.dataset.resumeCase = "";
+        return;
+      }
+
+      document.getElementById("resume-banner-title").textContent = resumeSessionLabel(pending);
+      document.getElementById("resume-banner-meta").textContent = resumeSessionMeta(pending.saved) || "Reprise disponible pendant 24 h.";
+      banner.dataset.resumeKey = pending.key;
+      banner.dataset.resumeMode = pending.mode;
+      banner.dataset.resumeCase = pending.caseId || "";
+      banner.hidden = false;
+    }
+
+    function resumePendingSession() {
+      const banner = document.getElementById("resume-banner");
+      const mode = banner?.dataset.resumeMode;
+      if (!mode || !modeConfig[mode]) {
+        renderResumeBanner();
+        return;
+      }
+      const caseId = mode === "simulation" ? undefined : (banner.dataset.resumeCase || undefined);
+      if (window.GPXAccess) {
+        window.GPXAccess.guard("cas-pratique.html", mode, null, () => startSession(mode, caseId));
+        return;
+      }
+      startSession(mode, caseId);
+    }
+
+    function dismissPendingSession() {
+      const banner = document.getElementById("resume-banner");
+      const key = banner?.dataset.resumeKey;
+      if (key) {
+        try {
+          localStorage.removeItem(key);
+        } catch (error) {
+          console.warn("[cas-pratique] abandon session locale:", error);
+        }
+      }
+      renderResumeBanner();
     }
 
     async function startSession(mode, caseId) {
@@ -6569,6 +6771,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       floatingVocabularyButton.classList.remove("hidden");
       homeScreen.classList.remove("hidden");
       updateScoreDisplay();
+      renderResumeBanner();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -6642,6 +6845,8 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       `);
       printWindow.document.close();
     }
+
+    renderResumeBanner();
   </script>
 </body>
 </html>

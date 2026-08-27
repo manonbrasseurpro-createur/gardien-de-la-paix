@@ -59,6 +59,139 @@
       color: var(--navy);
       border: 2px solid var(--border);
     }
+
+    .compte-delete-wrap {
+      margin: 28px auto 8px;
+      max-width: 720px;
+      text-align: center;
+    }
+
+    .compte-delete-wrap.hidden {
+      display: none;
+    }
+
+    .compte-delete-link {
+      display: inline;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: #9aa0a6;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .compte-delete-link:hover,
+    .compte-delete-link:focus-visible {
+      color: #6b7280;
+      text-decoration: underline;
+    }
+
+    .compte-delete-blocked {
+      display: block;
+      margin: 10px auto 0;
+      max-width: 520px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.55;
+      color: #b42318;
+    }
+
+    .compte-delete-blocked a {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    .compte-delete-blocked.hidden {
+      display: none;
+    }
+
+    .compte-delete-modal {
+      width: min(480px, calc(100vw - 32px));
+      padding: 24px;
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 12px;
+      background: var(--white, #fff);
+      color: var(--navy, #0B1F3A);
+      box-shadow: 0 18px 50px rgba(11, 31, 58, 0.25);
+    }
+
+    .compte-delete-modal::backdrop {
+      background: rgba(11, 31, 58, 0.55);
+    }
+
+    .compte-delete-modal h2 {
+      margin: 0 0 12px;
+      font-family: "Spectral", Georgia, serif;
+      font-size: 1.25rem;
+    }
+
+    .compte-delete-modal p {
+      margin: 0 0 10px;
+      line-height: 1.6;
+    }
+
+    .compte-delete-modal label {
+      display: block;
+      margin: 14px 0 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .compte-delete-modal input {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 42px;
+      padding: 8px 12px;
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    .compte-delete-modal__error {
+      min-height: 1.2em;
+      color: #b42318;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .compte-delete-modal__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    .compte-delete-cancel {
+      padding: 8px 14px;
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 8px;
+      background: var(--white, #fff);
+      font: inherit;
+      font-weight: 600;
+      color: var(--navy, #0B1F3A);
+      cursor: pointer;
+    }
+
+    .compte-delete-confirm {
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #8B1E2F;
+      font: inherit;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .compte-delete-confirm:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,7 +243,25 @@
     <p class="auth-footer">
       <a href="index.html">Retour à l'accueil</a> · <a href="tarifs.html">Tarifs et abonnement</a>
     </p>
+
+    <div id="delete-account-wrap" class="compte-delete-wrap hidden">
+      <button id="delete-account-link" class="compte-delete-link" type="button">Supprimer mon compte</button>
+      <p id="delete-account-blocked" class="compte-delete-blocked hidden" role="alert"></p>
+    </div>
   </main>
+
+  <dialog id="delete-account-modal" class="compte-delete-modal" aria-labelledby="delete-account-modal-title">
+    <h2 id="delete-account-modal-title">Supprimer définitivement votre compte ?</h2>
+    <p>Cette action est <strong>irréversible</strong>. Toutes vos données seront définitivement effacées : profil, statistiques, historique d'entraînement, flashcards, messages communautaires et résultats de tests.</p>
+    <p>Vous ne pourrez plus vous reconnecter avec cette adresse e-mail tant que vous n'aurez pas créé un nouveau compte.</p>
+    <label for="delete-account-confirm-input">Pour confirmer, tapez SUPPRIMER</label>
+    <input id="delete-account-confirm-input" type="text" autocomplete="off" spellcheck="false" aria-describedby="delete-account-modal-error">
+    <p id="delete-account-modal-error" class="compte-delete-modal__error" role="alert"></p>
+    <div class="compte-delete-modal__actions">
+      <button id="delete-account-cancel" class="compte-delete-cancel" type="button">Annuler</button>
+      <button id="delete-account-confirm" class="compte-delete-confirm" type="button" disabled>Supprimer définitivement</button>
+    </div>
+  </dialog>
 
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
@@ -124,6 +275,148 @@
     console.info("[GPX Auth] Diagnostic au chargement:", window.GPXAuth.getDiagnostics());
 
     const loggedInView = document.getElementById("logged-in-view");
+    const deleteWrap = document.getElementById("delete-account-wrap");
+    const deleteLink = document.getElementById("delete-account-link");
+    const deleteBlocked = document.getElementById("delete-account-blocked");
+    const deleteModal = document.getElementById("delete-account-modal");
+    const deleteConfirmInput = document.getElementById("delete-account-confirm-input");
+    const deleteConfirmBtn = document.getElementById("delete-account-confirm");
+    const deleteCancelBtn = document.getElementById("delete-account-cancel");
+    const deleteModalError = document.getElementById("delete-account-modal-error");
+    const CONFIRM_PHRASE = "SUPPRIMER";
+    const CONFIRM_DELAY_MS = 5000;
+    let confirmDelayTimer = null;
+    let confirmDelayRemaining = 0;
+
+    function getSupabaseFunctionConfig() {
+      const cfg = window.GPX_SUPABASE || {};
+      return {
+        url: (cfg.url || cfg.SUPABASE_URL || "").replace(/\/$/, ""),
+        anonKey: cfg.anonKey || cfg.anon_key || cfg.publishableKey || ""
+      };
+    }
+
+    async function callDeleteOwnAccount(payload) {
+      const token = await window.GPXAuth.getAccessToken();
+      if (!token) {
+        throw new Error("Session expirée. Reconnectez-vous.");
+      }
+
+      const { url, anonKey } = getSupabaseFunctionConfig();
+      if (!url || !anonKey) {
+        throw new Error("Supabase n'est pas configuré.");
+      }
+
+      const response = await fetch(`${url}/functions/v1/delete-own-account`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          apikey: anonKey,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json().catch(() => ({}));
+      return { ok: response.ok, status: response.status, data };
+    }
+
+    function showActiveSubscriptionBlock() {
+      deleteBlocked.innerHTML =
+        "Vous devez d'abord résilier votre abonnement avant de pouvoir supprimer votre compte. Rendez-vous dans " +
+        "'<a href=\"#manage-subscription-button\" id=\"delete-account-manage-link\">Gérer mon abonnement</a>' " +
+        "pour le faire.";
+      deleteBlocked.classList.remove("hidden");
+      const manageBtn = document.getElementById("manage-subscription-button");
+      manageBtn.classList.remove("hidden");
+      document.getElementById("delete-account-manage-link")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        manageBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+        manageBtn.focus();
+      });
+    }
+
+    function hideActiveSubscriptionBlock() {
+      deleteBlocked.textContent = "";
+      deleteBlocked.classList.add("hidden");
+    }
+
+    function updateConfirmButtonState() {
+      const phraseOk = deleteConfirmInput.value.trim() === CONFIRM_PHRASE;
+      const delayOk = confirmDelayRemaining <= 0;
+      deleteConfirmBtn.disabled = !(phraseOk && delayOk) || deleteConfirmBtn.dataset.busy === "1";
+      if (deleteConfirmBtn.dataset.busy === "1") {
+        return;
+      }
+      if (!delayOk) {
+        const seconds = Math.ceil(confirmDelayRemaining / 1000);
+        deleteConfirmBtn.textContent = `Supprimer définitivement (${seconds})`;
+      } else {
+        deleteConfirmBtn.textContent = "Supprimer définitivement";
+      }
+    }
+
+    function stopConfirmDelay() {
+      if (confirmDelayTimer) {
+        window.clearInterval(confirmDelayTimer);
+        confirmDelayTimer = null;
+      }
+      confirmDelayRemaining = 0;
+    }
+
+    function startConfirmDelay() {
+      stopConfirmDelay();
+      confirmDelayRemaining = CONFIRM_DELAY_MS;
+      updateConfirmButtonState();
+      confirmDelayTimer = window.setInterval(() => {
+        confirmDelayRemaining = Math.max(0, confirmDelayRemaining - 250);
+        if (confirmDelayRemaining <= 0) {
+          stopConfirmDelay();
+        }
+        updateConfirmButtonState();
+      }, 250);
+    }
+
+    function closeDeleteModal() {
+      stopConfirmDelay();
+      deleteConfirmInput.value = "";
+      deleteModalError.textContent = "";
+      deleteConfirmBtn.dataset.busy = "";
+      deleteConfirmBtn.disabled = true;
+      deleteConfirmBtn.textContent = "Supprimer définitivement";
+      if (typeof deleteModal.close === "function") {
+        deleteModal.close();
+      }
+    }
+
+    function openDeleteModal() {
+      hideActiveSubscriptionBlock();
+      deleteConfirmInput.value = "";
+      deleteModalError.textContent = "";
+      deleteConfirmBtn.dataset.busy = "";
+      startConfirmDelay();
+      if (typeof deleteModal.showModal === "function") {
+        deleteModal.showModal();
+      }
+      window.setTimeout(() => deleteConfirmInput.focus(), 50);
+    }
+
+    async function signOutLocally() {
+      try {
+        const client = window.__gpxSupabaseClient;
+        if (client?.auth?.signOut) {
+          await client.auth.signOut({ scope: "local" });
+          return;
+        }
+      } catch (error) {
+        console.warn("[GPX Auth] signOut local après suppression:", error);
+      }
+      try {
+        await window.GPXAuth.logout();
+      } catch (error) {
+        console.warn("[GPX Auth] logout après suppression:", error);
+      }
+    }
 
     async function refreshDashboard() {
       const user = await window.GPXAuth.getCurrentUser();
@@ -133,6 +426,7 @@
       }
 
       loggedInView.classList.remove("hidden");
+      deleteWrap.classList.remove("hidden");
       document.getElementById("user-display-name").textContent = [user.firstName, user.lastName].filter(Boolean).join(" ");
       document.getElementById("hero-subtitle").textContent = "Gérez votre compte et votre abonnement";
 
@@ -193,6 +487,89 @@
     document.getElementById("logout-button").addEventListener("click", async () => {
       await window.GPXAuth.logout();
       await refreshDashboard();
+    });
+
+    deleteLink.addEventListener("click", async () => {
+      hideActiveSubscriptionBlock();
+      deleteLink.disabled = true;
+      const previousLabel = deleteLink.textContent;
+      deleteLink.textContent = "Vérification…";
+      try {
+        const result = await callDeleteOwnAccount({ action: "check" });
+        if (result.status === 409 || result.data.code === "active_subscription") {
+          showActiveSubscriptionBlock();
+          return;
+        }
+        if (!result.ok || result.data.canDelete !== true) {
+          deleteBlocked.textContent = result.data.error || "Impossible de vérifier la suppression du compte.";
+          deleteBlocked.classList.remove("hidden");
+          return;
+        }
+        openDeleteModal();
+      } catch (error) {
+        deleteBlocked.textContent = error.message || "Impossible de vérifier la suppression du compte.";
+        deleteBlocked.classList.remove("hidden");
+      } finally {
+        deleteLink.disabled = false;
+        deleteLink.textContent = previousLabel;
+      }
+    });
+
+    deleteConfirmInput.addEventListener("input", updateConfirmButtonState);
+    deleteConfirmInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (!deleteConfirmBtn.disabled) {
+          deleteConfirmBtn.click();
+        }
+      }
+    });
+
+    deleteCancelBtn.addEventListener("click", () => {
+      closeDeleteModal();
+    });
+
+    deleteModal.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeDeleteModal();
+    });
+
+    deleteConfirmBtn.addEventListener("click", async () => {
+      if (deleteConfirmInput.value.trim() !== CONFIRM_PHRASE || confirmDelayRemaining > 0) {
+        return;
+      }
+
+      deleteModalError.textContent = "";
+      deleteConfirmBtn.dataset.busy = "1";
+      deleteConfirmBtn.disabled = true;
+      deleteConfirmBtn.textContent = "Suppression…";
+
+      try {
+        const result = await callDeleteOwnAccount({
+          action: "delete",
+          confirmation: CONFIRM_PHRASE
+        });
+
+        if (result.status === 409 || result.data.code === "active_subscription") {
+          closeDeleteModal();
+          showActiveSubscriptionBlock();
+          return;
+        }
+
+        if (!result.ok) {
+          deleteModalError.textContent = result.data.error || "Impossible de supprimer le compte.";
+          deleteConfirmBtn.dataset.busy = "";
+          updateConfirmButtonState();
+          return;
+        }
+
+        await signOutLocally();
+        window.location.href = "index.html?compte=supprime";
+      } catch (error) {
+        deleteModalError.textContent = error.message || "Impossible de supprimer le compte.";
+        deleteConfirmBtn.dataset.busy = "";
+        updateConfirmButtonState();
+      }
     });
 
     refreshDashboard();

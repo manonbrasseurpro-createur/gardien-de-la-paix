@@ -719,3 +719,15 @@ create policy "Admin delete partners"
 
 revoke all on table public.partners from public, anon;
 grant select, insert, update, delete on table public.partners to authenticated;
+
+-- Suppression de compte en libre-service (Edge Function delete-own-account, service_role).
+-- Un élève ne peut supprimer QUE son propre compte, et seulement s'il n'a pas
+-- d'abonnement Stripe actif non résilié (vérifié via l'API Stripe, pas seulement
+-- le statut en base). Les tables sans ON DELETE CASCADE sont nettoyées d'abord :
+--   problem_reports, satisfaction_surveys (user_id ON DELETE SET NULL)
+--   intervenant_questions (pas de FK user_id ; suppression par student_email)
+-- La suppression de auth.users déclenche ensuite le cascade sur :
+--   profiles, exam_sessions, community_posts, notification_dismissals,
+--   notification_targets, content_events, personality_test_results, flashcard_progress.
+-- email_campaigns.sent_by et site_notifications.created_by restent en SET NULL
+-- (traces admin, pas de données élève).

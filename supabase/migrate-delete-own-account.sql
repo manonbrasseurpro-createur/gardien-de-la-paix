@@ -1,0 +1,21 @@
+-- Suppression de compte en libre-service (delete-own-account).
+-- Aucune altération de schéma n'est requise : la suppression passe par l'Edge
+-- Function (service_role), qui ignore le RLS. Ce fichier documente l'ordre
+-- des suppressions pour rester aligné avec schema.sql.
+--
+-- 1. Vérifier l'identité : auth.uid() du JWT = utilisateur appelant.
+-- 2. Vérifier Stripe (API) : aucun abonnement active/trialing/past_due/unpaid/paused
+--    qui n'a pas encore été résilié (cancel_at_period_end = false).
+-- 3. Tables SANS cascade — à supprimer explicitement :
+--      problem_reports          (user_id ON DELETE SET NULL)
+--      satisfaction_surveys     (user_id ON DELETE SET NULL)
+--      intervenant_questions    (pas de FK user_id ; filtre student_email)
+-- 4. auth.admin.deleteUser(id) → cascade sur :
+--      profiles, exam_sessions, community_posts, notification_dismissals,
+--      notification_targets, content_events, personality_test_results,
+--      flashcard_progress
+-- 5. Laissées en SET NULL (traces admin, pas de PII élève) :
+--      email_campaigns.sent_by, site_notifications.created_by
+--
+-- Déploiement : supabase functions deploy delete-own-account
+select 1;

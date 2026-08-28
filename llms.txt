@@ -1,0 +1,38 @@
+# PrepaGPX
+
+> Plateforme en ligne de préparation aux épreuves écrites du concours de Gardien de la Paix (police nationale française) : cas pratiques corrigés par IA, culture générale, langue étrangère, tests psychotechniques et flashcards juridiques.
+
+PrepaGPX couvre les trois épreuves écrites d'admissibilité du concours externe Gardien de la Paix : cas pratique (coefficient 4), culture générale + langue étrangère (coefficients 2 et 1), et tests psychotechniques. La plateforme ne couvre pas les épreuves sportives ni l'entretien avec le jury, mais propose des guides informatifs sur ces sujets. 7 jours d'essai gratuit sans carte bancaire, puis abonnement mensuel ou forfaits 3/6 mois.
+
+## Le concours
+
+- [Concours Gardien de la Paix 2026-2027](https://prepagpx.fr/concours-gpx.html): conditions d'accès, structure des épreuves, coefficients, calendrier des sessions 2026 et 2027
+- [Différences concours interne / externe](https://prepagpx.fr/concours-interne-externe-gardien-de-la-paix.html)
+- [Calendrier détaillé 2e session 2026 et 1re session 2027](https://prepagpx.fr/2e-session-concours-gpx-2026.html)
+- [Les filières de la police nationale après le concours](https://prepagpx.fr/filieres-police-nationale-gpx.html)
+- [Salaire Gardien de la Paix 2026](https://prepagpx.fr/salaire-gardien-de-la-paix.html): grille indiciaire, primes, évolution de carrière
+
+## Préparer les épreuves écrites
+
+- [Méthode complète du cas pratique](https://prepagpx.fr/cas-pratique-methode-complete.html): méthode en 5 étapes, erreurs fréquentes, coefficient 4
+- [Droit pénal pour le cas pratique](https://prepagpx.fr/droit-penal-cas-pratique-gpx.html): infractions, classification, peines
+- [Lexique juridique du concours (OPJ, APJ, GAV, IGPN...)](https://prepagpx.fr/sigles-vocabulaire-juridique-police.html)
+- [Annales Gardien de la Paix — cas pratiques corrigés](https://prepagpx.fr/annales-gardien-de-la-paix.html)
+- [QCM Culture Générale — exemples de questions](https://prepagpx.fr/qcm-culture-generale-gardien-de-la-paix.html)
+- [QCM Anglais — exemples de questions](https://prepagpx.fr/qcm-anglais-gardien-de-la-paix.html)
+- [Tests psychotechniques (logique, spatial, numérique, verbal)](https://prepagpx.fr/psychotechnique-gardien-de-la-paix.html)
+
+## Préparer l'oral et le sportif (informatif, hors plateforme)
+
+- [Entretien avec le jury GPX](https://prepagpx.fr/entretien-jury-gpx.html): qualités évaluées, questions fréquentes, méthode de préparation, coefficient 5
+- [Préparation physique concours GPX](https://prepagpx.fr/preparation-physique-gardien-de-la-paix.html): épreuves sportives et barèmes officiels
+
+## La plateforme
+
+- [Tarifs](https://prepagpx.fr/tarifs.html): abonnement mensuel, forfaits 3 et 6 mois, essai gratuit 7 jours
+- [Inscription](https://prepagpx.fr/inscription.html)
+- [Toutes les actualités et guides](https://prepagpx.fr/actualites.html)
+
+## Optional
+
+- [Accueil](https://prepagpx.fr/index.html)

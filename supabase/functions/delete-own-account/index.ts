@@ -283,16 +283,6 @@ Deno.serve(async (req) => {
           `Impossible de supprimer les signalements : ${reportsEmailError.message}`
         );
       }
-
-      const { error: questionsError } = await supabaseAdmin
-        .from("intervenant_questions")
-        .delete()
-        .ilike("student_email", userEmail);
-      if (questionsError) {
-        throw new Error(
-          `Impossible de supprimer les questions : ${questionsError.message}`
-        );
-      }
     }
 
     const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(user.id);

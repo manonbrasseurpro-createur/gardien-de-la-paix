@@ -513,23 +513,6 @@ $$;
 
 grant execute on function public.get_cas_pratique_leaderboard() to authenticated;
 
--- Questions contact intervenants (page citations)
-create table if not exists public.intervenant_questions (
-  id uuid primary key default gen_random_uuid(),
-  quote_id uuid references public.professional_quotes (id) on delete set null,
-  student_name text not null,
-  student_email text not null,
-  message text not null,
-  status text not null default 'nouveau',
-  created_at timestamptz not null default now()
-);
-
-alter table public.intervenant_questions enable row level security;
-
-create policy "Anyone can submit a question"
-  on public.intervenant_questions for insert
-  with check (true);
-
 -- Historique des campagnes email (admin uniquement)
 create table if not exists public.email_campaigns (
   id uuid primary key default gen_random_uuid(),
@@ -725,7 +708,6 @@ grant select, insert, update, delete on table public.partners to authenticated;
 -- d'abonnement Stripe actif non résilié (vérifié via l'API Stripe, pas seulement
 -- le statut en base). Les tables sans ON DELETE CASCADE sont nettoyées d'abord :
 --   problem_reports, satisfaction_surveys (user_id ON DELETE SET NULL)
---   intervenant_questions (pas de FK user_id ; suppression par student_email)
 -- La suppression de auth.users déclenche ensuite le cascade sur :
 --   profiles, exam_sessions, community_posts, notification_dismissals,
 --   notification_targets, content_events, personality_test_results, flashcard_progress.

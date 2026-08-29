@@ -506,9 +506,20 @@
       <div class="home-section__inner">
         <p class="home-section__kicker">Ils l'ont fait</p>
         <h2 id="home-testimonials-title" class="home-section__title">Ce qu'en disent les candidats</h2>
-        <div id="home-testimonials-summary" class="home-testimonials__summary" hidden></div>
+        <div id="home-testimonials-summary" class="home-testimonials__summary" aria-label="Note moyenne 5/5, basée sur 3 avis">
+          <p class="home-testimonials__summary-score">5/5</p>
+          <span class="home-testimonials__stars" aria-hidden="true">
+            <span class="home-testimonials__stars-bg">★★★★★</span>
+            <span class="home-testimonials__stars-fill" style="width: 100%">★★★★★</span>
+          </span>
+          <p class="home-testimonials__summary-count">3 avis</p>
+        </div>
         <div id="home-testimonials-grid" class="home-testimonials__grid">
-          <p class="home-testimonials__placeholder">Les premiers retours arrivent bientôt. Vous serez peut-être parmi les premiers à témoigner.</p>
+          <article class="home-testimonial-card">
+            <p class="home-testimonial-card__note">★★★★★ 5/5</p>
+            <blockquote class="home-testimonial-card__quote">Prepagpx, vous offre un contenu tant diversifié que complet, vous permettant d'aborder avec confiance vos épreuves écrites du concours. La qualité des informations est telle, que cela pourra également vous permettre d'éventuellement vous pencher sur d'autres concours comme la gendarmerie ou les douanes.</blockquote>
+            <p class="home-testimonial-card__meta">psychotechnique, culture-generale, langues, cas-pratique · juillet 2026</p>
+          </article>
         </div>
       </div>
     </section>

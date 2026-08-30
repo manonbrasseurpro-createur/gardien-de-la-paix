@@ -261,14 +261,11 @@
       text-align: center;
     }
 
-    .evolution-wrap {
-      overflow-x: auto;
-    }
-
     .evolution-chart {
+      display: block;
       width: 100%;
-      min-width: 620px;
-      min-height: 300px;
+      height: auto;
+      aspect-ratio: 760 / 300;
       background: var(--off-white);
       border: 1px solid var(--border);
       border-radius: 18px;
@@ -429,6 +426,70 @@
       .progression-panel {
         padding: 22px;
       }
+
+      .history-table-wrap {
+        overflow: visible;
+        border: 0;
+        border-radius: 0;
+      }
+
+      .history-table-wrap table {
+        display: block;
+        min-width: 0;
+        background: transparent;
+      }
+
+      .history-table-wrap thead {
+        display: none;
+      }
+
+      .history-table-wrap tbody {
+        display: grid;
+        gap: 16px;
+      }
+
+      .history-table-wrap tr {
+        display: grid;
+        gap: 12px;
+        padding: 20px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .history-table-wrap td {
+        display: grid;
+        gap: 4px;
+        padding: 0 0 8px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .history-table-wrap td:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      .history-table-wrap td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .history-table-wrap .history-empty td {
+        padding: 0;
+        border: 0;
+        color: var(--muted);
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .history-table-wrap .history-empty td::before {
+        content: none;
+      }
     }
   </style>
 </head>
@@ -511,7 +572,7 @@
         </div>
       </div>
       <div class="evolution-wrap">
-        <svg class="evolution-chart" id="evolution-chart" viewBox="0 0 760 300" role="img" aria-label="Evolution des derniers tests"></svg>
+        <svg class="evolution-chart" id="evolution-chart" viewBox="0 0 760 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Evolution des derniers tests"></svg>
       </div>
     </section>
 
@@ -896,13 +957,13 @@
       elements.historyBody.innerHTML = sorted.length
         ? sorted.map((session) => `
           <tr>
-            <td>${formatDate(session.date)}</td>
-            <td>${modules[session.module].shortLabel}</td>
-            <td><span class="score-pill">${scoreText(session)}</span></td>
-            <td>${formatDuration(session.duree)}</td>
+            <td data-label="Date et heure">${formatDate(session.date)}</td>
+            <td data-label="Module testé">${modules[session.module].shortLabel}</td>
+            <td data-label="Score obtenu"><span class="score-pill">${scoreText(session)}</span></td>
+            <td data-label="Durée de la session">${formatDuration(session.duree)}</td>
           </tr>
         `).join("")
-        : '<tr><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
+        : '<tr class="history-empty"><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
     }
 
     function renderObjectives(goals) {

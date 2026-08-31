@@ -144,7 +144,8 @@
       color: var(--navy);
       margin: 0 0 14px;
     }
-    .admin-users-filter select {
+    .admin-users-filter select,
+    .admin-users-filter input[type="date"] {
       padding: 8px 12px;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -152,6 +153,16 @@
       font-weight: 500;
       background: var(--white);
       color: var(--text);
+    }
+    .admin-campaign-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+      margin: 0 0 14px;
+    }
+    .admin-campaign-filters .admin-users-filter {
+      margin: 0;
     }
     .admin-users-pagination {
       display: flex;
@@ -539,6 +550,7 @@
       color: rgba(246, 244, 238, 0.68);
     }
     #panel-admin .admin-users-filter select,
+    #panel-admin .admin-users-filter input[type="date"],
     #panel-admin .admin-text-input,
     #panel-admin .admin-campaign-form input[type="text"],
     #panel-admin .admin-campaign-form textarea,
@@ -1469,15 +1481,25 @@
             <div class="auth-card auth-card--wide">
               <h2>Campagne email</h2>
               <p class="admin-lead">Sélectionnez les destinataires, rédigez l'objet et le message, puis confirmez avant l'envoi réel via Brevo (lien de désinscription automatique).</p>
-              <label class="admin-users-filter">
-                Filtrer les destinataires
-                <select id="admin-campaign-filter">
-                  <option value="all">Tous</option>
-                  <option value="free">Gratuit</option>
-                  <option value="active">Abonné</option>
-                  <option value="complimentary">Accès offert</option>
-                </select>
-              </label>
+              <div class="admin-campaign-filters">
+                <label class="admin-users-filter">
+                  Filtrer les destinataires
+                  <select id="admin-campaign-filter">
+                    <option value="all">Tous</option>
+                    <option value="free">Gratuit</option>
+                    <option value="active">Abonné</option>
+                    <option value="complimentary">Accès offert</option>
+                  </select>
+                </label>
+                <label class="admin-users-filter">
+                  Inscrit depuis le
+                  <input type="date" id="admin-campaign-created-from">
+                </label>
+                <label class="admin-users-filter">
+                  Inscrit jusqu'au
+                  <input type="date" id="admin-campaign-created-to">
+                </label>
+              </div>
               <div class="admin-campaign-toolbar">
                 <button type="button" id="admin-campaign-select-page">Tout sélectionner (cette page)</button>
                 <button type="button" id="admin-campaign-select-filter">Sélectionner le filtre actuel</button>
@@ -1785,15 +1807,32 @@
       const ADMIN_USERS_PAGE_SIZE = 50;
       let adminUsersPage = 1;
 
-      function applyAdminUsersFilter(query, filter) {
+      function campaignSignupDateBoundary(dateValue, endOfDay) {
+        const parts = String(dateValue || '').split('-').map(Number);
+        if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
+        const [year, month, day] = parts;
+        if (endOfDay) {
+          return new Date(year, month - 1, day, 23, 59, 59, 999).toISOString();
+        }
+        return new Date(year, month - 1, day, 0, 0, 0, 0).toISOString();
+      }
+
+      function applyAdminUsersFilter(query, filter, options) {
         if (filter === 'free') {
-          return query.eq('subscription_status', 'trial').eq('is_complimentary', false);
+          query = query.eq('subscription_status', 'trial').eq('is_complimentary', false);
+        } else if (filter === 'active') {
+          query = query.eq('subscription_status', 'active').eq('is_complimentary', false);
+        } else if (filter === 'complimentary') {
+          query = query.eq('is_complimentary', true);
         }
-        if (filter === 'active') {
-          return query.eq('subscription_status', 'active').eq('is_complimentary', false);
-        }
-        if (filter === 'complimentary') {
-          return query.eq('is_complimentary', true);
+
+        if (!options?.skipSignupDates) {
+          const fromValue = document.getElementById('admin-campaign-created-from')?.value;
+          const toValue = document.getElementById('admin-campaign-created-to')?.value;
+          const fromIso = fromValue ? campaignSignupDateBoundary(fromValue, false) : null;
+          const toIso = toValue ? campaignSignupDateBoundary(toValue, true) : null;
+          if (fromIso) query = query.gte('created_at', fromIso);
+          if (toIso) query = query.lte('created_at', toIso);
         }
         return query;
       }
@@ -1836,7 +1875,7 @@
           .select('id, email, first_name, last_name, subscription_status, is_complimentary, promo_code, created_at', { count: 'exact' })
           .order('created_at', { ascending: false })
           .range(from, to);
-        query = applyAdminUsersFilter(query, filter);
+        query = applyAdminUsersFilter(query, filter, { skipSignupDates: true });
 
         const { data: users, count: filteredCount } = await query;
         const totalFiltered = filteredCount ?? 0;
@@ -1986,7 +2025,7 @@
         modal.classList.add('is-open');
       }
 
-      async function fetchAllFilteredProfiles(client, filter) {
+      async function fetchAllFilteredProfiles(client, filter, options) {
         const pageSize = 1000;
         const all = [];
         let from = 0;
@@ -1996,7 +2035,7 @@
             .select('id, email, first_name, subscription_status, is_complimentary')
             .order('created_at', { ascending: false })
             .range(from, from + pageSize - 1);
-          query = applyAdminUsersFilter(query, filter);
+          query = applyAdminUsersFilter(query, filter, options);
           const { data, error } = await query;
           if (error) throw new Error(error.message);
           const rows = data || [];
@@ -2313,7 +2352,7 @@
           .select('id, email, first_name, subscription_status, is_complimentary, created_at', { count: 'exact' })
           .order('created_at', { ascending: notifUsersSortAsc })
           .range(from, to);
-        query = applyAdminUsersFilter(query, filter);
+        query = applyAdminUsersFilter(query, filter, { skipSignupDates: true });
 
         const { data: users, count: filteredCount, error } = await query;
         if (error) {
@@ -3241,6 +3280,13 @@
           const client = getAdminClient();
           if (client) await loadCampaignUsersList(client);
         });
+        ['admin-campaign-created-from', 'admin-campaign-created-to'].forEach((id) => {
+          document.getElementById(id)?.addEventListener('change', async () => {
+            campaignUsersPage = 1;
+            const client = getAdminClient();
+            if (client) await loadCampaignUsersList(client);
+          });
+        });
         document.getElementById('admin-campaign-select-page')?.addEventListener('click', () => {
           const client = getAdminClient();
           selectCampaignUsers(campaignUsersCache);
@@ -3366,7 +3412,7 @@
           button.disabled = true;
           try {
             const filter = document.getElementById('admin-notif-users-filter')?.value || 'all';
-            const users = await fetchAllFilteredProfiles(client, filter);
+            const users = await fetchAllFilteredProfiles(client, filter, { skipSignupDates: true });
             selectNotifUsers(users);
             await loadNotifUsersList(client);
           } catch (error) {

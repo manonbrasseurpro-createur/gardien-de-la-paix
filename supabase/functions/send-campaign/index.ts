@@ -6,7 +6,9 @@ const SENDER = { name: "PrepaGPX", email: "contact@prepagpx.fr" };
 const BREVO_API = "https://api.brevo.com/v3";
 const MAX_RECIPIENTS = 1000;
 const MAX_HTML_BYTES = 100_000;
-const CONTACT_CHUNK_SIZE = 8;
+const CONTACT_CHUNK_SIZE = 2;
+const CONTACT_BATCH_DELAY_MS = 250;
+const CONTACT_RATE_LIMIT_RETRY_DELAYS_MS = [1000, 2000];
 const LIST_ADD_CHUNK_SIZE = 150;
 const RATE_LIMIT_SECONDS = 20;
 
@@ -43,7 +45,19 @@ function parseBrevoError(status: number, text: string, step: string): string {
     // keep raw text
   }
   if (!detail) detail = `HTTP ${status}`;
+  else if (!/\bHTTP \d+\b/.test(detail) && !detail.includes(String(status))) {
+    detail = `HTTP ${status} — ${detail}`;
+  }
   return `${step} : ${detail}`;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRateLimitError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /\bHTTP 429\b|\b429\b/.test(message);
 }
 
 async function brevoRequest(
@@ -144,26 +158,6 @@ function parseRecipients(body: Record<string, unknown>): RecipientInput[] {
     return (body.emails as unknown[]).map((email) => ({ email: String(email) }));
   }
   return [];
-}
-
-async function mapWithConcurrency<T, R>(
-  items: T[],
-  concurrency: number,
-  worker: (item: T, index: number) => Promise<R>,
-): Promise<R[]> {
-  const results: R[] = new Array(items.length);
-  let nextIndex = 0;
-
-  async function run() {
-    while (nextIndex < items.length) {
-      const index = nextIndex++;
-      results[index] = await worker(items[index], index);
-    }
-  }
-
-  const workers = Array.from({ length: Math.min(concurrency, items.length) }, () => run());
-  await Promise.all(workers);
-  return results;
 }
 
 function folderNameOf(folder: unknown): string {
@@ -410,7 +404,24 @@ Deno.serve(async (req) => {
       if (recipient.firstName && firstNameAttr) {
         body.attributes = { [firstNameAttr]: recipient.firstName };
       }
-      await brevoRequest(brevoKey, "POST", "/contacts", `Contact ${recipient.email}`, body);
+
+      let lastError: unknown;
+      for (let attempt = 0; attempt <= CONTACT_RATE_LIMIT_RETRY_DELAYS_MS.length; attempt++) {
+        try {
+          await brevoRequest(brevoKey, "POST", "/contacts", `Contact ${recipient.email}`, body);
+          return;
+        } catch (error) {
+          lastError = error;
+          const canRetry = isRateLimitError(error) && attempt < CONTACT_RATE_LIMIT_RETRY_DELAYS_MS.length;
+          if (!canRetry) throw error;
+          const delayMs = CONTACT_RATE_LIMIT_RETRY_DELAYS_MS[attempt];
+          console.warn(
+            `[send-campaign] HTTP 429 pour ${recipient.email}, nouvelle tentative ${attempt + 1}/${CONTACT_RATE_LIMIT_RETRY_DELAYS_MS.length} dans ${delayMs} ms`,
+          );
+          await sleep(delayMs);
+        }
+      }
+      throw lastError;
     }
 
     const namedProbe = recipients.find((recipient) => recipient.firstName) || recipients[0];
@@ -431,24 +442,42 @@ Deno.serve(async (req) => {
       }
     }
 
+    const remainingRecipients = recipients.filter((recipient) => recipient.email !== namedProbe.email);
     const contactFailures: string[] = [];
-    await mapWithConcurrency(
-      recipients.filter((recipient) => recipient.email !== namedProbe.email),
-      CONTACT_CHUNK_SIZE,
-      async (recipient) => {
+    let contactSuccesses = 1;
+
+    console.log(
+      `[send-campaign] Synchronisation Brevo : ${recipients.length} contact(s), lots de ${CONTACT_CHUNK_SIZE}`,
+    );
+
+    for (let i = 0; i < remainingRecipients.length; i += CONTACT_CHUNK_SIZE) {
+      const chunk = remainingRecipients.slice(i, i + CONTACT_CHUNK_SIZE);
+      await Promise.all(chunk.map(async (recipient) => {
         try {
           await upsertBrevoContact(recipient, recipient.firstName ? firstNameAttr : null);
+          contactSuccesses += 1;
         } catch (error) {
           contactFailures.push(error instanceof Error ? error.message : String(error));
         }
-      },
-    );
+      }));
+
+      const processed = Math.min(i + CONTACT_CHUNK_SIZE, remainingRecipients.length) + 1;
+      console.log(
+        `[send-campaign] Contacts : ${contactSuccesses} synchronisé(s), ${contactFailures.length} échec(s), ${processed}/${recipients.length} traités`,
+      );
+
+      if (i + CONTACT_CHUNK_SIZE < remainingRecipients.length) {
+        await sleep(CONTACT_BATCH_DELAY_MS);
+      }
+    }
 
     if (contactFailures.length > 0) {
       throw new Error(
-        `Échec de synchronisation de ${contactFailures.length} contact(s) Brevo. ${contactFailures[0]}`,
+        `Échec de synchronisation de ${contactFailures.length} contact(s) Brevo (${contactSuccesses} synchronisé(s) avec succès sur ${recipients.length}). ${contactFailures[0]}`,
       );
     }
+
+    console.log(`[send-campaign] ${contactSuccesses} contact(s) synchronisé(s) avec succès.`);
 
     const folderId = await ensureCampaignFolderId(brevoKey);
 

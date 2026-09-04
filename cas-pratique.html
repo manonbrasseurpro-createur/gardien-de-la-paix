@@ -465,6 +465,21 @@
       line-height: 1.3;
     }
 
+    .case-select__new {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      vertical-align: middle;
+      color: #0f5132;
+      background: #d1e7dd;
+      border: 1px solid #a3cfbb;
+    }
+
     .mode-card p,
     .case-select p {
       margin: 0;
@@ -3665,6 +3680,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "ivresse-outrage-violences-filmage-gare",
+        addedDate: "2026-09-04",
         title: "Ivresse publique, outrage et rébellion — droit de filmer une intervention",
         theme: "Ivresse publique manifeste, outrage, violences sur PDAP, usage de la force, droit de filmer une intervention",
         situation: [
@@ -3847,6 +3863,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "controle-routier-fpr-stupefiants-discretion",
+        addedDate: "2026-09-04",
         title: "Contrôle routier et fiche FPR discrète",
         theme: "Contrôle routier, dépistage d'alcoolémie, fichier des personnes recherchées, discrétion professionnelle, obéissance hiérarchique",
         situation: [
@@ -4025,6 +4042,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "scene-crime-domicile-faed-fnaeg",
+        addedDate: "2026-09-04",
         title: "Scène de crime à domicile — FAED et FNAEG",
         theme: "Analyse d'une scène de crime, fichiers de police technique et scientifique (FAED, FNAEG), place de la preuve scientifique dans l'enquête judiciaire",
         situation: [
@@ -4194,6 +4212,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "tapage-nocturne-menace-mort-voisinage",
+        addedDate: "2026-09-04",
         title: "Tapage nocturne et menace de mort entre voisins",
         theme: "Tapage nocturne, limites du pouvoir d'entrée au domicile, menace de mort, violences légères entre particuliers",
         situation: [
@@ -4333,6 +4352,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "mort-violente-domicile-annonce-famille",
+        addedDate: "2026-09-04",
         title: "Mort violente à domicile — annonce à la famille",
         theme: "Intervention face à une mort violente à domicile, état de nécessité et entrée au domicile, comportement envers les proches lors de l'annonce d'un décès",
         situation: [
@@ -4441,6 +4461,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "radicalisation-signalement-collegue-travail",
+        addedDate: "2026-09-04",
         title: "Signalement de radicalisation d'un collègue",
         theme: "Repérage des signes de radicalisation, conduite à tenir face à un signalement, obligation de rendre compte à la hiérarchie",
         situation: [
@@ -4601,6 +4622,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "outrage-sexiste-sexuel-arret-bus",
+        addedDate: "2026-09-04",
         title: "Outrage sexiste et sexuel aggravé à un arrêt de bus",
         theme: "Outrage sexiste et sexuel (droit en vigueur post-réforme du 1er avril 2023), dispositifs de protection des victimes",
         situation: [
@@ -4786,6 +4808,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "accident-velo-croquis-topographique",
+        addedDate: "2026-09-04",
         title: "Accident vélo/voiture — lecture de croquis et dépistages",
         theme: "Lecture et exploitation d'un croquis d'accident, dépistages d'alcoolémie et de stupéfiants",
         situation: [
@@ -4932,6 +4955,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       },
       {
         id: "harcelement-scolaire-cyberharcelement-college",
+        addedDate: "2026-09-04",
         title: "Harcèlement scolaire — accueil d'une victime",
         theme: "Harcèlement scolaire, accueil d'une victime, dispositifs de prévention actualisés",
         situation: [
@@ -6574,9 +6598,10 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       caseGrid.innerHTML = cases.map((caseItem) => {
         const badge = caseSelectorBadge(mode, caseItem, events);
         const doneClass = badge.includes("Déjà fait") ? " is-done" : "";
+        const isNew = Boolean(caseItem.addedDate) && (Date.now() - new Date(caseItem.addedDate)) < 14 * 24 * 60 * 60 * 1000;
         return `
         <button class="case-select${doneClass}" type="button" data-case="${caseItem.id}">
-          <h3>${caseItem.title}${caseItem.sessionPoints ? ` <span style="font-size:0.85em;color:#1a2744">${gpxIcon("star-solid")} Type concours</span>` : ""}</h3>
+          <h3>${caseItem.title}${caseItem.sessionPoints ? ` <span style="font-size:0.85em;color:#1a2744">${gpxIcon("star-solid")} Type concours</span>` : ""}${isNew ? ` <span class="case-select__new">Nouveau</span>` : ""}</h3>
           <p>${caseItem.theme}</p>
           <p><strong>${caseItem.questions.length} questions</strong>${caseItem.sessionPoints ? ` — barème ${caseItem.sessionPoints} pts` : ""} + dossier documentaire</p>
           ${badge}

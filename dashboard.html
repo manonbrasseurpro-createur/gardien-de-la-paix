@@ -1872,7 +1872,7 @@
 
         let query = client
           .from('profiles')
-          .select('id, email, first_name, last_name, subscription_status, is_complimentary, promo_code, created_at', { count: 'exact' })
+          .select('id, email, first_name, last_name, subscription_status, is_complimentary, promo_code, created_at, subscription_plan', { count: 'exact' })
           .order('created_at', { ascending: false })
           .range(from, to);
         query = applyAdminUsersFilter(query, filter, { skipSignupDates: true });
@@ -1905,10 +1905,12 @@
 
         usersEl.innerHTML = `
           ${users.map((u) => {
+            const planLabels = { monthly: '1 mois', quarterly: '3 mois', biannual: '6 mois' };
+            const planLabel = planLabels[u.subscription_plan];
             const statusLabel = u.is_complimentary
               ? 'Accès gratuit permanent'
               : u.subscription_status === 'active'
-                ? 'Abonné'
+                ? (planLabel ? `Abonné · ${planLabel}` : 'Abonné')
                 : 'Gratuit';
             const statusBg = u.is_complimentary
               ? '#ede9fe'

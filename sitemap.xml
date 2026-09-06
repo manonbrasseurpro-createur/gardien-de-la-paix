@@ -15,7 +15,7 @@
   </url>
   <url>
     <loc>https://prepagpx.fr/actualites.html</loc>
-    <lastmod>2026-08-26</lastmod>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -101,6 +101,12 @@
   <url>
     <loc>https://prepagpx.fr/filieres-police-nationale-gpx.html</loc>
     <lastmod>2026-08-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://prepagpx.fr/legitime-defense-usage-force-policier.html</loc>
+    <lastmod>2026-09-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

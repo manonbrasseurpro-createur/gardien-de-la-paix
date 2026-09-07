@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur d'entretien oral — PrepaGPX</title>
+<meta name="description" content="Entraînez-vous à l'oral du concours de gardien de la paix face à un jury simulé, à la voix.">
+<meta name="robots" content="noindex, nofollow">
+<!-- noindex volontaire : page applicative réservée aux abonnés, pas un contenu SEO -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="gpx-fonts-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@1,600&family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+
+<style>
+  :root{
+    --navy:#0B1F3A;
+    --seal:#8B1E2F;
+    --brass:#B8935E;
+    --parchment:#F6F4EE;
+    --muted:#6b6a63;
+    --border:#e3e1d8;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--parchment);
+    color:var(--navy);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+  }
+
+  h1, h2, h3{
+    font-family:'Spectral', Georgia, serif;
+    font-weight:600;
+    margin:0 0 12px;
+  }
+
+  .container{
+    max-width:720px;
+    margin:0 auto;
+    padding:32px 20px 64px;
+  }
+
+  .hero{
+    padding:40px 20px 24px;
+    text-align:center;
+  }
+
+  .hero p{
+    color:var(--muted);
+    max-width:480px;
+    margin:8px auto 0;
+  }
+
+  .auth-card.auth-card--wide{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:28px;
+    margin-bottom:20px;
+  }
+
+  .mode-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+
+  @media (max-width:560px){
+    .mode-grid{grid-template-columns:1fr;}
+  }
+
+  .mode-card{
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:#fff;
+    padding:18px;
+    text-align:left;
+    cursor:pointer;
+    font-family:inherit;
+    color:var(--navy);
+    transition:border-color .15s ease;
+  }
+
+  .mode-card:hover, .mode-card:focus-visible{
+    border-color:var(--brass);
+    outline:none;
+  }
+
+  .mode-card svg{
+    color:var(--brass);
+    margin-bottom:8px;
+    display:block;
+  }
+
+  .mode-card__title{
+    font-weight:600;
+    margin-bottom:4px;
+  }
+
+  .mode-card__count{
+    color:var(--muted);
+    font-size:.9em;
+  }
+
+  .primary-button, .secondary-button{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border-radius:8px;
+    padding:12px 22px;
+    font-family:inherit;
+    font-size:1em;
+    font-weight:500;
+    cursor:pointer;
+    border:1px solid transparent;
+    text-decoration:none;
+  }
+
+  .primary-button{
+    background:var(--navy);
+    color:#fff;
+  }
+
+  .primary-button:disabled{
+    background:var(--border);
+    color:var(--muted);
+    cursor:not-allowed;
+  }
+
+  .secondary-button{
+    background:#fff;
+    color:var(--navy);
+    border-color:var(--border);
+  }
+
+  .actions-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:20px;
+  }
+
+  .jury-block{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    margin-bottom:20px;
+  }
+
+  .jury-block svg{
+    flex:none;
+    color:var(--navy);
+    margin-top:2px;
+  }
+
+  .jury-question{
+    font-size:1.15em;
+    font-weight:500;
+  }
+
+  .mic-zone{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    padding:24px 0 8px;
+  }
+
+  .mic-button{
+    width:64px;
+    height:64px;
+    border-radius:50%;
+    border:2px solid var(--navy);
+    background:#fff;
+    color:var(--navy);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+
+  .mic-button[aria-pressed="true"]{
+    background:var(--seal);
+    border-color:var(--seal);
+    color:#fff;
+  }
+
+  .mic-status{
+    color:var(--muted);
+    font-size:.9em;
+    min-height:1.2em;
+  }
+
+  .transcript-box{
+    width:100%;
+    min-height:80px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:14px;
+    background:var(--parchment);
+    white-space:pre-wrap;
+  }
+
+  textarea.transcript-box{
+    font-family:inherit;
+    font-size:1em;
+    resize:vertical;
+  }
+
+  .gpx-reminder-bar{
+    background:var(--navy);
+    color:#fff;
+    border-radius:8px;
+    padding:12px 16px;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:.92em;
+    margin-bottom:20px;
+  }
+
+  .gpx-reminder-bar svg{flex:none; margin-top:2px;}
+
+  .recap-item{
+    border-bottom:1px solid var(--border);
+    padding:14px 0;
+  }
+
+  .recap-item:last-child{border-bottom:none;}
+
+  .recap-item .q{
+    font-weight:600;
+    margin-bottom:4px;
+  }
+
+  .recap-item .a{
+    color:var(--muted);
+  }
+
+  [hidden]{display:none !important;}
+
+  :focus-visible{
+    outline:2px solid var(--brass);
+    outline-offset:2px;
+  }
+
+  /* Garde d'accès : le contenu reste caché tant que le contrôle
+     d'abonnement n'a pas répondu, pour éviter un flash de contenu
+     visible avant redirection. */
+  body.gpx-checking .container{ display:none; }
+
+  .gpx-access-loading{
+    display:none;
+    max-width:480px;
+    margin:80px auto;
+    text-align:center;
+    color:var(--muted);
+  }
+  body.gpx-checking .gpx-access-loading{ display:block; }
+</style>
+</head>
+<body class="gpx-checking">
+
+<p class="gpx-access-loading">Vérification de votre abonnement…</p>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Simulateur d'entretien oral</h1>
+    <p>Un jury simulé vous pose des questions à voix haute. Répondez au micro, comme à l'oral.</p>
+  </div>
+
+  <!-- ÉCRAN 1 : parcours du candidat (remplace CV, pour contextualiser les questions) -->
+  <section id="screen-cv" class="auth-card auth-card--wide">
+    <h2>Avant de commencer</h2>
+    <p style="color:var(--muted)">Comme le jury dispose de votre CV le jour de l'oral, décrivez ici votre parcours (formation, expériences, motivations). Ça servira de base à l'entretien — vous n'aurez pas à choisir de thème, exactement comme au concours.</p>
+    <textarea class="transcript-box" id="cv-input" rows="6" placeholder="Ex. : Titulaire d'un bac pro sécurité, j'ai travaillé 2 ans comme agent de sécurité incendie. Je souhaite devenir gardien de la paix pour..."></textarea>
+    <div class="actions-row">
+      <button type="button" class="primary-button" id="start-cv-btn" disabled>Commencer l'entretien</button>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 2 : présentation libre de 5 minutes, comme au vrai oral -->
+  <section id="screen-presentation" class="auth-card auth-card--wide" hidden>
+    <div class="gpx-reminder-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+      <span>Comme au vrai oral : vous disposez de 5 minutes pour vous présenter librement au jury.</span>
+    </div>
+
+    <div class="jury-block">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/></svg>
+      <p class="jury-question">Présentez-vous, votre parcours, et votre motivation à devenir gardien de la paix.</p>
+    </div>
+
+    <div class="mic-zone">
+      <p style="font-family:'IBM Plex Mono', monospace; font-size:1.6em; margin:0;" id="presentation-timer">05:00</p>
+      <button type="button" class="mic-button" id="presentation-mic-button" aria-pressed="false" aria-label="Démarrer ma présentation">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
+      </button>
+      <p class="mic-status" id="presentation-status">Cliquez sur le micro quand vous êtes prêt(e) à commencer.</p>
+    </div>
+
+    <textarea class="transcript-box" id="presentation-transcript" rows="4" placeholder="Votre présentation s'affichera ici (ou tapez-la si le micro n'est pas disponible)."></textarea>
+
+    <div class="actions-row">
+      <button type="button" class="primary-button" id="finish-presentation-btn">Terminer ma présentation</button>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 3 : entretien en cours -->
+  <section id="screen-interview" class="auth-card auth-card--wide" hidden>
+
+    <div class="gpx-reminder-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>
+      <span>Question <span id="question-index">1</span> sur <span id="question-total">5</span> — répondez comme si vous étiez face au jury.</span>
+    </div>
+
+    <div class="jury-block">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/></svg>
+      <p class="jury-question" id="question-text">Chargement de la question…</p>
+    </div>
+
+    <div class="mic-zone">
+      <button type="button" class="mic-button" id="mic-button" aria-pressed="false" aria-label="Démarrer l'enregistrement de ma réponse">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
+      </button>
+      <p class="mic-status" id="mic-status">Cliquez sur le micro pour répondre.</p>
+    </div>
+
+    <!-- Fallback texte si SpeechRecognition indisponible (Firefox, Safari ancien, etc.) -->
+    <textarea class="transcript-box" id="transcript-input" rows="3" placeholder="Votre réponse s'affichera ici (ou tapez-la si le micro n'est pas disponible)."></textarea>
+
+    <div class="actions-row">
+      <button type="button" class="secondary-button" id="replay-question-btn">Réécouter la question</button>
+      <button type="button" class="primary-button" id="validate-answer-btn" disabled>Valider ma réponse</button>
+    </div>
+  </section>
+
+  <!-- ÉCRAN 3 : récapitulatif de fin de session -->
+  <section id="screen-recap" class="auth-card auth-card--wide" hidden>
+    <h2>Récapitulatif de la session</h2>
+    <p style="color:var(--muted)">Relisez vos réponses. L'analyse détaillée par l'IA arrivera dans une prochaine version.</p>
+    <div id="recap-list"></div>
+    <div class="actions-row">
+      <button type="button" class="primary-button" id="restart-btn">Recommencer</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- Auth / accès : mêmes inclusions que sur le reste du site -->
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8"></script>
+<script src="auth-service.js"></script>
+<script src="cookie-consent.js"></script>
+<script src="access-control.js"></script>
+
+<script>
+(function(){
+  // -----------------------------------------------------------------
+  // GARDE D'ACCÈS — formule 6 mois ("biannual") uniquement
+  //
+  // Utilise directement window.GPXAuth (auth-service.js), déjà chargé
+  // juste au-dessus. getCurrentUser() ne lève jamais d'exception :
+  // elle renvoie soit un profil normalisé, soit null.
+  //
+  // Cette vérification côté client n'est qu'un confort UX (éviter
+  // qu'un non-abonné voie l'interface). La vraie protection sera
+  // dans l'Edge Function entretien-relance, qui devra refaire
+  // exactement ce contrôle côté serveur avec le service_role.
+  // -----------------------------------------------------------------
+
+  // Même logique de date que GPXAuth.hasActiveSubscription(), mais
+  // restreinte à la formule 6 mois uniquement (pas 1 mois, pas 3 mois,
+  // pas essai gratuit).
+  function aAccesSimulateurEntretien(user){
+    if (!user) return false;
+
+    if (user.isComplimentary === true) return true;
+
+    if (
+      user.subscriptionPlan === 'biannual' &&
+      user.subscriptionStatus === 'active' &&
+      user.subscriptionEnd &&
+      new Date(user.subscriptionEnd) > new Date()
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async function checkAccesSimulateur(){
+    try {
+      if (!window.GPXAuth || !window.GPXAuth.isSupabaseConfigured()){
+        console.error('GPXAuth indisponible — vérifier l\'ordre de chargement des scripts.');
+        window.location.href = 'tarifs.html';
+        return;
+      }
+
+      const user = await window.GPXAuth.getCurrentUser();
+
+      if (!user){
+        // Pas connecté du tout
+        window.location.href = 'connexion.html?redirect=entretien-simulateur.html';
+        return;
+      }
+
+      if (!aAccesSimulateurEntretien(user)){
+        // Connecté, mais pas sur la formule 6 mois active :
+        // redirection vers la page tarifs avec un repère dans l'URL
+        // pour, plus tard, y afficher un message ciblé sur l'avantage 6 mois.
+        window.location.href = 'tarifs.html?upsell=simulateur-entretien';
+        return;
+      }
+
+      // -----------------------------------------------------------
+      // Test de personnalité obligatoire avant l'entretien.
+      // On récupère le résultat le plus récent de l'utilisateur dans
+      // personality_test_results. S'il n'existe aucune ligne, on
+      // renvoie vers la page du test avant de laisser continuer.
+      // -----------------------------------------------------------
+      const client = window.__gpxSupabaseClient;
+      if (!client){
+        console.error('Client Supabase indisponible pour la vérification du test de personnalité.');
+        window.location.href = 'tarifs.html';
+        return;
+      }
+
+      const { data: resultatsPersonnalite, error: errPersonnalite } = await client
+        .from('personality_test_results')
+        .select('analyse_text, dimension_scores, score_moyen, coherence_score, created_at')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+      if (errPersonnalite){
+        console.error('Erreur de lecture du test de personnalité :', errPersonnalite);
+        window.location.href = 'tarifs.html';
+        return;
+      }
+
+      if (!resultatsPersonnalite || resultatsPersonnalite.length === 0){
+        // Le test de personnalité n'a jamais été passé : on bloque
+        // l'accès à l'entretien et on renvoie vers le test.
+        window.location.href = 'psychotechnique.html?requis=entretien';
+        return;
+      }
+
+      // Profil psychologique disponible pour la suite (utilisé plus
+      // tard par l'Edge Function entretien-relance pour personnaliser
+      // les questions/relances).
+      window.__gpxProfilPersonnalite = resultatsPersonnalite[0];
+
+      // Accès autorisé : on révèle l'interface
+      document.body.classList.remove('gpx-checking');
+
+    } catch (err){
+      console.error('Erreur inattendue lors du contrôle d\'accès :', err);
+      window.location.href = 'tarifs.html';
+    }
+  }
+
+  checkAccesSimulateur();
+})();
+</script>
+
+<script>
+(function(){
+
+  // ---------------------------------------------------------------
+  // Banque de questions
+  // En production : remplacer par fetch('/data/questions-entretien.json')
+  // (fichier déjà préparé séparément). Inline ici pour ce prototype.
+  // ---------------------------------------------------------------
+  const NB_QUESTIONS_ENTRETIEN = 6; // nombre de questions posées par l'IA, tous thèmes confondus
+  const DUREE_PRESENTATION_SECONDES = 5 * 60;
+
+  const state = {
+    cv: '',
+    presentation: '',
+    // Déposé par le garde d'accès (script précédent) après vérification
+    // que le test de personnalité a bien été passé.
+    personnalite: window.__gpxProfilPersonnalite || null,
+    questions: [], // { question, categoryId } piochées aléatoirement dans toutes les catégories
+    index: 0,
+    answers: [] // { question, categoryId, reponse }
+  };
+
+  const els = {
+    screenCv: document.getElementById('screen-cv'),
+    cvInput: document.getElementById('cv-input'),
+    startCvBtn: document.getElementById('start-cv-btn'),
+
+    screenPresentation: document.getElementById('screen-presentation'),
+    presentationTimer: document.getElementById('presentation-timer'),
+    presentationMicButton: document.getElementById('presentation-mic-button'),
+    presentationStatus: document.getElementById('presentation-status'),
+    presentationTranscript: document.getElementById('presentation-transcript'),
+    finishPresentationBtn: document.getElementById('finish-presentation-btn'),
+
+    screenInterview: document.getElementById('screen-interview'),
+    screenRecap: document.getElementById('screen-recap'),
+    questionText: document.getElementById('question-text'),
+    questionIndex: document.getElementById('question-index'),
+    questionTotal: document.getElementById('question-total'),
+    micButton: document.getElementById('mic-button'),
+    micStatus: document.getElementById('mic-status'),
+    transcriptInput: document.getElementById('transcript-input'),
+    validateBtn: document.getElementById('validate-answer-btn'),
+    replayBtn: document.getElementById('replay-question-btn'),
+    recapList: document.getElementById('recap-list'),
+    restartBtn: document.getElementById('restart-btn')
+  };
+
+  // ---------------------------------------------------------------
+  // Écran 1 : CV / parcours
+  // ---------------------------------------------------------------
+  els.cvInput.addEventListener('input', () => {
+    els.startCvBtn.disabled = els.cvInput.value.trim().length < 20;
+  });
+
+  els.startCvBtn.addEventListener('click', () => {
+    state.cv = els.cvInput.value.trim();
+    els.screenCv.hidden = true;
+    els.screenPresentation.hidden = false;
+    presentationSecondsLeft = DUREE_PRESENTATION_SECONDES;
+    startPresentationTimer();
+  });
+
+  // ---------------------------------------------------------------
+  // Écran 2 : présentation libre de 5 minutes
+  // ---------------------------------------------------------------
+  let presentationSecondsLeft = DUREE_PRESENTATION_SECONDES;
+  let presentationTimerHandle = null;
+
+  function formatTimer(seconds){
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return m + ':' + s;
+  }
+
+  function startPresentationTimer(){
+    els.presentationTimer.textContent = formatTimer(presentationSecondsLeft);
+    presentationTimerHandle = setInterval(() => {
+      presentationSecondsLeft -= 1;
+      els.presentationTimer.textContent = formatTimer(Math.max(0, presentationSecondsLeft));
+      if (presentationSecondsLeft <= 0){
+        clearInterval(presentationTimerHandle);
+        finishPresentation();
+      }
+    }, 1000);
+  }
+
+  function stopPresentationTimer(){
+    if (presentationTimerHandle){ clearInterval(presentationTimerHandle); presentationTimerHandle = null; }
+  }
+
+  function finishPresentation(){
+    stopPresentationTimer();
+    controleurPresentation.stop();
+    state.presentation = els.presentationTranscript.value.trim();
+    startInterview();
+  }
+
+  els.finishPresentationBtn.addEventListener('click', finishPresentation);
+
+  // ---------------------------------------------------------------
+  // Déroulé de l'entretien — chaque question est générée par l'IA
+  // (Edge Function entretien-relance), en tenant compte du CV, de la
+  // présentation, du profil de personnalité et de l'historique des
+  // réponses déjà données. Pas de thème choisi, comme un vrai jury.
+  // ---------------------------------------------------------------
+  async function demanderProchaineQuestion(){
+    const token = await window.GPXAuth.getAccessToken();
+    if (!token){
+      afficherErreurEntretien("Session expirée — merci de vous reconnecter.");
+      return null;
+    }
+
+    const cfg = window.GPX_SUPABASE || {};
+    const baseUrl = cfg.SUPABASE_URL || cfg.url;
+    const url = baseUrl + '/functions/v1/entretien-relance';
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'apikey': cfg.anonKey || '',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cv: state.cv,
+        presentation: state.presentation,
+        historique: state.answers,
+        numeroQuestion: state.index + 1
+      })
+    });
+
+    if (!res.ok){
+      const errBody = await res.json().catch(() => ({}));
+      afficherErreurEntretien(errBody.error || "Impossible d'obtenir la question suivante pour le moment.");
+      return null;
+    }
+
+    return await res.json(); // { question, categoryId }
+  }
+
+  function afficherErreurEntretien(message){
+    els.questionText.textContent = message;
+    els.micButton.disabled = true;
+    els.validateBtn.disabled = true;
+  }
+
+  function startInterview(){
+    state.index = 0;
+    state.answers = [];
+
+    els.screenPresentation.hidden = true;
+    els.screenRecap.hidden = true;
+    els.screenInterview.hidden = false;
+    els.questionTotal.textContent = NB_QUESTIONS_ENTRETIEN;
+
+    askCurrentQuestion();
+  }
+
+  let questionCourante = null; // { question, categoryId } — la dernière question reçue de l'IA
+
+  async function askCurrentQuestion(){
+    els.questionText.textContent = "Le jury réfléchit à sa prochaine question…";
+    els.micButton.disabled = true;
+    els.transcriptInput.value = '';
+    els.validateBtn.disabled = true;
+    els.questionIndex.textContent = state.index + 1;
+
+    const resultat = await demanderProchaineQuestion();
+    if (!resultat) return; // erreur déjà affichée par demanderProchaineQuestion()
+
+    questionCourante = resultat;
+    els.micButton.disabled = false;
+    els.questionText.textContent = resultat.question;
+    speakQuestion(resultat.question);
+  }
+
+  // ---------------------------------------------------------------
+  // Synthèse vocale (Web Speech API — SpeechSynthesis)
+  // ---------------------------------------------------------------
+  function speakQuestion(text){
+    if (!('speechSynthesis' in window)){
+      els.micStatus.textContent = "Synthèse vocale non disponible sur ce navigateur — lisez la question ci-dessus.";
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'fr-FR';
+    utter.rate = 0.98;
+    window.speechSynthesis.speak(utter);
+  }
+
+  els.replayBtn.addEventListener('click', () => {
+    if (questionCourante) speakQuestion(questionCourante.question);
+  });
+
+  // ---------------------------------------------------------------
+  // Reconnaissance vocale (Web Speech API — SpeechRecognition)
+  // Support : Chrome / Edge (webkitSpeechRecognition). Pas de support
+  // natif sur Firefox et Safari — fallback texte manuel dans ce cas.
+  //
+  // Fabrique réutilisable : un couple micro/statut/texte par écran
+  // (présentation et questions), sans dupliquer la logique.
+  // ---------------------------------------------------------------
+  const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  function creerControleurVocal(micButton, statusEl, textareaEl, messageApresArret){
+    let recognition = null;
+    let listening = false;
+
+    if (SpeechRecognitionCtor){
+      recognition = new SpeechRecognitionCtor();
+      recognition.lang = 'fr-FR';
+      recognition.continuous = true;
+      recognition.interimResults = true;
+
+      recognition.onresult = (event) => {
+        let finalTranscript = textareaEl.dataset.finalText || '';
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++){
+          const chunk = event.results[i][0].transcript;
+          if (event.results[i].isFinal){
+            finalTranscript += chunk + ' ';
+          } else {
+            interim += chunk;
+          }
+        }
+        textareaEl.dataset.finalText = finalTranscript;
+        textareaEl.value = (finalTranscript + interim).trim();
+        textareaEl.dispatchEvent(new Event('gpx-transcript-update'));
+      };
+
+      recognition.onerror = (event) => {
+        statusEl.textContent = "Erreur micro (" + event.error + "). Vous pouvez taper votre réponse ci-dessous.";
+        stop();
+      };
+
+      recognition.onend = () => {
+        if (listening){ stop(); }
+      };
+    } else {
+      statusEl.textContent = "Micro non supporté sur ce navigateur — utilisez Chrome ou Edge, ou tapez votre réponse ci-dessous.";
+      micButton.disabled = true;
+    }
+
+    function start(){
+      if (!recognition) return;
+      textareaEl.dataset.finalText = '';
+      listening = true;
+      micButton.setAttribute('aria-pressed', 'true');
+      statusEl.textContent = "Je vous écoute…";
+      recognition.start();
+    }
+
+    function stop(){
+      if (!recognition) return;
+      listening = false;
+      micButton.setAttribute('aria-pressed', 'false');
+      statusEl.textContent = textareaEl.value ? messageApresArret : "Cliquez sur le micro pour commencer.";
+      try { recognition.stop(); } catch(e){}
+    }
+
+    micButton.addEventListener('click', () => {
+      if (listening){ stop(); } else { start(); }
+    });
+
+    return {
+      get listening(){ return listening; },
+      stop
+    };
+  }
+
+  const controleurQuestion = creerControleurVocal(
+    els.micButton, els.micStatus, els.transcriptInput,
+    "Réponse enregistrée — vous pouvez la corriger avant de valider."
+  );
+  els.transcriptInput.addEventListener('gpx-transcript-update', () => {
+    els.validateBtn.disabled = els.transcriptInput.value.trim().length === 0;
+  });
+  els.transcriptInput.addEventListener('input', () => {
+    els.validateBtn.disabled = els.transcriptInput.value.trim().length === 0;
+  });
+
+  const controleurPresentation = creerControleurVocal(
+    els.presentationMicButton, els.presentationStatus, els.presentationTranscript,
+    "Présentation enregistrée — vous pouvez la corriger avant de continuer."
+  );
+
+  // ---------------------------------------------------------------
+  // Validation de la réponse — la question suivante sera générée par
+  // l'IA (Edge Function entretien-relance), qui reçoit tout
+  // l'historique et peut donc rebondir dessus / relever une incohérence.
+  // ---------------------------------------------------------------
+  els.validateBtn.addEventListener('click', () => {
+    controleurQuestion.stop();
+
+    if (!questionCourante) return;
+
+    state.answers.push({
+      question: questionCourante.question,
+      categoryId: questionCourante.categoryId,
+      reponse: els.transcriptInput.value.trim()
+    });
+
+    goToNextQuestion();
+  });
+
+  function goToNextQuestion(){
+    state.index += 1;
+    if (state.index >= NB_QUESTIONS_ENTRETIEN){
+      showRecap();
+    } else {
+      askCurrentQuestion();
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // Récapitulatif
+  // ---------------------------------------------------------------
+  function showRecap(){
+    els.screenInterview.hidden = true;
+    els.screenRecap.hidden = false;
+    els.recapList.innerHTML = '';
+
+    const presentationDiv = document.createElement('div');
+    presentationDiv.className = 'recap-item';
+    presentationDiv.innerHTML =
+      '<div class="q">Présentation libre</div>' +
+      '<div class="a">' + (state.presentation || '(pas de présentation enregistrée)') + '</div>';
+    els.recapList.appendChild(presentationDiv);
+
+    state.answers.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'recap-item';
+      div.innerHTML =
+        '<div class="q">' + a.question + '</div>' +
+        '<div class="a">' + (a.reponse || '(pas de réponse enregistrée)') + '</div>';
+      els.recapList.appendChild(div);
+    });
+  }
+
+  els.restartBtn.addEventListener('click', () => {
+    state.cv = '';
+    state.presentation = '';
+    state.answers = [];
+    els.cvInput.value = '';
+    els.presentationTranscript.value = '';
+    els.startCvBtn.disabled = true;
+    els.screenRecap.hidden = true;
+    els.screenCv.hidden = false;
+  });
+
+})();
+</script>
+
+</body>
+</html>

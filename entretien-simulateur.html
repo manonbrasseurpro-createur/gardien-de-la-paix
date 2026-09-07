@@ -278,7 +278,7 @@
   <!-- ÉCRAN 1 : parcours du candidat (remplace CV, pour contextualiser les questions) -->
   <section id="screen-cv" class="auth-card auth-card--wide">
     <h2>Avant de commencer</h2>
-    <p style="color:var(--muted)">Comme le jury dispose de votre CV le jour de l'oral, décrivez ici votre parcours (formation, expériences, motivations). Ça servira de base à l'entretien — vous n'aurez pas à choisir de thème, exactement comme au concours.</p>
+    <p style="color:var(--muted)">Comme le jury dispose de votre CV le jour de l'oral, décrivez ici votre parcours (formation, expériences, motivations).</p>
     <textarea class="transcript-box" id="cv-input" rows="6" placeholder="Ex. : Titulaire d'un bac pro sécurité, j'ai travaillé 2 ans comme agent de sécurité incendie. Je souhaite devenir gardien de la paix pour..."></textarea>
     <div class="actions-row">
       <button type="button" class="primary-button" id="start-cv-btn" disabled>Commencer l'entretien</button>
@@ -341,11 +341,28 @@
     </div>
   </section>
 
-  <!-- ÉCRAN 3 : récapitulatif de fin de session -->
+  <!-- ÉCRAN 4 : récapitulatif de fin de session -->
   <section id="screen-recap" class="auth-card auth-card--wide" hidden>
     <h2>Récapitulatif de la session</h2>
-    <p style="color:var(--muted)">Relisez vos réponses. L'analyse détaillée par l'IA arrivera dans une prochaine version.</p>
+    <p style="color:var(--muted)">Relisez vos réponses ci-dessous.</p>
     <div id="recap-list"></div>
+
+    <div id="bilan-zone" style="margin-top:24px; border-top:1px solid var(--border); padding-top:20px;">
+      <div id="bilan-avant">
+        <p style="color:var(--muted)">Le jury peut vous donner un retour sur l'ensemble de votre passage : ce qui était solide, et ce qu'il faudrait retravailler.</p>
+        <button type="button" class="primary-button" id="generer-bilan-btn">Obtenir mon bilan</button>
+      </div>
+      <div id="bilan-chargement" hidden style="color:var(--muted)">Le jury prépare son retour…</div>
+      <div id="bilan-resultat" hidden>
+        <h3 style="color:var(--navy); margin:0 0 10px;">Appréciation générale</h3>
+        <p id="bilan-appreciation"></p>
+        <h3 style="color:var(--navy); margin:20px 0 10px;">Points forts</h3>
+        <ul id="bilan-points-forts"></ul>
+        <h3 style="color:var(--navy); margin:20px 0 10px;">Axes d'amélioration</h3>
+        <ul id="bilan-points-ameliorer"></ul>
+      </div>
+    </div>
+
     <div class="actions-row">
       <button type="button" class="primary-button" id="restart-btn">Recommencer</button>
     </div>
@@ -478,7 +495,7 @@
   // En production : remplacer par fetch('/data/questions-entretien.json')
   // (fichier déjà préparé séparément). Inline ici pour ce prototype.
   // ---------------------------------------------------------------
-  const NB_QUESTIONS_ENTRETIEN = 6; // nombre de questions posées par l'IA, tous thèmes confondus
+  const NB_QUESTIONS_ENTRETIEN = 8; // estimation pour ~20 min de questions du jury (durée réelle du concours) ; approximatif car dépend de la longueur des réponses de l'élève
   const DUREE_PRESENTATION_SECONDES = 5 * 60;
 
   const state = {
@@ -515,7 +532,15 @@
     validateBtn: document.getElementById('validate-answer-btn'),
     replayBtn: document.getElementById('replay-question-btn'),
     recapList: document.getElementById('recap-list'),
-    restartBtn: document.getElementById('restart-btn')
+    restartBtn: document.getElementById('restart-btn'),
+
+    bilanAvant: document.getElementById('bilan-avant'),
+    bilanChargement: document.getElementById('bilan-chargement'),
+    bilanResultat: document.getElementById('bilan-resultat'),
+    genererBilanBtn: document.getElementById('generer-bilan-btn'),
+    bilanAppreciation: document.getElementById('bilan-appreciation'),
+    bilanPointsForts: document.getElementById('bilan-points-forts'),
+    bilanPointsAmeliorer: document.getElementById('bilan-points-ameliorer')
   };
 
   // ---------------------------------------------------------------
@@ -820,6 +845,61 @@
     els.startCvBtn.disabled = true;
     els.screenRecap.hidden = true;
     els.screenCv.hidden = false;
+    els.bilanAvant.hidden = false;
+    els.bilanChargement.hidden = true;
+    els.bilanResultat.hidden = true;
+  });
+
+  // ---------------------------------------------------------------
+  // Bilan de fin d'entretien — appelle la même Edge Function
+  // (entretien-relance), avec mode: 'bilan' au lieu de 'question'.
+  // ---------------------------------------------------------------
+  els.genererBilanBtn.addEventListener('click', async () => {
+    els.bilanAvant.hidden = true;
+    els.bilanChargement.hidden = false;
+
+    const token = await window.GPXAuth.getAccessToken();
+    if (!token){
+      els.bilanChargement.textContent = "Session expirée — merci de vous reconnecter.";
+      return;
+    }
+
+    const cfg = window.GPX_SUPABASE || {};
+    const url = (cfg.SUPABASE_URL || cfg.url) + '/functions/v1/entretien-relance';
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'apikey': cfg.anonKey || '',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          mode: 'bilan',
+          cv: state.cv,
+          presentation: state.presentation,
+          historique: state.answers
+        })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok){
+        els.bilanChargement.textContent = data.error || "Impossible d'obtenir le bilan pour le moment.";
+        return;
+      }
+
+      els.bilanAppreciation.textContent = data.appreciation || '';
+      els.bilanPointsForts.innerHTML = (data.points_forts || []).map(p => '<li>' + p + '</li>').join('');
+      els.bilanPointsAmeliorer.innerHTML = (data.points_ameliorer || []).map(p => '<li>' + p + '</li>').join('');
+
+      els.bilanChargement.hidden = true;
+      els.bilanResultat.hidden = false;
+
+    } catch (err){
+      els.bilanChargement.textContent = "Erreur inattendue lors de la génération du bilan.";
+    }
   });
 
 })();

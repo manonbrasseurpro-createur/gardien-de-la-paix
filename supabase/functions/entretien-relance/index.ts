@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 import { corsHeaders } from "../_shared/cors.ts";
 
 const ANTHROPIC_MODEL = "claude-sonnet-5";
-const NB_QUESTIONS_MAX = 6;
+const NB_QUESTIONS_MAX = 8; // estimation pour ~20 min de questions du jury (durée réelle du concours)
 
 // Banque de questions statique, envoyée à l'IA comme matériau
 // d'inspiration (registre, niveau, couverture des catégories) —
@@ -47,6 +47,21 @@ FORMAT DE RÉPONSE
 Réponds UNIQUEMENT avec un objet JSON valide, sans aucun texte avant ou après, sans balises markdown :
 {"question": "...", "categoryId": "motivation|mise_en_situation|culture_concours|actualite"}`;
 
+const BILAN_SYSTEM_PROMPT = `Tu es un membre du jury qui vient de terminer l'entretien oral du concours de gardien de la paix avec ce candidat. Rédige maintenant un bilan constructif de son passage, pour l'aider à progresser avant le vrai concours.
+
+RÔLE ET TON
+- Sois honnête et concret, pas complaisant : si la prestation est faible, dis-le clairement, mais toujours de façon constructive et respectueuse.
+- Appuie-toi sur des exemples précis tirés de ce que le candidat a réellement dit (présentation et réponses), pas de généralités vagues.
+- N'invente jamais de point fort qui n'existe pas réellement dans ce que le candidat a dit.
+
+LIMITES STRICTES
+- Ne présente jamais un fait juridique, réglementaire, un coefficient ou une procédure comme vrai — reste sur l'évaluation de la prestation (clarté, cohérence, posture, motivation, gestion du stress perçue à travers les réponses).
+- Ne mentionne jamais de nom réel de personne.
+
+FORMAT DE RÉPONSE
+Réponds UNIQUEMENT avec un objet JSON valide, sans aucun texte avant ou après, sans balises markdown :
+{"appreciation": "2-3 phrases d'appréciation générale", "points_forts": ["point 1", "point 2"], "points_ameliorer": ["point 1", "point 2", "point 3"]}`;
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -61,6 +76,7 @@ serve(async (req) => {
       });
     }
 
+    // 1. Authentification — même schéma que correct-cas-pratique
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!,
@@ -75,6 +91,8 @@ serve(async (req) => {
       });
     }
 
+    // 2. Autorisation : formule 6 mois active OU complimentary uniquement
+    //    (plus strict que correct-cas-pratique, qui accepte tout abonnement actif)
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("subscription_status, subscription_plan, subscription_end, is_complimentary")
@@ -102,6 +120,8 @@ serve(async (req) => {
       );
     }
 
+    // 3. Vérification que le test de personnalité a bien été passé
+    //    (déjà vérifié côté client, on la refait ici par sécurité)
     const { data: resultatsPersonnalite, error: errPersonnalite } = await supabase
       .from("personality_test_results")
       .select("analyse_text")
@@ -124,6 +144,7 @@ serve(async (req) => {
     }
     const analyseText = resultatsPersonnalite[0].analyse_text;
 
+    // 4. Rate limiting — RPC atomique, même principe que claim_ai_correction_slot
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -149,14 +170,16 @@ serve(async (req) => {
       );
     }
 
-    const { cv, presentation, historique, numeroQuestion } = await req.json();
+    // 5. Lecture et validation du corps de la requête
+    const { mode, cv, presentation, historique, numeroQuestion } = await req.json();
+    const modeBilan = mode === "bilan";
 
     const cvTexte = String(cv ?? "").slice(0, 4000);
     const presentationTexte = String(presentation ?? "").slice(0, 4000);
     const historiqueArr = Array.isArray(historique) ? historique.slice(0, NB_QUESTIONS_MAX) : [];
     const numQuestion = Number(numeroQuestion) || 1;
 
-    if (numQuestion < 1 || numQuestion > NB_QUESTIONS_MAX) {
+    if (!modeBilan && (numQuestion < 1 || numQuestion > NB_QUESTIONS_MAX)) {
       return new Response(JSON.stringify({ error: "Numéro de question invalide." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -172,7 +195,21 @@ serve(async (req) => {
           .join("\n\n")
       : "(aucune question posée pour l'instant — c'est la première question après la présentation)";
 
-    const userPrompt = `CV / parcours du candidat :
+    const userPrompt = modeBilan
+      ? `CV / parcours du candidat :
+${cvTexte || "(non renseigné)"}
+
+Présentation orale donnée en début d'entretien :
+${presentationTexte || "(non renseignée)"}
+
+Profil de personnalité (issu du test psychotechnique du candidat) :
+${analyseText}
+
+Ensemble des questions et réponses de l'entretien :
+${historiqueTexte}
+
+Rédige maintenant le bilan de ce passage.`
+      : `CV / parcours du candidat :
 ${cvTexte || "(non renseigné)"}
 
 Présentation orale donnée en début d'entretien :
@@ -189,6 +226,7 @@ ${JSON.stringify(BANQUE_INSPIRATION)}
 
 C'est la question n°${numQuestion} sur ${NB_QUESTIONS_MAX}. Pose la prochaine question du jury, en rebondissant naturellement sur ce qui précède.`;
 
+    // 6. Appel à l'API Anthropic
     const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
     if (!anthropicKey) throw new Error("Clé API manquante");
 
@@ -201,8 +239,8 @@ C'est la question n°${numQuestion} sur ${NB_QUESTIONS_MAX}. Pose la prochaine q
       },
       body: JSON.stringify({
         model: ANTHROPIC_MODEL,
-        max_tokens: 400,
-        system: SYSTEM_PROMPT,
+        max_tokens: modeBilan ? 900 : 400,
+        system: modeBilan ? BILAN_SYSTEM_PROMPT : SYSTEM_PROMPT,
         messages: [{ role: "user", content: userPrompt }],
       }),
     });
@@ -213,6 +251,23 @@ C'est la question n°${numQuestion} sur ${NB_QUESTIONS_MAX}. Pose la prochaine q
       .map((b: any) => b.text)
       .join("");
 
+    if (modeBilan) {
+      let parsedBilan: { appreciation?: string; points_forts?: string[]; points_ameliorer?: string[] } = {};
+      try {
+        const clean = rawText.replace(/```json|```/g, "").trim();
+        parsedBilan = JSON.parse(clean);
+      } catch {
+        console.error("[entretien-relance] Bilan non parsable:", rawText);
+        return new Response(
+          JSON.stringify({ error: "Le bilan n'a pas pu être généré correctement, veuillez réessayer." }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      return new Response(JSON.stringify(parsedBilan), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     let parsed: { question?: string; categoryId?: string } = {};
     try {
       const clean = rawText.replace(/```json|```/g, "").trim();
@@ -222,6 +277,7 @@ C'est la question n°${numQuestion} sur ${NB_QUESTIONS_MAX}. Pose la prochaine q
     }
 
     if (!parsed.question) {
+      // Repli défensif : question générique plutôt qu'une erreur bloquante
       parsed = {
         question: "Pouvez-vous préciser ce point de votre parcours ?",
         categoryId: "motivation",

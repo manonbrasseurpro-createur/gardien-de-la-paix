@@ -1140,6 +1140,11 @@
     .dash-leaderboard-wrap table {
       min-width: 520px;
     }
+    .card--locked {
+      opacity: 0.55;
+      cursor: default;
+      pointer-events: none;
+    }
     .dash-leaderboard-rank {
       font-weight: 700;
       color: var(--navy);
@@ -1246,10 +1251,10 @@
               <h3>Cas pratiques</h3>
               <p>Simulation chronométrée ou cas unique.</p>
             </a>
-            <a class="card card--theme-psycho" href="entretien-simulateur.html" id="entretien-card-item" style="display:none;">
+            <a class="card card--theme-psycho card--locked" id="entretien-card-item">
               <svg class="card__icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
               <h3>Entretien oral</h3>
-              <p>Simulateur vocal avec IA — exclusif formule 6 mois.</p>
+              <p id="entretien-card-desc">Exclusivement dans la formule complète de 6 mois.</p>
             </a>
           </section>
         </div>
@@ -1815,6 +1820,7 @@
       });
 
       const entretienCardItem = document.getElementById('entretien-card-item');
+      const entretienCardDesc = document.getElementById('entretien-card-desc');
       const aAccesEntretien =
         user?.isComplimentary === true ||
         (user?.subscriptionPlan === 'biannual' &&
@@ -1822,7 +1828,15 @@
           user?.subscriptionEnd &&
           new Date(user.subscriptionEnd) > new Date());
       if (entretienCardItem) {
-        entretienCardItem.style.display = aAccesEntretien ? 'flex' : 'none';
+        if (aAccesEntretien) {
+          entretienCardItem.href = 'entretien-simulateur.html';
+          entretienCardItem.classList.remove('card--locked');
+          if (entretienCardDesc) entretienCardDesc.textContent = 'Simulateur vocal avec IA — inclus dans votre formule.';
+        } else {
+          entretienCardItem.removeAttribute('href');
+          entretienCardItem.classList.add('card--locked');
+          if (entretienCardDesc) entretienCardDesc.textContent = 'Exclusivement dans la formule complète de 6 mois.';
+        }
       }
 
       const ADMIN_USERS_PAGE_SIZE = 50;

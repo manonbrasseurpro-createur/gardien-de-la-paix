@@ -1191,6 +1191,18 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="14" height="10" rx="2"></rect><rect x="7" y="9" width="14" height="10" rx="2"></rect></svg>
           Flashcards
         </a>
+        <a class="dash-nav__item" href="entretien-simulateur.html" id="entretien-nav-item" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          Entretien oral
+        </a>
+        <a class="dash-nav__item" href="entretien-simulateur.html" id="entretien-nav-item" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          Entretien oral
+        </a>
+        <a class="dash-nav__item" href="entretien-simulateur.html" id="entretien-nav-item" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          Entretien oral
+        </a>
         <button class="dash-nav__item" data-panel="progression">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="20" y2="20"></line><path d="M4 16l5-5 4 4 7-7"></path></svg>
           Ma progression
@@ -1797,6 +1809,17 @@
       } else {
         adminSep.style.display = 'none';
         adminNavItem.style.display = 'none';
+      }
+
+      const entretienNavItem = document.getElementById('entretien-nav-item');
+      const aAccesEntretien =
+        user?.isComplimentary === true ||
+        (user?.subscriptionPlan === 'biannual' &&
+          user?.subscriptionStatus === 'active' &&
+          user?.subscriptionEnd &&
+          new Date(user.subscriptionEnd) > new Date());
+      if (entretienNavItem) {
+        entretienNavItem.style.display = aAccesEntretien ? 'flex' : 'none';
       }
 
       document.getElementById('dash-logout-btn')?.addEventListener('click', async () => {

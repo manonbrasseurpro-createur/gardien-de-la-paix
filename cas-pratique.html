@@ -5406,11 +5406,16 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       return `Je rappelle les peines encourues indiquées par le dossier : ${penaltySentence}`;
     }
 
+    function isVictimRelatedQuestion(question) {
+      const text = normalizeText(`${question.title} ${question.prompt}`);
+      return text.includes("victime");
+    }
+
     function buildHumanAndOperationalReminder(caseItem, question) {
       const reminders = [];
       const type = getQuestionType(caseItem, question);
 
-      if (!caseItem.noVictim) {
+      if (!caseItem.noVictim && isVictimRelatedQuestion(question)) {
         reminders.push("Il serait préférable de distinguer clairement : à l'égard de la victime, protection, confidentialité, assistance médicale et soutien psychologique ; à l'égard de l'auteur présumé, sécurisation, neutralité et transmission à l'OPJ.");
         reminders.push("Pour tenter de réduire ce phénomène, il est possible également de proposer une orientation vers les associations, de rappeler les numéros d'urgence et, si le danger le justifie, d'envisager un hébergement d'urgence ou un dispositif de protection.");
       }

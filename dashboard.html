@@ -2997,7 +2997,6 @@
             if (!isAdmin) {
               window.alert("Action réservée à l'administratrice.");
               await loadAdminPartnersList(client);
-        await loadAdminSeoGeoList(client);
               return;
             }
             const id = select.getAttribute('data-partner-status');
@@ -3012,7 +3011,6 @@
               window.alert(updateError.message || 'Mise à jour refusée.');
             }
             await loadAdminPartnersList(client);
-        await loadAdminSeoGeoList(client);
           });
         });
 
@@ -3035,7 +3033,6 @@
             }
             hidePartnerForm();
             await loadAdminPartnersList(client);
-        await loadAdminSeoGeoList(client);
           });
         });
       }
@@ -3089,8 +3086,6 @@
 
         hidePartnerForm();
         await loadAdminPartnersList(client);
-        await loadAdminSeoGeoList(client);
-        await loadAdminSeoGeoList(client);
       }
 
       async function loadAdminSeoGeoList(client) {
@@ -3125,7 +3120,7 @@
             ? '<span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #dcfce7; color: #166534;">Email envoyé</span>'
             : '<span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #fef3c7; color: #92400e;">Email non envoyé</span>';
           return `
-            <details ${index === 0 ? 'open' : ''} style="border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; background: var(--white);">
+            <details ${index === 0 ? 'open' : ''} style="border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; background: rgba(246, 244, 238, 0.06);">
               <summary style="cursor: pointer; font-weight: 700; color: var(--navy); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
                 <span>${escapeCommunityHtml(periode)}</span>
                 ${emailBadge}
@@ -3293,7 +3288,6 @@
         updateCampaignSelectedCount();
         await loadAdminNotificationsList(client);
         await loadAdminPartnersList(client);
-        await loadAdminSeoGeoList(client);
         await loadAdminSeoGeoList(client);
       }
 

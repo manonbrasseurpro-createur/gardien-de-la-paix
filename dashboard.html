@@ -1458,6 +1458,13 @@
                 <h2>Avis</h2>
                 <p class="admin-tile__desc">Questionnaires de satisfaction et publication.</p>
               </button>
+              <button class="admin-tile" type="button" data-admin-view="seo-geo">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </span>
+                <h2>Veille SEO/GEO</h2>
+                <p class="admin-tile__desc">Rapports hebdomadaires automatiques (Google + robots IA).</p>
+              </button>
             </div>
           </div>
 
@@ -1553,6 +1560,15 @@
             <div class="auth-card auth-card--wide">
               <h2>Avis de satisfaction</h2>
               <div id="admin-surveys-list"><p style="color: var(--muted);">Chargement…</p></div>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-seo-geo" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Veille SEO/GEO</h2>
+              <p class="admin-lead">Rapports générés automatiquement chaque lundi (Google Search Console + robots IA via Cloudflare).</p>
+              <div id="admin-seo-geo-list"><p class="admin-lead">Chargement…</p></div>
             </div>
           </div>
 
@@ -2974,6 +2990,7 @@
             if (!isAdmin) {
               window.alert("Action réservée à l'administratrice.");
               await loadAdminPartnersList(client);
+        await loadAdminSeoGeoList(client);
               return;
             }
             const id = select.getAttribute('data-partner-status');
@@ -2988,6 +3005,7 @@
               window.alert(updateError.message || 'Mise à jour refusée.');
             }
             await loadAdminPartnersList(client);
+        await loadAdminSeoGeoList(client);
           });
         });
 
@@ -3010,6 +3028,7 @@
             }
             hidePartnerForm();
             await loadAdminPartnersList(client);
+        await loadAdminSeoGeoList(client);
           });
         });
       }
@@ -3063,6 +3082,55 @@
 
         hidePartnerForm();
         await loadAdminPartnersList(client);
+        await loadAdminSeoGeoList(client);
+        await loadAdminSeoGeoList(client);
+      }
+
+      async function loadAdminSeoGeoList(client) {
+        const listEl = document.getElementById('admin-seo-geo-list');
+        if (!listEl || !client) return;
+
+        const { data: reports, error } = await client
+          .from('seo_geo_reports')
+          .select('id, created_at, period_start, period_end, resume, points_notables, cloudflare_error, email_envoye')
+          .order('created_at', { ascending: false })
+          .limit(20);
+
+        if (error) {
+          listEl.innerHTML = `<p style="color: #fecaca;">Impossible de charger les rapports : ${escapeCommunityHtml(error.message)}</p>`;
+          return;
+        }
+        if (!reports || reports.length === 0) {
+          listEl.innerHTML = '<p class="admin-lead">Aucun rapport pour l\'instant — le premier arrivera au prochain passage automatique (lundi).</p>';
+          return;
+        }
+
+        listEl.innerHTML = reports.map((r, index) => {
+          const periode = `${new Date(r.period_start).toLocaleDateString('fr-FR')} → ${new Date(r.period_end).toLocaleDateString('fr-FR')}`;
+          const points = Array.isArray(r.points_notables) ? r.points_notables : [];
+          const pointsHtml = points.length
+            ? `<ul>${points.map((p) => `<li>${escapeCommunityHtml(p)}</li>`).join('')}</ul>`
+            : '';
+          const cfNote = r.cloudflare_error
+            ? `<p style="color: var(--brass); font-size: 0.85rem;">Données robots IA indisponibles cette semaine.</p>`
+            : '';
+          const emailBadge = r.email_envoye
+            ? '<span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #dcfce7; color: #166534;">Email envoyé</span>'
+            : '<span style="padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; background: #fef3c7; color: #92400e;">Email non envoyé</span>';
+          return `
+            <details ${index === 0 ? 'open' : ''} style="border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; background: var(--white);">
+              <summary style="cursor: pointer; font-weight: 700; color: var(--navy); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span>${escapeCommunityHtml(periode)}</span>
+                ${emailBadge}
+              </summary>
+              <div style="margin-top: 12px;">
+                <p>${escapeCommunityHtml(r.resume || '')}</p>
+                ${pointsHtml}
+                ${cfNote}
+              </div>
+            </details>
+          `;
+        }).join('');
       }
 
       async function loadAdminData() {
@@ -3218,6 +3286,8 @@
         updateCampaignSelectedCount();
         await loadAdminNotificationsList(client);
         await loadAdminPartnersList(client);
+        await loadAdminSeoGeoList(client);
+        await loadAdminSeoGeoList(client);
       }
 
       if (isAdmin) {

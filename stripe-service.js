@@ -46,7 +46,7 @@
         apikey: anonKey,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ plan: plan.id })
+      body: JSON.stringify({ plan: plan.id, referral_source: window.GPXReferral?.get() || null })
     });
 
     const payload = await response.json().catch(() => ({}));

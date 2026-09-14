@@ -42,6 +42,7 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const plan = String(body.plan || "quarterly");
+    const referralSource = typeof body.referral_source === "string" ? body.referral_source.trim().toLowerCase() : null;
     const stripePriceId = PLAN_PRICE_IDS[plan];
 
     if (!stripePriceId) {
@@ -87,10 +88,10 @@ Deno.serve(async (req) => {
       billing_address_collection: "required",
       automatic_tax: { enabled: true },
       line_items: [{ price: stripePriceId, quantity: 1 }],
-      metadata: { user_id: user.id, plan },
+      metadata: { user_id: user.id, plan, ...(referralSource ? { referral_source: referralSource } : {}) },
       ...(PLAN_MODE[plan] === "subscription"
-        ? { subscription_data: { metadata: { user_id: user.id, plan } } }
-        : { payment_intent_data: { metadata: { user_id: user.id, plan } } }),
+        ? { subscription_data: { metadata: { user_id: user.id, plan, ...(referralSource ? { referral_source: referralSource } : {}) } } }
+        : { payment_intent_data: { metadata: { user_id: user.id, plan, ...(referralSource ? { referral_source: referralSource } : {}) } } }),
       success_url: SUCCESS_URL,
       cancel_url: CANCEL_URL
     });

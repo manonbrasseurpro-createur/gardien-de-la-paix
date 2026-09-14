@@ -68,7 +68,13 @@ async function resolveUserIdFromSubscription(
 }
 
 function subscriptionEndsAt(subscription: Stripe.Subscription): string {
-  return new Date(subscription.current_period_end * 1000).toISOString();
+  const itemPeriodEnd = (subscription as any).items?.data?.[0]?.current_period_end;
+  const legacyPeriodEnd = (subscription as any).current_period_end;
+  const periodEnd = itemPeriodEnd ?? legacyPeriodEnd;
+  if (!periodEnd) {
+    throw new Error("current_period_end introuvable sur l'abonnement (ni items[], ni legacy).");
+  }
+  return new Date(periodEnd * 1000).toISOString();
 }
 
 function planEndsAt(plan: string): string | null {
@@ -185,6 +191,7 @@ Deno.serve(async (req) => {
         }
 
         const promoCode = await extractPromoCode(stripe, session);
+        const referralSource = session.metadata?.referral_source || null;
 
         await updateProfileSubscription(supabaseAdmin, userId, {
           subscription_status: "active",
@@ -193,8 +200,35 @@ Deno.serve(async (req) => {
           subscription_ends_at: subscriptionEnd,
           stripe_customer_id: stripeCustomerId,
           stripe_subscription_id: stripeSubscriptionId,
-          ...(promoCode ? { promo_code: promoCode } : {})
+          ...(promoCode ? { promo_code: promoCode } : {}),
+          ...(referralSource ? { referral_source: referralSource } : {})
         });
+        break;
+      }
+
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object as Stripe.Invoice;
+        const legacySubField = (invoice as any).subscription;
+        const newSubField = (invoice as any).parent?.subscription_details?.subscription;
+        const rawSubscriptionRef = newSubField ?? legacySubField;
+        const subscriptionId =
+          typeof rawSubscriptionRef === "string" ? rawSubscriptionRef : rawSubscriptionRef?.id;
+
+        if (subscriptionId) {
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          const userId = await resolveUserIdFromSubscription(supabaseAdmin, stripe, subscription);
+
+          if (userId) {
+            const endsAt = subscriptionEndsAt(subscription);
+            await updateProfileSubscription(supabaseAdmin, userId, {
+              subscription_status: "active",
+              subscription_end: endsAt,
+              subscription_ends_at: endsAt
+            });
+          } else {
+            console.error("invoice.payment_succeeded: utilisateur introuvable");
+          }
+        }
         break;
       }
 

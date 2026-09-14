@@ -202,39 +202,45 @@
       {
         name: "croix centrale",
         cells: [[1, 0, "A"], [0, 1, "B"], [1, 1, "C"], [2, 1, "D"], [1, 2, "E"], [1, 3, "F"]],
-        visible: ["A", "B", "C"]
+        visible: ["A", "B", "C"],
+        opposites: { A: "E", E: "A", B: "D", D: "B", C: "F", F: "C" }
       },
       {
         name: "bande avec rabats",
         cells: [[0, 1, "A"], [1, 1, "B"], [2, 1, "C"], [3, 1, "D"], [1, 0, "E"], [1, 2, "F"]],
-        visible: ["E", "A", "B"]
+        visible: ["E", "A", "B"],
+        opposites: { A: "C", C: "A", B: "D", D: "B", E: "F", F: "E" }
       },
       {
         name: "escalier",
         cells: [[0, 0, "A"], [0, 1, "B"], [1, 1, "C"], [1, 2, "D"], [2, 2, "E"], [2, 3, "F"]],
-        visible: ["A", "B", "C"]
+        visible: ["A", "B", "C"],
+        opposites: { A: "D", D: "A", B: "E", E: "B", C: "F", F: "C" }
       },
       {
         name: "T allongé",
         cells: [[1, 0, "A"], [1, 1, "B"], [0, 2, "C"], [1, 2, "D"], [2, 2, "E"], [1, 3, "F"]],
-        visible: ["B", "C", "D"]
+        visible: ["B", "C", "D"],
+        opposites: { A: "D", D: "A", B: "F", F: "B", C: "E", E: "C" }
       },
       {
         name: "zigzag compact",
         cells: [[2, 0, "A"], [0, 1, "B"], [1, 1, "C"], [2, 1, "D"], [1, 2, "E"], [1, 3, "F"]],
-        visible: ["A", "C", "D"]
+        visible: ["A", "C", "D"],
+        opposites: { A: "E", E: "A", B: "D", D: "B", C: "F", F: "C" }
       }
     ];
 
     for (let index = 0; index < 20; index += 1) {
       const net = rotateNetFaces(nets[index % nets.length], index);
       const correct = net.visible;
+      const [visibleTop, visibleLeft, visibleRight] = correct;
       const optionFaces = uniqueFaceOptions([
         correct,
-        [net.faces[3], correct[1], correct[2]],
-        [correct[0], correct[2], correct[1]],
-        [net.faces[5], net.faces[0], net.faces[4]],
-        [net.faces[1], net.faces[4], net.faces[2]]
+        [visibleTop, visibleRight, visibleLeft],
+        [net.opposites[visibleTop], visibleLeft, visibleRight],
+        [visibleTop, net.opposites[visibleLeft], visibleRight],
+        [visibleTop, visibleLeft, net.opposites[visibleRight]]
       ]);
 
       questions.push({
@@ -666,11 +672,17 @@
       return map;
     }, {});
 
+    const rotatedOpposites = {};
+    Object.entries(net.opposites).forEach(([face, opposite]) => {
+      rotatedOpposites[faceMap[face]] = faceMap[opposite];
+    });
+
     return {
       name: net.name,
       faces: rotated,
       cells: net.cells.map(([x, y, face]) => [x, y, faceMap[face]]),
-      visible: net.visible.map((face) => faceMap[face])
+      visible: net.visible.map((face) => faceMap[face]),
+      opposites: rotatedOpposites
     };
   }
 

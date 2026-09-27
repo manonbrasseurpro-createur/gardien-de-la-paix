@@ -1476,6 +1476,13 @@
                 <h2>Veille SEO/GEO</h2>
                 <p class="admin-tile__desc">Rapports hebdomadaires automatiques (Google + robots IA).</p>
               </button>
+              <button class="admin-tile" type="button" data-admin-view="finance">
+                <span class="admin-tile__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="M8 16v-5"></path><path d="M12 16V8"></path><path d="M16 16v-3"></path></svg>
+                </span>
+                <h2>Rapport financier</h2>
+                <p class="admin-tile__desc">Chiffre d'affaires HT et TVA collectée, mois par mois.</p>
+              </button>
             </div>
           </div>
 
@@ -1580,6 +1587,20 @@
               <h2>Veille SEO/GEO</h2>
               <p class="admin-lead">Rapports générés automatiquement chaque lundi (Google Search Console + robots IA via Cloudflare).</p>
               <div id="admin-seo-geo-list"><p class="admin-lead">Chargement…</p></div>
+            </div>
+          </div>
+
+          <div class="admin-view" id="admin-view-finance" hidden>
+            <button class="admin-back" type="button" data-admin-back>← Retour au panneau</button>
+            <div class="auth-card auth-card--wide">
+              <h2>Rapport financier</h2>
+              <p class="admin-lead">Export Excel du chiffre d'affaires HT et de la TVA collectée pour le mois choisi.</p>
+              <form class="admin-campaign-form" id="admin-finance-form">
+                <label for="admin-finance-month">Mois</label>
+                <input type="month" id="admin-finance-month" required>
+                <button class="primary-button" type="submit" id="admin-finance-download">Télécharger le rapport</button>
+                <p class="admin-campaign-status" id="admin-finance-status"></p>
+              </form>
             </div>
           </div>
 
@@ -3489,6 +3510,68 @@
         document.getElementById('admin-partner-new-btn')?.addEventListener('click', () => {
           if (!isAdmin) return;
           showPartnerForm(null);
+        });
+        const financeMonthInput = document.getElementById('admin-finance-month');
+        if (financeMonthInput && !financeMonthInput.value) {
+          const now = new Date();
+          financeMonthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+        document.getElementById('admin-finance-form')?.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const statusEl = document.getElementById('admin-finance-status');
+          const downloadBtn = document.getElementById('admin-finance-download');
+          const month = document.getElementById('admin-finance-month')?.value || '';
+          const setFinanceStatus = (message, isError) => {
+            if (!statusEl) return;
+            statusEl.textContent = message;
+            statusEl.style.color = isError ? '#fecaca' : '';
+          };
+          if (!isAdmin || (await getAuthEmail()) !== ADMIN_EMAIL) {
+            setFinanceStatus("Accès refusé. Cette action est réservée à l'administratrice.", true);
+            return;
+          }
+          if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
+            setFinanceStatus('Choisissez un mois.', true);
+            return;
+          }
+          if (downloadBtn) downloadBtn.disabled = true;
+          setFinanceStatus('Préparation du rapport…', false);
+          try {
+            const token = await window.GPXAuth?.getAccessToken?.();
+            const cfg = window.GPX_SUPABASE || {};
+            const url = (cfg.url || cfg.SUPABASE_URL || '').replace(/\/$/, '');
+            const anonKey = cfg.anonKey || '';
+            if (!token || !url || !anonKey) {
+              throw new Error('Session expirée ou configuration Supabase manquante.');
+            }
+            const response = await fetch(`${url}/functions/v1/generate-financial-report`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                apikey: anonKey,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ month })
+            });
+            if (!response.ok) {
+              const payload = await response.json().catch(() => ({}));
+              throw new Error(payload.error || `Erreur (${response.status}).`);
+            }
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = `rapport-financier-${month}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+            setFinanceStatus('Rapport téléchargé.', false);
+          } catch (error) {
+            setFinanceStatus(error instanceof Error ? error.message : String(error), true);
+          } finally {
+            if (downloadBtn) downloadBtn.disabled = false;
+          }
         });
         document.getElementById('admin-partner-cancel-btn')?.addEventListener('click', () => {
           hidePartnerForm();

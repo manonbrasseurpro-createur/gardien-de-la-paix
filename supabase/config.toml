@@ -7,6 +7,9 @@ verify_jwt = true
 [functions.send-campaign]
 verify_jwt = true
 
+[functions.generate-financial-report]
+verify_jwt = true
+
 [functions.stripe-webhook]
 verify_jwt = false
 

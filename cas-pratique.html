@@ -5948,6 +5948,20 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
       const reponses = state.items.map((item) => state.answers[`${item.caseId}-${item.questionIndex}`] || "");
       const sujet = state.items[0] ? getCase(state.items[0].caseId).title : "Cas pratique GPX";
 
+      let clientId = null;
+      const progressionSessions = window.GpxProgression?.readSessions?.() || [];
+      let latestDate = "";
+      for (const session of progressionSessions) {
+        if (session?.module !== "cas-pratique" || !session.client_id) {
+          continue;
+        }
+        const date = String(session.date || "");
+        if (!clientId || date >= latestDate) {
+          latestDate = date;
+          clientId = session.client_id;
+        }
+      }
+
       try {
         const anonKey = window.GPX_SUPABASE?.anonKey || window.GPX_SUPABASE?.anon_key || "";
         const accessToken = await window.GPXAuth?.getAccessToken?.();
@@ -5962,7 +5976,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
             Authorization: `Bearer ${accessToken}`,
             apikey: anonKey,
           },
-          body: JSON.stringify({ sujet, questions, reponses }),
+          body: JSON.stringify({ sujet, questions, reponses, client_id: clientId }),
         });
 
         const correction = await response.json();
@@ -5999,6 +6013,28 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
         `;
 
         btn.innerHTML = `${gpxIcon("sparkles", { size: 18, className: "gpx-inline-icon--lg" })} Correction effectuée`;
+
+        if (correction.ai_correction_saved === false && clientId) {
+          const correctionToStore = { ...correction };
+          delete correctionToStore.ai_correction_saved;
+          window.setTimeout(() => {
+            fetch("https://ivrafclenoukjhmubrgq.supabase.co/functions/v1/correct-cas-pratique", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+                apikey: anonKey,
+              },
+              body: JSON.stringify({
+                persist_only: true,
+                client_id: clientId,
+                correction: correctionToStore,
+              }),
+            }).catch((error) => {
+              console.warn("[cas-pratique] retry correction IA:", error);
+            });
+          }, 2000);
+        }
       } catch (err) {
         resultDiv.innerHTML = `<p style="color: #b42318;">Une erreur s'est produite : ${err.message}. Veuillez réessayer.</p>`;
         btn.disabled = false;

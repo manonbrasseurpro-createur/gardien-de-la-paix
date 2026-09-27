@@ -6,6 +6,61 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const CLIENT_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+
+function correctionPayload(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return null;
+  }
+
+  const stored = { ...(value as Record<string, unknown>) };
+  delete stored.ai_correction_saved;
+  delete stored.error;
+
+  if (!("note" in stored) || !("retour_questions" in stored)) {
+    return null;
+  }
+
+  return stored;
+}
+
+async function saveAiCorrection(
+  supabase: { from: (table: string) => any },
+  userId: string,
+  clientId: unknown,
+  correction: Record<string, unknown>
+): Promise<boolean> {
+  if (typeof clientId !== "string" || !CLIENT_ID_RE.test(clientId)) {
+    return false;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("exam_sessions")
+      .update({ ai_correction: correction })
+      .eq("user_id", userId)
+      .eq("client_id", clientId)
+      .select("id");
+
+    if (error) {
+      console.error("saveAiCorrection:", error);
+      return false;
+    }
+
+    return Array.isArray(data) && data.length > 0;
+  } catch (error) {
+    console.error("saveAiCorrection:", error);
+    return false;
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -14,10 +69,7 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Authentification requise." }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Authentification requise." }, 401);
     }
 
     const supabase = createClient(
@@ -28,10 +80,7 @@ serve(async (req) => {
 
     const { data: authData, error: authError } = await supabase.auth.getUser();
     if (authError || !authData.user) {
-      return new Response(JSON.stringify({ error: "Session invalide. Reconnectez-vous." }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Session invalide. Reconnectez-vous." }, 401);
     }
 
     const { data: profile, error: profileError } = await supabase
@@ -41,23 +90,32 @@ serve(async (req) => {
       .maybeSingle();
 
     if (profileError) {
-      return new Response(JSON.stringify({ error: "Impossible de vérifier l'abonnement." }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Impossible de vérifier l'abonnement." }, 500);
     }
 
     const status = String(profile?.subscription_status ?? "").toLowerCase();
     const canUseAi = profile?.is_complimentary === true || status === "active";
 
     if (!canUseAi) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error:
             "La correction IA est réservée aux abonnés. Passez à une formule payante pour y accéder.",
-        }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        },
+        403
       );
+    }
+
+    const body = await req.json();
+
+    if (body?.persist_only === true) {
+      const stored = correctionPayload(body.correction);
+      if (!stored) {
+        return jsonResponse({ error: "Correction invalide." }, 400);
+      }
+
+      const saved = await saveAiCorrection(supabase, authData.user.id, body.client_id, stored);
+      return jsonResponse({ ...stored, ai_correction_saved: saved });
     }
 
     const supabaseAdmin = createClient(
@@ -72,22 +130,19 @@ serve(async (req) => {
 
     if (rateError) {
       console.error("claim_ai_correction_slot:", rateError);
-      return new Response(
-        JSON.stringify({ error: "Impossible de vérifier la limite de fréquence." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      return jsonResponse({ error: "Impossible de vérifier la limite de fréquence." }, 500);
     }
 
     if (!claimed) {
-      return new Response(
-        JSON.stringify({
+      return jsonResponse(
+        {
           error: "Merci de patienter quelques instants avant une nouvelle correction.",
-        }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        },
+        429
       );
     }
 
-    const { sujet, questions, reponses } = await req.json();
+    const { sujet, questions, reponses } = body;
 
     const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
     if (!anthropicKey) throw new Error("Clé API manquante");
@@ -144,19 +199,23 @@ Réponds UNIQUEMENT avec le JSON, sans texte avant ou après, sans balises markd
     try {
       correction = JSON.parse(text);
     } catch {
-      return new Response(
-        JSON.stringify({ error: "La correction n'a pas pu être générée correctement, veuillez réessayer." }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      return jsonResponse(
+        { error: "La correction n'a pas pu être générée correctement, veuillez réessayer." },
+        500
       );
     }
 
-    return new Response(JSON.stringify(correction), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    const stored = correctionPayload(correction);
+    if (!stored) {
+      return jsonResponse(
+        { error: "La correction n'a pas pu être générée correctement, veuillez réessayer." },
+        500
+      );
+    }
+
+    const saved = await saveAiCorrection(supabase, authData.user.id, body.client_id, stored);
+    return jsonResponse({ ...stored, ai_correction_saved: saved });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    return jsonResponse({ error: error.message }, 500);
   }
 });

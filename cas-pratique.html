@@ -2073,6 +2073,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
   <script src="presence-tracking.js"></script>
   <script src="progression-storage.js"></script>
   <script src="gpx-icons.js"></script>
+  <script src="ai-correction-render.js"></script>
   <script>
     const OFFICIAL_SESSION_CASE_IDS = [
       "violences-conjugales",
@@ -5983,34 +5984,7 @@ C'est ce qui fait la différence entre une bonne et une excellente réponse.</p>
 
         if (correction.error) throw new Error(correction.error);
 
-        resultDiv.innerHTML = `
-          <h3 style="color: var(--navy); margin: 0 0 16px; font-family: 'Spectral', serif;">Correction IA — ${correction.note}/20</h3>
-          <p style="color: var(--text); margin-bottom: 16px;">${correction.appreciation}</p>
-          <div style="display: grid; grid-template-columns: ${correction.points_forts.length > 0 ? '1fr 1fr' : '1fr'}; gap: 16px; margin-bottom: 20px;">
-            ${correction.points_forts.length > 0 ? `
-            <div style="padding: 16px; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
-              <strong style="color: #166534;">Points forts</strong>
-              <ul style="margin: 8px 0 0; padding-left: 16px; color: #166534;">
-                ${correction.points_forts.map((p) => `<li>${p}</li>`).join("")}
-              </ul>
-            </div>
-            ` : ''}
-            <div style="padding: 16px; background: #fff7ed; border-radius: 8px; border: 1px solid #fdba74;">
-              <strong style="color: #9a3412;">Points à améliorer</strong>
-              <ul style="margin: 8px 0 0; padding-left: 16px; color: #9a3412;">
-                ${correction.points_ameliorer.map((p) => `<li>${p}</li>`).join("")}
-              </ul>
-            </div>
-          </div>
-          <h4 style="color: var(--navy); margin: 0 0 12px;">Retour par question</h4>
-          ${correction.retour_questions.map((r) => `
-            <div style="padding: 12px 16px; margin-bottom: 8px; background: white; border-radius: 8px; border: 1px solid var(--border);">
-              <strong style="color: var(--navy);">Question ${r.question} — ${r.note} pts</strong>
-              <p style="margin: 4px 0 0; color: var(--muted); font-size: 0.93rem;">${r.commentaire}</p>
-            </div>
-          `).join("")}
-          <p style="margin-top: 16px; font-size: 0.8rem; color: var(--muted);">⚠️ Cette correction est générée par IA à titre indicatif. Elle ne reflète pas le jugement officiel du jury GPX.</p>
-        `;
+        resultDiv.innerHTML = window.GpxAiCorrection.renderHtml(correction);
 
         btn.innerHTML = `${gpxIcon("sparkles", { size: 18, className: "gpx-inline-icon--lg" })} Correction effectuée`;
 

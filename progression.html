@@ -366,7 +366,7 @@
 
     table {
       width: 100%;
-      min-width: 720px;
+      min-width: 860px;
       border-collapse: collapse;
       background: var(--white);
     }
@@ -468,6 +468,14 @@
       .history-table-wrap td:last-child {
         padding-bottom: 0;
         border-bottom: 0;
+      }
+
+      .history-table-wrap .history-ai-empty {
+        display: none;
+      }
+
+      .history-ai-panel {
+        margin-top: 12px;
       }
 
       .history-table-wrap td::before {
@@ -602,6 +610,7 @@
               <th>Module testé</th>
               <th>Score obtenu</th>
               <th>Durée de la session</th>
+              <th>Correction IA</th>
             </tr>
           </thead>
           <tbody id="history-body"></tbody>
@@ -618,6 +627,7 @@
   <script src="notifications-banner.js"></script>
   <script src="presence-tracking.js"></script>
   <script src="progression-storage.js"></script>
+  <script src="ai-correction-render.js"></script>
   <script>
     const GOALS_KEY = "gpxProgressionGoals";
 
@@ -674,6 +684,9 @@
       targetDate: document.getElementById("target-date"),
       countdown: document.getElementById("countdown")
     };
+
+    let aiCorrectionStore = new Map();
+    let openAiCorrectionKey = "";
 
     function readSessions() {
       return (window.GpxProgression?.readSessions() || [])
@@ -949,21 +962,56 @@
       }).join("");
     }
 
+    function storedAiCorrection(session) {
+      if (session?.module !== "cas-pratique") {
+        return null;
+      }
+      if (session.client_id && aiCorrectionStore.has("c:" + session.client_id)) {
+        return aiCorrectionStore.get("c:" + session.client_id);
+      }
+      if (session.serverId && aiCorrectionStore.has("s:" + session.serverId)) {
+        return aiCorrectionStore.get("s:" + session.serverId);
+      }
+      return null;
+    }
+
+    function aiCorrectionKey(session) {
+      if (session.client_id) {
+        return "c:" + session.client_id;
+      }
+      if (session.serverId) {
+        return "s:" + session.serverId;
+      }
+      return "";
+    }
+
     function renderHistory(sessions) {
       const sorted = sortByDateDescending(sessions);
       elements.historyCount.textContent = sorted.length
         ? `${sorted.length} session${sorted.length > 1 ? "s" : ""} enregistrée${sorted.length > 1 ? "s" : ""}.`
         : "Aucune session enregistrée.";
       elements.historyBody.innerHTML = sorted.length
-        ? sorted.map((session) => `
+        ? sorted.map((session) => {
+          const correction = storedAiCorrection(session);
+          const key = aiCorrectionKey(session);
+          const open = Boolean(correction) && openAiCorrectionKey === key;
+          const correctionCell = correction && window.GpxAiCorrection
+            ? `<td data-label="Correction IA">
+                <button type="button" class="secondary-button" data-ai-correction="${key}" aria-expanded="${open ? "true" : "false"}">${open ? "Masquer la correction" : "Voir la correction"}</button>
+                ${open ? `<div class="history-ai-panel">${window.GpxAiCorrection.renderHtml(correction)}</div>` : ""}
+              </td>`
+            : '<td data-label="Correction IA" class="history-ai-empty"></td>';
+          return `
           <tr>
             <td data-label="Date et heure">${formatDate(session.date)}</td>
             <td data-label="Module testé">${modules[session.module].shortLabel}</td>
             <td data-label="Score obtenu"><span class="score-pill">${scoreText(session)}</span></td>
             <td data-label="Durée de la session">${formatDuration(session.duree)}</td>
+            ${correctionCell}
           </tr>
-        `).join("")
-        : '<tr class="history-empty"><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
+        `;
+        }).join("")
+        : '<tr class="history-empty"><td colspan="5">Aucun test terminé pour le moment.</td></tr>';
     }
 
     function renderObjectives(goals) {
@@ -1033,6 +1081,24 @@
       renderCountdown(goals.targetDate);
     });
 
+    async function refreshAiCorrections() {
+      if (!window.GpxAiCorrection?.loadMap) {
+        return;
+      }
+      aiCorrectionStore = await window.GpxAiCorrection.loadMap();
+      renderHistory(readSessions());
+    }
+
+    elements.historyBody.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-ai-correction]");
+      if (!button) {
+        return;
+      }
+      const key = button.getAttribute("data-ai-correction") || "";
+      openAiCorrectionKey = openAiCorrectionKey === key ? "" : key;
+      renderHistory(readSessions());
+    });
+
     elements.clearHistory.addEventListener("click", () => {
       if (!confirm("Effacer tout l'historique de progression ?")) {
         return;
@@ -1047,6 +1113,11 @@
 
     renderObjectives(readGoals());
     renderAll();
+    window.GpxProgression?.onSynced?.(() => {
+      renderAll();
+      void refreshAiCorrections();
+    });
+    void refreshAiCorrections();
   </script>
 </body>
 </html>

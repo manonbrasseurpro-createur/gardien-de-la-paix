@@ -743,6 +743,9 @@
       text-transform: uppercase;
       font-weight: 600;
     }
+    .dash-ai-correction-panel {
+      margin-top: 12px;
+    }
     .dash-history-table-wrap tr:last-child td { border-bottom: 0; }
     .dash-score-pill {
       display: inline-flex;
@@ -1332,6 +1335,7 @@
                     <th>Module testé</th>
                     <th>Score obtenu</th>
                     <th>Durée de la session</th>
+                    <th>Correction IA</th>
                   </tr>
                 </thead>
                 <tbody id="dash-history-body"></tbody>
@@ -1724,6 +1728,7 @@
   <script src="notifications-banner.js"></script>
   <script src="presence-tracking.js"></script>
   <script src="progression-storage.js"></script>
+  <script src="ai-correction-render.js"></script>
   <script>
     document.querySelectorAll('.dash-nav__item[data-panel]').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -3841,6 +3846,28 @@
         });
       }
 
+      let aiCorrectionStore = new Map();
+      let openDashAiKey = "";
+
+      function storedDashAiCorrection(session) {
+        if (session?.module !== "cas-pratique") {
+          return null;
+        }
+        if (session.client_id && aiCorrectionStore.has("c:" + session.client_id)) {
+          return aiCorrectionStore.get("c:" + session.client_id);
+        }
+        if (session.serverId && aiCorrectionStore.has("s:" + session.serverId)) {
+          return aiCorrectionStore.get("s:" + session.serverId);
+        }
+        return null;
+      }
+
+      function dashAiCorrectionKey(session) {
+        if (session.client_id) return "c:" + session.client_id;
+        if (session.serverId) return "s:" + session.serverId;
+        return "";
+      }
+
       function renderDashHistory(sessions) {
         const sorted = [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date));
         const countEl = document.getElementById('dash-history-count');
@@ -3852,15 +3879,27 @@
           : 'Aucune session enregistrée.';
 
         bodyEl.innerHTML = sorted.length
-          ? sorted.map((session) => `
+          ? sorted.map((session) => {
+            const correction = storedDashAiCorrection(session);
+            const key = dashAiCorrectionKey(session);
+            const open = Boolean(correction) && openDashAiKey === key;
+            const correctionCell = correction && window.GpxAiCorrection
+              ? `<td>
+                  <button type="button" class="secondary-button" data-ai-correction="${key}" aria-expanded="${open ? "true" : "false"}">${open ? "Masquer la correction" : "Voir la correction"}</button>
+                  ${open ? `<div class="dash-ai-correction-panel">${window.GpxAiCorrection.renderHtml(correction)}</div>` : ""}
+                </td>`
+              : "<td></td>";
+            return `
             <tr>
               <td>${formatProgressionDate(session.date)}</td>
               <td>${progressionModules[session.module].shortLabel}</td>
               <td><span class="dash-score-pill">${progressionScoreText(session)}</span></td>
               <td>${formatProgressionDuration(session.duree)}</td>
+              ${correctionCell}
             </tr>
-          `).join('')
-          : '<tr><td colspan="4">Aucun test terminé pour le moment.</td></tr>';
+          `;
+          }).join("")
+          : '<tr><td colspan="5">Aucun test terminé pour le moment.</td></tr>';
       }
 
       function formatPersonalityDashScore(value) {
@@ -4132,7 +4171,33 @@
         loadPersonalityProfile();
       }
 
-      document.querySelector('.dash-nav__item[data-panel="progression"]')?.addEventListener('click', renderProgressionPanel);
+      let progressionPanelRendered = false;
+
+      async function refreshDashAiCorrections() {
+        if (!window.GpxAiCorrection?.loadMap) {
+          return;
+        }
+        aiCorrectionStore = await window.GpxAiCorrection.loadMap();
+        if (progressionPanelRendered) {
+          renderDashHistory(readProgressionSessions());
+        }
+      }
+
+      document.getElementById('dash-history-body')?.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-ai-correction]');
+        if (!button) {
+          return;
+        }
+        const key = button.getAttribute('data-ai-correction') || '';
+        openDashAiKey = openDashAiKey === key ? '' : key;
+        renderDashHistory(readProgressionSessions());
+      });
+
+      document.querySelector('.dash-nav__item[data-panel="progression"]')?.addEventListener('click', () => {
+        progressionPanelRendered = true;
+        renderProgressionPanel();
+        void refreshDashAiCorrections();
+      });
       document.getElementById('dash-clear-history')?.addEventListener('click', () => {
         if (!confirm('Effacer tout l\'historique de progression ?')) return;
         window.GpxProgression?.clearSessions();
@@ -4141,8 +4206,18 @@
       });
 
       if (window.location.hash === '#progression') {
+        progressionPanelRendered = true;
         renderProgressionPanel();
       }
+
+      window.GpxProgression?.onSynced?.(() => {
+        renderDashboardWidgets();
+        if (progressionPanelRendered) {
+          renderProgressionPanel();
+        }
+        void refreshDashAiCorrections();
+      });
+      void refreshDashAiCorrections();
 
       const COMMUNITY_MSG_MAX = 500;
       const COMMUNITY_FOUNDER_EMAIL = 'manonbrasseurpro@gmail.com';

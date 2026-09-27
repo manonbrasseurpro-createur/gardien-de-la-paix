@@ -5,6 +5,8 @@
 
   let epoch = 0;
   let accountSync = null;
+  const syncListeners = [];
+  let syncSettled = false;
 
   function readSessions() {
     try {
@@ -453,10 +455,37 @@
     }
   }
 
+  function notifySynced() {
+    syncSettled = true;
+    syncListeners.slice().forEach((callback) => {
+      try {
+        callback();
+      } catch (error) {
+        console.warn("[GPX Progression] onSynced:", error);
+      }
+    });
+  }
+
+  function onSynced(callback) {
+    if (typeof callback !== "function") {
+      return;
+    }
+    syncListeners.push(callback);
+    if (syncSettled && !accountSync) {
+      try {
+        callback();
+      } catch (error) {
+        console.warn("[GPX Progression] onSynced:", error);
+      }
+    }
+  }
+
   function ensureAccountSync() {
     if (!accountSync) {
+      syncSettled = false;
       accountSync = runAccountSync().finally(() => {
         accountSync = null;
+        notifySynced();
       });
     }
     return accountSync;
@@ -526,6 +555,7 @@
     STORAGE_KEY,
     readSessions,
     saveSession,
-    clearSessions
+    clearSessions,
+    onSynced
   };
 })();

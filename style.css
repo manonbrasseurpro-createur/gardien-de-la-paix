@@ -492,6 +492,31 @@ a {
   margin: 0 auto;
 }
 
+.auth-card .table-wrap {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.auth-card table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.auth-card th,
+.auth-card td {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.auth-card th {
+  background: var(--off-white);
+  font-weight: 700;
+  color: var(--navy);
+}
+
 .auth-switch {
   margin-top: 18px;
   text-align: center;
